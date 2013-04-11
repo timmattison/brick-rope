@@ -1,4 +1,4 @@
-package com.timmattison.bitcoin.test.script.words.arithmetic;
+package com.timmattison.bitcoin.test.script.words.constants;
 
 import com.timmattison.bitcoin.test.script.StateMachine;
 import com.timmattison.bitcoin.test.script.Word;
@@ -23,6 +23,11 @@ public class VirtualOpPush extends Word {
             // No, throw an exception
             throw new UnsupportedOperationException("Opcode must be between " + MIN_OPCODE + " and " + MAX_OPCODE + ", saw " + opcode);
         }
+    }
+
+    @Override
+    public int getInputBytesRequired() {
+        return opcode;
     }
 
     @Override

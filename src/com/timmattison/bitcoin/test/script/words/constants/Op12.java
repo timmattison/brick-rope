@@ -19,6 +19,11 @@ public class Op12 extends Word {
     }
 
     @Override
+    public int getInputBytesRequired() {
+        return 0;
+    }
+
+    @Override
     public void execute(StateMachine stateMachine) {
         throw new UnsupportedOperationException();
     }

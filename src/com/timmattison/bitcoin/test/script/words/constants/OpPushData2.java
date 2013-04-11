@@ -19,6 +19,11 @@ public class OpPushData2 extends Word {
     }
 
     @Override
+    public int getInputBytesRequired() {
+        return 2;
+    }
+
+    @Override
     public void execute(StateMachine stateMachine) {
         throw new UnsupportedOperationException();
     }
