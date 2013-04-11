@@ -1,4 +1,4 @@
-package com.timmattison.bitcoin.test.com.timmattison.bitcoin.test.script.com.timmattison.bitcoin.test.script.words.com.timmattison.bitcoin.test.script.words.constants;
+package com.timmattison.bitcoin.test.script.words.constants;
 
 import com.timmattison.bitcoin.test.com.timmattison.bitcoin.test.script.StateMachine;
 import com.timmattison.bitcoin.test.com.timmattison.bitcoin.test.script.Word;
@@ -10,11 +10,11 @@ import com.timmattison.bitcoin.test.com.timmattison.bitcoin.test.script.Word;
  * Time: 9:51 AM
  * To change this template use File | Settings | File Templates.
  */
-public class Op1Negate extends Word {
-    private static final String word = "OP_1NEGATE";
-    private static final int opcode = 0x4f;
+public class Op5 extends Word {
+    private static final String word = "OP_5";
+    private static final int opcode = 0x55;
 
-    public Op1Negate() {
+    public Op5() {
         super(word, opcode);
     }
 
