@@ -1,7 +1,7 @@
 package com.timmattison.bitcoin.test.script.words.constants;
 
-import com.timmattison.bitcoin.test.com.timmattison.bitcoin.test.script.StateMachine;
-import com.timmattison.bitcoin.test.com.timmattison.bitcoin.test.script.Word;
+import com.timmattison.bitcoin.test.script.StateMachine;
+import com.timmattison.bitcoin.test.script.Word;
 
 /**
  * Created with IntelliJ IDEA.

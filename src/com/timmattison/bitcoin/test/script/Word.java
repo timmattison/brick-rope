@@ -1,4 +1,4 @@
-package com.timmattison.bitcoin.test.com.timmattison.bitcoin.test.script;
+package com.timmattison.bitcoin.test.script;
 
 /**
  * Created with IntelliJ IDEA.
