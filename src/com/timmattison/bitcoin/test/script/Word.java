@@ -13,7 +13,6 @@ import java.util.List;
 public abstract class Word {
     protected final int opcode;
     protected final String word;
-    protected List<Byte> input;
     protected Object output;
 
     public Word(String word, int opcode) {
@@ -28,31 +27,6 @@ public abstract class Word {
     public String getWord() {
         return word;
     }
-
-    public List<Byte> consumeInput(List<Byte> input) {
-        // Is there any input?
-        if (input == null) {
-            // No, throw an exception
-            throw new UnsupportedOperationException("Input cannot be NULL");
-        }
-
-        int inputBytesRequired = getInputBytesRequired();
-        int inputSize = input.size();
-
-        // Do we have enough bytes to do this successfully?
-        if (inputSize < inputBytesRequired) {
-            // No, throw an exception
-            throw new UnsupportedOperationException("Input needs " + inputBytesRequired + " byte(s) but only has " + inputSize + " byte(s)");
-        }
-
-        // Get the bytes we need
-        this.input = input.subList(0, inputBytesRequired);
-
-        // Remove them from the input
-        return input.subList(inputBytesRequired, inputSize);
-    }
-
-    public abstract int getInputBytesRequired();
 
     public Object getOutput() {
         return output;

@@ -1,7 +1,7 @@
-package com.timmattison.bitcoin.test.script.words.constants;
+package com.timmattison.bitcoin.test.script.ByteConsumingWords.constants;
 
 import com.timmattison.bitcoin.test.script.StateMachine;
-import com.timmattison.bitcoin.test.script.Word;
+import com.timmattison.bitcoin.test.script.ByteConsumingWord;
 
 /**
  * Created with IntelliJ IDEA.
@@ -10,13 +10,13 @@ import com.timmattison.bitcoin.test.script.Word;
  * Time: 11:57 AM
  * To change this template use File | Settings | File Templates.
  */
-public class VirtualOpPush extends Word {
-    private static final String word = "VIRTUAL_OP_PUSH";
+public class VirtualOpPush extends ByteConsumingWord {
+    private static final String ByteConsumingWord = "VIRTUAL_OP_PUSH";
     private static final int MIN_OPCODE = 0x01;
     private static final int MAX_OPCODE = 0x4B;
 
     public VirtualOpPush(int opcode) {
-        super(word, opcode);
+        super(ByteConsumingWord, opcode);
 
         // Is the opcode valid?
         if ((opcode < MIN_OPCODE) || (opcode > MAX_OPCODE)) {
