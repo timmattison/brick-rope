@@ -20,6 +20,6 @@ public class Op3 extends Word {
 
     @Override
     public void execute(StateMachine stateMachine) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new UnsupportedOperationException();
     }
 }
