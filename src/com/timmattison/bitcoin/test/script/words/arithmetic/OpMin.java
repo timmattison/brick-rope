@@ -12,7 +12,7 @@ import com.timmattison.bitcoin.test.script.Word;
  */
 public class OpMin extends Word {
     private static final String word = "OP_MIN";
-    private static final int opcode = 0xa3;
+    private static final Byte opcode = (byte) 0xa3;
 
     public OpMin() {
         super(word, opcode);

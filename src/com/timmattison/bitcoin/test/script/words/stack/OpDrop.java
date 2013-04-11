@@ -12,7 +12,7 @@ import com.timmattison.bitcoin.test.script.Word;
  */
 public class OpDrop extends Word {
     private static final String word = "OP_DROP";
-    private static final int opcode = 0x75;
+    private static final Byte opcode = (byte) 0x75;
 
     public OpDrop() {
         super(word, opcode);

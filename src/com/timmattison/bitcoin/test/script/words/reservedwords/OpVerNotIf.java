@@ -12,7 +12,7 @@ import com.timmattison.bitcoin.test.script.Word;
  */
 public class OpVerNotIf extends Word {
     private static final String word = "OP_VERNOTIF";
-    private static final int opcode = 0x66;
+    private static final Byte opcode = (byte) 0x66;
 
     public OpVerNotIf() {
         super(word, opcode);

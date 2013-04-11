@@ -1,6 +1,7 @@
 package com.timmattison.bitcoin.test;
 
-import java.util.List;
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * Created with IntelliJ IDEA.
@@ -9,6 +10,41 @@ import java.util.List;
  * Time: 8:37 AM
  * To change this template use File | Settings | File Templates.
  */
-public class BlockChain {
-    private List<Block> blocks;
+public class BlockChain extends ByteConsumer {
+    private static final String name = "BLOCK CHAIN";
+    public static int blockNumber = 0;
+
+    public BlockChain(InputStream inputStream, boolean debug) throws IOException {
+        super(inputStream, debug);
+    }
+
+    @Override
+    protected void build() throws IOException {
+        // Loop until there is no more input stream data available
+        while (inputStream.available() > 0) {
+            // Display the block number
+            getLogger().info("Block #" + blockNumber++);
+
+            // Create and parse the block
+            Block block = new Block(inputStream, isDebug());
+
+            // Show the block's debug info
+            block.showDebugInfo();
+        }
+    }
+
+    @Override
+    protected void initialize(Object[] objects) {
+        throw new UnsupportedOperationException("Additional initialization not necessary");
+    }
+
+    @Override
+    protected String getName() {
+        return name;
+    }
+
+    @Override
+    protected void innerShowDebugInfo() {
+        throw new UnsupportedOperationException("Not implemented yet");
+    }
 }

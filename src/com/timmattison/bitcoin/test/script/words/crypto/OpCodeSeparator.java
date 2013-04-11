@@ -12,7 +12,7 @@ import com.timmattison.bitcoin.test.script.Word;
  */
 public class OpCodeSeparator extends Word {
     private static final String word = "OP_CODESEPARATOR";
-    private static final int opcode = 0xab;
+    private static final Byte opcode = (byte) 0xab;
 
     public OpCodeSeparator() {
         super(word, opcode);

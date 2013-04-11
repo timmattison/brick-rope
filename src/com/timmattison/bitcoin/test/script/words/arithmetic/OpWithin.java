@@ -12,7 +12,7 @@ import com.timmattison.bitcoin.test.script.Word;
  */
 public class OpWithin extends Word {
     private static final String word = "OP_WITHIN";
-    private static final int opcode = 0xa5;
+    private static final Byte opcode = (byte) 0xa5;
 
     public OpWithin() {
         super(word, opcode);

@@ -12,7 +12,7 @@ import com.timmattison.bitcoin.test.script.Word;
  */
 public class Op0NotEqual extends Word {
     private static final String word = "OP_0NOTEQUAL";
-    private static final int opcode = 0x92;
+    private static final Byte opcode = (byte) 0x92;
 
     public Op0NotEqual() {
         super(word, opcode);

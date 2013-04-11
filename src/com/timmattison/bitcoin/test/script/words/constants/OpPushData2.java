@@ -1,7 +1,10 @@
-package com.timmattison.bitcoin.test.script.ByteConsumingWords.constants;
+package com.timmattison.bitcoin.test.script.words.constants;
 
-import com.timmattison.bitcoin.test.script.StateMachine;
+import com.timmattison.bitcoin.test.ByteArrayHelper;
 import com.timmattison.bitcoin.test.script.ByteConsumingWord;
+import com.timmattison.bitcoin.test.script.StateMachine;
+
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -11,11 +14,32 @@ import com.timmattison.bitcoin.test.script.ByteConsumingWord;
  * To change this template use File | Settings | File Templates.
  */
 public class OpPushData2 extends ByteConsumingWord {
-    private static final String ByteConsumingWord = "OP_PUSHDATA2";
-    private static final int opcode = 0x4d;
+    private static final String word = "OP_PUSHDATA2";
+    private static final Byte opcode = (byte) 0x4d;
 
     public OpPushData2() {
-        super(ByteConsumingWord, opcode);
+        super(word, opcode);
+    }
+
+    @Override
+    protected List<Byte> doAdditionalProcessing(List<Byte> input) {
+        validateFirstStageInput();
+
+        // Our input now represents the number of bytes we are going to read
+        int bytesToRead = input.get(0) + (input.get(1) << 8);
+        int inputSize = input.size();
+
+        validateBytesToRead(bytesToRead, inputSize);
+
+        // Get the bytes we need
+        this.input = ByteArrayHelper.grabHeadBytes(input, bytesToRead);
+        return ByteArrayHelper.grabTailBytes(input, bytesToRead);
+    }
+
+    @Override
+    protected boolean isAdditionalProcessingRequired() {
+        return true;
+
     }
 
     @Override

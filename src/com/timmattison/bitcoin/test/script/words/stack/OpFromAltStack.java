@@ -12,7 +12,7 @@ import com.timmattison.bitcoin.test.script.Word;
  */
 public class OpFromAltStack extends Word {
     private static final String word = "OP_FROMALTSTACK";
-    private static final int opcode = 0x6c;
+    private static final Byte opcode = (byte) 0x6c;
 
     public OpFromAltStack() {
         super(word, opcode);

@@ -12,7 +12,7 @@ import com.timmattison.bitcoin.test.script.Word;
  */
 public class OpPubKey extends Word {
     private static final String word = "OP_PUBKEY";
-    private static final int opcode = 0xfe;
+    private static final Byte opcode = (byte) 0xfe;
 
     public OpPubKey() {
         super(word, opcode);

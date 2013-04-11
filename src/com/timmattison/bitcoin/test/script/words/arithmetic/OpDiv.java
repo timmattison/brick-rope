@@ -12,7 +12,7 @@ import com.timmattison.bitcoin.test.script.Word;
  */
 public class OpDiv extends Word {
     private static final String word = "OP_DIV";
-    private static final int opcode = 0x96;
+    private static final Byte opcode = (byte) 0x96;
 
     public OpDiv() {
         super(word, opcode);

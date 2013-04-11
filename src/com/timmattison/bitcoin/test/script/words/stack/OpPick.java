@@ -12,7 +12,7 @@ import com.timmattison.bitcoin.test.script.Word;
  */
 public class OpPick extends Word {
     private static final String word = "OP_PICK";
-    private static final int opcode = 0x79;
+    private static final Byte opcode = (byte) 0x79;
 
     public OpPick() {
         super(word, opcode);

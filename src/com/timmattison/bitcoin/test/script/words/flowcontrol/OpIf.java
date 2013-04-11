@@ -12,7 +12,7 @@ import com.timmattison.bitcoin.test.script.Word;
  */
 public class OpIf extends Word {
     private static final String word = "OP_IF";
-    private static final int opcode = 0x63;
+    private static final Byte opcode = (byte) 0x63;
 
     public OpIf() {
         super(word, opcode);

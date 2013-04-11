@@ -12,7 +12,7 @@ import com.timmattison.bitcoin.test.script.Word;
  */
 public class OpSubStr extends Word {
     private static final String word = "OP_SUBSTR";
-    private static final int opcode = 0x7f;
+    private static final Byte opcode = (byte) 0x7f;
 
     public OpSubStr() {
         super(word, opcode);

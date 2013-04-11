@@ -12,7 +12,7 @@ import com.timmattison.bitcoin.test.script.Word;
  */
 public class OpRight extends Word {
     private static final String word = "OP_RIGHT";
-    private static final int opcode = 0x81;
+    private static final Byte opcode = (byte) 0x81;
 
     public OpRight() {
         super(word, opcode);

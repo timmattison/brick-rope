@@ -12,7 +12,7 @@ import com.timmattison.bitcoin.test.script.Word;
  */
 public class OpLessThanOrEqual extends Word {
     private static final String word = "OP_LESSTHANOREQUAL";
-    private static final int opcode = 0xa1;
+    private static final Byte opcode = (byte) 0xa1;
 
     public OpLessThanOrEqual() {
         super(word, opcode);

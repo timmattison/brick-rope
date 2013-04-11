@@ -12,7 +12,7 @@ import com.timmattison.bitcoin.test.script.Word;
  */
 public class OpCheckSig extends Word {
     private static final String word = "OP_CHECKSIG";
-    private static final int opcode = 0xac;
+    private static final Byte opcode = (byte) 0xac;
 
     public OpCheckSig() {
         super(word, opcode);

@@ -12,7 +12,7 @@ import com.timmattison.bitcoin.test.script.Word;
  */
 public class OpBoolAnd extends Word {
     private static final String word = "OP_BOOLAND";
-    private static final int opcode = 0x9a;
+    private static final Byte opcode = (byte) 0x9a;
 
     public OpBoolAnd() {
         super(word, opcode);

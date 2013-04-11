@@ -1,8 +1,5 @@
 package com.timmattison.bitcoin.test.script;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Created with IntelliJ IDEA.
  * User: timmattison
@@ -11,16 +8,16 @@ import java.util.List;
  * To change this template use File | Settings | File Templates.
  */
 public abstract class Word {
-    protected final int opcode;
+    protected final Byte opcode;
     protected final String word;
     protected Object output;
 
-    public Word(String word, int opcode) {
+    public Word(String word, Byte opcode) {
         this.opcode = opcode;
         this.word = word;
     }
 
-    public int getOpcode() {
+    public Byte getOpcode() {
         return opcode;
     }
 

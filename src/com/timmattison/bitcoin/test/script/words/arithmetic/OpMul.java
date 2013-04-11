@@ -12,7 +12,7 @@ import com.timmattison.bitcoin.test.script.Word;
  */
 public class OpMul extends Word {
     private static final String word = "OP_MUL";
-    private static final int opcode = 0x95;
+    private static final Byte opcode = (byte) 0x95;
 
     public OpMul() {
         super(word, opcode);

@@ -12,7 +12,7 @@ import com.timmattison.bitcoin.test.script.Word;
  */
 public class OpRoll extends Word {
     private static final String word = "OP_ROLL";
-    private static final int opcode = 0x7a;
+    private static final Byte opcode = (byte) 0x7a;
 
     public OpRoll() {
         super(word, opcode);

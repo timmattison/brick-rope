@@ -12,7 +12,7 @@ import com.timmattison.bitcoin.test.script.Word;
  */
 public class OpInvalidOpcode extends Word {
     private static final String word = "OP_INVALIDOPCODE";
-    private static final int opcode = 0xff;
+    private static final Byte opcode = (byte) 0xff;
 
     public OpInvalidOpcode() {
         super(word, opcode);

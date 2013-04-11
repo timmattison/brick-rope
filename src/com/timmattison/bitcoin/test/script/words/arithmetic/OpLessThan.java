@@ -12,7 +12,7 @@ import com.timmattison.bitcoin.test.script.Word;
  */
 public class OpLessThan extends Word {
     private static final String word = "OP_LESSTHAN";
-    private static final int opcode = 0x9f;
+    private static final Byte opcode = (byte) 0x9f;
 
     public OpLessThan() {
         super(word, opcode);

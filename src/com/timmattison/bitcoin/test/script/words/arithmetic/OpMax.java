@@ -12,7 +12,7 @@ import com.timmattison.bitcoin.test.script.Word;
  */
 public class OpMax extends Word {
     private static final String word = "OP_MAX";
-    private static final int opcode = 0xa4;
+    private static final Byte opcode = (byte) 0xa4;
 
     public OpMax() {
         super(word, opcode);

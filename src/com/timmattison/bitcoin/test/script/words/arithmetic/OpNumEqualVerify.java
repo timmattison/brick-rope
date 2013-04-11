@@ -12,7 +12,7 @@ import com.timmattison.bitcoin.test.script.Word;
  */
 public class OpNumEqualVerify extends Word {
     private static final String word = "OP_NUMEQUALVERIFY";
-    private static final int opcode = 0x9d;
+    private static final Byte opcode = (byte) 0x9d;
 
     public OpNumEqualVerify() {
         super(word, opcode);

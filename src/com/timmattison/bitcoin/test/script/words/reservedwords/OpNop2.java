@@ -12,7 +12,7 @@ import com.timmattison.bitcoin.test.script.Word;
  */
 public class OpNop2 extends Word {
     private static final String word = "OP_NOP2";
-    private static final int opcode = 0xb1;
+    private static final Byte opcode = (byte) 0xb1;
 
     public OpNop2() {
         super(word, opcode);

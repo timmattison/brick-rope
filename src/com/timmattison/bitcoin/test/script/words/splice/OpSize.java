@@ -12,7 +12,7 @@ import com.timmattison.bitcoin.test.script.Word;
  */
 public class OpSize extends Word {
     private static final String word = "OP_SIZE";
-    private static final int opcode = 0x82;
+    private static final Byte opcode = (byte) 0x82;
 
     public OpSize() {
         super(word, opcode);

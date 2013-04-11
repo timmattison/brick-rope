@@ -12,7 +12,7 @@ import com.timmattison.bitcoin.test.script.Word;
  */
 public class OpEndIf extends Word {
     private static final String word = "OP_ENDIF";
-    private static final int opcode = 0x68;
+    private static final Byte opcode = (byte) 0x68;
 
     public OpEndIf() {
         super(word, opcode);

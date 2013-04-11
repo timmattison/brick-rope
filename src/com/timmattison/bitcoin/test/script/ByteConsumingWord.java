@@ -13,7 +13,7 @@ public abstract class ByteConsumingWord extends Word {
     protected List<Byte> input;
     protected Object output;
 
-    public ByteConsumingWord(String word, int opcode) {
+    public ByteConsumingWord(String word, Byte opcode) {
         super(word, opcode);
     }
 
@@ -36,9 +36,36 @@ public abstract class ByteConsumingWord extends Word {
         // Get the bytes we need
         this.input = input.subList(0, inputBytesRequired);
 
-        // Remove them from the input
-        return input.subList(inputBytesRequired, inputSize);
+        // Is there additional processing that needs to be done?
+        if (isAdditionalProcessingRequired()) {
+            // Yes, let the word do any additional processing it needs to
+            input = doAdditionalProcessing(input);
+        } else {
+            // No, just remove the bytes we consumed from the input
+            input = input.subList(inputBytesRequired, inputSize);
+        }
+
+        return input;
     }
+
+    protected void validateFirstStageInput() {
+        // Do we have the data we need?
+        if ((input == null) || (input.size() != getInputBytesRequired())) {
+            // No, throw an exception
+            throw new UnsupportedOperationException("Didn't get the required number of bytes [" + getInputBytesRequired() + "]");
+        }
+    }
+
+    protected void validateBytesToRead(int bytesToRead, int inputSize) {
+        // Do we have enough data to read the number of bytes they requested?
+        if (bytesToRead > inputSize) {
+            throw new UnsupportedOperationException("Requested to read " + bytesToRead + " byte(s) but only " + inputSize + " byte(s) are available");
+        }
+    }
+
+    protected abstract List<Byte> doAdditionalProcessing(List<Byte> input);
+
+    protected abstract boolean isAdditionalProcessingRequired();
 
     public abstract int getInputBytesRequired();
 

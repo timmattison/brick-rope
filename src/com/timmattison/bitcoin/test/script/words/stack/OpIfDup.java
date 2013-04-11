@@ -12,7 +12,7 @@ import com.timmattison.bitcoin.test.script.Word;
  */
 public class OpIfDup extends Word {
     private static final String word = "OP_IFDUP";
-    private static final int opcode = 0x73;
+    private static final Byte opcode = (byte) 0x73;
 
     public OpIfDup() {
         super(word, opcode);

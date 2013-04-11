@@ -1,7 +1,7 @@
-package com.timmattison.bitcoin.test.script.ByteConsumingWords.constants;
+package com.timmattison.bitcoin.test.script.words.constants;
 
 import com.timmattison.bitcoin.test.script.StateMachine;
-import com.timmattison.bitcoin.test.script.ByteConsumingWord;
+import com.timmattison.bitcoin.test.script.Word;
 
 /**
  * Created with IntelliJ IDEA.
@@ -10,17 +10,12 @@ import com.timmattison.bitcoin.test.script.ByteConsumingWord;
  * Time: 9:51 AM
  * To change this template use File | Settings | File Templates.
  */
-public class Op2 extends ByteConsumingWord {
-    private static final String ByteConsumingWord = "OP_2";
-    private static final int opcode = 0x52;
+public class Op2 extends Word {
+    private static final String word = "OP_2";
+    private static final Byte opcode = (byte) 0x52;
 
     public Op2() {
-        super(ByteConsumingWord, opcode);
-    }
-
-    @Override
-    public int getInputBytesRequired() {
-        return 0;
+        super(word, opcode);
     }
 
     @Override

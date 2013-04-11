@@ -12,7 +12,7 @@ import com.timmattison.bitcoin.test.script.Word;
  */
 public class OpHash256 extends Word {
     private static final String word = "OP_HASH256";
-    private static final int opcode = 0xaa;
+    private static final Byte opcode = (byte) 0xaa;
 
     public OpHash256() {
         super(word, opcode);

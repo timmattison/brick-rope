@@ -12,7 +12,7 @@ import com.timmattison.bitcoin.test.script.Word;
  */
 public class OpTuck extends Word {
     private static final String word = "OP_TUCK";
-    private static final int opcode = 0x7d;
+    private static final Byte opcode = (byte) 0x7d;
 
     public OpTuck() {
         super(word, opcode);

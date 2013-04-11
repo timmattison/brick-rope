@@ -12,7 +12,7 @@ import com.timmattison.bitcoin.test.script.Word;
  */
 public class OpRShift extends Word {
     private static final String word = "OP_RSHIFT";
-    private static final int opcode = 0x99;
+    private static final Byte opcode = (byte) 0x99;
 
     public OpRShift() {
         super(word, opcode);

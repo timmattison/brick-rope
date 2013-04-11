@@ -12,7 +12,7 @@ import com.timmattison.bitcoin.test.script.Word;
  */
 public class OpDup extends Word {
     private static final String word = "OP_DUP";
-    private static final int opcode = 0x76;
+    private static final Byte opcode = (byte) 0x76;
 
     public OpDup() {
         super(word, opcode);
@@ -20,6 +20,7 @@ public class OpDup extends Word {
 
     @Override
     public void execute(StateMachine stateMachine) {
-        throw new UnsupportedOperationException();
+        // Duplicate the top element on the stack
+        stateMachine.stack.push(stateMachine.stack.peek());
     }
 }
