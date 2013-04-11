@@ -30,5 +30,10 @@ public abstract class Word {
         return output;
     }
 
+    public boolean isEnabled() {
+        // All words are enabled by default
+        return true;
+    }
+
     public abstract void execute(StateMachine stateMachine);
 }
