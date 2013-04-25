@@ -1,5 +1,6 @@
 package com.timmattison.bitcoin.test;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,12 +12,12 @@ import java.util.List;
  * To change this template use File | Settings | File Templates.
  */
 public class ImportFromText {
-    public static Byte[] Import(String data) {
+    public static byte[] Import(String data) {
         if (data == null) {
             throw new UnsupportedOperationException("Data cannot be NULL");
         }
 
-        List<Byte> returnValue = new ArrayList<Byte>();
+        ByteArrayOutputStream returnValue = new ByteArrayOutputStream();
 
         StringBuilder stringBuilder = new StringBuilder();
         int position = 0;
@@ -35,12 +36,12 @@ public class ImportFromText {
             if (stringBuilder.length() == 2) {
                 String currentByteString = stringBuilder.toString();
                 Byte currentByte = (byte) Integer.parseInt(currentByteString, 16);
-                returnValue.add(currentByte);
+                returnValue.write(currentByte);
 
                 stringBuilder = new StringBuilder();
             }
         }
 
-        return returnValue.toArray(new Byte[returnValue.size()]);
+        return returnValue.toByteArray();
     }
 }

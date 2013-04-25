@@ -2,6 +2,7 @@ package com.timmattison.bitcoin.test;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.logging.FileHandler;
 import java.util.logging.Handler;
@@ -16,7 +17,13 @@ import java.util.logging.SimpleFormatter;
  */
 public class BlockChainTest {
     private static final boolean debug = true;
-    public static Handler handler;
+
+    public static Handler getHandler() throws IOException {
+        Handler handler = new FileHandler("test.log");
+        handler.setFormatter(new SimpleFormatter());
+
+        return handler;
+    }
 
     public static void main(String[] args) throws Exception {
         // Did they specify a filename (and only one filename)?
@@ -25,9 +32,6 @@ public class BlockChainTest {
             System.out.println("A filename containing block data must be specified");
             return;
         }
-
-        handler = new FileHandler("test.log");
-        handler.setFormatter(new SimpleFormatter());
 
         File inputFile = new File(args[0]);
         InputStream inputStream = new FileInputStream(inputFile);

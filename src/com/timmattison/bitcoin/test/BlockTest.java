@@ -1,5 +1,7 @@
 package com.timmattison.bitcoin.test;
 
+import java.io.ByteArrayInputStream;
+
 /**
  * Created with IntelliJ IDEA.
  * User: timmattison
@@ -10,7 +12,7 @@ package com.timmattison.bitcoin.test;
 public class BlockTest {
     // Genesis block
     // From: http://james.lab6.com/2012/01/12/bitcoin-285-bytes-that-changed-the-world/
-    static Byte[] testBlock1 = new Byte[]{
+    static byte[] testBlock1 = new byte[]{
             (byte) 0xf9, (byte) 0xbe, (byte) 0xb4, (byte) 0xd9, // Magic number
             (byte) 0x1d, (byte) 0x01, (byte) 0x00, (byte) 0x00, // Block size
             (byte) 0x01, (byte) 0x00, (byte) 0x00, (byte) 0x00, // Block format
@@ -92,6 +94,7 @@ public class BlockTest {
             (byte) 0x1d, (byte) 0x5f, (byte) 0xac,              // Script
             (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00  // Lock time
     };
+    static ByteArrayInputStream testBlock1InputStream = new ByteArrayInputStream(testBlock1);
 
     static String testBlock2Data = "F9 BE B4 D9 D7 00 00 00 01 00 00 00 6F E2 8C 0A" +
             "B6 F1 B3 72 C1 A6 A2 46 AE 63 F7 4F 93 1E 83 65" +
@@ -108,60 +111,14 @@ public class BlockTest {
             "D4 E0 A6 04 F8 14 17 81 E6 22 94 72 11 66 BF 62" +
             "1E 73 A8 2C BF 23 42 C8 58 EE AC 00 00 00 00";
 
-    static Byte[] testBlock2 = ImportFromText.Import(testBlock2Data);
-
-    // JSON for the Genesis block from http://blockexplorer.com/rawblock/000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f
-    static String testBlock1Json = "{\n" +
-            "  \"hash\":\"000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f\",\n" +
-            "  \"ver\":1,\n" +
-            "  \"prev_block\":\"0000000000000000000000000000000000000000000000000000000000000000\",\n" +
-            "  \"mrkl_root\":\"4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b\",\n" +
-            "  \"time\":1231006505,\n" +
-            "  \"bits\":486604799,\n" +
-            "  \"nonce\":2083236893,\n" +
-            "  \"n_tx\":1,\n" +
-            "  \"size\":285,\n" +
-            "  \"tx\":[\n" +
-            "    {\n" +
-            "      \"hash\":\"4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b\",\n" +
-            "      \"ver\":1,\n" +
-            "      \"vin_sz\":1,\n" +
-            "      \"vout_sz\":1,\n" +
-            "      \"lock_time\":0,\n" +
-            "      \"size\":204,\n" +
-            "      \"in\":[\n" +
-            "        {\n" +
-            "          \"prev_out\":{\n" +
-            "            \"hash\":\"0000000000000000000000000000000000000000000000000000000000000000\",\n" +
-            "            \"n\":4294967295\n" +
-            "          },\n" +
-            "          \"coinbase\":\"04ffff001d0104455468652054696d65732030332f4a616e2f32303039204368616e63656c6c6f72206f6e206272696e6b206f66207365636f6e64206261696c6f757420666f722062616e6b73\"\n" +
-            "        }\n" +
-            "      ],\n" +
-            "      \"out\":[\n" +
-            "        {\n" +
-            "          \"value\":\"50.00000000\",\n" +
-            "          \"scriptPubKey\":\"04678afdb0fe5548271967f1a67130b7105cd6a828e03909a67962e0ea1f61deb649f6bc3f4cef38c4f35504e51ec112de5c384df7ba0b8d578a4c702b6bf11d5f OP_CHECKSIG\"\n" +
-            "        }\n" +
-            "      ]\n" +
-            "    }\n" +
-            "  ],\n" +
-            "  \"mrkl_tree\":[\n" +
-            "    \"4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b\"\n" +
-            "  ]\n" +
-            "}";
+    static byte[] testBlock2 = ImportFromText.Import(testBlock2Data);
+    static ByteArrayInputStream testBlock2InputStream = new ByteArrayInputStream(testBlock2);
 
     private static final boolean debug = true;
 
     public static void main(String[] args) throws Exception {
-        //partialCompare(testBlock1, genesisBytes);
-        //Block block1 = new Block(testBlock1);
-        //System.out.println("-- CUT HERE --");
-        //Block genesisBlock = new Block(genesisBytes);
-        //System.out.print("Reference: ");
-        //printArray(testBlock1);
-        //System.out.print("Parsed: ");
-        //printArray(genesisBytes);
+        Block block1 = new Block(testBlock1InputStream, debug);
+        Block block2 = new Block(testBlock2InputStream, debug);
     }
 
     private static void partialCompare(Byte[] array1, Byte[] array2) {

@@ -6,7 +6,10 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.FileHandler;
+import java.util.logging.Handler;
 import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
 
 /**
  * Created with IntelliJ IDEA.
@@ -20,13 +23,11 @@ public abstract class ByteConsumer {
      * The bytes as they came from the caller.  Nobody is allowed to touch this.
      */
     protected InputStream inputStream;
-
+    protected Logger logger;
     /**
      * Whether or not the object should print out debug information.  Default is false.
      */
     private boolean debug = false;
-
-    protected Logger logger;
 
     public ByteConsumer(InputStream inputStream, boolean debug) throws IOException {
         this.inputStream = inputStream;
@@ -100,11 +101,23 @@ public abstract class ByteConsumer {
     protected abstract void build() throws IOException;
 
     protected Logger getLogger() {
-        if(logger == null) {
+        if (logger == null) {
             logger = Logger.getLogger(getName());
-            logger.addHandler(BlockChainTest.handler);
+
+            try {
+                logger.addHandler(BlockChainTest.getHandler());
+            } catch (Exception ex) {
+                // Do nothing, failed to get a handler
+            }
         }
 
         return logger;
+    }
+
+    protected Handler getHandler() throws IOException {
+        Handler handler = new FileHandler("test.log");
+        handler.setFormatter(new SimpleFormatter());
+
+        return handler;
     }
 }
