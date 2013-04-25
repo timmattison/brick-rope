@@ -60,19 +60,15 @@ public class ByteArrayHelper {
         return Arrays.asList(bytes);
     }
 
-    public static void printArray(Byte[] array) {
-        System.out.println(formatArray(array));
-    }
-
     public static void printArray(byte[] array) {
-        printArray(ByteArrayToJavaLangByteArray(array));
+        System.out.println(formatArray(array));
     }
 
     public static String toHex(Byte input) {
         return String.format("%02x", input);
     }
 
-    public static String formatArray(Byte[] array) {
+    public static String formatArray(byte[] array) {
         StringBuilder stringBuilder = new StringBuilder();
 
         for (int loop = 0; loop < array.length; loop++) {

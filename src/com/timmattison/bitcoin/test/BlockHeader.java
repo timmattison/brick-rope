@@ -32,12 +32,12 @@ public class BlockHeader extends ByteConsumer {
     /**
      * The hash value of the previous block this particular block references
      */
-    private Byte[] prevBlock;
+    private byte[] prevBlock;
 
     /**
      * The reference to a Merkle tree collection which is a hash of all transactions related to this block
      */
-    private Byte[] merkleRoot;
+    private byte[] merkleRoot;
 
     /**
      * A Unix timestamp recording when this block was created (currently limited to dates before the year 2106!)
@@ -105,19 +105,19 @@ public class BlockHeader extends ByteConsumer {
         MessageDigest hashOfHash = MessageDigest.getInstance(hashName);
 
         // Hash all of the header data
-        hashOfHeader.update(ByteArrayHelper.JavaLangByteArrayToByteArray(EndiannessHelper.IntToBytes(version)));
-        hashOfHeader.update(ByteArrayHelper.JavaLangByteArrayToByteArray(prevBlock));
-        hashOfHeader.update(ByteArrayHelper.JavaLangByteArrayToByteArray(merkleRoot));
-        hashOfHeader.update(ByteArrayHelper.JavaLangByteArrayToByteArray(EndiannessHelper.IntToBytes(timestamp)));
-        hashOfHeader.update(ByteArrayHelper.JavaLangByteArrayToByteArray(EndiannessHelper.IntToBytes(bits)));
-        hashOfHeader.update(ByteArrayHelper.JavaLangByteArrayToByteArray(EndiannessHelper.IntToBytes(nonce)));
+        hashOfHeader.update(EndiannessHelper.IntToBytes(version));
+        hashOfHeader.update(prevBlock);
+        hashOfHeader.update(merkleRoot);
+        hashOfHeader.update(EndiannessHelper.IntToBytes(timestamp));
+        hashOfHeader.update(EndiannessHelper.IntToBytes(bits));
+        hashOfHeader.update(EndiannessHelper.IntToBytes(nonce));
 
         // Hash the hashed data
         hashOfHash.update(hashOfHeader.digest());
 
         // Get the result and print it
         byte[] result = hashOfHash.digest();
-        getLogger().info(ByteArrayHelper.formatArray(ByteArrayHelper.ByteArrayToJavaLangByteArray(result)));
+        getLogger().info(ByteArrayHelper.formatArray(result));
 
         // Return it
         return result;

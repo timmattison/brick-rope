@@ -3,6 +3,7 @@ package com.timmattison.bitcoin.test.script.words.constants;
 import com.timmattison.bitcoin.test.script.ByteConsumingWord;
 import com.timmattison.bitcoin.test.script.StateMachine;
 
+import java.io.ByteArrayInputStream;
 import java.util.List;
 
 /**
@@ -33,8 +34,7 @@ public class VirtualOpPush extends ByteConsumingWord {
     }
 
     @Override
-    protected List<Byte> doAdditionalProcessing(List<Byte> input) {
-        return null;
+    protected void doAdditionalProcessing(ByteArrayInputStream input) {
     }
 
     @Override
@@ -49,7 +49,6 @@ public class VirtualOpPush extends ByteConsumingWord {
 
     @Override
     public void execute(StateMachine stateMachine) {
-        Byte[] data = ((List<Byte>) input).toArray(new Byte[input.size()]);
-        stateMachine.stack.push(data);
+        stateMachine.stack.push(input);
     }
 }

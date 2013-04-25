@@ -154,7 +154,6 @@ public class BlockTest {
     private static final boolean debug = true;
 
     public static void main(String[] args) throws Exception {
-        //Byte[] genesisBytes = ImportFromJson.Import(testBlock1Json);
         //partialCompare(testBlock1, genesisBytes);
         //Block block1 = new Block(testBlock1);
         //System.out.println("-- CUT HERE --");

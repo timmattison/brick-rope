@@ -1,5 +1,6 @@
 package com.timmattison.bitcoin.test;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,29 +18,29 @@ public class EndiannessHelper {
     private static final long intMask = 0x00FFFFFFFFL;
     private static final int longSize = 4;
 
-    public static short BytesToShort(Byte[] bytes) {
+    public static short BytesToShort(byte[] bytes) {
         validateSize(bytes, shortSize);
 
         long returnValue = ((toRealByte(bytes[1]) << 8) | toRealByte(bytes[0])) & shortMask;
         return (short) returnValue;
     }
 
-    public static int BytesToInt(Byte[] bytes) {
+    public static int BytesToInt(byte[] bytes) {
         validateSize(bytes, intSize);
 
         long returnValue = ((toRealByte(bytes[3]) << 24) | (toRealByte(bytes[2]) << 16) | (toRealByte(bytes[1]) << 8) | (toRealByte(bytes[0]))) & intMask;
         return (int) returnValue;
     }
 
-    public static long BytesToLong(Byte[] bytes) {
+    public static long BytesToLong(byte[] bytes) {
         validateSize(bytes, longSize);
 
         long returnValue = (toRealByte(bytes[7]) << 56) | (toRealByte(bytes[6]) << 48) | (toRealByte(bytes[5]) << 40) | (toRealByte(bytes[4]) << 32) | (toRealByte(bytes[3]) << 24) | (toRealByte(bytes[2]) << 16) | (toRealByte(bytes[1]) << 8) | (toRealByte(bytes[0]));
         return returnValue;
     }
 
-    public static Byte[] ShortToBytes(short value) {
-        Byte[] returnValue = new Byte[2];
+    public static byte[] ShortToBytes(short value) {
+        byte[] returnValue = new byte[2];
 
         returnValue[1] = (byte) ((value >> 8) & 0xFF);
         returnValue[0] = (byte) (value & 0xFF);
@@ -47,8 +48,8 @@ public class EndiannessHelper {
         return returnValue;
     }
 
-    public static Byte[] IntToBytes(int value) {
-        Byte[] returnValue = new Byte[4];
+    public static byte[] IntToBytes(int value) {
+        byte[] returnValue = new byte[4];
 
         returnValue[3] = (byte) ((value >> 24) & 0xFF);
         returnValue[2] = (byte) ((value >> 16) & 0xFF);
@@ -58,8 +59,8 @@ public class EndiannessHelper {
         return returnValue;
     }
 
-    public static Byte[] LongToBytes(long value) {
-        Byte[] returnValue = new Byte[8];
+    public static byte[] LongToBytes(long value) {
+        byte[] returnValue = new byte[8];
 
         returnValue[7] = (byte) ((value >> 56) & 0xFF);
         returnValue[6] = (byte) ((value >> 48) & 0xFF);
@@ -77,7 +78,7 @@ public class EndiannessHelper {
         return ((int) input) & 0xFF;
     }
 
-    private static void validateSize(Byte[] bytes, int requiredSize) {
+    private static void validateSize(byte[] bytes, int requiredSize) {
         if (bytes == null) {
             throw new UnsupportedOperationException("Bytes cannot be NULL");
         } else if (bytes.length < requiredSize) {
@@ -85,26 +86,30 @@ public class EndiannessHelper {
         }
     }
 
-    public static Byte[] VarIntToBytes(long varInt) {
-        List<Byte> bytes = new ArrayList<Byte>();
+    public static byte[] VarIntToBytes(long varInt) {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+
         // How big is the value?
         if (varInt < 0xfd) {
             // Small enough to fit in one byte
-            bytes.add((byte) varInt);
+            bytes.write((byte) varInt);
         } else if (varInt < 0xffff) {
             // Small enough to fit in two bytes
-            bytes.add((byte) 0xfd);
-            ByteArrayHelper.addBytes(bytes, ShortToBytes((short) varInt));
+            bytes.write((byte) 0xfd);
+            byte[] temp = ShortToBytes((short) varInt);
+            bytes.write(temp, 0, temp.length);
         } else if (varInt < 0xffffffffL) {
             // Small enough to fit in four bytes
-            bytes.add((byte) 0xfe);
-            ByteArrayHelper.addBytes(bytes, IntToBytes((int) varInt));
+            bytes.write((byte) 0xfe);
+            byte[] temp = IntToBytes((int) varInt);
+            bytes.write(temp, 0, temp.length);
         } else {
             // Needs eight bytes
-            bytes.add((byte) 0xff);
-            ByteArrayHelper.addBytes(bytes, IntToBytes((int) varInt));
+            bytes.write((byte) 0xff);
+            byte[] temp = LongToBytes((int) varInt);
+            bytes.write(temp, 0, temp.length);
         }
 
-        return bytes.toArray(new Byte[bytes.size()]);
+        return bytes.toByteArray();
     }
 }

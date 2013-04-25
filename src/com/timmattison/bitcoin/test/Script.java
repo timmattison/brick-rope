@@ -4,6 +4,7 @@ import com.timmattison.bitcoin.test.script.ByteConsumingWord;
 import com.timmattison.bitcoin.test.script.StateMachine;
 import com.timmattison.bitcoin.test.script.Word;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -97,14 +98,15 @@ public class Script extends ByteConsumer {
          * Move the bytes we want into a new list.  This is so we can be sure that a misbehaving opcode doesn't try to
          * read past the end of the script.  NOTE: Technically we only support scripts up to 2GB!
          */
-        List<Byte> bytesToProcess = pullByteList((int) lengthInBytes);
-        getLogger().info("Bytes to process: " + ByteArrayHelper.formatArray(ByteArrayHelper.ByteArrayToJavaLangByteArray(ByteArrayHelper.JavaLangByteListToByteArray(bytesToProcess))));
+        byte[] bytesToProcess = pullBytes((int) lengthInBytes);
+        getLogger().info("Bytes to process: " + ByteArrayHelper.formatArray(bytesToProcess));
+
+        ByteArrayInputStream byteStream = new ByteArrayInputStream(bytesToProcess);
 
         try {
-            while (!bytesToProcess.isEmpty()) {
+            while (byteStream.available() > 0) {
                 // Get the next byte
-                Byte currentByte = bytesToProcess.get(0);
-                bytesToProcess = ByteArrayHelper.removeFirstByte(bytesToProcess);
+                byte currentByte = (byte) byteStream.read();
 
                 // Get the word that the next byte corresponds to
                 Word currentWord = getWordFactory().getWordByOpcode(currentByte);
@@ -113,7 +115,7 @@ public class Script extends ByteConsumer {
                 // Is this a byte consuming word?
                 if (ByteConsumingWord.class.isAssignableFrom(currentWord.getClass())) {
                     // Yes, consume the bytes
-                    bytesToProcess = ((ByteConsumingWord) currentWord).consumeInput(bytesToProcess);
+                    ((ByteConsumingWord) currentWord).consumeInput(byteStream);
                 }
 
                 // Add the word to our word list

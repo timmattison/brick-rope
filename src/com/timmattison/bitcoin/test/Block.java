@@ -18,7 +18,7 @@ public class Block extends ByteConsumer {
     private static final String name = "BLOCK";
 
     // Used for sanity check
-    private static final Byte[] requiredMagicNumberBytes = new Byte[]{new Byte((byte) 0xf9), new Byte((byte) 0xbe), new Byte((byte) 0xb4), new Byte((byte) 0xd9)};
+    private static final byte[] requiredMagicNumberBytes = new byte[]{(byte) 0xf9, (byte) 0xbe, (byte) 0xb4, (byte) 0xd9};
     private static final int requiredMagicNumber = EndiannessHelper.BytesToInt(requiredMagicNumberBytes);
 
     private static final int magicNumberLengthInBytes = 4;

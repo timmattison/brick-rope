@@ -18,7 +18,7 @@ public class Input extends ByteConsumer {
     private static final int previousOutputIndexLengthInBytes = 4;
     private static final int sequenceNumberLengthInBytes = 4;
 
-    private Byte[] previousTransactionHash;
+    private byte[] previousTransactionHash;
     private long previousOutputIndex;
     private Script inputScript;
     private long sequenceNumber;

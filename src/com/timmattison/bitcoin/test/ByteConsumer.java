@@ -71,17 +71,11 @@ public abstract class ByteConsumer {
         return debug;
     }
 
-    protected Byte[] pullBytes(int count) throws IOException {
+    protected byte[] pullBytes(int count) throws IOException {
         byte[] bytes = new byte[count];
         inputStream.read(bytes, 0, count);
 
-        Byte[] returnValue = ByteArrayHelper.ByteArrayToJavaLangByteArray(bytes);
-
-        if(BlockChain.blockNumber > 29664) {
-            logBytes(returnValue);
-        }
-
-        return returnValue;
+        return bytes;
     }
 
     private void logBytes(Byte[] bytes) {
@@ -92,11 +86,6 @@ public abstract class ByteConsumer {
         }
 
         getLogger().info(stringBuilder.toString());
-    }
-
-    protected List<Byte> pullByteList(int count) throws IOException {
-        Byte[] bytes = pullBytes(count);
-        return new ArrayList<Byte>(Arrays.asList(bytes));
     }
 
     protected void showDebugInfo() {

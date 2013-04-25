@@ -1,5 +1,6 @@
 package com.timmattison.bitcoin.test.script;
 
+import java.io.ByteArrayInputStream;
 import java.util.List;
 
 /**
@@ -10,14 +11,14 @@ import java.util.List;
  * To change this template use File | Settings | File Templates.
  */
 public abstract class ByteConsumingWord extends Word {
-    protected List<Byte> input;
+    protected byte[] input;
     protected Object output;
 
     public ByteConsumingWord(String word, Byte opcode) {
         super(word, opcode);
     }
 
-    public List<Byte> consumeInput(List<Byte> input) {
+    public void consumeInput(ByteArrayInputStream input) {
         // Is there any input?
         if (input == null) {
             // No, throw an exception
@@ -25,7 +26,7 @@ public abstract class ByteConsumingWord extends Word {
         }
 
         int inputBytesRequired = getInputBytesRequired();
-        int inputSize = input.size();
+        int inputSize = input.available();
 
         // Do we have enough bytes to do this successfully?
         if (inputSize < inputBytesRequired) {
@@ -34,23 +35,19 @@ public abstract class ByteConsumingWord extends Word {
         }
 
         // Get the bytes we need
-        this.input = input.subList(0, inputBytesRequired);
+        this.input = new byte[inputBytesRequired];
+        input.read(this.input, 0, inputBytesRequired);
 
         // Is there additional processing that needs to be done?
         if (isAdditionalProcessingRequired()) {
             // Yes, let the word do any additional processing it needs to
-            input = doAdditionalProcessing(input);
-        } else {
-            // No, just remove the bytes we consumed from the input
-            input = input.subList(inputBytesRequired, inputSize);
+            doAdditionalProcessing(input);
         }
-
-        return input;
     }
 
     protected void validateFirstStageInput() {
         // Do we have the data we need?
-        if ((input == null) || (input.size() != getInputBytesRequired())) {
+        if ((input == null) || (input.length != getInputBytesRequired())) {
             // No, throw an exception
             throw new UnsupportedOperationException("Didn't get the required number of bytes [" + getInputBytesRequired() + "]");
         }
@@ -63,7 +60,7 @@ public abstract class ByteConsumingWord extends Word {
         }
     }
 
-    protected abstract List<Byte> doAdditionalProcessing(List<Byte> input);
+    protected abstract void doAdditionalProcessing(ByteArrayInputStream input);
 
     protected abstract boolean isAdditionalProcessingRequired();
 

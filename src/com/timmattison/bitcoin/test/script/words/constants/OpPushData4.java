@@ -4,6 +4,7 @@ import com.timmattison.bitcoin.test.ByteArrayHelper;
 import com.timmattison.bitcoin.test.script.ByteConsumingWord;
 import com.timmattison.bitcoin.test.script.StateMachine;
 
+import java.io.ByteArrayInputStream;
 import java.util.List;
 
 /**
@@ -22,21 +23,21 @@ public class OpPushData4 extends ByteConsumingWord {
     }
 
     @Override
-    protected List<Byte> doAdditionalProcessing(List<Byte> input) {
+    protected void doAdditionalProcessing(ByteArrayInputStream input) {
         // TODO - This is the same in all three OpPushDataX classes, extract it
         validateFirstStageInput();
 
         // Our input now represents the number of bytes we are going to read
-        int bytesToRead = input.get(0) + (input.get(1) << 8) + (input.get(2) << 16) + (input.get(3) << 24);
-        int inputSize = input.size();
+        int bytesToRead = input.read() + (input.read() << 8) + (input.read() << 16) + (input.read() << 24);
+        int inputSize = input.available();
 
         // TODO - This is the same in all three OpPushDataX classes, extract it
         validateBytesToRead(bytesToRead, inputSize);
 
         // TODO - This is the same in all three OpPushDataX classes, extract it
         // Get the bytes we need
-        this.input = ByteArrayHelper.grabHeadBytes(input, bytesToRead);
-        return ByteArrayHelper.grabTailBytes(input, bytesToRead);
+        this.input = new byte[bytesToRead];
+        input.read(this.input, 0, bytesToRead);
     }
 
     @Override

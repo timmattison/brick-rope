@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.logging.FileHandler;
 import java.util.logging.Handler;
+import java.util.logging.SimpleFormatter;
 
 /**
  * Created with IntelliJ IDEA.
@@ -26,6 +27,7 @@ public class BlockChainTest {
         }
 
         handler = new FileHandler("test.log");
+        handler.setFormatter(new SimpleFormatter());
 
         File inputFile = new File(args[0]);
         InputStream inputStream = new FileInputStream(inputFile);
