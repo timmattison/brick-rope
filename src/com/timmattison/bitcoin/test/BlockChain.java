@@ -47,4 +47,14 @@ public class BlockChain extends ByteConsumer {
     protected void innerShowDebugInfo() {
         throw new UnsupportedOperationException("Not implemented yet");
     }
+
+    @Override
+    protected boolean isDebug() {
+        if(blockNumber < 29600) {
+            return false;
+        }
+        else {
+            return true;
+        }
+    }
 }

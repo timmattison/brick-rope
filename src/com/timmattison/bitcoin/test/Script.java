@@ -19,13 +19,10 @@ import java.util.List;
  */
 public class Script extends ByteConsumer {
     private static final String name = "SCRIPT";
-
     private static final int MAX_WORD_LIST_LENGTH = 201;
     private long lengthInBytes;
-
     private List<Word> words;
     private StateMachine stateMachine;
-
     private WordFactory wordFactory;
 
     public Script(long lengthInBytes, InputStream inputStream, boolean debug) throws IllegalAccessException, InstantiationException, IOException {
@@ -48,7 +45,9 @@ public class Script extends ByteConsumer {
 
     @Override
     protected void innerShowDebugInfo() {
-        getLogger().info(getListOfWords());
+        if (isDebug()) {
+            getLogger().info(getListOfWords());
+        }
     }
 
     public String getListOfWords() {
@@ -99,7 +98,6 @@ public class Script extends ByteConsumer {
          * read past the end of the script.  NOTE: Technically we only support scripts up to 2GB!
          */
         byte[] bytesToProcess = pullBytes((int) lengthInBytes);
-        getLogger().info("Bytes to process: " + ByteArrayHelper.formatArray(bytesToProcess));
 
         ByteArrayInputStream byteStream = new ByteArrayInputStream(bytesToProcess);
 
@@ -110,7 +108,6 @@ public class Script extends ByteConsumer {
 
                 // Get the word that the next byte corresponds to
                 Word currentWord = getWordFactory().getWordByOpcode(currentByte);
-                getLogger().info("Current word: " + currentWord.getWord() + " [" + currentWord.getOpcode() + "]");
 
                 // Is this a byte consuming word?
                 if (ByteConsumingWord.class.isAssignableFrom(currentWord.getClass())) {

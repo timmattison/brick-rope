@@ -52,16 +52,13 @@ public class Input extends ByteConsumer {
     protected void build() throws IOException {
         // Get the previous transaction hash
         previousTransactionHash = pullBytes(previousTransactionHashLengthInBytes);
-        getLogger().info("Previous transaction hash: " + ByteArrayHelper.formatArray(previousTransactionHash));
 
         // Get the previous output index
         previousOutputIndex = EndiannessHelper.BytesToInt(pullBytes(previousOutputIndexLengthInBytes));
-        getLogger().info("Previous output index: " + previousOutputIndex);
 
         // Get the input script length
         VariableLengthInteger temp = new VariableLengthInteger(inputStream, isDebug());
         inputScriptLength = temp.getValue();
-        getLogger().info("Input script length: " + inputScriptLength);
 
         try {
             // Get the input script

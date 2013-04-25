@@ -15,12 +15,10 @@ import java.util.List;
  */
 public class Transaction extends ByteConsumer {
     private static final String name = "TRANSACTION";
-
     // Used for sanity check
     private static final long currentVersionNumber = 1;
     private static final int versionNumberLengthInBytes = 4;
     private static final int lockTimeLengthInBytes = 4;
-
     private int versionNumber;
     private long inCounter;
     private List<Input> inputs;
@@ -44,20 +42,22 @@ public class Transaction extends ByteConsumer {
 
     @Override
     protected void innerShowDebugInfo() {
-        getLogger().info("Version: " + versionNumber);
-        getLogger().info("Input counter: " + inCounter);
+        if (isDebug()) {
+            getLogger().info("Version: " + versionNumber);
+            getLogger().info("Input counter: " + inCounter);
 
-        for (Input input : inputs) {
-            input.showDebugInfo();
+            for (Input input : inputs) {
+                input.showDebugInfo();
+            }
+
+            getLogger().info("Output counter: " + outCounter);
+
+            for (Output output : outputs) {
+                output.showDebugInfo();
+            }
+
+            getLogger().info("Lock time: " + lockTime);
         }
-
-        getLogger().info("Output counter: " + outCounter);
-
-        for (Output output : outputs) {
-            output.showDebugInfo();
-        }
-
-        getLogger().info("Lock time: " + lockTime);
     }
 
     @Override
