@@ -28,20 +28,6 @@ public abstract class ByteConsumer {
 
     protected Logger logger;
 
-    public ByteConsumer(Byte[] bytes, boolean debug) throws IOException {
-        inputStream = new ByteArrayInputStream(ByteArrayHelper.JavaLangByteArrayToByteArray(bytes));
-        this.debug = debug;
-
-        build();
-    }
-
-    public ByteConsumer(List<Byte> bytes, boolean debug) throws IOException {
-        inputStream = new ByteArrayInputStream(ByteArrayHelper.JavaLangByteListToByteArray(bytes));
-        this.debug = debug;
-
-        build();
-    }
-
     public ByteConsumer(InputStream inputStream, boolean debug) throws IOException {
         this.inputStream = inputStream;
         this.debug = debug;

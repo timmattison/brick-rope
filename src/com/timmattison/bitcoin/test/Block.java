@@ -60,10 +60,6 @@ public class Block extends ByteConsumer {
         }
     }
 
-    public Block(Byte[] blockBytes, boolean debug) throws IOException {
-        super(blockBytes, debug);
-    }
-
     @Override
     protected void build() throws IOException {
         // Get the magic number and remove the bytes it occupied

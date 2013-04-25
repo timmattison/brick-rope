@@ -12,22 +12,6 @@ import java.util.List;
  * To change this template use File | Settings | File Templates.
  */
 public class ByteArrayHelper {
-    public static byte[] JavaLangByteArrayToByteArray(Byte[] bytes) {
-        byte[] returnValue = new byte[bytes.length];
-
-        for (int loop = 0; loop < bytes.length; loop++) {
-            returnValue[loop] = bytes[loop];
-        }
-
-        return returnValue;
-    }
-
-    public static byte[] JavaLangByteListToByteArray(List<Byte> bytes) {
-        Byte[] tempByteArray = bytes.toArray(new Byte[bytes.size()]);
-
-        return JavaLangByteArrayToByteArray(tempByteArray);
-    }
-
     public static void printArray(byte[] array) {
         System.out.println(formatArray(array));
     }

@@ -162,8 +162,6 @@ public class BlockTest {
         //printArray(testBlock1);
         //System.out.print("Parsed: ");
         //printArray(genesisBytes);
-        Block block1 = new Block(testBlock1, debug);
-        Block block2 = new Block(testBlock2, debug);
     }
 
     private static void partialCompare(Byte[] array1, Byte[] array2) {
