@@ -50,15 +50,24 @@ public class Input extends ByteConsumer {
 
     @Override
     protected void build() throws IOException {
+        boolean innerDebug = false;
+
+        if(BlockChain.blockNumber > 29664) {
+            innerDebug = true;
+        }
+
         // Get the previous transaction hash
         previousTransactionHash = pullBytes(previousTransactionHashLengthInBytes);
+        if(innerDebug) { getLogger().info("Previous transaction hash: " + ByteArrayHelper.formatArray(previousTransactionHash)); }
 
         // Get the previous output index
         previousOutputIndex = EndiannessHelper.BytesToInt(pullBytes(previousOutputIndexLengthInBytes));
+        if(innerDebug) { getLogger().info("Previous output index: " + previousOutputIndex); }
 
         // Get the input script length
         VariableLengthInteger temp = new VariableLengthInteger(inputStream, isDebug());
         inputScriptLength = temp.getValue();
+        if(innerDebug) { getLogger().info("Input script length: " + inputScriptLength); }
 
         try {
             // Get the input script
@@ -71,5 +80,6 @@ public class Input extends ByteConsumer {
 
         // Get the sequence number
         sequenceNumber = EndiannessHelper.BytesToInt(pullBytes(sequenceNumberLengthInBytes));
+        if(innerDebug) { getLogger().info("Sequence number: " + sequenceNumber); }
     }
 }

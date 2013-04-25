@@ -1,5 +1,7 @@
 package com.timmattison.bitcoin.test.script;
 
+import com.timmattison.bitcoin.test.BlockChain;
+
 import java.io.ByteArrayInputStream;
 import java.util.List;
 
@@ -19,6 +21,12 @@ public abstract class ByteConsumingWord extends Word {
     }
 
     public void consumeInput(ByteArrayInputStream input) {
+        boolean innerDebug = false;
+
+        if(BlockChain.blockNumber > 29664) {
+            innerDebug = true;
+        }
+
         // Is there any input?
         if (input == null) {
             // No, throw an exception
@@ -26,6 +34,10 @@ public abstract class ByteConsumingWord extends Word {
         }
 
         int inputBytesRequired = getInputBytesRequired();
+        if(innerDebug) {
+            System.out.println("Input bytes required: " + inputBytesRequired);
+        }
+
         int inputSize = input.available();
 
         // Do we have enough bytes to do this successfully?
@@ -37,10 +49,12 @@ public abstract class ByteConsumingWord extends Word {
         // Get the bytes we need
         this.input = new byte[inputBytesRequired];
         input.read(this.input, 0, inputBytesRequired);
+        if(innerDebug) { System.out.println("Input bytes read: " + inputBytesRequired); }
 
         // Is there additional processing that needs to be done?
         if (isAdditionalProcessingRequired()) {
             // Yes, let the word do any additional processing it needs to
+            if(innerDebug) { System.out.println("About to do additional processing"); }
             doAdditionalProcessing(input);
         }
     }

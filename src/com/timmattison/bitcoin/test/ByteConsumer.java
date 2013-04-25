@@ -23,7 +23,7 @@ public abstract class ByteConsumer {
      * The bytes as they came from the caller.  Nobody is allowed to touch this.
      */
     protected InputStream inputStream;
-    protected Logger logger;
+    protected static Logger logger;
     /**
      * Whether or not the object should print out debug information.  Default is false.
      */

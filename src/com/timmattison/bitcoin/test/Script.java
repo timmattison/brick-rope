@@ -79,6 +79,12 @@ public class Script extends ByteConsumer {
 
     @Override
     protected void build() throws IOException {
+        boolean innerDebug = false;
+
+        if(BlockChain.blockNumber > 29664) {
+            innerDebug = true;
+        }
+
         words = new ArrayList<Word>();
 
         // Is there any data?
@@ -105,12 +111,15 @@ public class Script extends ByteConsumer {
             while (byteStream.available() > 0) {
                 // Get the next byte
                 byte currentByte = (byte) byteStream.read();
+                if(innerDebug) { getLogger().info("Current byte: " + currentByte); }
 
                 // Get the word that the next byte corresponds to
                 Word currentWord = getWordFactory().getWordByOpcode(currentByte);
+                if(innerDebug) { getLogger().info("Current word: " + currentWord.getWord()); }
 
                 // Is this a byte consuming word?
                 if (ByteConsumingWord.class.isAssignableFrom(currentWord.getClass())) {
+                    if(innerDebug) { getLogger().info("Word about to consume some bytes"); }
                     // Yes, consume the bytes
                     ((ByteConsumingWord) currentWord).consumeInput(byteStream);
                 }
