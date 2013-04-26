@@ -61,7 +61,7 @@ public class Block extends ByteConsumer {
         if(isDebug()) { getLogger().info("Input stream available: " + inputStream.available()); }
 
         // Get the magic number and remove the bytes it occupied
-        magicNumber = EndiannessHelper.BytesToInt(pullBytes(magicNumberLengthInBytes));
+        magicNumber = EndiannessHelper.BytesToInt(pullBytes(magicNumberLengthInBytes, "block, magic number"));
 
         // Validate that the magic number matches the spec
         if (magicNumber != requiredMagicNumber) {
@@ -69,7 +69,7 @@ public class Block extends ByteConsumer {
         }
 
         // Get the block size and remove the bytes it occupied
-        blockSize = EndiannessHelper.BytesToInt(pullBytes(blockSizeLengthInBytes));
+        blockSize = EndiannessHelper.BytesToInt(pullBytes(blockSizeLengthInBytes, "block, block size"));
 
         // Sanity check the block size
         if (blockSize <= 0) {

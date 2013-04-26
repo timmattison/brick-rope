@@ -46,7 +46,7 @@ public class Output extends ByteConsumer {
     @Override
     protected void build() throws IOException {
         // Get the value
-        value = EndiannessHelper.BytesToLong(pullBytes(valueLengthInBytes));
+        value = EndiannessHelper.BytesToLong(pullBytes(valueLengthInBytes, "output, value"));
 
         // Get the output script length
         VariableLengthInteger temp = new VariableLengthInteger(inputStream, isDebug());

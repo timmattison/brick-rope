@@ -81,22 +81,22 @@ public class BlockHeader extends ByteConsumer {
     @Override
     protected void build() throws IOException {
         // Get the version
-        version = EndiannessHelper.BytesToInt(pullBytes(versionLengthInBytes));
+        version = EndiannessHelper.BytesToInt(pullBytes(versionLengthInBytes, "block header, version"));
 
         // Get the previous block hash
-        prevBlock = pullBytes(prevBlockLengthInBytes);
+        prevBlock = pullBytes(prevBlockLengthInBytes, "block header, prev block");
 
         // Get the Merkle root
-        merkleRoot = pullBytes(merkleRootLengthInBytes);
+        merkleRoot = pullBytes(merkleRootLengthInBytes, "block header, merkle root");
 
         // Get the timestamp
-        timestamp = EndiannessHelper.BytesToInt(pullBytes(timestampLengthInBytes));
+        timestamp = EndiannessHelper.BytesToInt(pullBytes(timestampLengthInBytes, "block header, timestamp"));
 
         // Get the difficulty
-        bits = EndiannessHelper.BytesToInt(pullBytes(bitsLengthInBytes));
+        bits = EndiannessHelper.BytesToInt(pullBytes(bitsLengthInBytes, "block header, bits"));
 
         // Get the nonce
-        nonce = EndiannessHelper.BytesToInt(pullBytes(nonceLengthInBytes));
+        nonce = EndiannessHelper.BytesToInt(pullBytes(nonceLengthInBytes, "block header, nonce"));
     }
 
     public byte[] getHash() throws NoSuchAlgorithmException {

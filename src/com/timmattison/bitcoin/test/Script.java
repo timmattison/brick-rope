@@ -99,7 +99,7 @@ public class Script extends ByteConsumer {
          * Move the bytes we want into a new list.  This is so we can be sure that a misbehaving opcode doesn't try to
          * read past the end of the script.  NOTE: Technically we only support scripts up to 2GB!
          */
-        byte[] bytesToProcess = pullBytes((int) lengthInBytes);
+        byte[] bytesToProcess = pullBytes((int) lengthInBytes, "script, bytes to process");
 
         ByteArrayInputStream byteStream = new ByteArrayInputStream(bytesToProcess);
 

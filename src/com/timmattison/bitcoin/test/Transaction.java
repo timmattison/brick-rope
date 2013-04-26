@@ -63,7 +63,7 @@ public class Transaction extends ByteConsumer {
     @Override
     protected void build() throws IOException {
         // Get the version number
-        versionNumber = EndiannessHelper.BytesToInt(pullBytes(versionNumberLengthInBytes));
+        versionNumber = EndiannessHelper.BytesToInt(pullBytes(versionNumberLengthInBytes, "transaction, version number"));
 
         // Sanity check the version number
         if (versionNumber != currentVersionNumber) {
@@ -91,7 +91,7 @@ public class Transaction extends ByteConsumer {
         }
 
         // Get the lock time
-        lockTime = EndiannessHelper.BytesToInt(pullBytes(lockTimeLengthInBytes));
+        lockTime = EndiannessHelper.BytesToInt(pullBytes(lockTimeLengthInBytes, "transaction, lock time"));
     }
 
     private void addInput(Input input) {
