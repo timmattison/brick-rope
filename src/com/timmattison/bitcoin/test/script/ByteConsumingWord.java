@@ -23,10 +23,6 @@ public abstract class ByteConsumingWord extends Word {
     public void consumeInput(ByteArrayInputStream input) {
         boolean innerDebug = false;
 
-        if(BlockChain.blockNumber > 29664) {
-            innerDebug = true;
-        }
-
         // Is there any input?
         if (input == null) {
             // No, throw an exception

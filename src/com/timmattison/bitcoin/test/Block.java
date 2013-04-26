@@ -16,19 +16,15 @@ import java.util.logging.Logger;
  */
 public class Block extends ByteConsumer {
     private static final String name = "BLOCK";
-
     // Used for sanity check
     private static final byte[] requiredMagicNumberBytes = new byte[]{(byte) 0xf9, (byte) 0xbe, (byte) 0xb4, (byte) 0xd9};
     private static final int requiredMagicNumber = EndiannessHelper.BytesToInt(requiredMagicNumberBytes);
-
     private static final int magicNumberLengthInBytes = 4;
     private static final int blockSizeLengthInBytes = 4;
-
     private int magicNumber;
     private int blockSize;
     private BlockHeader blockHeader;
     private int transactionCount;
-
     private List<Transaction> transactions;
 
     public Block(InputStream inputStream, boolean debug) throws IOException {
@@ -62,6 +58,8 @@ public class Block extends ByteConsumer {
 
     @Override
     protected void build() throws IOException {
+        if(isDebug()) { getLogger().info("Input stream available: " + inputStream.available()); }
+
         // Get the magic number and remove the bytes it occupied
         magicNumber = EndiannessHelper.BytesToInt(pullBytes(magicNumberLengthInBytes));
 

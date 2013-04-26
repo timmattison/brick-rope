@@ -52,7 +52,7 @@ public class Input extends ByteConsumer {
     protected void build() throws IOException {
         boolean innerDebug = false;
 
-        if(BlockChain.blockNumber > 29664) {
+        if(BlockChain.blockNumber > 29650) {
             innerDebug = true;
         }
 

@@ -81,10 +81,6 @@ public class Script extends ByteConsumer {
     protected void build() throws IOException {
         boolean innerDebug = false;
 
-        if(BlockChain.blockNumber > 29664) {
-            innerDebug = true;
-        }
-
         words = new ArrayList<Word>();
 
         // Is there any data?
