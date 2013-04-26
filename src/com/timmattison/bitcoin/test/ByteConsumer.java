@@ -59,8 +59,16 @@ public abstract class ByteConsumer {
     }
 
     protected byte[] pullBytes(int count) throws IOException {
+        return pullBytes(count, "unspecified");
+    }
+
+    protected byte[] pullBytes(int count, String reason) throws IOException {
         byte[] bytes = new byte[count];
         inputStream.read(bytes, 0, count);
+
+        if(isDebug()) {
+            getLogger().info("Bytes pulled for " + reason + ": " + ByteArrayHelper.formatArray(bytes));
+        }
 
         return bytes;
     }
