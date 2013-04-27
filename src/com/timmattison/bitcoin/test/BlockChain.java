@@ -23,7 +23,9 @@ public class BlockChain extends ByteConsumer {
         // Loop until there is no more input stream data available
         while (inputStream.available() > 0) {
             // Display the block number
-            getLogger().info("Block #" + blockNumber++);
+            if ((blockNumber % 10000) == 0) {
+                getLogger().info("Block #" + blockNumber++);
+            }
 
             // Create and parse the block
             Block block = new Block(inputStream, isDebug());
