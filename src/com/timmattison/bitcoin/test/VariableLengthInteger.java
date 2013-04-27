@@ -41,23 +41,23 @@ public class VariableLengthInteger extends ByteConsumer {
     @Override
     protected void build() throws IOException {
         // Get the first byte
-        long firstByte = pullBytes(1)[0];
+        long firstByte = pullBytes(1, "Variable length integer, reading first byte")[0];
 
         int bytesToRead = 0;
 
         // What size value is this?
-        if (firstByte == header16BitInteger) {
+        if (firstByte == (byte) header16BitInteger) {
             // 16-bit
             bytesToRead = 2;
-            value = EndiannessHelper.BytesToShort(pullBytes(bytesToRead));
-        } else if (firstByte == header32BitInteger) {
+            value = EndiannessHelper.BytesToShort(pullBytes(bytesToRead, "Variable length integer, reading short"));
+        } else if (firstByte == (byte) header32BitInteger) {
             // 32-bit
             bytesToRead = 4;
-            value = EndiannessHelper.BytesToInt(pullBytes(bytesToRead));
-        } else if (firstByte == header64BitInteger) {
+            value = EndiannessHelper.BytesToInt(pullBytes(bytesToRead, "Variable length integer, reading int"));
+        } else if (firstByte == (byte) header64BitInteger) {
             // 64-bit
             bytesToRead = 8;
-            value = EndiannessHelper.BytesToLong(pullBytes(bytesToRead));
+            value = EndiannessHelper.BytesToLong(pullBytes(bytesToRead, "Variable length integer, reading long"));
         } else {
             // 8-bit (mask this so that we don't get negative values)
             value = (firstByte & 0x0FF);
