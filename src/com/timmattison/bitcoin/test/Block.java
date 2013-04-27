@@ -58,7 +58,7 @@ public class Block extends ByteConsumer {
 
     @Override
     protected void build() throws IOException {
-        boolean innerDebug = true;
+        boolean innerDebug = false;
 
         if(isDebug()) { getLogger().info("Input stream available: " + inputStream.available()); }
 

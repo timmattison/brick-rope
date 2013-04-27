@@ -45,7 +45,7 @@ public class Output extends ByteConsumer {
 
     @Override
     protected void build() throws IOException {
-        boolean innerDebug = true;
+        boolean innerDebug = false;
 
         // Get the value
         value = EndiannessHelper.BytesToLong(pullBytes(valueLengthInBytes, "output, value"));

@@ -62,7 +62,7 @@ public class Transaction extends ByteConsumer {
 
     @Override
     protected void build() throws IOException {
-        boolean innerDebug = true;
+        boolean innerDebug = false;
 
         // Get the version number
         versionNumber = EndiannessHelper.BytesToInt(pullBytes(versionNumberLengthInBytes, "transaction, version number"));

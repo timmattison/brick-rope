@@ -25,7 +25,7 @@ public abstract class ByteConsumingWord extends Word {
     }
 
     public void consumeInput(ByteArrayInputStream input) {
-        boolean innerDebug = true;
+        boolean innerDebug = false;
 
         // Is there any input?
         if (input == null) {

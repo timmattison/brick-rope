@@ -50,7 +50,7 @@ public class Input extends ByteConsumer {
 
     @Override
     protected void build() throws IOException {
-        boolean innerDebug = true;
+        boolean innerDebug = false;
 
         // Get the previous transaction hash
         previousTransactionHash = pullBytes(previousTransactionHashLengthInBytes, "input, previous transaction hash");
