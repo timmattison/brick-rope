@@ -19,7 +19,8 @@ import java.util.List;
  */
 public class Script extends ByteConsumer {
     private static final String name = "SCRIPT";
-    private static final int MAX_WORD_LIST_LENGTH = 201;
+    //private static final int MAX_WORD_LIST_LENGTH = 201;
+    private static final int MAX_WORD_LIST_LENGTH = 9999;
     private long lengthInBytes;
     private List<Word> words;
     private StateMachine stateMachine;
