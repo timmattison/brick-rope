@@ -62,6 +62,8 @@ public class Transaction extends ByteConsumer {
 
     @Override
     protected void build() throws IOException {
+        boolean innerDebug = true;
+
         // Get the version number
         versionNumber = EndiannessHelper.BytesToInt(pullBytes(versionNumberLengthInBytes, "transaction, version number"));
 
@@ -73,6 +75,7 @@ public class Transaction extends ByteConsumer {
         // Get the input counter
         VariableLengthInteger temp = new VariableLengthInteger(inputStream, isDebug());
         inCounter = temp.getValue();
+        if(innerDebug) { getLogger().info("transaction, in counter: " + inCounter); }
 
         // Get the inputs
         for (int inputLoop = 0; inputLoop < inCounter; inputLoop++) {
@@ -83,6 +86,7 @@ public class Transaction extends ByteConsumer {
         // Get the output counter
         temp = new VariableLengthInteger(inputStream, isDebug());
         outCounter = temp.getValue();
+        if(innerDebug) { getLogger().info("transaction, out counter: " + outCounter); }
 
         // Get the outputs
         for (int outputLoop = 0; outputLoop < outCounter; outputLoop++) {

@@ -58,6 +58,8 @@ public class Block extends ByteConsumer {
 
     @Override
     protected void build() throws IOException {
+        boolean innerDebug = true;
+
         if(isDebug()) { getLogger().info("Input stream available: " + inputStream.available()); }
 
         // Get the magic number and remove the bytes it occupied
@@ -83,6 +85,7 @@ public class Block extends ByteConsumer {
         // Get the transaction count and return the remaining bytes back into the block header byte list
         VariableLengthInteger temp = new VariableLengthInteger(inputStream, isDebug());
         transactionCount = (int) temp.getValue();
+        if(innerDebug) { getLogger().info("block, transaction count: " + transactionCount); }
 
         // Sanity check transaction count
         if (transactionCount <= 0) {

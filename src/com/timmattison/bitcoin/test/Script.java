@@ -95,11 +95,16 @@ public class Script extends ByteConsumer {
             throw new UnsupportedOperationException("Script is supposed to have " + lengthInBytes + " byte(s) but only " + inputStream.available() + " byte(s) are left");
         }
 
+        // Is the length valid?
+        if(lengthInBytes == 0) {
+            // No, throw an exception
+            throw new UnsupportedOperationException("Scripts cannot be zero bytes long");
+        }
         /**
          * Move the bytes we want into a new list.  This is so we can be sure that a misbehaving opcode doesn't try to
          * read past the end of the script.  NOTE: Technically we only support scripts up to 2GB!
          */
-        byte[] bytesToProcess = pullBytes((int) lengthInBytes, "script, bytes to process");
+        byte[] bytesToProcess = pullBytes((int) lengthInBytes, "script, " + lengthInBytes + " byte(s) to process");
 
         ByteArrayInputStream byteStream = new ByteArrayInputStream(bytesToProcess);
 

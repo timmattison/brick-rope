@@ -1,9 +1,12 @@
 package com.timmattison.bitcoin.test.script;
 
 import com.timmattison.bitcoin.test.BlockChain;
+import com.timmattison.bitcoin.test.BlockChainTest;
+import com.timmattison.bitcoin.test.ByteArrayHelper;
 
 import java.io.ByteArrayInputStream;
 import java.util.List;
+import java.util.logging.Logger;
 
 /**
  * Created with IntelliJ IDEA.
@@ -15,6 +18,7 @@ import java.util.List;
 public abstract class ByteConsumingWord extends Word {
     protected byte[] input;
     protected Object output;
+    private Logger logger;
 
     public ByteConsumingWord(String word, Byte opcode) {
         super(word, opcode);
@@ -30,8 +34,9 @@ public abstract class ByteConsumingWord extends Word {
         }
 
         int inputBytesRequired = getInputBytesRequired();
+
         if(innerDebug) {
-            System.out.println("Input bytes required: " + inputBytesRequired);
+            getLogger().info("Input bytes required: " + inputBytesRequired);
         }
 
         int inputSize = input.available();
@@ -45,12 +50,12 @@ public abstract class ByteConsumingWord extends Word {
         // Get the bytes we need
         this.input = new byte[inputBytesRequired];
         input.read(this.input, 0, inputBytesRequired);
-        if(innerDebug) { System.out.println("Input bytes read: " + inputBytesRequired); }
+        if(innerDebug) { getLogger().info("Input bytes read: " + inputBytesRequired + " " + ByteArrayHelper.formatArray(this.input)); }
 
         // Is there additional processing that needs to be done?
         if (isAdditionalProcessingRequired()) {
             // Yes, let the word do any additional processing it needs to
-            if(innerDebug) { System.out.println("About to do additional processing"); }
+            if(innerDebug) { getLogger().info("About to do additional processing"); }
             doAdditionalProcessing(input);
         }
     }
@@ -77,4 +82,18 @@ public abstract class ByteConsumingWord extends Word {
     public abstract int getInputBytesRequired();
 
     public abstract void execute(StateMachine stateMachine);
+
+    protected Logger getLogger() {
+        if (logger == null) {
+            logger = Logger.getLogger(getWord());
+
+            try {
+               logger.addHandler(BlockChainTest.getHandler());
+            } catch (Exception ex) {
+                // Do nothing, failed to get a handler
+            }
+        }
+
+        return logger;
+    }
 }

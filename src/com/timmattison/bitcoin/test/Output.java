@@ -45,12 +45,15 @@ public class Output extends ByteConsumer {
 
     @Override
     protected void build() throws IOException {
+        boolean innerDebug = true;
+
         // Get the value
         value = EndiannessHelper.BytesToLong(pullBytes(valueLengthInBytes, "output, value"));
 
         // Get the output script length
         VariableLengthInteger temp = new VariableLengthInteger(inputStream, isDebug());
         outputScriptLength = temp.getValue();
+        if(innerDebug) { getLogger().info("output, output script length: " + outputScriptLength); }
 
         try {
             // Get the input script
