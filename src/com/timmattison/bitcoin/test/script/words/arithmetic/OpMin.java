@@ -15,7 +15,7 @@ public class OpMin extends Word {
     private static final Byte opcode = (byte) 0xa3;
 
     public OpMin() {
-        super(word, opcode, false);
+        super(word, opcode, true);
     }
 
     @Override

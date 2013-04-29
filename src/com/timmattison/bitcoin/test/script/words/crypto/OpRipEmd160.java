@@ -20,7 +20,7 @@ public class OpRipEmd160 extends Word {
     private static final Byte opcode = (byte) 0xa6;
 
     public OpRipEmd160() {
-        super(word, opcode, false);
+        super(word, opcode, true);
     }
 
     @Override

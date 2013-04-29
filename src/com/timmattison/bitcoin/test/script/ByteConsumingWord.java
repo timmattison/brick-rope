@@ -33,9 +33,7 @@ public abstract class ByteConsumingWord extends Word {
 
         int inputBytesRequired = getInputBytesRequired();
 
-        if(isInnerDebug()) {
-            getLogger().info("Input bytes required: " + inputBytesRequired);
-        }
+        if(isInnerDebug()) { getLogger().info("Input bytes required: " + inputBytesRequired); }
 
         int inputSize = input.available();
 

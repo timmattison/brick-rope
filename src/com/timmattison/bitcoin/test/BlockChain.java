@@ -14,8 +14,8 @@ public class BlockChain extends ByteConsumer {
     private static final String name = "BLOCK CHAIN";
     public static int blockNumber = 0;
 
-    public BlockChain(InputStream inputStream, boolean debug) throws IOException {
-        super(inputStream, debug, false);
+    public BlockChain(InputStream inputStream, boolean debug, boolean innerDebug) throws IOException {
+        super(inputStream, debug, innerDebug);
     }
 
     @Override

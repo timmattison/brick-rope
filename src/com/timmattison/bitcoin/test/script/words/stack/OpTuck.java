@@ -15,7 +15,7 @@ public class OpTuck extends Word {
     private static final Byte opcode = (byte) 0x7d;
 
     public OpTuck() {
-        super(word, opcode, false);
+        super(word, opcode, true);
     }
 
     @Override

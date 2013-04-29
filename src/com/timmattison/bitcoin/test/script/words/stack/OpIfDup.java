@@ -15,7 +15,7 @@ public class OpIfDup extends Word {
     private static final Byte opcode = (byte) 0x73;
 
     public OpIfDup() {
-        super(word, opcode, false);
+        super(word, opcode, true);
     }
 
     @Override

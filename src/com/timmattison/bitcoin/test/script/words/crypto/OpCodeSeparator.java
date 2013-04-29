@@ -15,7 +15,7 @@ public class OpCodeSeparator extends Word {
     private static final Byte opcode = (byte) 0xab;
 
     public OpCodeSeparator() {
-        super(word, opcode, false);
+        super(word, opcode, true);
     }
 
     @Override

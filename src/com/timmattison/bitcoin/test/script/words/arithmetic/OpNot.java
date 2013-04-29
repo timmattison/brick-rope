@@ -15,7 +15,7 @@ public class OpNot extends Word {
     private static final Byte opcode = (byte) 0x91;
 
     public OpNot() {
-        super(word, opcode, false);
+        super(word, opcode, true);
     }
 
     @Override

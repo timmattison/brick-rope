@@ -15,7 +15,7 @@ public class OpSize extends Word {
     private static final Byte opcode = (byte) 0x82;
 
     public OpSize() {
-        super(word, opcode, false);
+        super(word, opcode, true);
     }
 
     @Override

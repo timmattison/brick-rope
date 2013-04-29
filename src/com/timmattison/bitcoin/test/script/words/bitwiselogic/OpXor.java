@@ -15,7 +15,7 @@ public class OpXor extends Word {
     private static final Byte opcode = (byte) 0x86;
 
     public OpXor() {
-        super(word, opcode, false);
+        super(word, opcode, true);
     }
 
     @Override

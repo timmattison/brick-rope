@@ -15,7 +15,7 @@ public class OpMax extends Word {
     private static final Byte opcode = (byte) 0xa4;
 
     public OpMax() {
-        super(word, opcode, false);
+        super(word, opcode, true);
     }
 
     @Override

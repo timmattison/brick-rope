@@ -15,7 +15,7 @@ public class OpLessThanOrEqual extends Word {
     private static final Byte opcode = (byte) 0xa1;
 
     public OpLessThanOrEqual() {
-        super(word, opcode, false);
+        super(word, opcode, true);
     }
 
     @Override

@@ -16,7 +16,8 @@ import java.util.logging.SimpleFormatter;
  * To change this template use File | Settings | File Templates.
  */
 public class BlockChainTest {
-    private static final boolean debug = true;
+    private static final boolean debug = false;
+    private static final boolean innerDebug = true;
 
     public static Handler getHandler() throws IOException {
         Handler handler = new FileHandler("test.log");
@@ -35,7 +36,7 @@ public class BlockChainTest {
 
         File inputFile = new File(args[0]);
         InputStream inputStream = new FileInputStream(inputFile);
-        BlockChain blockChain = new BlockChain(inputStream, debug);
+        BlockChain blockChain = new BlockChain(inputStream, debug, innerDebug);
         blockChain.showDebugInfo();
     }
 }
