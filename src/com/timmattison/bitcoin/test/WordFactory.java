@@ -179,7 +179,7 @@ public class WordFactory {
         }
     }
 
-    public Word getWordByOpcode(Byte opcode) {
+    public Word getWordByOpcode(byte opcode) {
         if ((opcode >= 0x01) && (opcode <= 0x4B)) {
             return new VirtualOpPush(opcode);
         }
