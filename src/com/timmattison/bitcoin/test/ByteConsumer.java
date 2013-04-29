@@ -55,7 +55,12 @@ public abstract class ByteConsumer {
     protected abstract void initialize(Object[] objects);
 
     protected boolean isDebug() {
-        return debug;
+        if(BlockChain.blockNumber == 139759) {
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 
     protected byte[] pullBytes(int count, String reason) throws IOException {
