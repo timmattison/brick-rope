@@ -103,11 +103,13 @@ public class Script extends ByteConsumer {
 
         ByteArrayInputStream byteStream = new ByteArrayInputStream(bytesToProcess);
 
+        if(isInnerDebug()) { getLogger().info("Bytes for this script: " + ByteArrayHelper.formatArray(bytesToProcess)); }
+
         try {
             while (byteStream.available() > 0) {
                 // Get the next byte
                 byte currentByte = (byte) byteStream.read();
-                if(isInnerDebug()) { getLogger().info("Current byte: " + currentByte); }
+                if(isInnerDebug()) { getLogger().info("Current byte: " + currentByte + " [" + String.format("%02x", currentByte) + "]"); }
 
                 // Get the word that the next byte corresponds to
                 Word currentWord = getWordFactory().getWordByOpcode(currentByte);
