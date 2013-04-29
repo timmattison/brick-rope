@@ -21,18 +21,21 @@ public class Script extends ByteConsumer {
     private static final String name = "SCRIPT";
     //private static final int MAX_WORD_LIST_LENGTH = 201;
     private static final int MAX_WORD_LIST_LENGTH = 9999;
+
     private long lengthInBytes;
     private List<Word> words;
     private StateMachine stateMachine;
     private WordFactory wordFactory;
+    private boolean coinbase;
 
-    public Script(long lengthInBytes, InputStream inputStream, boolean debug, boolean innerDebug) throws IllegalAccessException, InstantiationException, IOException {
-        super(inputStream, debug, innerDebug, new Object[]{lengthInBytes});
+    public Script(long lengthInBytes, InputStream inputStream, boolean coinbase, boolean debug, boolean innerDebug) throws IllegalAccessException, InstantiationException, IOException {
+        super(inputStream, debug, innerDebug, new Object[]{lengthInBytes, coinbase});
     }
 
     @Override
     protected void initialize(Object[] objects) {
-        this.lengthInBytes = (Long) objects[0];
+        lengthInBytes = (Long) objects[0];
+        coinbase = (Boolean) objects[1];
     }
 
     @Override
@@ -104,6 +107,12 @@ public class Script extends ByteConsumer {
         ByteArrayInputStream byteStream = new ByteArrayInputStream(bytesToProcess);
 
         if(isInnerDebug()) { getLogger().info("Bytes for this script: " + ByteArrayHelper.formatArray(bytesToProcess)); }
+
+        // Is this the coinbase?
+        if(coinbase) {
+            // Yes, don't try to process it
+            return;
+        }
 
         try {
             while (byteStream.available() > 0) {

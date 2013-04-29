@@ -26,13 +26,15 @@ public class Input extends ByteConsumer {
     // This is not part of the script
     private long inputScriptLength;
 
-    public Input(InputStream inputStream, boolean debug, boolean innerDebug) throws IOException {
-        super(inputStream, debug, innerDebug);
+    private boolean coinbase;
+
+    public Input(InputStream inputStream, boolean coinbase, boolean debug, boolean innerDebug) throws IOException {
+        super(inputStream, debug, innerDebug, new Object[] { coinbase });
     }
 
     @Override
     protected void initialize(Object[] objects) {
-        throw new UnsupportedOperationException("Additional initialization not necessary");
+        coinbase = (Boolean) objects[0];
     }
 
     @Override
@@ -65,7 +67,7 @@ public class Input extends ByteConsumer {
 
         try {
             // Get the input script
-            inputScript = new Script(inputScriptLength, inputStream, isDebug(), isInnerDebug());
+            inputScript = new Script(inputScriptLength, inputStream, this.coinbase, isDebug(), isInnerDebug());
         } catch (IllegalAccessException e) {
             throw new UnsupportedOperationException(e);
         } catch (InstantiationException e) {

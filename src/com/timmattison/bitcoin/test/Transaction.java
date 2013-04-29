@@ -77,7 +77,9 @@ public class Transaction extends ByteConsumer {
 
         // Get the inputs
         for (int inputLoop = 0; inputLoop < inCounter; inputLoop++) {
-            Input input = new Input(inputStream, isDebug(), isInnerDebug());
+            // Input 0 is the coinbase, all other inputs are not
+            boolean coinbase = (inputLoop == 0) ? true : false;
+            Input input = new Input(inputStream, coinbase, isDebug(), isInnerDebug());
             addInput(input);
         }
 

@@ -55,7 +55,7 @@ public class Output extends ByteConsumer {
 
         try {
             // Get the input script
-            outputScript = new Script(outputScriptLength, inputStream, isDebug(), isInnerDebug());
+            outputScript = new Script(outputScriptLength, inputStream, false, isDebug(), isInnerDebug());
         } catch (IllegalAccessException e) {
             throw new UnsupportedOperationException(e);
         } catch (InstantiationException e) {
