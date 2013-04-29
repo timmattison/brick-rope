@@ -27,14 +27,18 @@ public class OpPushData1 extends ByteConsumingWord {
         validateFirstStageInput();
 
         // Our input now represents the number of bytes we are going to read
-        int bytesToRead = input.read();
+        int bytesToRead = this.input[0];
         int inputSize = input.available();
 
         validateBytesToRead(bytesToRead, inputSize);
 
+        if(isInnerDebug()) { getLogger().info("About to read " + bytesToRead + " byte(s)"); }
+
         // Get the bytes we need
         this.input = new byte[bytesToRead];
         input.read(this.input, 0, bytesToRead);
+
+        if(isInnerDebug()) { getLogger().info("Read " + ByteArrayHelper.formatArray(this.input)); }
     }
 
     @Override
