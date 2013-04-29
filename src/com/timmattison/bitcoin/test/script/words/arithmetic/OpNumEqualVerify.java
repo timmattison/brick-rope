@@ -15,7 +15,7 @@ public class OpNumEqualVerify extends Word {
     private static final Byte opcode = (byte) 0x9d;
 
     public OpNumEqualVerify() {
-        super(word, opcode, true);
+        super(word, opcode, false);
     }
 
     @Override

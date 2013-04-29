@@ -15,7 +15,7 @@ public class OpDepth extends Word {
     private static final Byte opcode = (byte) 0x74;
 
     public OpDepth() {
-        super(word, opcode, true);
+        super(word, opcode, false);
     }
 
     @Override

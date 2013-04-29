@@ -15,7 +15,7 @@ public class OpInvert extends Word {
     private static final Byte opcode = (byte) 0x83;
 
     public OpInvert() {
-        super(word, opcode, true);
+        super(word, opcode, false);
     }
 
     @Override

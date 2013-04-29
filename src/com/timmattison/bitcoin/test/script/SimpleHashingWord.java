@@ -12,7 +12,7 @@ import java.security.NoSuchAlgorithmException;
  */
 public abstract class SimpleHashingWord extends Word {
     public SimpleHashingWord(String word, Byte opcode) {
-        super(word, opcode, true);
+        super(word, opcode, false);
     }
 
     /**

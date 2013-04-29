@@ -15,7 +15,7 @@ public class OpNop2 extends Word {
     private static final Byte opcode = (byte) 0xb1;
 
     public OpNop2() {
-        super(word, opcode, true);
+        super(word, opcode, false);
     }
 
     @Override

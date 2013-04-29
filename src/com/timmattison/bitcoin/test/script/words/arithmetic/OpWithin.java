@@ -15,7 +15,7 @@ public class OpWithin extends Word {
     private static final Byte opcode = (byte) 0xa5;
 
     public OpWithin() {
-        super(word, opcode, true);
+        super(word, opcode, false);
     }
 
     @Override

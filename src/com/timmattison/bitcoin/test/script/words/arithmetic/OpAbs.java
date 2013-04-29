@@ -15,7 +15,7 @@ public class OpAbs extends Word {
     private static final Byte opcode = (byte) 0x90;
 
     public OpAbs() {
-        super(word, opcode, true);
+        super(word, opcode, false);
     }
 
     @Override

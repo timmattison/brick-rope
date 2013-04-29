@@ -15,7 +15,7 @@ public class OpEndIf extends Word {
     private static final Byte opcode = (byte) 0x68;
 
     public OpEndIf() {
-        super(word, opcode, true);
+        super(word, opcode, false);
     }
 
     @Override

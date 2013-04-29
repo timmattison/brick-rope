@@ -15,7 +15,7 @@ public class OpInvalidOpcode extends Word {
     private static final Byte opcode = (byte) 0xff;
 
     public OpInvalidOpcode() {
-        super(word, opcode, true);
+        super(word, opcode, false);
     }
 
     @Override

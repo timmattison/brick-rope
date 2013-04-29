@@ -15,7 +15,7 @@ public class OpPubKeyHash extends Word {
     private static final Byte opcode = (byte) 0xfd;
 
     public OpPubKeyHash() {
-        super(word, opcode, true);
+        super(word, opcode, false);
     }
 
     @Override

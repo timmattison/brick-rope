@@ -15,7 +15,7 @@ public class OpHash160 extends Word {
     private static final Byte opcode = (byte) 0xa9;
 
     public OpHash160() {
-        super(word, opcode, true);
+        super(word, opcode, false);
     }
 
     @Override

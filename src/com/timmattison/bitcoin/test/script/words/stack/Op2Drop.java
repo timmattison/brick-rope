@@ -15,7 +15,7 @@ public class Op2Drop extends Word {
     private static final Byte opcode = (byte) 0x6d;
 
     public Op2Drop() {
-        super(word, opcode, true);
+        super(word, opcode, false);
     }
 
     @Override

@@ -15,7 +15,7 @@ public class Op1Negate extends Word {
     private static final Byte opcode = (byte) 0x4f;
 
     public Op1Negate() {
-        super(word, opcode, true);
+        super(word, opcode, false);
     }
 
     @Override

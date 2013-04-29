@@ -15,7 +15,7 @@ public class OpReserved2 extends Word {
     private static final Byte opcode = (byte) 0x8a;
 
     public OpReserved2() {
-        super(word, opcode, true);
+        super(word, opcode, false);
     }
 
     @Override

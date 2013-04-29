@@ -15,7 +15,7 @@ public class Op2Div extends Word {
     private static final Byte opcode = (byte) 0x8e;
 
     public Op2Div() {
-        super(word, opcode, true);
+        super(word, opcode, false);
     }
 
     @Override
