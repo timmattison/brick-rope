@@ -15,7 +15,7 @@ public class BlockChain extends ByteConsumer {
     public static int blockNumber = 0;
 
     public BlockChain(InputStream inputStream, boolean debug) throws IOException {
-        super(inputStream, debug);
+        super(inputStream, debug, false);
     }
 
     @Override
@@ -23,15 +23,15 @@ public class BlockChain extends ByteConsumer {
         // Loop until there is no more input stream data available
         while (inputStream.available() > 0) {
             // Display the block number
-            if ((blockNumber % 10000) == 0) {
+            //if ((blockNumber % 10000) == 0) {
                 getLogger().info("Block #" + blockNumber);
-            }
+            //}
 
             // Increment the counter
             blockNumber++;
 
             // Create and parse the block
-            Block block = new Block(inputStream, isDebug());
+            Block block = new Block(inputStream, isDebug(), isInnerDebug());
 
             // Show the block's debug info
             block.showDebugInfo();
