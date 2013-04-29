@@ -28,7 +28,7 @@ public class OpPushData4 extends ByteConsumingWord {
         validateFirstStageInput();
 
         // Our input now represents the number of bytes we are going to read
-        int bytesToRead = this.input[0] + (this.input[1] << 8) + (this.input[2] << 16) + (this.input[3] << 24);
+        int bytesToRead = (int) ((this.input[0] + (this.input[1] << 8) + (this.input[2] << 16) + (this.input[3] << 24)) & 0x7FFFFFFFL);
         int inputSize = input.available();
 
         // TODO - This is the same in all three OpPushDataX classes, extract it
