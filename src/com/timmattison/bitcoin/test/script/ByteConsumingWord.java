@@ -20,13 +20,11 @@ public abstract class ByteConsumingWord extends Word {
     protected Object output;
     private Logger logger;
 
-    public ByteConsumingWord(String word, Byte opcode) {
-        super(word, opcode);
+    public ByteConsumingWord(String word, Byte opcode, boolean innerDebug) {
+        super(word, opcode, innerDebug);
     }
 
     public void consumeInput(ByteArrayInputStream input) {
-        boolean innerDebug = false;
-
         // Is there any input?
         if (input == null) {
             // No, throw an exception
@@ -35,7 +33,7 @@ public abstract class ByteConsumingWord extends Word {
 
         int inputBytesRequired = getInputBytesRequired();
 
-        if(innerDebug) {
+        if(isInnerDebug()) {
             getLogger().info("Input bytes required: " + inputBytesRequired);
         }
 
@@ -50,12 +48,12 @@ public abstract class ByteConsumingWord extends Word {
         // Get the bytes we need
         this.input = new byte[inputBytesRequired];
         input.read(this.input, 0, inputBytesRequired);
-        if(innerDebug) { getLogger().info("Input bytes read: " + inputBytesRequired + " " + ByteArrayHelper.formatArray(this.input)); }
+        if(isInnerDebug()) { getLogger().info("Input bytes read: " + inputBytesRequired + " " + ByteArrayHelper.formatArray(this.input)); }
 
         // Is there additional processing that needs to be done?
         if (isAdditionalProcessingRequired()) {
             // Yes, let the word do any additional processing it needs to
-            if(innerDebug) { getLogger().info("About to do additional processing"); }
+            if(isInnerDebug()) { getLogger().info("About to do additional processing"); }
             doAdditionalProcessing(input);
         }
     }

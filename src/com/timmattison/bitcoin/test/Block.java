@@ -27,8 +27,8 @@ public class Block extends ByteConsumer {
     private int transactionCount;
     private List<Transaction> transactions;
 
-    public Block(InputStream inputStream, boolean debug) throws IOException {
-        super(inputStream, debug);
+    public Block(InputStream inputStream, boolean debug, boolean innerDebug) throws IOException {
+        super(inputStream, debug, innerDebug);
     }
 
     @Override
@@ -58,8 +58,6 @@ public class Block extends ByteConsumer {
 
     @Override
     protected void build() throws IOException {
-        boolean innerDebug = false;
-
         if(isDebug()) { getLogger().info("Input stream available: " + inputStream.available()); }
 
         // Get the magic number and remove the bytes it occupied
@@ -80,12 +78,12 @@ public class Block extends ByteConsumer {
         }
 
         // Get the block header and remove the bytes it occupied
-        blockHeader = new BlockHeader(inputStream, isDebug());
+        blockHeader = new BlockHeader(inputStream, isDebug(), isInnerDebug());
 
         // Get the transaction count and return the remaining bytes back into the block header byte list
-        VariableLengthInteger temp = new VariableLengthInteger(inputStream, isDebug());
+        VariableLengthInteger temp = new VariableLengthInteger(inputStream, isDebug(), isInnerDebug());
         transactionCount = (int) temp.getValue();
-        if(innerDebug) { getLogger().info("block, transaction count: " + transactionCount); }
+        if(isInnerDebug()) { getLogger().info("block, transaction count: " + transactionCount); }
 
         // Sanity check transaction count
         if (transactionCount <= 0) {
@@ -96,7 +94,7 @@ public class Block extends ByteConsumer {
         transactions = new ArrayList<Transaction>();
 
         for (int transactionCounter = 0; transactionCounter < transactionCount; transactionCounter++) {
-            Transaction transaction = new Transaction(inputStream, isDebug());
+            Transaction transaction = new Transaction(inputStream, isDebug(), isInnerDebug());
             transactions.add(transaction);
         }
     }

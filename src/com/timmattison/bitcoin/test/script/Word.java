@@ -11,10 +11,12 @@ public abstract class Word {
     protected final Byte opcode;
     protected final String word;
     protected Object output;
+    private boolean innerDebug;
 
-    public Word(String word, Byte opcode) {
+    public Word(String word, Byte opcode, boolean innerDebug) {
         this.opcode = opcode;
         this.word = word;
+        this.innerDebug = innerDebug;
     }
 
     public Byte getOpcode() {
@@ -35,4 +37,8 @@ public abstract class Word {
     }
 
     public abstract void execute(StateMachine stateMachine);
+
+    protected boolean isInnerDebug() {
+        return innerDebug;
+    }
 }

@@ -15,7 +15,7 @@ public class OpPick extends Word {
     private static final Byte opcode = (byte) 0x79;
 
     public OpPick() {
-        super(word, opcode);
+        super(word, opcode, false);
     }
 
     @Override

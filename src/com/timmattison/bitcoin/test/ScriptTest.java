@@ -47,10 +47,11 @@ public class ScriptTest {
     };
 
     private static final boolean debug = true;
+    private static final boolean innerDebug = true;
 
     public static void main(String[] args) throws InstantiationException, IllegalAccessException, IOException {
-        Script script = new Script(testScript3.length, testScript3, debug);
-        Object result = script.execute();
-        System.out.println(result);
+        //Script script = new Script(testScript3.length, testScript3, debug, innerDebug);
+        //Object result = script.execute();
+        //System.out.println(result);
     }
 }

@@ -15,7 +15,7 @@ public class OpMul extends Word {
     private static final Byte opcode = (byte) 0x95;
 
     public OpMul() {
-        super(word, opcode);
+        super(word, opcode, false);
     }
 
     @Override

@@ -15,7 +15,7 @@ public class Op2Swap extends Word {
     private static final Byte opcode = (byte) 0x72;
 
     public Op2Swap() {
-        super(word, opcode);
+        super(word, opcode, false);
     }
 
     @Override

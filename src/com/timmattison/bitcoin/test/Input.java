@@ -26,8 +26,8 @@ public class Input extends ByteConsumer {
     // This is not part of the script
     private long inputScriptLength;
 
-    public Input(InputStream inputStream, boolean debug) throws IOException {
-        super(inputStream, debug);
+    public Input(InputStream inputStream, boolean debug, boolean innerDebug) throws IOException {
+        super(inputStream, debug, innerDebug);
     }
 
     @Override
@@ -50,24 +50,22 @@ public class Input extends ByteConsumer {
 
     @Override
     protected void build() throws IOException {
-        boolean innerDebug = false;
-
         // Get the previous transaction hash
         previousTransactionHash = pullBytes(previousTransactionHashLengthInBytes, "input, previous transaction hash");
-        if(innerDebug) { getLogger().info("Previous transaction hash: " + ByteArrayHelper.formatArray(previousTransactionHash)); }
+        if(isInnerDebug()) { getLogger().info("Previous transaction hash: " + ByteArrayHelper.formatArray(previousTransactionHash)); }
 
         // Get the previous output index
         previousOutputIndex = EndiannessHelper.BytesToInt(pullBytes(previousOutputIndexLengthInBytes, "input, previous output index"));
-        if(innerDebug) { getLogger().info("Previous output index: " + previousOutputIndex); }
+        if(isInnerDebug()) { getLogger().info("Previous output index: " + previousOutputIndex); }
 
         // Get the input script length
-        VariableLengthInteger temp = new VariableLengthInteger(inputStream, isDebug());
+        VariableLengthInteger temp = new VariableLengthInteger(inputStream, isDebug(), isInnerDebug());
         inputScriptLength = temp.getValue();
-        if(innerDebug) { getLogger().info("Input script length: " + inputScriptLength); }
+        if(isInnerDebug()) { getLogger().info("Input script length: " + inputScriptLength); }
 
         try {
             // Get the input script
-            inputScript = new Script(inputScriptLength, inputStream, isDebug());
+            inputScript = new Script(inputScriptLength, inputStream, isDebug(), isInnerDebug());
         } catch (IllegalAccessException e) {
             throw new UnsupportedOperationException(e);
         } catch (InstantiationException e) {
@@ -76,6 +74,6 @@ public class Input extends ByteConsumer {
 
         // Get the sequence number
         sequenceNumber = EndiannessHelper.BytesToInt(pullBytes(sequenceNumberLengthInBytes, "input, sequence number"));
-        if(innerDebug) { getLogger().info("Sequence number: " + sequenceNumber); }
+        if(isInnerDebug()) { getLogger().info("Sequence number: " + sequenceNumber); }
     }
 }

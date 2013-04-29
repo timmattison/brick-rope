@@ -15,7 +15,7 @@ public class OpNip extends Word {
     private static final Byte opcode = (byte) 0x77;
 
     public OpNip() {
-        super(word, opcode);
+        super(word, opcode, false);
     }
 
     @Override

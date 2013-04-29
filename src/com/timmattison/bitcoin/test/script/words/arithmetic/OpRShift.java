@@ -15,7 +15,7 @@ public class OpRShift extends Word {
     private static final Byte opcode = (byte) 0x99;
 
     public OpRShift() {
-        super(word, opcode);
+        super(word, opcode, false);
     }
 
     @Override

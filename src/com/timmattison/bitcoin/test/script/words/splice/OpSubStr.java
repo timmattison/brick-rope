@@ -15,7 +15,7 @@ public class OpSubStr extends Word {
     private static final Byte opcode = (byte) 0x7f;
 
     public OpSubStr() {
-        super(word, opcode);
+        super(word, opcode, false);
     }
 
     @Override

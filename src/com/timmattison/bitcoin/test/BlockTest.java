@@ -115,10 +115,11 @@ public class BlockTest {
     static ByteArrayInputStream testBlock2InputStream = new ByteArrayInputStream(testBlock2);
 
     private static final boolean debug = true;
+    private static final boolean innerDebug = true;
 
     public static void main(String[] args) throws Exception {
-        Block block1 = new Block(testBlock1InputStream, debug);
-        Block block2 = new Block(testBlock2InputStream, debug);
+        Block block1 = new Block(testBlock1InputStream, debug, innerDebug);
+        Block block2 = new Block(testBlock2InputStream, debug, innerDebug);
     }
 
     private static void partialCompare(Byte[] array1, Byte[] array2) {

@@ -15,7 +15,7 @@ public class Op12 extends Word {
     private static final Byte opcode = (byte) 0x5C;
 
     public Op12() {
-        super(word, opcode);
+        super(word, opcode, false);
     }
 
     @Override

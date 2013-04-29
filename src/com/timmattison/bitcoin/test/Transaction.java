@@ -26,8 +26,8 @@ public class Transaction extends ByteConsumer {
     private List<Output> outputs;
     private int lockTime;
 
-    public Transaction(InputStream inputStream, boolean debug) throws IOException {
-        super(inputStream, debug);
+    public Transaction(InputStream inputStream, boolean debug, boolean innerDebug) throws IOException {
+        super(inputStream, debug, innerDebug);
     }
 
     @Override
@@ -62,8 +62,6 @@ public class Transaction extends ByteConsumer {
 
     @Override
     protected void build() throws IOException {
-        boolean innerDebug = false;
-
         // Get the version number
         versionNumber = EndiannessHelper.BytesToInt(pullBytes(versionNumberLengthInBytes, "transaction, version number"));
 
@@ -73,24 +71,24 @@ public class Transaction extends ByteConsumer {
         }
 
         // Get the input counter
-        VariableLengthInteger temp = new VariableLengthInteger(inputStream, isDebug());
+        VariableLengthInteger temp = new VariableLengthInteger(inputStream, isDebug(), isInnerDebug());
         inCounter = temp.getValue();
-        if(innerDebug) { getLogger().info("transaction, in counter: " + inCounter); }
+        if(isInnerDebug()) { getLogger().info("transaction, in counter: " + inCounter); }
 
         // Get the inputs
         for (int inputLoop = 0; inputLoop < inCounter; inputLoop++) {
-            Input input = new Input(inputStream, isDebug());
+            Input input = new Input(inputStream, isDebug(), isInnerDebug());
             addInput(input);
         }
 
         // Get the output counter
-        temp = new VariableLengthInteger(inputStream, isDebug());
+        temp = new VariableLengthInteger(inputStream, isDebug(), isInnerDebug());
         outCounter = temp.getValue();
-        if(innerDebug) { getLogger().info("transaction, out counter: " + outCounter); }
+        if(isInnerDebug()) { getLogger().info("transaction, out counter: " + outCounter); }
 
         // Get the outputs
         for (int outputLoop = 0; outputLoop < outCounter; outputLoop++) {
-            Output output = new Output(inputStream, isDebug());
+            Output output = new Output(inputStream, isDebug(), isInnerDebug());
             addOutput(output);
         }
 

@@ -15,7 +15,7 @@ public class Op3Dup extends Word {
     private static final Byte opcode = (byte) 0x6f;
 
     public Op3Dup() {
-        super(word, opcode);
+        super(word, opcode, false);
     }
 
     @Override

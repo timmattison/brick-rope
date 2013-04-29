@@ -15,7 +15,7 @@ public class OpRoll extends Word {
     private static final Byte opcode = (byte) 0x7a;
 
     public OpRoll() {
-        super(word, opcode);
+        super(word, opcode, false);
     }
 
     @Override

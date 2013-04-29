@@ -15,7 +15,7 @@ public class OpCheckSigVerify extends Word {
     private static final Byte opcode = (byte) 0xad;
 
     public OpCheckSigVerify() {
-        super(word, opcode);
+        super(word, opcode, false);
     }
 
     @Override

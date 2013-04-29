@@ -19,7 +19,7 @@ public class VirtualOpPush extends ByteConsumingWord {
     private static final int MAX_OPCODE = 0x4B;
 
     public VirtualOpPush(Byte opcode) {
-        super(word, opcode);
+        super(word, opcode, false);
 
         // Is the opcode valid?
         if ((opcode < MIN_OPCODE) || (opcode > MAX_OPCODE)) {

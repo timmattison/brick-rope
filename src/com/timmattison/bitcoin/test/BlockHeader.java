@@ -54,8 +54,8 @@ public class BlockHeader extends ByteConsumer {
      */
     private int nonce;
 
-    public BlockHeader(InputStream inputStream, boolean debug) throws IOException {
-        super(inputStream, debug);
+    public BlockHeader(InputStream inputStream, boolean debug, boolean innerDebug) throws IOException {
+        super(inputStream, debug, innerDebug);
     }
 
     @Override

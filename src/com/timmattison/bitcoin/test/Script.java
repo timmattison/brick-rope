@@ -26,12 +26,8 @@ public class Script extends ByteConsumer {
     private StateMachine stateMachine;
     private WordFactory wordFactory;
 
-    public Script(long lengthInBytes, InputStream inputStream, boolean debug) throws IllegalAccessException, InstantiationException, IOException {
-        super(inputStream, debug, new Object[]{lengthInBytes});
-    }
-
-    public Script(long lengthInBytes, Byte[] bytes, boolean debug) throws IllegalAccessException, InstantiationException, IOException {
-        super(bytes, debug, new Object[]{lengthInBytes});
+    public Script(long lengthInBytes, InputStream inputStream, boolean debug, boolean innerDebug) throws IllegalAccessException, InstantiationException, IOException {
+        super(inputStream, debug, innerDebug, new Object[]{lengthInBytes});
     }
 
     @Override
@@ -80,8 +76,6 @@ public class Script extends ByteConsumer {
 
     @Override
     protected void build() throws IOException {
-        boolean innerDebug = false;
-
         words = new ArrayList<Word>();
 
         // Is there any data?
@@ -113,15 +107,15 @@ public class Script extends ByteConsumer {
             while (byteStream.available() > 0) {
                 // Get the next byte
                 byte currentByte = (byte) byteStream.read();
-                if(innerDebug) { getLogger().info("Current byte: " + currentByte); }
+                if(isInnerDebug()) { getLogger().info("Current byte: " + currentByte); }
 
                 // Get the word that the next byte corresponds to
                 Word currentWord = getWordFactory().getWordByOpcode(currentByte);
-                if(innerDebug) { getLogger().info("Current word: " + currentWord.getWord()); }
+                if(isInnerDebug()) { getLogger().info("Current word: " + currentWord.getWord()); }
 
                 // Is this a byte consuming word?
                 if (ByteConsumingWord.class.isAssignableFrom(currentWord.getClass())) {
-                    if(innerDebug) { getLogger().info("Word about to consume some bytes"); }
+                    if(isInnerDebug()) { getLogger().info("Word about to consume some bytes"); }
                     // Yes, consume the bytes
                     ((ByteConsumingWord) currentWord).consumeInput(byteStream);
                 }

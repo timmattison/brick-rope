@@ -15,7 +15,7 @@ public class OpDiv extends Word {
     private static final Byte opcode = (byte) 0x96;
 
     public OpDiv() {
-        super(word, opcode);
+        super(word, opcode, false);
     }
 
     @Override

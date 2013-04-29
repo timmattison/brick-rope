@@ -22,8 +22,8 @@ public class Output extends ByteConsumer {
     private long outputScriptLength;
     private Script outputScript;
 
-    public Output(InputStream inputStream, boolean debug) throws IOException {
-        super(inputStream, debug);
+    public Output(InputStream inputStream, boolean debug, boolean innerDebug) throws IOException {
+        super(inputStream, debug, innerDebug);
     }
 
     @Override
@@ -45,19 +45,17 @@ public class Output extends ByteConsumer {
 
     @Override
     protected void build() throws IOException {
-        boolean innerDebug = false;
-
         // Get the value
         value = EndiannessHelper.BytesToLong(pullBytes(valueLengthInBytes, "output, value"));
 
         // Get the output script length
-        VariableLengthInteger temp = new VariableLengthInteger(inputStream, isDebug());
+        VariableLengthInteger temp = new VariableLengthInteger(inputStream, isDebug(), isInnerDebug());
         outputScriptLength = temp.getValue();
-        if(innerDebug) { getLogger().info("output, output script length: " + outputScriptLength); }
+        if(isInnerDebug()) { getLogger().info("output, output script length: " + outputScriptLength); }
 
         try {
             // Get the input script
-            outputScript = new Script(outputScriptLength, inputStream, isDebug());
+            outputScript = new Script(outputScriptLength, inputStream, isDebug(), isInnerDebug());
         } catch (IllegalAccessException e) {
             throw new UnsupportedOperationException(e);
         } catch (InstantiationException e) {

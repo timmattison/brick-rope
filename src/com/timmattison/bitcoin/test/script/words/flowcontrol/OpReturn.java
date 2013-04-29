@@ -15,7 +15,7 @@ public class OpReturn extends Word {
     private static final Byte opcode = (byte) 0x6a;
 
     public OpReturn() {
-        super(word, opcode);
+        super(word, opcode, false);
     }
 
     @Override

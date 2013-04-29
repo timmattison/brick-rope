@@ -24,29 +24,29 @@ public abstract class ByteConsumer {
      */
     protected InputStream inputStream;
     protected static Logger logger;
+
     /**
-     * Whether or not the object should print out debug information.  Default is false.
+     * Whether or not the object should print out basic debug information.  Default is false.
      */
     private boolean debug = false;
 
-    public ByteConsumer(InputStream inputStream, boolean debug) throws IOException {
+    /**
+     * Whether or not the object should print out detailed debug information.  Default is false.
+     */
+    private boolean innerDebug = false;
+
+    public ByteConsumer(InputStream inputStream, boolean debug, boolean innerDebug) throws IOException {
         this.inputStream = inputStream;
         this.debug = debug;
+        this.innerDebug = innerDebug;
 
         build();
     }
 
-    public ByteConsumer(InputStream inputStream, boolean debug, Object[] initializationParameters) throws IOException {
+    public ByteConsumer(InputStream inputStream, boolean debug, boolean innerDebug, Object[] initializationParameters) throws IOException {
         this.inputStream = inputStream;
         this.debug = debug;
-
-        initialize(initializationParameters);
-        build();
-    }
-
-    public ByteConsumer(Byte[] bytes, boolean debug, Object[] initializationParameters) throws IOException {
-        this.inputStream = inputStream;
-        this.debug = debug;
+        this.innerDebug = innerDebug;
 
         initialize(initializationParameters);
         build();
@@ -55,12 +55,11 @@ public abstract class ByteConsumer {
     protected abstract void initialize(Object[] objects);
 
     protected boolean isDebug() {
-        if(BlockChain.blockNumber == 139759) {
-            return true;
-        }
-        else {
-            return false;
-        }
+        return debug;
+    }
+
+    protected boolean isInnerDebug() {
+        return innerDebug;
     }
 
     protected byte[] pullBytes(int count, String reason) throws IOException {

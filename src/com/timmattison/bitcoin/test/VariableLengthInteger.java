@@ -19,8 +19,8 @@ public class VariableLengthInteger extends ByteConsumer {
 
     long value;
 
-    public VariableLengthInteger(InputStream inputStream, boolean debug) throws IOException {
-        super(inputStream, debug);
+    public VariableLengthInteger(InputStream inputStream, boolean debug, boolean innerDebug) throws IOException {
+        super(inputStream, debug, innerDebug);
     }
 
     @Override

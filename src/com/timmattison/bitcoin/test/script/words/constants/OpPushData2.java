@@ -19,7 +19,7 @@ public class OpPushData2 extends ByteConsumingWord {
     private static final Byte opcode = (byte) 0x4d;
 
     public OpPushData2() {
-        super(word, opcode);
+        super(word, opcode, false);
     }
 
     @Override
