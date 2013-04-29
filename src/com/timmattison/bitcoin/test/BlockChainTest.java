@@ -17,7 +17,7 @@ import java.util.logging.SimpleFormatter;
  */
 public class BlockChainTest {
     private static final boolean debug = false;
-    private static final boolean innerDebug = true;
+    private static final boolean innerDebug = false;
 
     public static Handler getHandler() throws IOException {
         Handler handler = new FileHandler("test.log");
