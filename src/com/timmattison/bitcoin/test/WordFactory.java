@@ -26,6 +26,8 @@ import java.util.Map;
  * To change this template use File | Settings | File Templates.
  */
 public class WordFactory {
+    private static Map<Byte, Class<Word>> classesByOpcode;
+    private static HashMap<String, Class<Word>> classesByName;
     // Initialize the list of available words
     List<Class> availableWords = new ArrayList<Class>() {{
         add(Op0NotEqual.class);
@@ -146,12 +148,14 @@ public class WordFactory {
         add(OpTuck.class);
     }};
 
-    private Map<Byte, Class<Word>> classesByOpcode;
-    private HashMap<String, Class<Word>> classesByName;
-
     public WordFactory() throws InstantiationException, IllegalAccessException {
-        createOpcodeLookupTable();
-        createNameLookupTable();
+        if (classesByOpcode == null) {
+            createOpcodeLookupTable();
+        }
+
+        if (classesByName == null) {
+            createNameLookupTable();
+        }
     }
 
     private void createOpcodeLookupTable() throws IllegalAccessException, InstantiationException {
@@ -187,7 +191,7 @@ public class WordFactory {
         Class<Word> clazz = classesByOpcode.get(opcode);
 
         if (clazz == null) {
-            throw new UnsupportedOperationException("No word found for opcode " + opcode);
+            throw new UnsupportedOperationException("No word found for opcode " + opcode + " in block #" + BlockChain.blockNumber);
         }
 
         try {
