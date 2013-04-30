@@ -64,7 +64,6 @@ public abstract class ByteConsumer {
 
     protected boolean isInnerDebug() {
         return innerDebug;
-        return innerDebug;
     }
 
     protected byte[] pullBytes(int count, String reason) throws IOException {
