@@ -34,15 +34,24 @@ public class BlockChainTest {
             return;
         }
 
+        // Open the input file
         File inputFile = new File(args[0]);
+
+        // Get a file input stream for this input file
         InputStream inputStream = new FileInputStream(inputFile);
+
+        // Instantiate the block chain object
         BlockChain blockChain = new BlockChain(inputStream, debug, innerDebug);
 
         try {
+            // Build the block chain
             blockChain.build();
+
+            // Show the debug info for the entire block chain
             blockChain.showDebugInfo();
         } catch (Exception ex) {
-            System.out.println("Exception in block #" + BlockChain.blockNumber);
+            // There was an exception, log the block number that it happened in
+            System.out.println("Exception in block #" + (BlockChain.blockNumber - 1));
             throw (ex);
         }
     }
