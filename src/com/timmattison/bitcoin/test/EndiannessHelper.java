@@ -1,8 +1,6 @@
 package com.timmattison.bitcoin.test;
 
 import java.io.ByteArrayOutputStream;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -21,22 +19,54 @@ public class EndiannessHelper {
     public static short BytesToShort(byte[] bytes) {
         validateSize(bytes, shortSize);
 
-        long returnValue = ((toRealByte(bytes[1]) << 8) | toRealByte(bytes[0])) & shortMask;
+        long returnValue = ((ToRealByte(bytes[1]) << 8) | ToRealByte(bytes[0])) & shortMask;
         return (short) returnValue;
     }
 
     public static int BytesToInt(byte[] bytes) {
         validateSize(bytes, intSize);
 
-        long returnValue = ((toRealByte(bytes[3]) << 24) | (toRealByte(bytes[2]) << 16) | (toRealByte(bytes[1]) << 8) | (toRealByte(bytes[0]))) & intMask;
+        long returnValue = ((ToRealByte(bytes[3]) << 24) | (ToRealByte(bytes[2]) << 16) | (ToRealByte(bytes[1]) << 8) | (ToRealByte(bytes[0]))) & intMask;
         return (int) returnValue;
     }
 
     public static long BytesToLong(byte[] bytes) {
         validateSize(bytes, longSize);
 
-        long returnValue = (toRealByte(bytes[7]) << 56) | (toRealByte(bytes[6]) << 48) | (toRealByte(bytes[5]) << 40) | (toRealByte(bytes[4]) << 32) | (toRealByte(bytes[3]) << 24) | (toRealByte(bytes[2]) << 16) | (toRealByte(bytes[1]) << 8) | (toRealByte(bytes[0]));
+        long returnValue = (ToRealByte(bytes[7]) << 56) | (ToRealByte(bytes[6]) << 48) | (ToRealByte(bytes[5]) << 40) | (ToRealByte(bytes[4]) << 32) | (ToRealByte(bytes[3]) << 24) | (ToRealByte(bytes[2]) << 16) | (ToRealByte(bytes[1]) << 8) | (ToRealByte(bytes[0]));
         return returnValue;
+    }
+
+    public static long BytesToValue(byte[] bytes) {
+        if(bytes == null) {
+            throw new UnsupportedOperationException("Bytes cannot be NULL");
+        }
+
+        if(bytes.length == 1) {
+            return ToRealByte(bytes);
+        }
+        else if(bytes.length == 2) {
+            return BytesToShort(bytes);
+        }
+        else if(bytes.length == 3) {
+            byte[] tempBytes = new byte[longSize];
+
+            for(int loop = 0; loop < longSize; loop++) {
+                tempBytes[loop] = 0;
+            }
+
+            tempBytes[0] = bytes[0];
+            tempBytes[1] = bytes[1];
+            tempBytes[2] = bytes[2];
+
+            return BytesToInt(tempBytes);
+        }
+        else if(bytes.length == 4) {
+            return BytesToLong(bytes);
+        }
+        else {
+            throw new UnsupportedOperationException("Bytes is longer than " + longSize + ".  This is not yet supported.");
+        }
     }
 
     public static byte[] ShortToBytes(short value) {
@@ -74,8 +104,20 @@ public class EndiannessHelper {
         return returnValue;
     }
 
-    private static long toRealByte(byte input) {
+    public static long ToRealByte(byte input) {
         return ((int) input) & 0xFF;
+    }
+
+    public static long ToRealByte(byte[] input) {
+        if(input == null) {
+            throw new UnsupportedOperationException("Input cannot be NULL");
+        }
+
+        if(input.length != 1) {
+            throw new UnsupportedOperationException("Input length must be 1, saw " + input.length);
+        }
+
+        return ((int) input[0]) & 0xFF;
     }
 
     private static void validateSize(byte[] bytes, int requiredSize) {
