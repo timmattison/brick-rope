@@ -90,7 +90,7 @@ public class Block extends ByteConsumer {
         transactions = new ArrayList<Transaction>();
 
         for (int transactionCounter = 0; transactionCounter < transactionCount; transactionCounter++) {
-            Transaction transaction = new Transaction(inputStream, isDebug(), isInnerDebug());
+            Transaction transaction = new Transaction(inputStream, transactionCounter, isDebug(), isInnerDebug());
             transaction.build();
             transactions.add(transaction);
         }

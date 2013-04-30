@@ -25,9 +25,12 @@ public class Transaction extends ByteConsumer {
     private long outCounter;
     private List<Output> outputs;
     private int lockTime;
+    private int transactionCounter;
 
-    public Transaction(InputStream inputStream, boolean debug, boolean innerDebug) throws IOException {
+    public Transaction(InputStream inputStream, int transactionCounter, boolean debug, boolean innerDebug) throws IOException {
         super(inputStream, debug, innerDebug);
+
+        this.transactionCounter = transactionCounter;
     }
 
     @Override
@@ -73,7 +76,7 @@ public class Transaction extends ByteConsumer {
         // Get the inputs
         for (int inputLoop = 0; inputLoop < inCounter; inputLoop++) {
             // Input 0 is the coinbase, all other inputs are not
-            boolean coinbase = (inputLoop == 0) ? true : false;
+            boolean coinbase = ((transactionCounter == 0) && (inputLoop == 0)) ? true : false;
             Input input = new Input(inputStream, coinbase, versionNumber, isDebug(), isInnerDebug());
             input.build();
             addInput(input);
