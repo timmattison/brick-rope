@@ -86,6 +86,11 @@ public class Script extends ByteConsumer {
 
     @Override
     protected void build() throws IOException {
+        if(lengthInBytes == 0) {
+            // XXX - Just return
+            return;
+        }
+
         words = new ArrayList<Word>();
 
         // Is there any data?
@@ -107,15 +112,18 @@ public class Script extends ByteConsumer {
             // Is this a version 2 script?
             if(versionNumber == 2) {
                 // Yes, no version 2 script can be zero bytes
+                pullDebugBytes();
                 throw new UnsupportedOperationException("Version 2 scripts cannot be zero bytes long, [coinbase? " + (coinbase ? "Yes" : "No") + "] [version: " + versionNumber + "]");
             }
             // Is this a version 1 coinbase?
             else if((versionNumber == 1) && (!coinbase)) {
                 // No, no version 1 non-coinbase script can be zero bytes
+                pullDebugBytes();
                 throw new UnsupportedOperationException("Version 1 scripts cannot be zero bytes long unless they are the coinbase");
             }
 
             // This is a version 1 coinbase, a zero length script is permitted
+            return;
         }
 
         /**
