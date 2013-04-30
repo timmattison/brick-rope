@@ -37,7 +37,13 @@ public class BlockChainTest {
         File inputFile = new File(args[0]);
         InputStream inputStream = new FileInputStream(inputFile);
         BlockChain blockChain = new BlockChain(inputStream, debug, innerDebug);
-        blockChain.build();
-        blockChain.showDebugInfo();
+
+        try {
+            blockChain.build();
+            blockChain.showDebugInfo();
+        } catch (Exception ex) {
+            System.out.println("Exception in block #" + BlockChain.blockNumber);
+            throw (ex);
+        }
     }
 }
