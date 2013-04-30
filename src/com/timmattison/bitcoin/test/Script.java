@@ -99,8 +99,10 @@ public class Script extends ByteConsumer {
             throw new UnsupportedOperationException("The script is empty");
         }
 
+        long availableBytes = inputStream.available() & 0xFFFFFFFFL;
+
         // Are there enough bytes to support that?
-        if (inputStream.available() < lengthInBytes) {
+        if (availableBytes < lengthInBytes) {
             // No, throw an exception
             throw new UnsupportedOperationException("Script is supposed to have " + lengthInBytes + " byte(s) but only " + inputStream.available() + " byte(s) are left");
         }

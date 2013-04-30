@@ -1,9 +1,6 @@
 package com.timmattison.bitcoin.test;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.util.logging.FileHandler;
 import java.util.logging.Handler;
 import java.util.logging.SimpleFormatter;
@@ -38,7 +35,7 @@ public class BlockChainTest {
         File inputFile = new File(args[0]);
 
         // Get a file input stream for this input file
-        InputStream inputStream = new FileInputStream(inputFile);
+        BufferedInputStream inputStream = new BufferedInputStream(new FileInputStream(inputFile));
 
         // Instantiate the block chain object
         BlockChain blockChain = new BlockChain(inputStream, debug, innerDebug);

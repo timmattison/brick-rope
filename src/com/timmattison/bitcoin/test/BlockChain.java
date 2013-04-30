@@ -20,8 +20,10 @@ public class BlockChain extends ByteConsumer {
 
     @Override
     protected void build() throws IOException {
+        long availableBytes = inputStream.available() & 0xFFFFFFFFL;
+
         // Loop until there is no more input stream data available
-        while (inputStream.available() > 0) {
+        while (availableBytes > 0) {
             // Display the block number
             if ((blockNumber % 10000) == 0) {
                 getLogger().info("Block #" + blockNumber);
@@ -36,6 +38,8 @@ public class BlockChain extends ByteConsumer {
 
             // Show the block's debug info
             block.showDebugInfo();
+
+            availableBytes = inputStream.available() & 0xFFFFFFFFL;
         }
     }
 
