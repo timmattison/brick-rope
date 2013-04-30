@@ -102,9 +102,22 @@ public class Script extends ByteConsumer {
 
         // Is the length valid?
         if(lengthInBytes == 0) {
-            // No, throw an exception
-            throw new UnsupportedOperationException("Scripts cannot be zero bytes long");
+            // Possibly not
+
+            // Is this a version 2 script?
+            if(versionNumber == 2) {
+                // Yes, no version 2 script can be zero bytes
+                throw new UnsupportedOperationException("Version 2 scripts cannot be zero bytes long, [coinbase? " + (coinbase ? "Yes" : "No") + "] [version: " + versionNumber + "]");
+            }
+            // Is this a version 1 coinbase?
+            else if((versionNumber == 1) && (!coinbase)) {
+                // No, no version 1 non-coinbase script can be zero bytes
+                throw new UnsupportedOperationException("Version 1 scripts cannot be zero bytes long unless they are the coinbase");
+            }
+
+            // This is a version 1 coinbase, a zero length script is permitted
         }
+
         /**
          * Move the bytes we want into a new list.  This is so we can be sure that a misbehaving opcode doesn't try to
          * read past the end of the script.  NOTE: Technically we only support scripts up to 2GB!
