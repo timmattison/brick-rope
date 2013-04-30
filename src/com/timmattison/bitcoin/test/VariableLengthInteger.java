@@ -21,11 +21,8 @@ public class VariableLengthInteger extends ByteConsumer {
 
     public VariableLengthInteger(InputStream inputStream, boolean debug, boolean innerDebug) throws IOException {
         super(inputStream, debug, innerDebug);
-    }
 
-    @Override
-    protected void initialize(Object[] objects) {
-        throw new UnsupportedOperationException("Additional initialization not necessary");
+        build();
     }
 
     @Override

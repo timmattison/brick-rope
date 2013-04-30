@@ -31,11 +31,6 @@ public class Transaction extends ByteConsumer {
     }
 
     @Override
-    protected void initialize(Object[] objects) {
-        throw new UnsupportedOperationException("Additional initialization not necessary");
-    }
-
-    @Override
     protected String getName() {
         return name;
     }
@@ -80,6 +75,7 @@ public class Transaction extends ByteConsumer {
             // Input 0 is the coinbase, all other inputs are not
             boolean coinbase = (inputLoop == 0) ? true : false;
             Input input = new Input(inputStream, coinbase, isDebug(), isInnerDebug());
+            input.build();
             addInput(input);
         }
 
@@ -91,6 +87,7 @@ public class Transaction extends ByteConsumer {
         // Get the outputs
         for (int outputLoop = 0; outputLoop < outCounter; outputLoop++) {
             Output output = new Output(inputStream, isDebug(), isInnerDebug());
+            output.build();
             addOutput(output);
         }
 

@@ -32,11 +32,6 @@ public class Block extends ByteConsumer {
     }
 
     @Override
-    protected void initialize(Object[] objects) {
-        throw new UnsupportedOperationException("Additional initialization not necessary");
-    }
-
-    @Override
     protected String getName() {
         return name;
     }
@@ -79,6 +74,7 @@ public class Block extends ByteConsumer {
 
         // Get the block header and remove the bytes it occupied
         blockHeader = new BlockHeader(inputStream, isDebug(), isInnerDebug());
+        blockHeader.build();
 
         // Get the transaction count and return the remaining bytes back into the block header byte list
         VariableLengthInteger temp = new VariableLengthInteger(inputStream, isDebug(), isInnerDebug());
@@ -95,6 +91,7 @@ public class Block extends ByteConsumer {
 
         for (int transactionCounter = 0; transactionCounter < transactionCount; transactionCounter++) {
             Transaction transaction = new Transaction(inputStream, isDebug(), isInnerDebug());
+            transaction.build();
             transactions.add(transaction);
         }
     }

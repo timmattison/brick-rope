@@ -27,11 +27,6 @@ public class Output extends ByteConsumer {
     }
 
     @Override
-    protected void initialize(Object[] objects) {
-        throw new UnsupportedOperationException("Additional initialization not necessary");
-    }
-
-    @Override
     protected String getName() {
         return name;
     }
@@ -55,7 +50,8 @@ public class Output extends ByteConsumer {
 
         try {
             // Get the input script
-            outputScript = new Script(outputScriptLength, inputStream, false, isDebug(), isInnerDebug());
+            outputScript = new Script(inputStream, outputScriptLength, isDebug(), isInnerDebug());
+            outputScript.build();
         } catch (IllegalAccessException e) {
             throw new UnsupportedOperationException(e);
         } catch (InstantiationException e) {

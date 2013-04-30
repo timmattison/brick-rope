@@ -28,14 +28,18 @@ public class Script extends ByteConsumer {
     private WordFactory wordFactory;
     private boolean coinbase;
 
-    public Script(long lengthInBytes, InputStream inputStream, boolean coinbase, boolean debug, boolean innerDebug) throws IllegalAccessException, InstantiationException, IOException {
-        super(inputStream, debug, innerDebug, new Object[]{lengthInBytes, coinbase});
+    public Script(InputStream inputStream, long lengthInBytes, boolean coinbase, boolean debug, boolean innerDebug) throws IllegalAccessException, InstantiationException, IOException {
+        super(inputStream, debug, innerDebug);
+
+        this.lengthInBytes = lengthInBytes;
+        this.coinbase = coinbase;
     }
 
-    @Override
-    protected void initialize(Object[] objects) {
-        lengthInBytes = (Long) objects[0];
-        coinbase = (Boolean) objects[1];
+    public Script(InputStream inputStream, long lengthInBytes, boolean debug, boolean innerDebug) throws IllegalAccessException, InstantiationException, IOException {
+        super(inputStream, debug, innerDebug);
+
+        this.lengthInBytes = lengthInBytes;
+        this.coinbase = false;
     }
 
     @Override

@@ -32,15 +32,11 @@ public class BlockChain extends ByteConsumer {
 
             // Create and parse the block
             Block block = new Block(inputStream, isDebug(), isInnerDebug());
+            block.build();
 
             // Show the block's debug info
             block.showDebugInfo();
         }
-    }
-
-    @Override
-    protected void initialize(Object[] objects) {
-        throw new UnsupportedOperationException("Additional initialization not necessary");
     }
 
     @Override

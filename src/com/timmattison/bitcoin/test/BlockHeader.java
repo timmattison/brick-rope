@@ -59,11 +59,6 @@ public class BlockHeader extends ByteConsumer {
     }
 
     @Override
-    protected void initialize(Object[] objects) {
-        throw new UnsupportedOperationException("Additional initialization not necessary");
-    }
-
-    @Override
     protected String getName() {
         return name;
     }

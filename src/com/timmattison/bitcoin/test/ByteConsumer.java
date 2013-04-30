@@ -35,27 +35,26 @@ public abstract class ByteConsumer {
      */
     private boolean innerDebug = false;
 
+    public ByteConsumer(InputStream inputStream) throws IOException {
+        this.inputStream = inputStream;
+    }
+
     public ByteConsumer(InputStream inputStream, boolean debug, boolean innerDebug) throws IOException {
         this.inputStream = inputStream;
-        this.debug = debug;
-        this.innerDebug = innerDebug;
-
-        build();
+        setDebug(debug);
+        setInnerDebug(innerDebug);
     }
 
-    public ByteConsumer(InputStream inputStream, boolean debug, boolean innerDebug, Object[] initializationParameters) throws IOException {
-        this.inputStream = inputStream;
+    protected void setDebug(boolean debug) {
         this.debug = debug;
-        this.innerDebug = innerDebug;
-
-        initialize(initializationParameters);
-        build();
     }
-
-    protected abstract void initialize(Object[] objects);
 
     protected boolean isDebug() {
         return debug;
+    }
+
+    protected void setInnerDebug(boolean innerDebug) {
+        this.innerDebug = innerDebug;
     }
 
     protected boolean isInnerDebug() {
