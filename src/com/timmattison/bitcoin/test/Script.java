@@ -27,12 +27,15 @@ public class Script extends ByteConsumer {
     private StateMachine stateMachine;
     private WordFactory wordFactory;
     private boolean coinbase;
+    private int versionNumber;
+    private int blockHeight;
 
-    public Script(InputStream inputStream, long lengthInBytes, boolean coinbase, boolean debug, boolean innerDebug) throws IllegalAccessException, InstantiationException, IOException {
+    public Script(InputStream inputStream, long lengthInBytes, boolean coinbase, int versionNumber, boolean debug, boolean innerDebug) throws IllegalAccessException, InstantiationException, IOException {
         super(inputStream, debug, innerDebug);
 
         this.lengthInBytes = lengthInBytes;
         this.coinbase = coinbase;
+        this.versionNumber = versionNumber;
     }
 
     public Script(InputStream inputStream, long lengthInBytes, boolean debug, boolean innerDebug) throws IllegalAccessException, InstantiationException, IOException {
@@ -114,7 +117,29 @@ public class Script extends ByteConsumer {
 
         // Is this the coinbase?
         if(coinbase) {
-            // Yes, don't try to process it
+            // Yes, is this a version 2 block?
+            if(versionNumber == 2) {
+                // Yes, process the additional fields
+
+                // Get the length of the block height value that is coming up
+                int lengthOfBlockHeight = (int) EndiannessHelper.ToRealByte((byte) byteStream.read());
+
+                // Read the block height
+                byte[] blockHeightBytes = new byte[lengthOfBlockHeight];
+                byteStream.read(blockHeightBytes, 0, lengthOfBlockHeight);
+
+                // Convert the block height bytes into a number
+                blockHeight = (int) EndiannessHelper.BytesToValue(blockHeightBytes);
+            }
+            else if(versionNumber == 1) {
+                // No, this is a version 1 block, do nothing
+            }
+            else {
+                // Unknown version number
+                throw new UnsupportedOperationException("Expected version 1 or version 2, saw " + versionNumber);
+            }
+
+            // Return immediately
             return;
         }
 

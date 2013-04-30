@@ -27,11 +27,13 @@ public class Input extends ByteConsumer {
     private long inputScriptLength;
 
     private boolean coinbase;
+    private int versionNumber;
 
-    public Input(InputStream inputStream, boolean coinbase, boolean debug, boolean innerDebug) throws IOException {
+    public Input(InputStream inputStream, boolean coinbase, int versionNumber, boolean debug, boolean innerDebug) throws IOException {
         super(inputStream, debug, innerDebug);
 
         this.coinbase = coinbase;
+        this.versionNumber = versionNumber;
     }
 
     @Override
@@ -64,7 +66,7 @@ public class Input extends ByteConsumer {
 
         try {
             // Get the input script
-            inputScript = new Script(inputStream, inputScriptLength, this.coinbase, isDebug(), isInnerDebug());
+            inputScript = new Script(inputStream, inputScriptLength, this.coinbase, this.versionNumber, isDebug(), isInnerDebug());
             inputScript.build();
         } catch (IllegalAccessException e) {
             throw new UnsupportedOperationException(e);

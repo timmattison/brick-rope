@@ -16,7 +16,7 @@ import java.util.List;
 public class Transaction extends ByteConsumer {
     private static final String name = "TRANSACTION";
     // Used for sanity check
-    private static final long currentVersionNumber = 1;
+    private static final long maxVersionNumber = 2;
     private static final int versionNumberLengthInBytes = 4;
     private static final int lockTimeLengthInBytes = 4;
     private int versionNumber;
@@ -61,8 +61,8 @@ public class Transaction extends ByteConsumer {
         versionNumber = EndiannessHelper.BytesToInt(pullBytes(versionNumberLengthInBytes, "transaction, version number"));
 
         // Sanity check the version number
-        if (versionNumber != currentVersionNumber) {
-            throw new UnsupportedOperationException("Expected version number is " + currentVersionNumber + ", saw " + versionNumber);
+        if (versionNumber > maxVersionNumber) {
+            throw new UnsupportedOperationException("Max version number is " + maxVersionNumber + ", saw " + versionNumber);
         }
 
         // Get the input counter
@@ -74,7 +74,7 @@ public class Transaction extends ByteConsumer {
         for (int inputLoop = 0; inputLoop < inCounter; inputLoop++) {
             // Input 0 is the coinbase, all other inputs are not
             boolean coinbase = (inputLoop == 0) ? true : false;
-            Input input = new Input(inputStream, coinbase, isDebug(), isInnerDebug());
+            Input input = new Input(inputStream, coinbase, versionNumber, isDebug(), isInnerDebug());
             input.build();
             addInput(input);
         }
