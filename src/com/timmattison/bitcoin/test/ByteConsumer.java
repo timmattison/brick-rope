@@ -20,6 +20,11 @@ import java.util.logging.SimpleFormatter;
  */
 public abstract class ByteConsumer {
     /**
+     * This is the number of bytes that are printed out when something goes wrong
+     */
+    private static final int DEBUG_BYTES = 16;
+
+    /**
      * The bytes as they came from the caller.  Nobody is allowed to touch this.
      */
     protected InputStream inputStream;
@@ -58,6 +63,7 @@ public abstract class ByteConsumer {
     }
 
     protected boolean isInnerDebug() {
+        return innerDebug;
         return innerDebug;
     }
 
@@ -126,5 +132,13 @@ public abstract class ByteConsumer {
         handler.setFormatter(new SimpleFormatter());
 
         return handler;
+    }
+
+    protected void pullDebugBytes() {
+        try {
+            getLogger().info(ByteArrayHelper.formatArray(pullBytes(DEBUG_BYTES, "debug bytes")));
+        } catch (IOException e) {
+            throw new UnsupportedOperationException("IOException in pullDebugBytes", e);
+        }
     }
 }
