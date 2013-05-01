@@ -1,5 +1,6 @@
 package com.timmattison.bitcoin.test.script.words.constants;
 
+import com.timmattison.bitcoin.test.ByteArrayHelper;
 import com.timmattison.bitcoin.test.script.ByteConsumingWord;
 import com.timmattison.bitcoin.test.script.StateMachine;
 
@@ -50,5 +51,9 @@ public class VirtualOpPush extends ByteConsumingWord {
     @Override
     public void execute(StateMachine stateMachine) {
         stateMachine.stack.push(input);
+
+        if (isInnerDebug()) {
+            getLogger().info("Data being pushed on the stack: " + ByteArrayHelper.formatArray(input));
+        }
     }
 }
