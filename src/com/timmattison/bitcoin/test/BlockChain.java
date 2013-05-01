@@ -2,6 +2,8 @@ package com.timmattison.bitcoin.test;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -13,6 +15,7 @@ import java.io.InputStream;
 public class BlockChain extends ByteConsumer {
     private static final String name = "BLOCK CHAIN";
     public static int blockNumber = 0;
+    private List<Block> blocks = new ArrayList<Block>();
 
     public BlockChain(InputStream inputStream, boolean debug, boolean innerDebug) throws IOException {
         super(inputStream, debug, innerDebug);
@@ -51,5 +54,20 @@ public class BlockChain extends ByteConsumer {
     @Override
     protected void innerShowDebugInfo() {
         throw new UnsupportedOperationException("Not implemented yet");
+    }
+
+    @Override
+    protected String dump(boolean pretty) {
+        StringBuilder stringBuilder = new StringBuilder();
+
+        if (pretty) {
+            stringBuilder.append("Block chain:\n");
+        }
+
+        for(Block block : blocks) {
+            stringBuilder.append(block.dump(pretty));
+        }
+
+        return stringBuilder.toString();
     }
 }

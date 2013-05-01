@@ -225,7 +225,7 @@ public class Script extends ByteConsumer {
     }
 
     @Override
-    protected void dump(boolean pretty) {
+    protected String dump(boolean pretty) {
         StringBuilder stringBuilder = new StringBuilder();
 
         if (pretty) {
@@ -258,7 +258,7 @@ public class Script extends ByteConsumer {
             }
         }
 
-        getLogger().info(stringBuilder.toString());
+        return stringBuilder.toString();
     }
 
     private WordFactory getWordFactory() throws IllegalAccessException, InstantiationException {

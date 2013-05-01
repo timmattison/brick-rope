@@ -18,21 +18,22 @@ public class Output extends ByteConsumer {
     private static final int valueLengthInBytes = 8;
     private static final BigDecimal satoshiPerBitcoin = new BigDecimal(100000000);
 
-    private long value;
-    private long outputScriptLength;
-    private Script outputScript;
-
-    // Raw bytes, in order they were pulled from the block chain
-
     /**
-     * Value bytes
+     * Value
      */
+    private long value;
     private byte[] valueBytes;
 
     /**
-     * Output script length bytes
+     * Output script length
      */
+    private long outputScriptLength;
     private byte[] outputScriptLengthBytes;
+
+    /**
+     * Output script
+     */
+    private Script outputScript;
 
     public Output(InputStream inputStream, boolean debug, boolean innerDebug) throws IOException {
         super(inputStream, debug, innerDebug);
@@ -58,7 +59,7 @@ public class Output extends ByteConsumer {
 
         // Get the output script length
         VariableLengthInteger temp = new VariableLengthInteger(inputStream, isDebug(), isInnerDebug());
-        outputScriptLengthBytes = temp.getBytes();
+        outputScriptLengthBytes = temp.getValueBytes();
         outputScriptLength = temp.getValue();
         if(isInnerDebug()) { getLogger().info("output, output script length: " + outputScriptLength); }
 
@@ -77,5 +78,21 @@ public class Output extends ByteConsumer {
         BigDecimal returnValue = new BigDecimal(value);
         returnValue = returnValue.divide(satoshiPerBitcoin);
         return returnValue.toString();
+    }
+
+    @Override
+    protected String dump(boolean pretty) {
+        StringBuilder stringBuilder = new StringBuilder();
+
+        if (pretty) {
+            stringBuilder.append("Output data:\n");
+        }
+
+        DumpHelper.dump(stringBuilder, pretty, "\tValue: ", "\n", valueBytes);
+        DumpHelper.dump(stringBuilder, pretty, "\tOutput script length: ", "\n", outputScriptLengthBytes);
+
+        stringBuilder.append(outputScript.dump(pretty));
+
+        return stringBuilder.toString();
     }
 }

@@ -145,5 +145,5 @@ public abstract class ByteConsumer {
      * Dump the object as formatted hex
      * @param pretty is true if the output should be human readable
      */
-    protected abstract void dump(boolean pretty);
+    protected abstract String dump(boolean pretty);
 }

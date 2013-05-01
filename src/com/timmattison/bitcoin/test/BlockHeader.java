@@ -28,6 +28,7 @@ public class BlockHeader extends ByteConsumer {
      * The software version that created this block
      */
     private int version;
+    private byte[] versionBytes;
 
     /**
      * The hash value of the previous block this particular block references
@@ -43,16 +44,19 @@ public class BlockHeader extends ByteConsumer {
      * A Unix timestamp recording when this block was created (currently limited to dates before the year 2106!)
      */
     private int timestamp;
+    private byte[] timestampBytes;
 
     /**
      * The calculated difficulty target being used for this block
      */
     private int bits;
+    private byte[] bitsBytes;
 
     /**
      * The nonce used to generate this block... to allow variations of the header and compute different hashes
      */
     private int nonce;
+    private byte[] nonceBytes;
 
     public BlockHeader(InputStream inputStream, boolean debug, boolean innerDebug) throws IOException {
         super(inputStream, debug, innerDebug);
@@ -76,7 +80,8 @@ public class BlockHeader extends ByteConsumer {
     @Override
     protected void build() throws IOException {
         // Get the version
-        version = EndiannessHelper.BytesToInt(pullBytes(versionLengthInBytes, "block header, version"));
+        versionBytes = pullBytes(versionLengthInBytes, "block header, version");
+        version = EndiannessHelper.BytesToInt(versionBytes);
 
         // Get the previous block hash
         prevBlock = pullBytes(prevBlockLengthInBytes, "block header, prev block");
@@ -85,13 +90,16 @@ public class BlockHeader extends ByteConsumer {
         merkleRoot = pullBytes(merkleRootLengthInBytes, "block header, merkle root");
 
         // Get the timestamp
-        timestamp = EndiannessHelper.BytesToInt(pullBytes(timestampLengthInBytes, "block header, timestamp"));
+        timestampBytes = pullBytes(timestampLengthInBytes, "block header, timestamp");
+        timestamp = EndiannessHelper.BytesToInt(timestampBytes);
 
         // Get the difficulty
-        bits = EndiannessHelper.BytesToInt(pullBytes(bitsLengthInBytes, "block header, bits"));
+        bitsBytes = pullBytes(bitsLengthInBytes, "block header, bits");
+        bits = EndiannessHelper.BytesToInt(bitsBytes);
 
         // Get the nonce
-        nonce = EndiannessHelper.BytesToInt(pullBytes(nonceLengthInBytes, "block header, nonce"));
+        nonceBytes = pullBytes(nonceLengthInBytes, "block header, nonce");
+        nonce = EndiannessHelper.BytesToInt(nonceBytes);
     }
 
     public byte[] getHash() throws NoSuchAlgorithmException {
@@ -116,5 +124,23 @@ public class BlockHeader extends ByteConsumer {
 
         // Return it
         return result;
+    }
+
+    @Override
+    protected String dump(boolean pretty) {
+        StringBuilder stringBuilder = new StringBuilder();
+
+        if (pretty) {
+            stringBuilder.append("Block header data:\n");
+        }
+
+        DumpHelper.dump(stringBuilder, pretty, "\tVersion: ", "\n", versionBytes);
+        DumpHelper.dump(stringBuilder, pretty, "\tPrevious block hash: ", "\n", prevBlock);
+        DumpHelper.dump(stringBuilder, pretty, "\tMerkle root: ", "\n", merkleRoot);
+        DumpHelper.dump(stringBuilder, pretty, "\tTimestamp: ", "\n", timestampBytes);
+        DumpHelper.dump(stringBuilder, pretty, "\tBits: ", "\n", bitsBytes);
+        DumpHelper.dump(stringBuilder, pretty, "\tNonce: ", "\n", nonceBytes);
+
+        return stringBuilder.toString();
     }
 }

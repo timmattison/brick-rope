@@ -18,33 +18,37 @@ public class Input extends ByteConsumer {
     private static final int previousOutputIndexLengthInBytes = 4;
     private static final int sequenceNumberLengthInBytes = 4;
 
+    /**
+     * Previous transaction hash
+     */
     private byte[] previousTransactionHash;
-    private long previousOutputIndex;
-    private Script inputScript;
-    private long sequenceNumber;
-
-    // This is not part of the script
-    private long inputScriptLength;
-
-    private boolean coinbase;
-    private int versionNumber;
-
-    // Raw bytes, in order they were pulled from the block chain
 
     /**
-     * Previous output index bytes
+     * Previous output index
      */
+    private long previousOutputIndex;
     private byte[] previousOutputIndexBytes;
 
     /**
-     * Input script length bytes
+     * Input script length
      */
+    private long inputScriptLength;
     private byte[] inputScriptLengthBytes;
 
     /**
-     * Sequence number bytes
+     * Input script
      */
+    private Script inputScript;
+
+    /**
+     * Sequence number
+     */
+    private long sequenceNumber;
     private byte[] sequenceNumberBytes;
+
+    // These are not part of the script
+    private boolean coinbase;
+    private int versionNumber;
 
     public Input(InputStream inputStream, boolean coinbase, int versionNumber, boolean debug, boolean innerDebug) throws IOException {
         super(inputStream, debug, innerDebug);
@@ -79,7 +83,7 @@ public class Input extends ByteConsumer {
 
         // Get the input script length
         VariableLengthInteger temp = new VariableLengthInteger(inputStream, isDebug(), isInnerDebug());
-        inputScriptLengthBytes = temp.getBytes();
+        inputScriptLengthBytes = temp.getValueBytes();
         inputScriptLength = temp.getValue();
         if(isInnerDebug()) { getLogger().info("Input script length: " + inputScriptLength); }
 
@@ -97,5 +101,24 @@ public class Input extends ByteConsumer {
         sequenceNumberBytes = pullBytes(sequenceNumberLengthInBytes, "input, sequence number");
         sequenceNumber = EndiannessHelper.BytesToInt(sequenceNumberBytes);
         if(isInnerDebug()) { getLogger().info("Sequence number: " + sequenceNumber); }
+    }
+
+    @Override
+    protected String dump(boolean pretty) {
+        StringBuilder stringBuilder = new StringBuilder();
+
+        if (pretty) {
+            stringBuilder.append("Input data:\n");
+        }
+
+        DumpHelper.dump(stringBuilder, pretty, "\tPrevious transaction hash: ", "\n", previousTransactionHash);
+        DumpHelper.dump(stringBuilder, pretty, "\tPrevious output index: ", "\n", previousOutputIndexBytes);
+        DumpHelper.dump(stringBuilder, pretty, "\tInput script length: ", "\n", inputScriptLengthBytes);
+
+        stringBuilder.append(inputScript.dump(pretty));
+
+        DumpHelper.dump(stringBuilder, pretty, "\tSequence number: ", "\n", sequenceNumberBytes);
+
+        return stringBuilder.toString();
     }
 }

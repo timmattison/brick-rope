@@ -21,10 +21,33 @@ public class Block extends ByteConsumer {
     private static final int requiredMagicNumber = EndiannessHelper.BytesToInt(requiredMagicNumberBytes);
     private static final int magicNumberLengthInBytes = 4;
     private static final int blockSizeLengthInBytes = 4;
+
+    /**
+     * Magic number
+     */
     private int magicNumber;
+    private byte[] magicNumberBytes;
+
+    /**
+     * Block size
+     */
     private int blockSize;
+    private byte[] blockSizeBytes;
+
+    /**
+     * Block header
+     */
     private BlockHeader blockHeader;
+
+    /**
+     * Transaction count
+     */
     private int transactionCount;
+    private byte[] transactionCountBytes;
+
+    /**
+     * Transactions
+     */
     private List<Transaction> transactions;
 
     // Raw bytes, in order they were pulled from the block chain
@@ -32,17 +55,14 @@ public class Block extends ByteConsumer {
     /**
      * The magic number bytes
      */
-    private byte[] magicNumberBytes;
 
     /**
      * The block size bytes
      */
-    private byte[] blockSizeBytes;
 
     /**
      * The transaction count bytes
      */
-    private byte[] transactionCountBytes;
 
     public Block(InputStream inputStream, boolean debug, boolean innerDebug) throws IOException {
         super(inputStream, debug, innerDebug);
@@ -97,7 +117,7 @@ public class Block extends ByteConsumer {
 
         // Get the transaction count and return the remaining bytes back into the block header byte list
         VariableLengthInteger temp = new VariableLengthInteger(inputStream, isDebug(), isInnerDebug());
-        transactionCountBytes = temp.getBytes();
+        transactionCountBytes = temp.getValueBytes();
         transactionCount = (int) temp.getValue();
         if(isInnerDebug()) { getLogger().info("block, transaction count: " + transactionCount); }
 
@@ -117,13 +137,22 @@ public class Block extends ByteConsumer {
     }
 
     @Override
-    protected void dump(boolean pretty) {
+    protected String dump(boolean pretty) {
         StringBuilder stringBuilder = new StringBuilder();
 
         if (pretty) {
-            stringBuilder.append("Block data\n");
+            stringBuilder.append("Block data:\n");
         }
 
-        DumpHelper.dump(stringBuilder, pretty, "Magic number: ", "", magicNumberBytes);
+        DumpHelper.dump(stringBuilder, pretty, "\tMagic number: ", "\n", magicNumberBytes);
+        DumpHelper.dump(stringBuilder, pretty, "\tBlock size: ", "\n", blockSizeBytes);
+        stringBuilder.append(blockHeader.dump(pretty));
+        DumpHelper.dump(stringBuilder, pretty, "\tTransaction count: ", "\n", transactionCountBytes);
+
+        for(Transaction transaction : transactions) {
+            stringBuilder.append(transaction.dump(pretty));
+        }
+
+        return stringBuilder.toString();
     }
 }

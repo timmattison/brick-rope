@@ -17,8 +17,11 @@ public class VariableLengthInteger extends ByteConsumer {
     private static final int header32BitInteger = 0xfe;
     private static final int header64BitInteger = 0xff;
 
+    /**
+     * Value
+     */
     long value;
-    private byte[] bytes;
+    private byte[] valueBytes;
 
     public VariableLengthInteger(InputStream inputStream, boolean debug, boolean innerDebug) throws IOException {
         super(inputStream, debug, innerDebug);
@@ -47,30 +50,44 @@ public class VariableLengthInteger extends ByteConsumer {
         if (firstByte == (byte) header16BitInteger) {
             // 16-bit
             bytesToRead = 2;
-            value = EndiannessHelper.BytesToShort(pullBytes(bytesToRead, "Variable length integer, reading short"));
+            valueBytes = pullBytes(bytesToRead, "Variable length integer, reading short");
+            value = EndiannessHelper.BytesToShort(valueBytes);
         } else if (firstByte == (byte) header32BitInteger) {
             // 32-bit
             bytesToRead = 4;
-            value = EndiannessHelper.BytesToInt(pullBytes(bytesToRead, "Variable length integer, reading int"));
+            valueBytes = pullBytes(bytesToRead, "Variable length integer, reading int");
+            value = EndiannessHelper.BytesToInt(valueBytes);
         } else if (firstByte == (byte) header64BitInteger) {
             // 64-bit
             bytesToRead = 8;
-            value = EndiannessHelper.BytesToLong(pullBytes(bytesToRead, "Variable length integer, reading long"));
+            valueBytes = pullBytes(bytesToRead, "Variable length integer, reading long");
+            value = EndiannessHelper.BytesToLong(valueBytes);
         } else {
             // 8-bit (mask this so that we don't get negative values)
+            valueBytes = new byte[1];
             value = (firstByte & 0x0FF);
+            valueBytes[0] = (byte) value;
         }
+    }
+
+    @Override
+    protected String dump(boolean pretty) {
+        StringBuilder stringBuilder = new StringBuilder();
+
+        if (pretty) {
+            stringBuilder.append("Variable length integer data:\n");
+        }
+
+        DumpHelper.dump(stringBuilder, pretty, "\tValue: ", "\n", valueBytes);
+
+        return stringBuilder.toString();
     }
 
     public long getValue() {
         return value;
     }
 
-    public byte[] getBytes() {
-        return bytes;
-    }
-
-    public void setBytes(byte[] bytes) {
-        this.bytes = bytes;
+    public byte[] getValueBytes() {
+        return valueBytes;
     }
 }

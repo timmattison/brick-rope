@@ -19,35 +19,42 @@ public class Transaction extends ByteConsumer {
     private static final long maxVersionNumber = 2;
     private static final int versionNumberLengthInBytes = 4;
     private static final int lockTimeLengthInBytes = 4;
-    private int versionNumber;
-    private long inCounter;
-    private List<Input> inputs;
-    private long outCounter;
-    private List<Output> outputs;
-    private int lockTime;
-    private int transactionCounter;
-
-    // Raw bytes, in order they were pulled from the block chain
 
     /**
-     * The version number bytes
+     * Version number
      */
+    private int versionNumber;
     private byte[] versionNumberBytes;
 
     /**
-     * Input counter bytes
+     * Input counter
      */
+    private long inCounter;
     private byte[] inCounterBytes;
 
     /**
-     * Output counter bytes
+     * Inputs
      */
+    private List<Input> inputs;
+
+    /**
+     * Output counter
+     */
+    private long outCounter;
     private byte[] outCounterBytes;
 
     /**
-     * Lock time bytes
+     * Outputs
      */
+    private List<Output> outputs;
+
+    /**
+     * Lock time
+     */
+    private int lockTime;
     private byte[] lockTimeBytes;
+
+    private int transactionCounter;
 
     public Transaction(InputStream inputStream, int transactionCounter, boolean debug, boolean innerDebug) throws IOException {
         super(inputStream, debug, innerDebug);
@@ -93,7 +100,7 @@ public class Transaction extends ByteConsumer {
 
         // Get the input counter
         VariableLengthInteger temp = new VariableLengthInteger(inputStream, isDebug(), isInnerDebug());
-        inCounterBytes = temp.getBytes();
+        inCounterBytes = temp.getValueBytes();
         inCounter = temp.getValue();
         if(isInnerDebug()) { getLogger().info("transaction, in counter: " + inCounter); }
 
@@ -108,7 +115,7 @@ public class Transaction extends ByteConsumer {
 
         // Get the output counter
         temp = new VariableLengthInteger(inputStream, isDebug(), isInnerDebug());
-        outCounterBytes = temp.getBytes();
+        outCounterBytes = temp.getValueBytes();
         outCounter = temp.getValue();
         if(isInnerDebug()) { getLogger().info("transaction, out counter: " + outCounter); }
 
@@ -138,5 +145,31 @@ public class Transaction extends ByteConsumer {
         }
 
         outputs.add(output);
+    }
+
+    @Override
+    protected String dump(boolean pretty) {
+        StringBuilder stringBuilder = new StringBuilder();
+
+        if (pretty) {
+            stringBuilder.append("Transaction data:\n");
+        }
+
+        DumpHelper.dump(stringBuilder, pretty, "\tVersion number: ", "\n", versionNumberBytes);
+        DumpHelper.dump(stringBuilder, pretty, "\tInput counter: ", "\n", inCounterBytes);
+
+        for(Input input : inputs) {
+            stringBuilder.append(input.dump(pretty));
+        }
+
+        DumpHelper.dump(stringBuilder, pretty, "\tOutput counter: ", "\n", outCounterBytes);
+
+        for(Output output : outputs) {
+            stringBuilder.append(output.dump(pretty));
+        }
+
+        DumpHelper.dump(stringBuilder, pretty, "\tLock time: ", "\n", outCounterBytes);
+
+        return stringBuilder.toString();
     }
 }
