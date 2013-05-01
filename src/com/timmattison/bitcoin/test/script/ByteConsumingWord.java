@@ -92,4 +92,8 @@ public abstract class ByteConsumingWord extends Word {
 
         return logger;
     }
+
+    public byte[] getInput() {
+        return input;
+    }
 }

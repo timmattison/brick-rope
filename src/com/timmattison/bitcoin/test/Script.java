@@ -21,7 +21,6 @@ public class Script extends ByteConsumer {
     private static final String name = "SCRIPT";
     //private static final int MAX_WORD_LIST_LENGTH = 201;
     private static final int MAX_WORD_LIST_LENGTH = 9999;
-
     private long lengthInBytes;
     private List<Word> words;
     private StateMachine stateMachine;
@@ -31,7 +30,6 @@ public class Script extends ByteConsumer {
     private int blockHeight;
 
     // Raw bytes, in order they were pulled from the block chain
-
     /**
      * Script bytes
      */
@@ -77,7 +75,7 @@ public class Script extends ByteConsumer {
 
     public boolean execute() {
         // Is this the coinbase?
-        if(coinbase) {
+        if (coinbase) {
             // Yes, nothing to execute
             return true;
         }
@@ -92,12 +90,11 @@ public class Script extends ByteConsumer {
         Object topStackValue = getStateMachine().stack.pop();
 
         // Is the top stack non-zero?
-        if(topStackValue != null) {
+        if (topStackValue != null) {
             // Yes, success!
             // XXX - This needs to check for zero values, not just NULLs
             return true;
-        }
-        else {
+        } else {
             // No, failure
             return false;
         }
@@ -130,17 +127,17 @@ public class Script extends ByteConsumer {
         }
 
         // Is the length valid?
-        if(lengthInBytes == 0) {
+        if (lengthInBytes == 0) {
             // Possibly not
 
             // Is this a version 2 script?
-            if(versionNumber == 2) {
+            if (versionNumber == 2) {
                 // Yes, no version 2 script can be zero bytes
                 pullDebugBytes();
                 throw new UnsupportedOperationException("Version 2 scripts cannot be zero bytes long, [coinbase? " + (coinbase ? "Yes" : "No") + "] [version: " + versionNumber + "]");
             }
             // Is this a version 1 coinbase?
-            else if((versionNumber == 1) && (!coinbase)) {
+            else if ((versionNumber == 1) && (!coinbase)) {
                 // No, no version 1 non-coinbase script can be zero bytes
                 pullDebugBytes();
                 throw new UnsupportedOperationException("Version 1 scripts cannot be zero bytes long unless they are the coinbase");
@@ -158,12 +155,14 @@ public class Script extends ByteConsumer {
 
         ByteArrayInputStream byteStream = new ByteArrayInputStream(scriptBytes);
 
-        if(isInnerDebug()) { getLogger().info("Bytes for this script: " + ByteArrayHelper.formatArray(scriptBytes)); }
+        if (isInnerDebug()) {
+            getLogger().info("Bytes for this script: " + ByteArrayHelper.formatArray(scriptBytes));
+        }
 
         // Is this the coinbase?
-        if(coinbase) {
+        if (coinbase) {
             // Yes, is this a version 2 block?
-            if(versionNumber == 2) {
+            if (versionNumber == 2) {
                 // Yes, process the additional fields
 
                 // Get the length of the block height value that is coming up
@@ -175,11 +174,9 @@ public class Script extends ByteConsumer {
 
                 // Convert the block height bytes into a number
                 blockHeight = (int) EndiannessHelper.BytesToValue(blockHeightBytes);
-            }
-            else if(versionNumber == 1) {
+            } else if (versionNumber == 1) {
                 // No, this is a version 1 block, do nothing
-            }
-            else {
+            } else {
                 // Unknown version number
                 throw new UnsupportedOperationException("Expected version 1 or version 2, saw " + versionNumber);
             }
@@ -192,15 +189,21 @@ public class Script extends ByteConsumer {
             while (byteStream.available() > 0) {
                 // Get the next byte
                 byte currentByte = (byte) byteStream.read();
-                if(isInnerDebug()) { getLogger().info("Current byte: " + currentByte + " [" + String.format("%02x", currentByte) + "]"); }
+                if (isInnerDebug()) {
+                    getLogger().info("Current byte: " + currentByte + " [" + String.format("%02x", currentByte) + "]");
+                }
 
                 // Get the word that the next byte corresponds to
                 Word currentWord = getWordFactory().getWordByOpcode(currentByte);
-                if(isInnerDebug()) { getLogger().info("Current word: " + currentWord.getWord()); }
+                if (isInnerDebug()) {
+                    getLogger().info("Current word: " + currentWord.getWord());
+                }
 
                 // Is this a byte consuming word?
                 if (ByteConsumingWord.class.isAssignableFrom(currentWord.getClass())) {
-                    if(isInnerDebug()) { getLogger().info("Word about to consume some bytes"); }
+                    if (isInnerDebug()) {
+                        getLogger().info("Word about to consume some bytes");
+                    }
                     // Yes, consume the bytes
                     ((ByteConsumingWord) currentWord).consumeInput(byteStream);
                 }
@@ -219,6 +222,43 @@ public class Script extends ByteConsumer {
             // Yes, throw an exception
             throw new UnsupportedOperationException("The maximum number of words in a script is " + MAX_WORD_LIST_LENGTH + ", saw " + words.size() + " word(s)");
         }
+    }
+
+    @Override
+    protected void dump(boolean pretty) {
+        StringBuilder stringBuilder = new StringBuilder();
+
+        if (pretty) {
+            stringBuilder.append("Script data\n");
+        }
+
+        int counter = 0;
+
+        for (Word word : words) {
+            if (pretty) {
+                stringBuilder.append("Opcode #");
+                stringBuilder.append(counter);
+                stringBuilder.append(": ");
+                stringBuilder.append(word.getWord());
+                stringBuilder.append(" - [");
+            }
+
+            stringBuilder.append(ByteArrayHelper.toHex(word.getOpcode()));
+
+            if (pretty) {
+                stringBuilder.append("] ");
+            }
+
+            if (word instanceof ByteConsumingWord) {
+                ByteConsumingWord byteConsumingWord = (ByteConsumingWord) word;
+
+                if (byteConsumingWord.getInputBytesRequired() != 0) {
+                    stringBuilder.append(ByteArrayHelper.formatArray(byteConsumingWord.getInput()));
+                }
+            }
+        }
+
+        getLogger().info(stringBuilder.toString());
     }
 
     private WordFactory getWordFactory() throws IllegalAccessException, InstantiationException {

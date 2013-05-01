@@ -115,4 +115,15 @@ public class Block extends ByteConsumer {
             transactions.add(transaction);
         }
     }
+
+    @Override
+    protected void dump(boolean pretty) {
+        StringBuilder stringBuilder = new StringBuilder();
+
+        if (pretty) {
+            stringBuilder.append("Block data\n");
+        }
+
+        DumpHelper.dump(stringBuilder, pretty, "Magic number: ", "", magicNumberBytes);
+    }
 }

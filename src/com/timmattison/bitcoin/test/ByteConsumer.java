@@ -140,4 +140,10 @@ public abstract class ByteConsumer {
             throw new UnsupportedOperationException("IOException in pullDebugBytes", e);
         }
     }
+
+    /**
+     * Dump the object as formatted hex
+     * @param pretty is true if the output should be human readable
+     */
+    protected abstract void dump(boolean pretty);
 }

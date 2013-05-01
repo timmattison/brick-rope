@@ -31,7 +31,7 @@ public class VirtualOpPush extends ByteConsumingWord {
 
     @Override
     public String getWord() {
-        return word + " " + opcode;
+        return word;
     }
 
     @Override
