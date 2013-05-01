@@ -29,6 +29,23 @@ public class Input extends ByteConsumer {
     private boolean coinbase;
     private int versionNumber;
 
+    // Raw bytes, in order they were pulled from the block chain
+
+    /**
+     * Previous output index bytes
+     */
+    private byte[] previousOutputIndexBytes;
+
+    /**
+     * Input script length bytes
+     */
+    private byte[] inputScriptLengthBytes;
+
+    /**
+     * Sequence number bytes
+     */
+    private byte[] sequenceNumberBytes;
+
     public Input(InputStream inputStream, boolean coinbase, int versionNumber, boolean debug, boolean innerDebug) throws IOException {
         super(inputStream, debug, innerDebug);
 
@@ -56,11 +73,13 @@ public class Input extends ByteConsumer {
         if(isInnerDebug()) { getLogger().info("Previous transaction hash: " + ByteArrayHelper.formatArray(previousTransactionHash)); }
 
         // Get the previous output index
-        previousOutputIndex = EndiannessHelper.BytesToInt(pullBytes(previousOutputIndexLengthInBytes, "input, previous output index"));
+        previousOutputIndexBytes = pullBytes(previousOutputIndexLengthInBytes, "input, previous output index");
+        previousOutputIndex = EndiannessHelper.BytesToInt(previousOutputIndexBytes);
         if(isInnerDebug()) { getLogger().info("Previous output index: " + previousOutputIndex); }
 
         // Get the input script length
         VariableLengthInteger temp = new VariableLengthInteger(inputStream, isDebug(), isInnerDebug());
+        inputScriptLengthBytes = temp.getBytes();
         inputScriptLength = temp.getValue();
         if(isInnerDebug()) { getLogger().info("Input script length: " + inputScriptLength); }
 
@@ -75,7 +94,8 @@ public class Input extends ByteConsumer {
         }
 
         // Get the sequence number
-        sequenceNumber = EndiannessHelper.BytesToInt(pullBytes(sequenceNumberLengthInBytes, "input, sequence number"));
+        sequenceNumberBytes = pullBytes(sequenceNumberLengthInBytes, "input, sequence number");
+        sequenceNumber = EndiannessHelper.BytesToInt(sequenceNumberBytes);
         if(isInnerDebug()) { getLogger().info("Sequence number: " + sequenceNumber); }
     }
 }

@@ -30,6 +30,13 @@ public class Script extends ByteConsumer {
     private int versionNumber;
     private int blockHeight;
 
+    // Raw bytes, in order they were pulled from the block chain
+
+    /**
+     * Script bytes
+     */
+    private byte[] scriptBytes;
+
     public Script(InputStream inputStream, long lengthInBytes, boolean coinbase, int versionNumber, boolean debug, boolean innerDebug) throws IllegalAccessException, InstantiationException, IOException {
         super(inputStream, debug, innerDebug);
 
@@ -147,11 +154,11 @@ public class Script extends ByteConsumer {
          * Move the bytes we want into a new list.  This is so we can be sure that a misbehaving opcode doesn't try to
          * read past the end of the script.  NOTE: Technically we only support scripts up to 2GB!
          */
-        byte[] bytesToProcess = pullBytes((int) lengthInBytes, "script, " + lengthInBytes + " byte(s) to process");
+        scriptBytes = pullBytes((int) lengthInBytes, "script, " + lengthInBytes + " byte(s) to process");
 
-        ByteArrayInputStream byteStream = new ByteArrayInputStream(bytesToProcess);
+        ByteArrayInputStream byteStream = new ByteArrayInputStream(scriptBytes);
 
-        if(isInnerDebug()) { getLogger().info("Bytes for this script: " + ByteArrayHelper.formatArray(bytesToProcess)); }
+        if(isInnerDebug()) { getLogger().info("Bytes for this script: " + ByteArrayHelper.formatArray(scriptBytes)); }
 
         // Is this the coinbase?
         if(coinbase) {

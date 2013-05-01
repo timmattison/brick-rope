@@ -22,6 +22,18 @@ public class Output extends ByteConsumer {
     private long outputScriptLength;
     private Script outputScript;
 
+    // Raw bytes, in order they were pulled from the block chain
+
+    /**
+     * Value bytes
+     */
+    private byte[] valueBytes;
+
+    /**
+     * Output script length bytes
+     */
+    private byte[] outputScriptLengthBytes;
+
     public Output(InputStream inputStream, boolean debug, boolean innerDebug) throws IOException {
         super(inputStream, debug, innerDebug);
     }
@@ -41,10 +53,12 @@ public class Output extends ByteConsumer {
     @Override
     protected void build() throws IOException {
         // Get the value
-        value = EndiannessHelper.BytesToLong(pullBytes(valueLengthInBytes, "output, value"));
+        valueBytes = pullBytes(valueLengthInBytes, "output, value");
+        value = EndiannessHelper.BytesToLong(valueBytes);
 
         // Get the output script length
         VariableLengthInteger temp = new VariableLengthInteger(inputStream, isDebug(), isInnerDebug());
+        outputScriptLengthBytes = temp.getBytes();
         outputScriptLength = temp.getValue();
         if(isInnerDebug()) { getLogger().info("output, output script length: " + outputScriptLength); }
 

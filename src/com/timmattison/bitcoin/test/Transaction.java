@@ -27,6 +27,28 @@ public class Transaction extends ByteConsumer {
     private int lockTime;
     private int transactionCounter;
 
+    // Raw bytes, in order they were pulled from the block chain
+
+    /**
+     * The version number bytes
+     */
+    private byte[] versionNumberBytes;
+
+    /**
+     * Input counter bytes
+     */
+    private byte[] inCounterBytes;
+
+    /**
+     * Output counter bytes
+     */
+    private byte[] outCounterBytes;
+
+    /**
+     * Lock time bytes
+     */
+    private byte[] lockTimeBytes;
+
     public Transaction(InputStream inputStream, int transactionCounter, boolean debug, boolean innerDebug) throws IOException {
         super(inputStream, debug, innerDebug);
 
@@ -61,7 +83,8 @@ public class Transaction extends ByteConsumer {
     @Override
     protected void build() throws IOException {
         // Get the version number
-        versionNumber = EndiannessHelper.BytesToInt(pullBytes(versionNumberLengthInBytes, "transaction, version number"));
+        versionNumberBytes = pullBytes(versionNumberLengthInBytes, "transaction, version number");
+        versionNumber = EndiannessHelper.BytesToInt(versionNumberBytes);
 
         // Sanity check the version number
         if (versionNumber > maxVersionNumber) {
@@ -70,6 +93,7 @@ public class Transaction extends ByteConsumer {
 
         // Get the input counter
         VariableLengthInteger temp = new VariableLengthInteger(inputStream, isDebug(), isInnerDebug());
+        inCounterBytes = temp.getBytes();
         inCounter = temp.getValue();
         if(isInnerDebug()) { getLogger().info("transaction, in counter: " + inCounter); }
 
@@ -84,6 +108,7 @@ public class Transaction extends ByteConsumer {
 
         // Get the output counter
         temp = new VariableLengthInteger(inputStream, isDebug(), isInnerDebug());
+        outCounterBytes = temp.getBytes();
         outCounter = temp.getValue();
         if(isInnerDebug()) { getLogger().info("transaction, out counter: " + outCounter); }
 
@@ -95,7 +120,8 @@ public class Transaction extends ByteConsumer {
         }
 
         // Get the lock time
-        lockTime = EndiannessHelper.BytesToInt(pullBytes(lockTimeLengthInBytes, "transaction, lock time"));
+        lockTimeBytes = pullBytes(lockTimeLengthInBytes, "transaction, lock time");
+        lockTime = EndiannessHelper.BytesToInt(lockTimeBytes);
     }
 
     private void addInput(Input input) {
