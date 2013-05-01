@@ -36,8 +36,10 @@ public class BlockChain extends ByteConsumer {
             blockNumber++;
 
             // Create and parse the block
-            Block block = new Block(inputStream, isDebug());
+            Block block = new Block(inputStream, blockNumber, isDebug());
             block.build();
+
+            getLogger().info(block.dump(true));
 
             availableBytes = inputStream.available() & 0xFFFFFFFFL;
         }

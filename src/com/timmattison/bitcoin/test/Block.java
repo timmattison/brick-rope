@@ -50,22 +50,13 @@ public class Block extends ByteConsumer {
      */
     private List<Transaction> transactions;
 
-    // Raw bytes, in order they were pulled from the block chain
+    // These values are not in the block
+    int blockNumber;
 
-    /**
-     * The magic number bytes
-     */
-
-    /**
-     * The block size bytes
-     */
-
-    /**
-     * The transaction count bytes
-     */
-
-    public Block(InputStream inputStream, boolean debug) throws IOException {
+    public Block(InputStream inputStream, int blockNumber, boolean debug) throws IOException {
         super(inputStream, debug);
+
+        this.blockNumber = blockNumber;
     }
 
     @Override
@@ -125,7 +116,9 @@ public class Block extends ByteConsumer {
         StringBuilder stringBuilder = new StringBuilder();
 
         if (pretty) {
-            stringBuilder.append("Block data:\n");
+            stringBuilder.append("Block #");
+            stringBuilder.append(blockNumber);
+            stringBuilder.append(" data:\n");
         }
 
         DumpHelper.dump(stringBuilder, pretty, "\tMagic number: ", "\n", magicNumberBytes);

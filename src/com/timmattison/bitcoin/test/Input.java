@@ -49,12 +49,14 @@ public class Input extends ByteConsumer {
     // These are not part of the script
     private boolean coinbase;
     private int versionNumber;
+    private int inputNumber;
 
-    public Input(InputStream inputStream, boolean coinbase, int versionNumber, boolean debug) throws IOException {
+    public Input(InputStream inputStream, boolean coinbase, int versionNumber, int inputNumber, boolean debug) throws IOException {
         super(inputStream, debug);
 
         this.coinbase = coinbase;
         this.versionNumber = versionNumber;
+        this.inputNumber = inputNumber;
     }
 
     @Override
@@ -78,7 +80,7 @@ public class Input extends ByteConsumer {
 
         try {
             // Get the input script
-            inputScript = new Script(inputStream, inputScriptLength, this.coinbase, this.versionNumber, isDebug());
+            inputScript = new Script(inputStream, inputScriptLength, coinbase, versionNumber, inputNumber, isDebug());
             inputScript.build();
         } catch (IllegalAccessException e) {
             throw new UnsupportedOperationException(e);

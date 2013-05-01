@@ -35,8 +35,13 @@ public class Output extends ByteConsumer {
      */
     private Script outputScript;
 
-    public Output(InputStream inputStream, boolean debug) throws IOException {
+    // These values are not in the output
+    int outputNumber;
+
+    public Output(InputStream inputStream, int outputNumber, boolean debug) throws IOException {
         super(inputStream, debug);
+
+        this.outputNumber = outputNumber;
     }
 
     @Override
@@ -57,7 +62,7 @@ public class Output extends ByteConsumer {
 
         try {
             // Get the input script
-            outputScript = new Script(inputStream, outputScriptLength, isDebug());
+            outputScript = new Script(inputStream, outputScriptLength, outputNumber, isDebug());
             outputScript.build();
         } catch (IllegalAccessException e) {
             throw new UnsupportedOperationException(e);

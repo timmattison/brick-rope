@@ -87,7 +87,7 @@ public class Transaction extends ByteConsumer {
         for (int inputLoop = 0; inputLoop < inCounter; inputLoop++) {
             // Input 0 is the coinbase, all other inputs are not
             boolean coinbase = ((transactionCounter == 0) && (inputLoop == 0)) ? true : false;
-            Input input = new Input(inputStream, coinbase, versionNumber, isDebug());
+            Input input = new Input(inputStream, coinbase, versionNumber, inputLoop, isDebug());
             input.build();
             addInput(input);
         }
@@ -99,7 +99,7 @@ public class Transaction extends ByteConsumer {
 
         // Get the outputs
         for (int outputLoop = 0; outputLoop < outCounter; outputLoop++) {
-            Output output = new Output(inputStream, isDebug());
+            Output output = new Output(inputStream, outputLoop, isDebug());
             output.build();
             addOutput(output);
         }

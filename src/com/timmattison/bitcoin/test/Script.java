@@ -30,24 +30,56 @@ public class Script extends ByteConsumer {
     private int blockHeight;
 
     // Raw bytes, in order they were pulled from the block chain
+
     /**
      * Script bytes
      */
     private byte[] scriptBytes;
 
-    public Script(InputStream inputStream, long lengthInBytes, boolean coinbase, int versionNumber, boolean debug) throws IllegalAccessException, InstantiationException, IOException {
+    // These values are not in the script
+    boolean input;
+    int scriptNumber;
+
+    /**
+     * Create an input script
+     * @param inputStream
+     * @param lengthInBytes
+     * @param coinbase
+     * @param versionNumber
+     * @param scriptNumber
+     * @param debug
+     * @throws IllegalAccessException
+     * @throws InstantiationException
+     * @throws IOException
+     */
+    public Script(InputStream inputStream, long lengthInBytes, boolean coinbase, int versionNumber, int scriptNumber, boolean debug) throws IllegalAccessException, InstantiationException, IOException {
         super(inputStream, debug);
 
         this.lengthInBytes = lengthInBytes;
         this.coinbase = coinbase;
         this.versionNumber = versionNumber;
+        this.scriptNumber = scriptNumber;
+        this.input = true;
     }
 
-    public Script(InputStream inputStream, long lengthInBytes, boolean debug) throws IllegalAccessException, InstantiationException, IOException {
+    /**
+     * Create an output script
+     * @param inputStream
+     * @param lengthInBytes
+     * @param scriptNumber
+     * @param debug
+     * @throws IllegalAccessException
+     * @throws InstantiationException
+     * @throws IOException
+     */
+    public Script(InputStream inputStream, long lengthInBytes, int scriptNumber, boolean debug) throws IllegalAccessException, InstantiationException, IOException {
         super(inputStream, debug);
 
         this.lengthInBytes = lengthInBytes;
         this.coinbase = false;
+        this.versionNumber = 1;
+        this.input = false;
+        this.scriptNumber = scriptNumber;
     }
 
     @Override
@@ -209,7 +241,16 @@ public class Script extends ByteConsumer {
         StringBuilder stringBuilder = new StringBuilder();
 
         if (pretty) {
-            stringBuilder.append("Script data\n");
+            if(input) {
+                stringBuilder.append("Input");
+            }
+            else {
+                stringBuilder.append("Output");
+            }
+
+            stringBuilder.append(" script #");
+            stringBuilder.append(scriptNumber);
+            stringBuilder.append(" data:\n");
         }
 
         int counter = 0;
@@ -236,6 +277,9 @@ public class Script extends ByteConsumer {
                     stringBuilder.append(ByteArrayHelper.formatArray(byteConsumingWord.getInput()));
                 }
             }
+
+            stringBuilder.append("\n");
+            counter++;
         }
 
         return stringBuilder.toString();
