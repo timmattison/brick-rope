@@ -14,7 +14,6 @@ import java.util.logging.SimpleFormatter;
  */
 public class BlockChainTest {
     private static final boolean debug = false;
-    private static final boolean innerDebug = false;
 
     public static Handler getHandler() throws IOException {
         Handler handler = new FileHandler("test.log");
@@ -38,14 +37,11 @@ public class BlockChainTest {
         BufferedInputStream inputStream = new BufferedInputStream(new FileInputStream(inputFile));
 
         // Instantiate the block chain object
-        BlockChain blockChain = new BlockChain(inputStream, debug, innerDebug);
+        BlockChain blockChain = new BlockChain(inputStream, debug);
 
         try {
             // Build the block chain
             blockChain.build();
-
-            // Show the debug info for the entire block chain
-            blockChain.showDebugInfo();
         } catch (Exception ex) {
             // There was an exception, log the block number that it happened in
             System.out.println("Exception in block #" + (BlockChain.blockNumber - 1));

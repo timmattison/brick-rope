@@ -31,23 +31,17 @@ public abstract class ByteConsumer {
     protected static Logger logger;
 
     /**
-     * Whether or not the object should print out basic debug information.  Default is false.
+     * Whether or not the object should print out debug information.  Default is false.
      */
     private boolean debug = false;
-
-    /**
-     * Whether or not the object should print out detailed debug information.  Default is false.
-     */
-    private boolean innerDebug = false;
 
     public ByteConsumer(InputStream inputStream) throws IOException {
         this.inputStream = inputStream;
     }
 
-    public ByteConsumer(InputStream inputStream, boolean debug, boolean innerDebug) throws IOException {
+    public ByteConsumer(InputStream inputStream, boolean debug) throws IOException {
         this.inputStream = inputStream;
         setDebug(debug);
-        setInnerDebug(innerDebug);
     }
 
     protected void setDebug(boolean debug) {
@@ -56,14 +50,6 @@ public abstract class ByteConsumer {
 
     protected boolean isDebug() {
         return debug;
-    }
-
-    protected void setInnerDebug(boolean innerDebug) {
-        this.innerDebug = innerDebug;
-    }
-
-    protected boolean isInnerDebug() {
-        return innerDebug;
     }
 
     protected byte[] pullBytes(int count, String reason) throws IOException {
@@ -77,35 +63,7 @@ public abstract class ByteConsumer {
         return bytes;
     }
 
-    private void logBytes(Byte[] bytes) {
-        StringBuilder stringBuilder = new StringBuilder();
-
-        for (int loop = 0; loop < bytes.length; loop++) {
-            stringBuilder.append(String.format("%02x ", bytes[loop]));
-        }
-
-        getLogger().info(stringBuilder.toString());
-    }
-
-    protected void showDebugInfo() {
-        // Is this object set to debug mode?
-        if (isDebug()) {
-            // Yes, show the debug information
-            getLogger().info(debugHeader(getName()));
-            innerShowDebugInfo();
-        }
-    }
-
     protected abstract String getName();
-
-    private String debugHeader(String name) {
-        return "------ " + name;
-    }
-
-    /**
-     * Print the debug information
-     */
-    protected abstract void innerShowDebugInfo();
 
     /**
      * Build the object from the input stream

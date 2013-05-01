@@ -118,24 +118,7 @@ public class BlockTest {
     private static final boolean innerDebug = true;
 
     public static void main(String[] args) throws Exception {
-        Block block1 = new Block(testBlock1InputStream, debug, innerDebug);
-        Block block2 = new Block(testBlock2InputStream, debug, innerDebug);
-    }
-
-    private static void partialCompare(Byte[] array1, Byte[] array2) {
-        if ((array1 == null) || (array2 == null)) {
-            throw new UnsupportedOperationException("Neither of the arrays can be NULL");
-        }
-
-        int length = array1.length < array2.length ? array1.length : array2.length;
-
-        for (int loop = 0; loop < length; loop++) {
-            if (!array1[loop].equals(array2[loop])) {
-                System.out.println("Arrays differ at byte " + loop + " [" + ByteArrayHelper.toHex(array1[loop]) + "][" + ByteArrayHelper.toHex(array2[loop]) + "]");
-                return;
-            }
-        }
-
-        System.out.println("Arrays are equal up to byte " + length);
+        Block block1 = new Block(testBlock1InputStream, debug);
+        Block block2 = new Block(testBlock2InputStream, debug);
     }
 }

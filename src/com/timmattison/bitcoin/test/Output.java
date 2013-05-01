@@ -35,20 +35,13 @@ public class Output extends ByteConsumer {
      */
     private Script outputScript;
 
-    public Output(InputStream inputStream, boolean debug, boolean innerDebug) throws IOException {
-        super(inputStream, debug, innerDebug);
+    public Output(InputStream inputStream, boolean debug) throws IOException {
+        super(inputStream, debug);
     }
 
     @Override
     protected String getName() {
         return name;
-    }
-
-    @Override
-    protected void innerShowDebugInfo() {
-        getLogger().info("Value: " + getDecimalValue() + " BTC [" + value + "]");
-        getLogger().info("Output script length: " + outputScriptLength);
-        outputScript.showDebugInfo();
     }
 
     @Override
@@ -58,14 +51,13 @@ public class Output extends ByteConsumer {
         value = EndiannessHelper.BytesToLong(valueBytes);
 
         // Get the output script length
-        VariableLengthInteger temp = new VariableLengthInteger(inputStream, isDebug(), isInnerDebug());
+        VariableLengthInteger temp = new VariableLengthInteger(inputStream, isDebug());
         outputScriptLengthBytes = temp.getValueBytes();
         outputScriptLength = temp.getValue();
-        if(isInnerDebug()) { getLogger().info("output, output script length: " + outputScriptLength); }
 
         try {
             // Get the input script
-            outputScript = new Script(inputStream, outputScriptLength, isDebug(), isInnerDebug());
+            outputScript = new Script(inputStream, outputScriptLength, isDebug());
             outputScript.build();
         } catch (IllegalAccessException e) {
             throw new UnsupportedOperationException(e);

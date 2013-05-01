@@ -64,28 +64,13 @@ public class Block extends ByteConsumer {
      * The transaction count bytes
      */
 
-    public Block(InputStream inputStream, boolean debug, boolean innerDebug) throws IOException {
-        super(inputStream, debug, innerDebug);
+    public Block(InputStream inputStream, boolean debug) throws IOException {
+        super(inputStream, debug);
     }
 
     @Override
     protected String getName() {
         return name;
-    }
-
-    @Override
-    protected void innerShowDebugInfo() {
-        // Show the block info
-        getLogger().info("  Magic number: " + magicNumber);
-        getLogger().info("  Block size: " + magicNumber);
-
-        // Show the block header info
-        blockHeader.showDebugInfo();
-
-        // Show the info for the transactions
-        for (Transaction transaction : transactions) {
-            transaction.showDebugInfo();
-        }
     }
 
     @Override
@@ -112,14 +97,13 @@ public class Block extends ByteConsumer {
         }
 
         // Get the block header and remove the bytes it occupied
-        blockHeader = new BlockHeader(inputStream, isDebug(), isInnerDebug());
+        blockHeader = new BlockHeader(inputStream, isDebug());
         blockHeader.build();
 
         // Get the transaction count and return the remaining bytes back into the block header byte list
-        VariableLengthInteger temp = new VariableLengthInteger(inputStream, isDebug(), isInnerDebug());
+        VariableLengthInteger temp = new VariableLengthInteger(inputStream, isDebug());
         transactionCountBytes = temp.getValueBytes();
         transactionCount = (int) temp.getValue();
-        if(isInnerDebug()) { getLogger().info("block, transaction count: " + transactionCount); }
 
         // Sanity check transaction count
         if (transactionCount <= 0) {
@@ -130,7 +114,7 @@ public class Block extends ByteConsumer {
         transactions = new ArrayList<Transaction>();
 
         for (int transactionCounter = 0; transactionCounter < transactionCount; transactionCounter++) {
-            Transaction transaction = new Transaction(inputStream, transactionCounter, isDebug(), isInnerDebug());
+            Transaction transaction = new Transaction(inputStream, transactionCounter, isDebug());
             transaction.build();
             transactions.add(transaction);
         }

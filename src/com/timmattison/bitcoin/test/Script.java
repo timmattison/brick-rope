@@ -35,16 +35,16 @@ public class Script extends ByteConsumer {
      */
     private byte[] scriptBytes;
 
-    public Script(InputStream inputStream, long lengthInBytes, boolean coinbase, int versionNumber, boolean debug, boolean innerDebug) throws IllegalAccessException, InstantiationException, IOException {
-        super(inputStream, debug, innerDebug);
+    public Script(InputStream inputStream, long lengthInBytes, boolean coinbase, int versionNumber, boolean debug) throws IllegalAccessException, InstantiationException, IOException {
+        super(inputStream, debug);
 
         this.lengthInBytes = lengthInBytes;
         this.coinbase = coinbase;
         this.versionNumber = versionNumber;
     }
 
-    public Script(InputStream inputStream, long lengthInBytes, boolean debug, boolean innerDebug) throws IllegalAccessException, InstantiationException, IOException {
-        super(inputStream, debug, innerDebug);
+    public Script(InputStream inputStream, long lengthInBytes, boolean debug) throws IllegalAccessException, InstantiationException, IOException {
+        super(inputStream, debug);
 
         this.lengthInBytes = lengthInBytes;
         this.coinbase = false;
@@ -53,13 +53,6 @@ public class Script extends ByteConsumer {
     @Override
     protected String getName() {
         return name;
-    }
-
-    @Override
-    protected void innerShowDebugInfo() {
-        if (isDebug()) {
-            getLogger().info(getListOfWords());
-        }
     }
 
     public String getListOfWords() {
@@ -155,10 +148,6 @@ public class Script extends ByteConsumer {
 
         ByteArrayInputStream byteStream = new ByteArrayInputStream(scriptBytes);
 
-        if (isInnerDebug()) {
-            getLogger().info("Bytes for this script: " + ByteArrayHelper.formatArray(scriptBytes));
-        }
-
         // Is this the coinbase?
         if (coinbase) {
             // Yes, is this a version 2 block?
@@ -189,21 +178,12 @@ public class Script extends ByteConsumer {
             while (byteStream.available() > 0) {
                 // Get the next byte
                 byte currentByte = (byte) byteStream.read();
-                if (isInnerDebug()) {
-                    getLogger().info("Current byte: " + currentByte + " [" + String.format("%02x", currentByte) + "]");
-                }
 
                 // Get the word that the next byte corresponds to
                 Word currentWord = getWordFactory().getWordByOpcode(currentByte);
-                if (isInnerDebug()) {
-                    getLogger().info("Current word: " + currentWord.getWord());
-                }
 
                 // Is this a byte consuming word?
                 if (ByteConsumingWord.class.isAssignableFrom(currentWord.getClass())) {
-                    if (isInnerDebug()) {
-                        getLogger().info("Word about to consume some bytes");
-                    }
                     // Yes, consume the bytes
                     ((ByteConsumingWord) currentWord).consumeInput(byteStream);
                 }

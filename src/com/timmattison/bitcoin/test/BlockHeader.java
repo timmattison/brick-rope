@@ -58,23 +58,13 @@ public class BlockHeader extends ByteConsumer {
     private int nonce;
     private byte[] nonceBytes;
 
-    public BlockHeader(InputStream inputStream, boolean debug, boolean innerDebug) throws IOException {
-        super(inputStream, debug, innerDebug);
+    public BlockHeader(InputStream inputStream, boolean debug) throws IOException {
+        super(inputStream, debug);
     }
 
     @Override
     protected String getName() {
         return name;
-    }
-
-    @Override
-    protected void innerShowDebugInfo() {
-        getLogger().info("Version: " + version);
-        getLogger().info("Previous block hash: " + ByteArrayHelper.formatArray(prevBlock));
-        getLogger().info("Merkle root: " + ByteArrayHelper.formatArray(merkleRoot));
-        getLogger().info("Timestamp: " + timestamp);
-        getLogger().info("Bits: " + bits);
-        getLogger().info("Nonce: " + nonce);
     }
 
     @Override

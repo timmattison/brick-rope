@@ -17,8 +17,8 @@ public class BlockChain extends ByteConsumer {
     public static int blockNumber = 0;
     private List<Block> blocks = new ArrayList<Block>();
 
-    public BlockChain(InputStream inputStream, boolean debug, boolean innerDebug) throws IOException {
-        super(inputStream, debug, innerDebug);
+    public BlockChain(InputStream inputStream, boolean debug) throws IOException {
+        super(inputStream, debug);
     }
 
     @Override
@@ -36,11 +36,8 @@ public class BlockChain extends ByteConsumer {
             blockNumber++;
 
             // Create and parse the block
-            Block block = new Block(inputStream, isDebug(), isInnerDebug());
+            Block block = new Block(inputStream, isDebug());
             block.build();
-
-            // Show the block's debug info
-            block.showDebugInfo();
 
             availableBytes = inputStream.available() & 0xFFFFFFFFL;
         }
@@ -49,11 +46,6 @@ public class BlockChain extends ByteConsumer {
     @Override
     protected String getName() {
         return name;
-    }
-
-    @Override
-    protected void innerShowDebugInfo() {
-        throw new UnsupportedOperationException("Not implemented yet");
     }
 
     @Override

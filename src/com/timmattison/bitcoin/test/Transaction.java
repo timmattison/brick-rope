@@ -56,8 +56,8 @@ public class Transaction extends ByteConsumer {
 
     private int transactionCounter;
 
-    public Transaction(InputStream inputStream, int transactionCounter, boolean debug, boolean innerDebug) throws IOException {
-        super(inputStream, debug, innerDebug);
+    public Transaction(InputStream inputStream, int transactionCounter, boolean debug) throws IOException {
+        super(inputStream, debug);
 
         this.transactionCounter = transactionCounter;
     }
@@ -65,26 +65,6 @@ public class Transaction extends ByteConsumer {
     @Override
     protected String getName() {
         return name;
-    }
-
-    @Override
-    protected void innerShowDebugInfo() {
-        if (isDebug()) {
-            getLogger().info("Version: " + versionNumber);
-            getLogger().info("Input counter: " + inCounter);
-
-            for (Input input : inputs) {
-                input.showDebugInfo();
-            }
-
-            getLogger().info("Output counter: " + outCounter);
-
-            for (Output output : outputs) {
-                output.showDebugInfo();
-            }
-
-            getLogger().info("Lock time: " + lockTime);
-        }
     }
 
     @Override
@@ -99,29 +79,27 @@ public class Transaction extends ByteConsumer {
         }
 
         // Get the input counter
-        VariableLengthInteger temp = new VariableLengthInteger(inputStream, isDebug(), isInnerDebug());
+        VariableLengthInteger temp = new VariableLengthInteger(inputStream, isDebug());
         inCounterBytes = temp.getValueBytes();
         inCounter = temp.getValue();
-        if(isInnerDebug()) { getLogger().info("transaction, in counter: " + inCounter); }
 
         // Get the inputs
         for (int inputLoop = 0; inputLoop < inCounter; inputLoop++) {
             // Input 0 is the coinbase, all other inputs are not
             boolean coinbase = ((transactionCounter == 0) && (inputLoop == 0)) ? true : false;
-            Input input = new Input(inputStream, coinbase, versionNumber, isDebug(), isInnerDebug());
+            Input input = new Input(inputStream, coinbase, versionNumber, isDebug());
             input.build();
             addInput(input);
         }
 
         // Get the output counter
-        temp = new VariableLengthInteger(inputStream, isDebug(), isInnerDebug());
+        temp = new VariableLengthInteger(inputStream, isDebug());
         outCounterBytes = temp.getValueBytes();
         outCounter = temp.getValue();
-        if(isInnerDebug()) { getLogger().info("transaction, out counter: " + outCounter); }
 
         // Get the outputs
         for (int outputLoop = 0; outputLoop < outCounter; outputLoop++) {
-            Output output = new Output(inputStream, isDebug(), isInnerDebug());
+            Output output = new Output(inputStream, isDebug());
             output.build();
             addOutput(output);
         }

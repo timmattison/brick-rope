@@ -50,8 +50,8 @@ public class Input extends ByteConsumer {
     private boolean coinbase;
     private int versionNumber;
 
-    public Input(InputStream inputStream, boolean coinbase, int versionNumber, boolean debug, boolean innerDebug) throws IOException {
-        super(inputStream, debug, innerDebug);
+    public Input(InputStream inputStream, boolean coinbase, int versionNumber, boolean debug) throws IOException {
+        super(inputStream, debug);
 
         this.coinbase = coinbase;
         this.versionNumber = versionNumber;
@@ -63,33 +63,22 @@ public class Input extends ByteConsumer {
     }
 
     @Override
-    protected void innerShowDebugInfo() {
-        getLogger().info("Previous transaction hash: " + ByteArrayHelper.formatArray(previousTransactionHash));
-        getLogger().info("Previous output index: " + previousOutputIndex);
-        inputScript.showDebugInfo();
-        getLogger().info("Sequence number: " + sequenceNumber);
-    }
-
-    @Override
     protected void build() throws IOException {
         // Get the previous transaction hash
         previousTransactionHash = pullBytes(previousTransactionHashLengthInBytes, "input, previous transaction hash");
-        if(isInnerDebug()) { getLogger().info("Previous transaction hash: " + ByteArrayHelper.formatArray(previousTransactionHash)); }
 
         // Get the previous output index
         previousOutputIndexBytes = pullBytes(previousOutputIndexLengthInBytes, "input, previous output index");
         previousOutputIndex = EndiannessHelper.BytesToInt(previousOutputIndexBytes);
-        if(isInnerDebug()) { getLogger().info("Previous output index: " + previousOutputIndex); }
 
         // Get the input script length
-        VariableLengthInteger temp = new VariableLengthInteger(inputStream, isDebug(), isInnerDebug());
+        VariableLengthInteger temp = new VariableLengthInteger(inputStream, isDebug());
         inputScriptLengthBytes = temp.getValueBytes();
         inputScriptLength = temp.getValue();
-        if(isInnerDebug()) { getLogger().info("Input script length: " + inputScriptLength); }
 
         try {
             // Get the input script
-            inputScript = new Script(inputStream, inputScriptLength, this.coinbase, this.versionNumber, isDebug(), isInnerDebug());
+            inputScript = new Script(inputStream, inputScriptLength, this.coinbase, this.versionNumber, isDebug());
             inputScript.build();
         } catch (IllegalAccessException e) {
             throw new UnsupportedOperationException(e);
@@ -100,7 +89,6 @@ public class Input extends ByteConsumer {
         // Get the sequence number
         sequenceNumberBytes = pullBytes(sequenceNumberLengthInBytes, "input, sequence number");
         sequenceNumber = EndiannessHelper.BytesToInt(sequenceNumberBytes);
-        if(isInnerDebug()) { getLogger().info("Sequence number: " + sequenceNumber); }
     }
 
     @Override

@@ -23,8 +23,8 @@ public class VariableLengthInteger extends ByteConsumer {
     long value;
     private byte[] valueBytes;
 
-    public VariableLengthInteger(InputStream inputStream, boolean debug, boolean innerDebug) throws IOException {
-        super(inputStream, debug, innerDebug);
+    public VariableLengthInteger(InputStream inputStream, boolean debug) throws IOException {
+        super(inputStream, debug);
 
         build();
     }
@@ -32,11 +32,6 @@ public class VariableLengthInteger extends ByteConsumer {
     @Override
     protected String getName() {
         return name;
-    }
-
-    @Override
-    protected void innerShowDebugInfo() {
-        //To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override
