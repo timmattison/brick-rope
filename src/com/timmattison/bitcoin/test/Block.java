@@ -27,6 +27,23 @@ public class Block extends ByteConsumer {
     private int transactionCount;
     private List<Transaction> transactions;
 
+    // Raw bytes, in order they were pulled from the block chain
+
+    /**
+     * The magic number bytes
+     */
+    private byte[] magicNumberBytes;
+
+    /**
+     * The block size bytes
+     */
+    private byte[] blockSizeBytes;
+
+    /**
+     * The transaction count bytes
+     */
+    private byte[] transactionCountBytes;
+
     public Block(InputStream inputStream, boolean debug, boolean innerDebug) throws IOException {
         super(inputStream, debug, innerDebug);
     }
@@ -56,7 +73,8 @@ public class Block extends ByteConsumer {
         if(isDebug()) { getLogger().info("Input stream available: " + inputStream.available()); }
 
         // Get the magic number and remove the bytes it occupied
-        magicNumber = EndiannessHelper.BytesToInt(pullBytes(magicNumberLengthInBytes, "block, magic number"));
+        magicNumberBytes = pullBytes(magicNumberLengthInBytes, "block, magic number");
+        magicNumber = EndiannessHelper.BytesToInt(magicNumberBytes);
 
         // Validate that the magic number matches the spec
         if (magicNumber != requiredMagicNumber) {
@@ -64,7 +82,8 @@ public class Block extends ByteConsumer {
         }
 
         // Get the block size and remove the bytes it occupied
-        blockSize = EndiannessHelper.BytesToInt(pullBytes(blockSizeLengthInBytes, "block, block size"));
+        blockSizeBytes = pullBytes(blockSizeLengthInBytes, "block, block size");
+        blockSize = EndiannessHelper.BytesToInt(blockSizeBytes);
 
         // Sanity check the block size
         if (blockSize <= 0) {
@@ -78,6 +97,7 @@ public class Block extends ByteConsumer {
 
         // Get the transaction count and return the remaining bytes back into the block header byte list
         VariableLengthInteger temp = new VariableLengthInteger(inputStream, isDebug(), isInnerDebug());
+        transactionCountBytes = temp.getBytes();
         transactionCount = (int) temp.getValue();
         if(isInnerDebug()) { getLogger().info("block, transaction count: " + transactionCount); }
 

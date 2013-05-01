@@ -18,6 +18,7 @@ public class VariableLengthInteger extends ByteConsumer {
     private static final int header64BitInteger = 0xff;
 
     long value;
+    private byte[] bytes;
 
     public VariableLengthInteger(InputStream inputStream, boolean debug, boolean innerDebug) throws IOException {
         super(inputStream, debug, innerDebug);
@@ -63,5 +64,13 @@ public class VariableLengthInteger extends ByteConsumer {
 
     public long getValue() {
         return value;
+    }
+
+    public byte[] getBytes() {
+        return bytes;
+    }
+
+    public void setBytes(byte[] bytes) {
+        this.bytes = bytes;
     }
 }
