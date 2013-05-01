@@ -68,12 +68,32 @@ public class Script extends ByteConsumer {
         return stringBuilder.toString();
     }
 
-    public Object execute() {
+    public boolean execute() {
+        // Is this the coinbase?
+        if(coinbase) {
+            // Yes, nothing to execute
+            return true;
+        }
+
+        // Loop through each word
         for (Word word : words) {
+            // Execute the instruction
             word.execute(getStateMachine());
         }
 
-        return getStateMachine().stack.pop();
+        // Pop the top value of the stack
+        Object topStackValue = getStateMachine().stack.pop();
+
+        // Is the top stack non-zero?
+        if(topStackValue != null) {
+            // Yes, success!
+            // XXX - This needs to check for zero values, not just NULLs
+            return true;
+        }
+        else {
+            // No, failure
+            return false;
+        }
     }
 
     private StateMachine getStateMachine() {
