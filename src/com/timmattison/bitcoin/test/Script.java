@@ -86,11 +86,6 @@ public class Script extends ByteConsumer {
 
     @Override
     protected void build() throws IOException {
-        if(lengthInBytes == 0) {
-            // XXX - Just return
-            return;
-        }
-
         words = new ArrayList<Word>();
 
         // Is there any data?
