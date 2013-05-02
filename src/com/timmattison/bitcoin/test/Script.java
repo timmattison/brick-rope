@@ -5,6 +5,7 @@ import com.timmattison.bitcoin.test.script.StateMachine;
 import com.timmattison.bitcoin.test.script.Word;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -283,6 +284,25 @@ public class Script extends ByteConsumer {
         }
 
         return stringBuilder.toString();
+    }
+
+    @Override
+    protected byte[] dumpBytes() throws IOException {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+
+        for(Word word : words) {
+            bytes.write(word.getOpcode());
+
+            if (word instanceof ByteConsumingWord) {
+                ByteConsumingWord byteConsumingWord = (ByteConsumingWord) word;
+
+                if (byteConsumingWord.getInputBytesRequired() != 0) {
+                    bytes.write(byteConsumingWord.getInput());
+                }
+            }
+        }
+
+        return bytes.toByteArray();
     }
 
     private WordFactory getWordFactory() throws IllegalAccessException, InstantiationException {

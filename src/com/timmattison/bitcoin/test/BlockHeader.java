@@ -1,9 +1,13 @@
 package com.timmattison.bitcoin.test;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -14,8 +18,6 @@ import java.security.NoSuchAlgorithmException;
  */
 public class BlockHeader extends ByteConsumer {
     private static final String name = "BLOCK HEADER";
-
-    private static final String hashName = "SHA-256";
 
     private static final int versionLengthInBytes = 4;
     private static final int prevBlockLengthInBytes = 32;
@@ -92,30 +94,6 @@ public class BlockHeader extends ByteConsumer {
         nonce = EndiannessHelper.BytesToInt(nonceBytes);
     }
 
-    public byte[] getHash() throws NoSuchAlgorithmException {
-        // Get two message digest objects so we can do the two step hash
-        MessageDigest hashOfHeader = MessageDigest.getInstance(hashName);
-        MessageDigest hashOfHash = MessageDigest.getInstance(hashName);
-
-        // Hash all of the header data
-        hashOfHeader.update(EndiannessHelper.IntToBytes(version));
-        hashOfHeader.update(prevBlock);
-        hashOfHeader.update(merkleRoot);
-        hashOfHeader.update(EndiannessHelper.IntToBytes(timestamp));
-        hashOfHeader.update(EndiannessHelper.IntToBytes(bits));
-        hashOfHeader.update(EndiannessHelper.IntToBytes(nonce));
-
-        // Hash the hashed data
-        hashOfHash.update(hashOfHeader.digest());
-
-        // Get the result and print it
-        byte[] result = hashOfHash.digest();
-        getLogger().info(ByteArrayHelper.formatArray(result));
-
-        // Return it
-        return result;
-    }
-
     @Override
     protected String dump(boolean pretty) {
         StringBuilder stringBuilder = new StringBuilder();
@@ -132,5 +110,32 @@ public class BlockHeader extends ByteConsumer {
         DumpHelper.dump(stringBuilder, pretty, "\tNonce: ", "\n", nonceBytes);
 
         return stringBuilder.toString();
+    }
+
+    @Override
+    protected byte[] dumpBytes() throws IOException {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+
+        bytes.write(versionBytes);
+        bytes.write(prevBlock);
+        bytes.write(merkleRoot);
+        bytes.write(timestampBytes);
+        bytes.write(bitsBytes);
+        bytes.write(nonceBytes);
+
+        return bytes.toByteArray();
+    }
+
+    public byte[] getHash() throws NoSuchAlgorithmException {
+        List<byte[]> data = new ArrayList<byte[]>();
+
+        data.add(EndiannessHelper.IntToBytes(version));
+        data.add(prevBlock);
+        data.add(merkleRoot);
+        data.add(EndiannessHelper.IntToBytes(timestamp));
+        data.add(EndiannessHelper.IntToBytes(bits));
+        data.add(EndiannessHelper.IntToBytes(nonce));
+
+        return HashHelper.doubleSha256Hash(data);
     }
 }

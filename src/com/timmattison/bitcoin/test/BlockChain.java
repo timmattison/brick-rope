@@ -1,5 +1,6 @@
 package com.timmattison.bitcoin.test;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -39,7 +40,7 @@ public class BlockChain extends ByteConsumer {
             Block block = new Block(inputStream, blockNumber, isDebug());
             block.build();
 
-            getLogger().info(block.dump(true));
+            //getLogger().info(block.dump(true));
 
             availableBytes = inputStream.available() & 0xFFFFFFFFL;
         }
@@ -63,5 +64,19 @@ public class BlockChain extends ByteConsumer {
         }
 
         return stringBuilder.toString();
+    }
+
+    @Override
+    protected byte[] dumpBytes() throws IOException {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+
+        // Loop through all of the blocks
+        for(Block block : blocks) {
+            // Dump the bytes for each block
+            bytes.write(block.dumpBytes());
+        }
+
+        // Return a byte array
+        return bytes.toByteArray();
     }
 }

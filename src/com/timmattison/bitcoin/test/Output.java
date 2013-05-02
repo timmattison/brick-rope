@@ -1,5 +1,7 @@
 package com.timmattison.bitcoin.test;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
@@ -91,5 +93,17 @@ public class Output extends ByteConsumer {
         stringBuilder.append(outputScript.dump(pretty));
 
         return stringBuilder.toString();
+    }
+
+    @Override
+    protected byte[] dumpBytes() throws IOException {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+
+        bytes.write(valueBytes);
+        bytes.write(outputScriptLengthBytes);
+
+        bytes.write(outputScript.dumpBytes());
+
+        return bytes.toByteArray();
     }
 }

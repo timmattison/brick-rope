@@ -1,5 +1,6 @@
 package com.timmattison.bitcoin.test;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -148,8 +149,30 @@ public class Transaction extends ByteConsumer {
             stringBuilder.append(output.dump(pretty));
         }
 
-        DumpHelper.dump(stringBuilder, pretty, "\tLock time: ", "\n", outCounterBytes);
+        DumpHelper.dump(stringBuilder, pretty, "\tLock time: ", "\n", lockTimeBytes);
 
         return stringBuilder.toString();
+    }
+
+    @Override
+    protected byte[] dumpBytes() throws IOException {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+
+        bytes.write(versionNumberBytes);
+        bytes.write(inCounterBytes);
+
+        for(Input input : inputs) {
+            bytes.write(input.dumpBytes());
+        }
+
+        bytes.write(outCounterBytes);
+
+        for(Output output : outputs) {
+            bytes.write(output.dumpBytes());
+        }
+
+        bytes.write(lockTimeBytes);
+
+        return bytes.toByteArray();
     }
 }

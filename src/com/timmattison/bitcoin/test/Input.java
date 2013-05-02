@@ -1,5 +1,6 @@
 package com.timmattison.bitcoin.test;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -110,5 +111,18 @@ public class Input extends ByteConsumer {
         DumpHelper.dump(stringBuilder, pretty, "\tSequence number: ", "\n", sequenceNumberBytes);
 
         return stringBuilder.toString();
+    }
+
+    @Override
+    protected byte[] dumpBytes() throws IOException {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+
+        bytes.write(previousTransactionHash);
+        bytes.write(previousOutputIndexBytes);
+        bytes.write(inputScriptLengthBytes);
+        bytes.write(inputScript.dumpBytes());
+        bytes.write(sequenceNumberBytes);
+
+        return bytes.toByteArray();
     }
 }

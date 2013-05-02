@@ -104,4 +104,10 @@ public abstract class ByteConsumer {
      * @param pretty is true if the output should be human readable
      */
     protected abstract String dump(boolean pretty);
+
+    /**
+     * Dump the raw bytes.  Used for code that needs to hash different parts of a block.
+     * @return
+     */
+    protected abstract byte[] dumpBytes() throws IOException;
 }

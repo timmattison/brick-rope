@@ -78,6 +78,11 @@ public class VariableLengthInteger extends ByteConsumer {
         return stringBuilder.toString();
     }
 
+    @Override
+    protected byte[] dumpBytes() throws IOException {
+        return getValueBytes();
+    }
+
     public long getValue() {
         return value;
     }

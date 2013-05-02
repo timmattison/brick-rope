@@ -1,7 +1,9 @@
 package com.timmattison.bitcoin.test;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -105,6 +107,14 @@ public class Block extends ByteConsumer {
         for (int transactionCounter = 0; transactionCounter < transactionCount; transactionCounter++) {
             Transaction transaction = new Transaction(inputStream, transactionCounter, isDebug());
             transaction.build();
+
+            try {
+                byte[] result = HashHelper.doubleSha256Hash(transaction.dumpBytes());
+                result = null;
+            } catch (NoSuchAlgorithmException e) {
+                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            }
+
             transactions.add(transaction);
         }
     }
@@ -129,5 +139,21 @@ public class Block extends ByteConsumer {
         }
 
         return stringBuilder.toString();
+    }
+
+    @Override
+    protected byte[] dumpBytes() throws IOException {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+
+        bytes.write(magicNumberBytes);
+        bytes.write(blockSizeBytes);
+        bytes.write(blockHeader.dumpBytes());
+        bytes.write(transactionCountBytes);
+
+        for(Transaction transaction : transactions) {
+            bytes.write(transaction.dumpBytes());
+        }
+
+        return bytes.toByteArray();
     }
 }
