@@ -130,7 +130,9 @@ public class Transaction extends ByteConsumer {
         StringBuilder stringBuilder = new StringBuilder();
 
         if (pretty) {
-            stringBuilder.append("Transaction data:\n");
+            stringBuilder.append("Transaction #");
+            stringBuilder.append(transactionCounter);
+            stringBuilder.append(" data:\n");
         }
 
         DumpHelper.dump(stringBuilder, pretty, "\tVersion number: ", "\n", versionNumberBytes);
