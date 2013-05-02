@@ -66,8 +66,6 @@ public class Block extends ByteConsumer {
 
     @Override
     protected void build() throws IOException {
-        if(isDebug()) { getLogger().info("Input stream available: " + inputStream.available()); }
-
         // Get the magic number and remove the bytes it occupied
         magicNumberBytes = pullBytes(magicNumberLengthInBytes, "block, magic number");
         magicNumber = EndiannessHelper.BytesToInt(magicNumberBytes);
