@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -129,10 +130,12 @@ public class Block extends ByteConsumer {
         List<byte[]> transactionBytes = new ArrayList<byte[]>();
 
         // Build the base of the tree by dumping all of the transaction bytes into an array
-
         for (Transaction transaction : transactions) {
             transactionBytes.add(transaction.dumpBytes());
         }
+
+        // Sort the hashes
+        Collections.sort(transactionBytes, new ByteArrayComparator());
 
         // Is there only one value?
         if (transactions.size() != 1) {
