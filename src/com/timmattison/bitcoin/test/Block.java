@@ -109,8 +109,9 @@ public class Block extends ByteConsumer {
             transaction.build();
 
             try {
+                // For block 0 this gives us the Merkle root
                 byte[] result = HashHelper.doubleSha256Hash(transaction.dumpBytes());
-                result = null;
+                getLogger().info(ByteArrayHelper.formatArray(result));
             } catch (NoSuchAlgorithmException e) {
                 e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
             }

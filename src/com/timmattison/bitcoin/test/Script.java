@@ -288,21 +288,7 @@ public class Script extends ByteConsumer {
 
     @Override
     protected byte[] dumpBytes() throws IOException {
-        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-
-        for(Word word : words) {
-            bytes.write(word.getOpcode());
-
-            if (word instanceof ByteConsumingWord) {
-                ByteConsumingWord byteConsumingWord = (ByteConsumingWord) word;
-
-                if (byteConsumingWord.getInputBytesRequired() != 0) {
-                    bytes.write(byteConsumingWord.getInput());
-                }
-            }
-        }
-
-        return bytes.toByteArray();
+        return scriptBytes;
     }
 
     private WordFactory getWordFactory() throws IllegalAccessException, InstantiationException {

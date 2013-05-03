@@ -1,6 +1,7 @@
 package com.timmattison.bitcoin.test;
 
 import java.io.ByteArrayOutputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -40,7 +41,20 @@ public class BlockChain extends ByteConsumer {
             Block block = new Block(inputStream, blockNumber, isDebug());
             block.build();
 
-            //getLogger().info(block.dump(true));
+            /*
+            byte[] bytes = block.dumpBytes();
+            FileOutputStream output = new FileOutputStream("blah.out");
+            output.write(bytes);
+            output.close();
+            */
+
+            if ((blockNumber == 10) || (blockNumber == 171)) {
+                getLogger().info(block.dump(true));
+            }
+
+            if (blockNumber == 171) {
+                throw new UnsupportedOperationException();
+            }
 
             availableBytes = inputStream.available() & 0xFFFFFFFFL;
         }
@@ -59,7 +73,7 @@ public class BlockChain extends ByteConsumer {
             stringBuilder.append("Block chain:\n");
         }
 
-        for(Block block : blocks) {
+        for (Block block : blocks) {
             stringBuilder.append(block.dump(pretty));
         }
 
@@ -71,7 +85,7 @@ public class BlockChain extends ByteConsumer {
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
 
         // Loop through all of the blocks
-        for(Block block : blocks) {
+        for (Block block : blocks) {
             // Dump the bytes for each block
             bytes.write(block.dumpBytes());
         }
