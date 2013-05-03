@@ -22,11 +22,11 @@ public class ByteArrayComparator implements Comparator<byte[]> {
         // They are not equal which one is longer?
         if(o1.length < o2.length) {
             // o1 is shorter
-            return 1;
+            return -1;
         }
         else if(o1.length > o2.length) {
             // o1 is longer
-            return -1;
+            return 1;
         }
 
         // They are equal in length
