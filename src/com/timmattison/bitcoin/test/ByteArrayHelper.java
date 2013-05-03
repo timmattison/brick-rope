@@ -1,5 +1,7 @@
 package com.timmattison.bitcoin.test;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -45,5 +47,14 @@ public class ByteArrayHelper {
         }
 
         System.out.println("Arrays are equal up to byte " + length);
+    }
+
+    public static byte[] concatenate(byte[] input1, byte[] input2) throws IOException {
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+
+        output.write(input1);
+        output.write(input2);
+
+        return output.toByteArray();
     }
 }

@@ -23,37 +23,31 @@ public class Block extends ByteConsumer {
     private static final int requiredMagicNumber = EndiannessHelper.BytesToInt(requiredMagicNumberBytes);
     private static final int magicNumberLengthInBytes = 4;
     private static final int blockSizeLengthInBytes = 4;
-
+    // These values are not in the block
+    int blockNumber;
     /**
      * Magic number
      */
     private int magicNumber;
     private byte[] magicNumberBytes;
-
     /**
      * Block size
      */
     private int blockSize;
     private byte[] blockSizeBytes;
-
     /**
      * Block header
      */
     private BlockHeader blockHeader;
-
     /**
      * Transaction count
      */
     private int transactionCount;
     private byte[] transactionCountBytes;
-
     /**
      * Transactions
      */
     private List<Transaction> transactions;
-
-    // These values are not in the block
-    int blockNumber;
 
     public Block(InputStream inputStream, int blockNumber, boolean debug) throws IOException {
         super(inputStream, debug);
@@ -108,16 +102,71 @@ public class Block extends ByteConsumer {
             Transaction transaction = new Transaction(inputStream, transactionCounter, isDebug());
             transaction.build();
 
-            try {
-                // For block 0 this gives us the Merkle root
-                byte[] result = HashHelper.doubleSha256Hash(transaction.dumpBytes());
-                getLogger().info(ByteArrayHelper.formatArray(result));
-            } catch (NoSuchAlgorithmException e) {
-                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-            }
-
             transactions.add(transaction);
         }
+
+        try {
+            // For block 0 this gives us the Merkle root
+            byte[] result = HashHelper.doubleSha256Hash(transactions.get(0).dumpBytes());
+            getLogger().info(ByteArrayHelper.formatArray(result));
+
+            byte[] otherResult = calculateMerkleRoot();
+            getLogger().info(ByteArrayHelper.formatArray(otherResult));
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
+    }
+
+    public byte[] calculateMerkleRoot() throws IOException, NoSuchAlgorithmException {
+        if((transactions == null) || (transactions.size() == 0)) {
+            throw new UnsupportedOperationException("Cannot calculate the Merkle root with no transactions");
+        }
+
+        List<byte[]> transactionBytes = new ArrayList<byte[]>();
+
+        // Build the base of the tree by dumping all of the transaction bytes into an array
+
+        for (Transaction transaction : transactions) {
+            transactionBytes.add(transaction.dumpBytes());
+        }
+
+        // Is there only one value?
+        if (transactions.size() != 1) {
+            // No, are there an odd number of transactions?
+            if ((transactions.size() % 2) != 0) {
+                // Yes, duplicate the last transaction to fill in the tree
+                transactionBytes.add(transactions.get(transactions.size() - 1).dumpBytes());
+            }
+        } else {
+            // Yes, there is only one value just do the final hashing step below
+        }
+
+
+        // Keep looping and hashing until there is only one value
+        do {
+            List<byte[]> tempTransactionBytes = new ArrayList<byte[]>();
+
+            // Hash all of the current values
+            for (int loop = 0; loop < transactionBytes.size(); loop++) {
+                tempTransactionBytes.add(HashHelper.doubleSha256Hash(transactionBytes.get(loop)));
+            }
+
+            // Clear out the original data
+            transactionBytes = new ArrayList<byte[]>();
+
+            // Is this the degenerate case?
+            if (tempTransactionBytes.size() == 1) {
+                // Yes, this is the last level of the tree
+                transactionBytes.add(tempTransactionBytes.get(0));
+            } else {
+                // Combine the hashed values into the next level of the tree
+                for (int loop = 0; loop < (transactionBytes.size() / 2); loop++) {
+                    transactionBytes.add(ByteArrayHelper.concatenate(tempTransactionBytes.get(loop * 2), tempTransactionBytes.get((loop * 2) + 1)));
+                }
+            }
+        } while (transactionBytes.size() != 1);
+
+        return transactionBytes.get(0);
     }
 
     @Override
@@ -135,7 +184,7 @@ public class Block extends ByteConsumer {
         stringBuilder.append(blockHeader.dump(pretty));
         DumpHelper.dump(stringBuilder, pretty, "\tTransaction count: ", "\n", transactionCountBytes);
 
-        for(Transaction transaction : transactions) {
+        for (Transaction transaction : transactions) {
             stringBuilder.append(transaction.dump(pretty));
         }
 
@@ -151,7 +200,7 @@ public class Block extends ByteConsumer {
         bytes.write(blockHeader.dumpBytes());
         bytes.write(transactionCountBytes);
 
-        for(Transaction transaction : transactions) {
+        for (Transaction transaction : transactions) {
             bytes.write(transaction.dumpBytes());
         }
 
