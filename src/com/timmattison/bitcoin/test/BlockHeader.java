@@ -138,4 +138,8 @@ public class BlockHeader extends ByteConsumer {
 
         return HashHelper.doubleSha256Hash(data);
     }
+
+    public byte[] getMerkleRoot() {
+        return merkleRoot;
+    }
 }

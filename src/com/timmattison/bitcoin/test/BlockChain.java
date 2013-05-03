@@ -4,6 +4,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,7 +25,7 @@ public class BlockChain extends ByteConsumer {
     }
 
     @Override
-    protected void build() throws IOException {
+    protected void build() throws IOException, NoSuchAlgorithmException {
         long availableBytes = inputStream.available() & 0xFFFFFFFFL;
 
         // Loop until there is no more input stream data available
@@ -48,6 +49,7 @@ public class BlockChain extends ByteConsumer {
             output.close();
             */
 
+            /*
             if ((blockNumber == 10) || (blockNumber == 171)) {
                 getLogger().info(block.dump(true));
             }
@@ -55,6 +57,7 @@ public class BlockChain extends ByteConsumer {
             if (blockNumber == 171) {
                 throw new UnsupportedOperationException();
             }
+            */
 
             availableBytes = inputStream.available() & 0xFFFFFFFFL;
         }

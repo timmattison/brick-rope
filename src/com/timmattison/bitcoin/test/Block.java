@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -61,7 +62,7 @@ public class Block extends ByteConsumer {
     }
 
     @Override
-    protected void build() throws IOException {
+    protected void build() throws IOException, NoSuchAlgorithmException {
         // Get the magic number and remove the bytes it occupied
         magicNumberBytes = pullBytes(magicNumberLengthInBytes, "block, magic number");
         magicNumber = EndiannessHelper.BytesToInt(magicNumberBytes);
@@ -105,20 +106,23 @@ public class Block extends ByteConsumer {
             transactions.add(transaction);
         }
 
-        try {
-            // For block 0 this gives us the Merkle root
-            byte[] result = HashHelper.doubleSha256Hash(transactions.get(0).dumpBytes());
-            getLogger().info(ByteArrayHelper.formatArray(result));
+        // Calculate the Merkle root
+        byte[] calculatedMerkleRoot = calculateMerkleRoot();
 
-            byte[] otherResult = calculateMerkleRoot();
-            getLogger().info(ByteArrayHelper.formatArray(otherResult));
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        // Validate that the Merkle root we calculated matches
+        if(!Arrays.equals(calculatedMerkleRoot, blockHeader.getMerkleRoot())) {
+            StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder.append("Merkle roots do not match\n\tCalculated: ");
+            stringBuilder.append(ByteArrayHelper.formatArray(calculatedMerkleRoot));
+            stringBuilder.append("\n\tFrom block chain: ");
+            stringBuilder.append(ByteArrayHelper.formatArray(blockHeader.getMerkleRoot()));
+
+            throw new UnsupportedOperationException(stringBuilder.toString());
         }
     }
 
     public byte[] calculateMerkleRoot() throws IOException, NoSuchAlgorithmException {
-        if((transactions == null) || (transactions.size() == 0)) {
+        if ((transactions == null) || (transactions.size() == 0)) {
             throw new UnsupportedOperationException("Cannot calculate the Merkle root with no transactions");
         }
 
@@ -144,12 +148,8 @@ public class Block extends ByteConsumer {
 
         // Keep looping and hashing until there is only one value
         do {
-            List<byte[]> tempTransactionBytes = new ArrayList<byte[]>();
-
-            // Hash all of the current values
-            for (int loop = 0; loop < transactionBytes.size(); loop++) {
-                tempTransactionBytes.add(HashHelper.doubleSha256Hash(transactionBytes.get(loop)));
-            }
+            // Copy the original data
+            List<byte[]> tempTransactionBytes = new ArrayList<byte[]>(transactionBytes);
 
             // Clear out the original data
             transactionBytes = new ArrayList<byte[]>();
@@ -157,11 +157,11 @@ public class Block extends ByteConsumer {
             // Is this the degenerate case?
             if (tempTransactionBytes.size() == 1) {
                 // Yes, this is the last level of the tree
-                transactionBytes.add(tempTransactionBytes.get(0));
+                transactionBytes.add(HashHelper.doubleSha256Hash(tempTransactionBytes.get(0)));
             } else {
                 // Combine the hashed values into the next level of the tree
-                for (int loop = 0; loop < (transactionBytes.size() / 2); loop++) {
-                    transactionBytes.add(ByteArrayHelper.concatenate(tempTransactionBytes.get(loop * 2), tempTransactionBytes.get((loop * 2) + 1)));
+                for (int loop = 0; loop < ((transactionBytes.size() / 2) + 1); loop++) {
+                    transactionBytes.add(HashHelper.doubleSha256Hash(ByteArrayHelper.concatenate(tempTransactionBytes.get(loop * 2), tempTransactionBytes.get((loop * 2) + 1))));
                 }
             }
         } while (transactionBytes.size() != 1);

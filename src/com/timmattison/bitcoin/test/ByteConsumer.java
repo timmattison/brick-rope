@@ -3,6 +3,7 @@ package com.timmattison.bitcoin.test;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -68,7 +69,7 @@ public abstract class ByteConsumer {
     /**
      * Build the object from the input stream
      */
-    protected abstract void build() throws IOException;
+    protected abstract void build() throws IOException, NoSuchAlgorithmException;
 
     protected Logger getLogger() {
         if (logger == null) {
