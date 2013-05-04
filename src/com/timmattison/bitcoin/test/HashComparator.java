@@ -10,7 +10,7 @@ import java.util.Comparator;
  * Time: 10:07 AM
  * To change this template use File | Settings | File Templates.
  */
-public class ByteArrayComparator implements Comparator<byte[]> {
+public class HashComparator implements Comparator<byte[]> {
     @Override
     public int compare(byte[] o1, byte[] o2) {
         // Are they equal?
@@ -19,18 +19,14 @@ public class ByteArrayComparator implements Comparator<byte[]> {
             return 0;
         }
 
-        // They are not equal which one is longer?
-        if(o1.length < o2.length) {
-            // o1 is shorter
-            return -1;
-        }
-        else if(o1.length > o2.length) {
-            // o1 is longer
-            return 1;
+        // Are they equal in length?
+        if(o1.length != o2.length) {
+            // No, this should never happen
+            throw new UnsupportedOperationException("ByteArrayComparator failed to compare the arrays");
         }
 
         // They are equal in length
-        for(int loop = 0; loop < o1.length; loop++) {
+        for(int loop = (o1.length - 1); loop >= 0; loop--) {
             if(o1[loop] < o2[loop]) {
                 // o1 is smaller
                 return -1;

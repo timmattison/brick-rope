@@ -111,7 +111,7 @@ public class Block extends ByteConsumer {
         byte[] calculatedMerkleRoot = calculateMerkleRoot();
 
         // Validate that the Merkle root we calculated matches
-        if(!Arrays.equals(calculatedMerkleRoot, blockHeader.getMerkleRoot())) {
+        if (!Arrays.equals(calculatedMerkleRoot, blockHeader.getMerkleRoot())) {
             StringBuilder stringBuilder = new StringBuilder();
             stringBuilder.append("Merkle roots do not match\n\tCalculated: ");
             stringBuilder.append(ByteArrayHelper.formatArray(calculatedMerkleRoot));
@@ -129,23 +129,26 @@ public class Block extends ByteConsumer {
 
         List<byte[]> transactionBytes = new ArrayList<byte[]>();
 
-        // Build the base of the tree by dumping all of the transaction bytes into an array
+        // Build the base of the tree by dumping all of the hashes of the transaction bytes into an array
         for (Transaction transaction : transactions) {
-            transactionBytes.add(transaction.dumpBytes());
+            transactionBytes.add(HashHelper.doubleSha256Hash(transaction.dumpBytes()));
         }
 
         // Sort the hashes
-        Collections.sort(transactionBytes, new ByteArrayComparator());
+        getLogger().info("Block number: " + blockNumber + " " + transactionBytes.size() + " transaction(s)");
+
+        Collections.sort(transactionBytes, new HashComparator());
 
         // Is there only one value?
         if (transactions.size() != 1) {
             // No, are there an odd number of transactions?
             if ((transactions.size() % 2) != 0) {
-                // Yes, duplicate the last transaction to fill in the tree
-                transactionBytes.add(transactions.get(transactions.size() - 1).dumpBytes());
+                // Yes, duplicate the last transaction hash to fill in the tree
+                transactionBytes.add(transactionBytes.get(transactions.size() - 1));
             }
         } else {
-            // Yes, there is only one value just do the final hashing step below
+            // Yes, there is only one value.  Just return it.
+            return transactionBytes.get(0);
         }
 
 
@@ -157,15 +160,9 @@ public class Block extends ByteConsumer {
             // Clear out the original data
             transactionBytes = new ArrayList<byte[]>();
 
-            // Is this the degenerate case?
-            if (tempTransactionBytes.size() == 1) {
-                // Yes, this is the last level of the tree
-                transactionBytes.add(HashHelper.doubleSha256Hash(tempTransactionBytes.get(0)));
-            } else {
-                // Combine the hashed values into the next level of the tree
-                for (int loop = 0; loop < ((transactionBytes.size() / 2) + 1); loop++) {
-                    transactionBytes.add(HashHelper.doubleSha256Hash(ByteArrayHelper.concatenate(tempTransactionBytes.get(loop * 2), tempTransactionBytes.get((loop * 2) + 1))));
-                }
+            // Combine the hashed values into the next level of the tree
+            for (int loop = 0; loop < ((transactionBytes.size() / 2) + 1); loop++) {
+                transactionBytes.add(HashHelper.doubleSha256Hash(ByteArrayHelper.concatenate(tempTransactionBytes.get(loop * 2), tempTransactionBytes.get((loop * 2) + 1))));
             }
         } while (transactionBytes.size() != 1);
 
