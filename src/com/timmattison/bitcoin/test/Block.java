@@ -136,6 +136,7 @@ public class Block extends ByteConsumer {
 
         // Sort the hashes
         getLogger().info("Block number: " + blockNumber + " " + transactionBytes.size() + " transaction(s)");
+        getLogger().info("Transactions: " + transactionCount);
 
         Collections.sort(transactionBytes, new HashComparator());
 
@@ -165,7 +166,7 @@ public class Block extends ByteConsumer {
             transactionBytes = new ArrayList<byte[]>();
 
             // Combine the hashed values into the next level of the tree
-            for (int loop = 0; loop < ((transactionBytes.size() / 2) + 1); loop++) {
+            for (int loop = 0; loop < (tempTransactionBytes.size() / 2); loop++) {
                 transactionBytes.add(HashHelper.doubleSha256Hash(ByteArrayHelper.concatenate(tempTransactionBytes.get(loop * 2), tempTransactionBytes.get((loop * 2) + 1))));
             }
 
