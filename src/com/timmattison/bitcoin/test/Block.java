@@ -139,6 +139,9 @@ public class Block extends ByteConsumer {
 
         Collections.sort(transactionBytes, new HashComparator());
 
+        getLogger().info("Merkle root calculation:");
+        logTree(0, transactionBytes);
+
         // Is there only one value?
         if (transactions.size() != 1) {
             // No, are there an odd number of transactions?
@@ -151,6 +154,7 @@ public class Block extends ByteConsumer {
             return transactionBytes.get(0);
         }
 
+        int level = 1;
 
         // Keep looping and hashing until there is only one value
         do {
@@ -164,9 +168,21 @@ public class Block extends ByteConsumer {
             for (int loop = 0; loop < ((transactionBytes.size() / 2) + 1); loop++) {
                 transactionBytes.add(HashHelper.doubleSha256Hash(ByteArrayHelper.concatenate(tempTransactionBytes.get(loop * 2), tempTransactionBytes.get((loop * 2) + 1))));
             }
+
+            logTree(level, transactionBytes);
         } while (transactionBytes.size() != 1);
 
         return transactionBytes.get(0);
+    }
+
+    private void logTree(int level, List<byte[]> transactionBytes) {
+        getLogger().info("Level " + level + ":");
+
+        int counter = 0;
+        for(byte[] bytes : transactionBytes) {
+            getLogger().info("Entry #" + counter + ": " + ByteArrayHelper.formatArray(bytes));
+            counter++;
+        }
     }
 
     @Override
