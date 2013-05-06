@@ -63,6 +63,20 @@ public class VariableLengthInteger extends ByteConsumer {
             value = (firstByte & 0x0FF);
             valueBytes[0] = (byte) value;
         }
+
+        // Did we have a multi-byte value?
+        if(valueBytes.length != 1) {
+            // Yes, add the missing first byte
+            byte[] tempValueBytes = new byte[valueBytes.length + 1];
+            tempValueBytes[0] = (byte) firstByte;
+
+            for(int loop = 0; loop < valueBytes.length; loop++) {
+                tempValueBytes[loop + 1] = valueBytes[loop];
+            }
+
+            // Store the true bytes back in valueBytes
+            valueBytes = tempValueBytes;
+        }
     }
 
     @Override
