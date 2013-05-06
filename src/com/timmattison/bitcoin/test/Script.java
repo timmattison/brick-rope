@@ -22,27 +22,26 @@ public class Script extends ByteConsumer {
     private static final String name = "SCRIPT";
     //private static final int MAX_WORD_LIST_LENGTH = 201;
     private static final int MAX_WORD_LIST_LENGTH = 9999;
+    // These values are not in the script
+    boolean input;
+    int scriptNumber;
     private long lengthInBytes;
     private List<Word> words;
     private StateMachine stateMachine;
     private WordFactory wordFactory;
     private boolean coinbase;
-    private int versionNumber;
-    private int blockHeight;
 
     // Raw bytes, in order they were pulled from the block chain
-
+    private int versionNumber;
+    private int blockHeight;
     /**
      * Script bytes
      */
     private byte[] scriptBytes;
 
-    // These values are not in the script
-    boolean input;
-    int scriptNumber;
-
     /**
      * Create an input script
+     *
      * @param inputStream
      * @param lengthInBytes
      * @param coinbase
@@ -65,6 +64,7 @@ public class Script extends ByteConsumer {
 
     /**
      * Create an output script
+     *
      * @param inputStream
      * @param lengthInBytes
      * @param scriptNumber
@@ -242,10 +242,9 @@ public class Script extends ByteConsumer {
         StringBuilder stringBuilder = new StringBuilder();
 
         if (pretty) {
-            if(input) {
+            if (input) {
                 stringBuilder.append("Input");
-            }
-            else {
+            } else {
                 stringBuilder.append("Output");
             }
 
@@ -255,6 +254,14 @@ public class Script extends ByteConsumer {
         }
 
         int counter = 0;
+
+        // Is this the coinbase?
+        if (coinbase) {
+            // Yes, no words are stored for the coinbase.  Just dump the bytes.
+            stringBuilder.append("Coinbase bytes: ");
+            stringBuilder.append(ByteArrayHelper.formatArray(scriptBytes));
+            stringBuilder.append("\n");
+        }
 
         for (Word word : words) {
             if (pretty) {
