@@ -137,17 +137,17 @@ public class Block extends ByteConsumer {
         getLogger().info("Block number: " + blockNumber + " " + transactionBytes.size() + " transaction(s)");
         getLogger().info("Transactions: " + transactionCount);
 
-        Collections.sort(transactionBytes, new HashComparator());
-
-        getLogger().info("Merkle root calculation:");
-
         // Is there only one value?
         if (transactionBytes.size() == 1) {
             // Yes, there is only one value.  Just return it.
             return transactionBytes.get(0);
         }
 
-        int level = 0;
+        Collections.sort(transactionBytes, new HashComparator());
+
+        getLogger().info("Merkle root calculation:");
+
+       int level = 0;
 
         // Keep looping and hashing until there is only one value
         do {
