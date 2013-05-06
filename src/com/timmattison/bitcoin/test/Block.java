@@ -4,6 +4,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.math.BigInteger;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -91,7 +92,9 @@ public class Block extends ByteConsumer {
         // Get the block header and remove the bytes it occupied
         blockHeader = new BlockHeader(inputStream, isDebug());
         blockHeader.build();
-        getLogger().info("Difficulty: " + String.format("%08x", blockHeader.getDifficulty()) + ", " + ByteArrayHelper.formatArray(blockHeader.getUnpackedDifficulty().toByteArray()));
+        getLogger().info("Difficulty: " + String.format("%08x", blockHeader.getDifficulty()));
+        getLogger().info("Target [bytes]: " + ByteArrayHelper.formatArray(blockHeader.getTargetBytes()));
+        getLogger().info("Target [hex]: " + blockHeader.getTargetBigInteger().toString(16));
 
         // Get the transaction count and return the remaining bytes back into the block header byte list
         VariableLengthInteger temp = new VariableLengthInteger(inputStream, isDebug());
@@ -140,6 +143,22 @@ public class Block extends ByteConsumer {
 
         // Validate that the Merkle root we calculated matches
         validateMerkleRoot(calculatedMerkleRoot);
+
+        // Validate the hash is lower than the target
+        validateHashAgainstTarget();
+    }
+
+    private void validateHashAgainstTarget() throws NoSuchAlgorithmException {
+        BigInteger currentHash = blockHeader.getHashBigInteger();
+        BigInteger currentTarget = blockHeader.getTargetBigInteger();
+
+        getLogger().info("Current hash: " + currentHash.toString(16));
+
+        // Is the current hash less than the current target?
+        if(currentHash.compareTo(currentTarget) >= 0) {
+            // No, it is equal to or greater than the current target.  Throw an exception.
+            throw new UnsupportedOperationException("Current hash is greater than the current target");
+        }
     }
 
     private void validateMerkleRoot(byte[] calculatedMerkleRoot) {

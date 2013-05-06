@@ -20,42 +20,45 @@ import java.util.List;
  */
 public class BlockHeader extends ByteConsumer {
     private static final String name = "BLOCK HEADER";
-
     private static final int versionLengthInBytes = 4;
     private static final int prevBlockLengthInBytes = 32;
     private static final int merkleRootLengthInBytes = 32;
     private static final int timestampLengthInBytes = 4;
     private static final int bitsLengthInBytes = 4;
     private static final int nonceLengthInBytes = 4;
-
+    /**
+     * The target.  This is not in the block chain.  It is derived from the difficulty.
+     */
+    private BigInteger targetBigInteger;
+    private byte[] targetBytes;
+    /**
+     * This is the hash of the header.  This is not in the block chain.  It is derived from the double SHA256 hash of the block header bytes.
+     */
+    private byte[] hashBytes;
+    private BigInteger hashBigInteger;
     /**
      * The software version that created this block
      */
     private int version;
     private byte[] versionBytes;
-
     /**
      * The hash value of the previous block this particular block references
      */
     private byte[] prevBlock;
-
     /**
      * The reference to a Merkle tree collection which is a hash of all transactions related to this block
      */
     private byte[] merkleRoot;
-
     /**
      * A Unix timestamp recording when this block was created (currently limited to dates before the year 2106!)
      */
     private int timestamp;
     private byte[] timestampBytes;
-
     /**
      * The calculated difficulty target being used for this block
      */
     private int bits;
     private byte[] bitsBytes;
-
     /**
      * The nonce used to generate this block... to allow variations of the header and compute different hashes
      */
@@ -133,31 +136,46 @@ public class BlockHeader extends ByteConsumer {
         return bytes.toByteArray();
     }
 
-    public byte[] getHash() throws NoSuchAlgorithmException {
-        List<byte[]> data = new ArrayList<byte[]>();
+    public byte[] getHashBytes() throws NoSuchAlgorithmException {
+        if (hashBytes == null) {
+            List<byte[]> data = new ArrayList<byte[]>();
 
-        data.add(EndiannessHelper.IntToBytes(version));
-        data.add(prevBlock);
-        data.add(merkleRoot);
-        data.add(EndiannessHelper.IntToBytes(timestamp));
-        data.add(EndiannessHelper.IntToBytes(bits));
-        data.add(EndiannessHelper.IntToBytes(nonce));
+            data.add(EndiannessHelper.IntToBytes(version));
+            data.add(prevBlock);
+            data.add(merkleRoot);
+            data.add(EndiannessHelper.IntToBytes(timestamp));
+            data.add(EndiannessHelper.IntToBytes(bits));
+            data.add(EndiannessHelper.IntToBytes(nonce));
 
-        return HashHelper.doubleSha256Hash(data);
+            hashBytes = HashHelper.doubleSha256Hash(data);
+        }
+
+        return hashBytes;
     }
 
-    public BigInteger getUnpackedDifficulty() {
-        // The formula for calculating difficulty is:
-        // Packed difficulty: 0x1d00ffff
-        // Unpacked difficulty: 0x00ffff * (2 ** (8 * (0x1d - 3)))
-        // Formula = (Last three bytes of difficulty) * (2 ** (8 * ((First byte of difficulty) - 3)))
-        BigInteger lastThreeBytesOfDifficulty = new BigInteger(String.valueOf((long) bits & 0x00FFFFFFL));
-        int firstByteOfDifficulty = (int) ((bits & 0xFF000000L) >>> 24);
-        BigInteger two = new BigInteger("2");
+    public BigInteger getHashBigInteger() throws NoSuchAlgorithmException {
+        if (hashBigInteger == null) {
+            byte[] tempHashBytes = getHashBytes();
+            hashBigInteger = new BigInteger(ByteArrayHelper.reverseBytes(tempHashBytes));
+        }
 
-        BigInteger unpackedDifficulty = lastThreeBytesOfDifficulty.multiply(two.pow((8 * (firstByteOfDifficulty - 3))));
+        return hashBigInteger;
+    }
 
-        return unpackedDifficulty;
+    public BigInteger getTargetBigInteger() {
+        if (targetBigInteger == null) {
+            // The formula for calculating target is:
+            // Difficulty: 0x1d00ffff
+            // Target: 0x00ffff * (2 ** (8 * (0x1d - 3)))
+            // Formula = (Last three bytes of difficulty) * (2 ** (8 * ((First byte of difficulty) - 3)))
+            BigInteger lastThreeBytesOfDifficulty = new BigInteger(String.valueOf((long) bits & 0x00FFFFFFL));
+            int firstByteOfDifficulty = (int) ((bits & 0xFF000000L) >>> 24);
+            BigInteger two = new BigInteger("2");
+
+            targetBigInteger = lastThreeBytesOfDifficulty.multiply(two.pow((8 * (firstByteOfDifficulty - 3))));
+        }
+
+        return targetBigInteger;
     }
 
     public byte[] getMerkleRoot() {
@@ -170,5 +188,14 @@ public class BlockHeader extends ByteConsumer {
 
     public int getDifficulty() {
         return bits;
+    }
+
+    public byte[] getTargetBytes() {
+        if(targetBytes == null) {
+            BigInteger tempTargetBigInteger = getTargetBigInteger();
+            targetBytes = tempTargetBigInteger.toByteArray();
+        }
+
+        return targetBytes;
     }
 }

@@ -58,4 +58,23 @@ public class ByteArrayHelper {
 
         return output.toByteArray();
     }
+
+    /**
+     * Reverse a byte array.  Typically used when endianness is backwards and we're converting to BigIntegers.
+     * @param input
+     * @return
+     */
+    public static byte[] reverseBytes(byte[] input) {
+        if(input == null) {
+            throw new UnsupportedOperationException("Input cannot be NULL");
+        }
+
+        byte[] returnValue = new byte[input.length];
+
+        for(int loop = 0; loop < input.length; loop++) {
+            returnValue[loop] = input[input.length - loop - 1];
+        }
+
+        return returnValue;
+    }
 }
