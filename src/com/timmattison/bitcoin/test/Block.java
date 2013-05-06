@@ -1,6 +1,7 @@
 package com.timmattison.bitcoin.test;
 
 import java.io.ByteArrayOutputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.NoSuchAlgorithmException;
@@ -134,8 +135,8 @@ public class Block extends ByteConsumer {
         }
 
         // Sort the hashes
-        getLogger().info("Block number: " + blockNumber + " " + transactionBytes.size() + " transaction(s)");
-        getLogger().info("Transactions: " + transactionCount);
+        //getLogger().info("Block number: " + blockNumber + " " + transactionBytes.size() + " transaction(s)");
+        //getLogger().info("Transactions: " + transactionCount);
 
         // Is there only one value?
         if (transactionBytes.size() == 1) {
@@ -145,9 +146,9 @@ public class Block extends ByteConsumer {
 
         Collections.sort(transactionBytes, new HashComparator());
 
-        getLogger().info("Merkle root calculation:");
+        //getLogger().info("Merkle root calculation:");
 
-       int level = 0;
+        int level = 0;
 
         // Keep looping and hashing until there is only one value
         do {
@@ -157,7 +158,7 @@ public class Block extends ByteConsumer {
                 transactionBytes.add(transactionBytes.get(transactionBytes.size() - 1));
             }
 
-            logTree(level++, transactionBytes);
+            //logTree(level++, transactionBytes);
 
             // Copy the original data
             List<byte[]> tempTransactionBytes = new ArrayList<byte[]>(transactionBytes);
@@ -170,7 +171,7 @@ public class Block extends ByteConsumer {
                 transactionBytes.add(HashHelper.doubleSha256Hash(ByteArrayHelper.concatenate(tempTransactionBytes.get(loop * 2), tempTransactionBytes.get((loop * 2) + 1))));
             }
 
-            logTree(level++, transactionBytes);
+            //logTree(level++, transactionBytes);
         } while (transactionBytes.size() != 1);
 
         return transactionBytes.get(0);
