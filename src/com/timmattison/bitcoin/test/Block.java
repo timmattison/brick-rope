@@ -111,6 +111,10 @@ public class Block extends ByteConsumer {
         byte[] calculatedMerkleRoot = calculateMerkleRoot();
 
         // Validate that the Merkle root we calculated matches
+        validateMerkleRoot(calculatedMerkleRoot);
+    }
+
+    private void validateMerkleRoot(byte[] calculatedMerkleRoot) {
         if (!Arrays.equals(calculatedMerkleRoot, blockHeader.getMerkleRoot())) {
             StringBuilder stringBuilder = new StringBuilder();
             stringBuilder.append("Merkle roots do not match\n\tCalculated: ");
