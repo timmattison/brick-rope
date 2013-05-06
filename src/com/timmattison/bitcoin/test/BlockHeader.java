@@ -7,6 +7,7 @@ import java.io.InputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -92,6 +93,11 @@ public class BlockHeader extends ByteConsumer {
         // Get the nonce
         nonceBytes = pullBytes(nonceLengthInBytes, "block header, nonce");
         nonce = EndiannessHelper.BytesToInt(nonceBytes);
+    }
+
+    private Date getDate() {
+        long timestampMilliseconds = ((long) timestamp & 0xFFFFFFFFL) * 1000;
+        return new Date(timestampMilliseconds);
     }
 
     @Override
