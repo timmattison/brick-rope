@@ -142,22 +142,23 @@ public class Block extends ByteConsumer {
         getLogger().info("Merkle root calculation:");
 
         // Is there only one value?
-        if (transactionBytes.size() != 1) {
-            // No, is the number of transactions a power of two?
-            if (numberOfBitsSet(transactionBytes.size()) != 1) {
-                // No, we need to do some work to fill in the tree
-                transactionBytes = fillInMerkleTreeRoot(transactionBytes);
-           }
-        } else {
+        if (transactionBytes.size() == 1) {
             // Yes, there is only one value.  Just return it.
             return transactionBytes.get(0);
         }
 
         int level = 0;
-        logTree(level++, transactionBytes);
 
         // Keep looping and hashing until there is only one value
         do {
+            // Is the number of transactions odd?
+            if ((transactionBytes.size() % 2) == 1) {
+                // Yes, duplicate the last transaction hash
+                transactionBytes.add(transactionBytes.get(transactionBytes.size() - 1));
+            }
+
+            logTree(level++, transactionBytes);
+
             // Copy the original data
             List<byte[]> tempTransactionBytes = new ArrayList<byte[]>(transactionBytes);
 
@@ -177,12 +178,12 @@ public class Block extends ByteConsumer {
 
     private List<byte[]> fillInMerkleTreeRoot(List<byte[]> transactionBytes) {
         // Sanity check.  Make sure the data isn't NULL.
-        if(transactionBytes == null) {
-           throw new UnsupportedOperationException("Transaction bytes cannot be NULL in fillInMerkleTreeRoot");
+        if (transactionBytes == null) {
+            throw new UnsupportedOperationException("Transaction bytes cannot be NULL in fillInMerkleTreeRoot");
         }
 
         // Sanity check.  Make sure that we don't already have the right number of values.
-        if(numberOfBitsSet(transactionBytes.size()) == 1) {
+        if (numberOfBitsSet(transactionBytes.size()) == 1) {
             return transactionBytes;
         }
 
@@ -192,7 +193,7 @@ public class Block extends ByteConsumer {
         int valuesToCopy = (int) (nextPowerOfTwo - startingSize);
 
         // Loop from the end of our list and fill in until we get to the next power of two
-        for(int loop = 0; loop < valuesToCopy; loop++) {
+        for (int loop = 0; loop < valuesToCopy; loop++) {
             int indexToCopy = (int) ((startingSize - valuesToCopy) + loop);
             transactionBytes.add(transactionBytes.get(indexToCopy));
         }
@@ -270,15 +271,14 @@ public class Block extends ByteConsumer {
         long currentBit = 0x00000001L;
 
         // Loop until we find that the current bit is larger than the masked value or the current bit is 0x80000000
-        while(((currentBit <= maskedValue) && (currentBit != 0x80000000L))) {
+        while (((currentBit <= maskedValue) && (currentBit != 0x80000000L))) {
             currentBit <<= 1;
         }
 
         // Is the current bit 0x80000000?
-        if(currentBit == 0x80000000L) {
+        if (currentBit == 0x80000000L) {
             throw new UnsupportedOperationException("Next power of two too large");
-        }
-        else {
+        } else {
             // No, return the value
             return currentBit;
         }
