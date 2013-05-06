@@ -19,6 +19,7 @@ public class BlockChain extends ByteConsumer {
     private static final String name = "BLOCK CHAIN";
     public static int blockNumber = 0;
     private List<Block> blocks = new ArrayList<Block>();
+    private Block previousBlock;
 
     public BlockChain(InputStream inputStream, boolean debug) throws IOException {
         super(inputStream, debug);
@@ -38,9 +39,20 @@ public class BlockChain extends ByteConsumer {
             // Increment the counter
             blockNumber++;
 
+            byte[] previousBlockHash = null;
+
+            // Is there a previous block?
+            if(previousBlock != null) {
+                // Yes, get its hash
+                previousBlockHash = previousBlock.getHeaderHash();
+            }
+
             // Create and parse the block
-            Block block = new Block(inputStream, blockNumber, isDebug());
+            Block block = new Block(inputStream, blockNumber, previousBlockHash, isDebug());
             block.build();
+
+            // Update the previous block
+            previousBlock = block;
 
             /*
             byte[] bytes = block.dumpBytes();

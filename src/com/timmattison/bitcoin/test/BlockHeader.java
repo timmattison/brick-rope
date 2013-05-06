@@ -142,4 +142,8 @@ public class BlockHeader extends ByteConsumer {
     public byte[] getMerkleRoot() {
         return merkleRoot;
     }
+
+    public byte[] getPreviousBlockHash() {
+        return prevBlock;
+    }
 }

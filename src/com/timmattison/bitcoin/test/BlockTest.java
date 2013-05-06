@@ -118,7 +118,7 @@ public class BlockTest {
     private static final boolean innerDebug = true;
 
     public static void main(String[] args) throws Exception {
-        Block block1 = new Block(testBlock1InputStream, 1, debug);
-        Block block2 = new Block(testBlock2InputStream, 2, debug);
+        Block block1 = new Block(testBlock1InputStream, 1, null, debug);
+        Block block2 = new Block(testBlock2InputStream, 2, block1.getHeaderHash(), debug);
     }
 }

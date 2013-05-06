@@ -25,8 +25,12 @@ public class Block extends ByteConsumer {
     private static final int requiredMagicNumber = EndiannessHelper.BytesToInt(requiredMagicNumberBytes);
     private static final int magicNumberLengthInBytes = 4;
     private static final int blockSizeLengthInBytes = 4;
+
     // These values are not in the block
-    int blockNumber;
+    private int blockNumber;
+    private byte[] previousBlockHash;
+    private byte[] headerHash;
+
     /**
      * Magic number
      */
@@ -51,10 +55,11 @@ public class Block extends ByteConsumer {
      */
     private List<Transaction> transactions;
 
-    public Block(InputStream inputStream, int blockNumber, boolean debug) throws IOException {
+    public Block(InputStream inputStream, int blockNumber, byte[] previousBlockHash, boolean debug) throws IOException {
         super(inputStream, debug);
 
         this.blockNumber = blockNumber;
+        this.previousBlockHash = previousBlockHash;
     }
 
     @Override
@@ -111,7 +116,24 @@ public class Block extends ByteConsumer {
         validateBlock();
     }
 
+    public byte[] getHeaderHash() throws IOException, NoSuchAlgorithmException {
+        if(headerHash == null) {
+            headerHash = HashHelper.doubleSha256Hash(blockHeader.dumpBytes());
+        }
+
+        return headerHash;
+    }
+
     private void validateBlock() throws IOException, NoSuchAlgorithmException {
+        // Do we have the hash of the previous block?
+        if(previousBlockHash != null) {
+            // Yes, does it match what we
+            if(!Arrays.equals(previousBlockHash, blockHeader.getPreviousBlockHash())) {
+                // No, throw an exception
+                throw new UnsupportedOperationException("Previous block hash doesn't match what this block has for its previous block hash");
+            }
+        }
+
         // Calculate the Merkle root
         byte[] calculatedMerkleRoot = calculateMerkleRoot();
 
