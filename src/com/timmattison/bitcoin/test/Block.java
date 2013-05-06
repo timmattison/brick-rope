@@ -91,6 +91,7 @@ public class Block extends ByteConsumer {
         // Get the block header and remove the bytes it occupied
         blockHeader = new BlockHeader(inputStream, isDebug());
         blockHeader.build();
+        getLogger().info("Difficulty: " + String.format("%08x", blockHeader.getDifficulty()) + ", " + ByteArrayHelper.formatArray(blockHeader.getUnpackedDifficulty().toByteArray()));
 
         // Get the transaction count and return the remaining bytes back into the block header byte list
         VariableLengthInteger temp = new VariableLengthInteger(inputStream, isDebug());

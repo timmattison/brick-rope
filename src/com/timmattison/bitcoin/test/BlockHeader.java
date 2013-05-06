@@ -4,6 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -145,11 +146,29 @@ public class BlockHeader extends ByteConsumer {
         return HashHelper.doubleSha256Hash(data);
     }
 
+    public BigInteger getUnpackedDifficulty() {
+        // The formula for calculating difficulty is:
+        // Packed difficulty: 0x1d00ffff
+        // Unpacked difficulty: 0x00ffff * (2 ** (8 * (0x1d - 3)))
+        // Formula = (Last three bytes of difficulty) * (2 ** (8 * ((First byte of difficulty) - 3)))
+        BigInteger lastThreeBytesOfDifficulty = new BigInteger(String.valueOf((long) bits & 0x00FFFFFFL));
+        int firstByteOfDifficulty = (int) ((bits & 0xFF000000L) >>> 24);
+        BigInteger two = new BigInteger("2");
+
+        BigInteger unpackedDifficulty = lastThreeBytesOfDifficulty.multiply(two.pow((8 * (firstByteOfDifficulty - 3))));
+
+        return unpackedDifficulty;
+    }
+
     public byte[] getMerkleRoot() {
         return merkleRoot;
     }
 
     public byte[] getPreviousBlockHash() {
         return prevBlock;
+    }
+
+    public int getDifficulty() {
+        return bits;
     }
 }
