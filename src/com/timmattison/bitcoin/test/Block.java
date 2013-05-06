@@ -134,10 +134,6 @@ public class Block extends ByteConsumer {
             transactionBytes.add(HashHelper.doubleSha256Hash(transaction.dumpBytes()));
         }
 
-        // Sort the hashes
-        //getLogger().info("Block number: " + blockNumber + " " + transactionBytes.size() + " transaction(s)");
-        //getLogger().info("Transactions: " + transactionCount);
-
         // Is there only one value?
         if (transactionBytes.size() == 1) {
             // Yes, there is only one value.  Just return it.
@@ -145,8 +141,6 @@ public class Block extends ByteConsumer {
         }
 
         Collections.sort(transactionBytes, new HashComparator());
-
-        //getLogger().info("Merkle root calculation:");
 
         int level = 0;
 
@@ -170,46 +164,9 @@ public class Block extends ByteConsumer {
             for (int loop = 0; loop < (tempTransactionBytes.size() / 2); loop++) {
                 transactionBytes.add(HashHelper.doubleSha256Hash(ByteArrayHelper.concatenate(tempTransactionBytes.get(loop * 2), tempTransactionBytes.get((loop * 2) + 1))));
             }
-
-            //logTree(level++, transactionBytes);
         } while (transactionBytes.size() != 1);
 
         return transactionBytes.get(0);
-    }
-
-    private List<byte[]> fillInMerkleTreeRoot(List<byte[]> transactionBytes) {
-        // Sanity check.  Make sure the data isn't NULL.
-        if (transactionBytes == null) {
-            throw new UnsupportedOperationException("Transaction bytes cannot be NULL in fillInMerkleTreeRoot");
-        }
-
-        // Sanity check.  Make sure that we don't already have the right number of values.
-        if (numberOfBitsSet(transactionBytes.size()) == 1) {
-            return transactionBytes;
-        }
-
-        // Now we know we need to fill in the tree.  Find the next power of two.
-        int startingSize = transactionBytes.size();
-        long nextPowerOfTwo = getNextPowerOfTwo(startingSize);
-        int valuesToCopy = (int) (nextPowerOfTwo - startingSize);
-
-        // Loop from the end of our list and fill in until we get to the next power of two
-        for (int loop = 0; loop < valuesToCopy; loop++) {
-            int indexToCopy = (int) ((startingSize - valuesToCopy) + loop);
-            transactionBytes.add(transactionBytes.get(indexToCopy));
-        }
-
-        return transactionBytes;
-    }
-
-    private void logTree(int level, List<byte[]> transactionBytes) {
-        getLogger().info("Level " + level + ":");
-
-        int counter = 0;
-        for (byte[] bytes : transactionBytes) {
-            getLogger().info("Entry #" + counter + ": " + ByteArrayHelper.formatArray(bytes));
-            counter++;
-        }
     }
 
     @Override
@@ -248,40 +205,5 @@ public class Block extends ByteConsumer {
         }
 
         return bytes.toByteArray();
-    }
-
-    private int numberOfBitsSet(long value) {
-        // "Variable precision SWAR algorithm" from Stack Overflow
-
-        // Only allow 32-bit values
-        long returnValue = value & 0xFFFFFFFFL;
-
-        returnValue = returnValue - ((returnValue >> 1) & 0x55555555L);
-        returnValue = (returnValue & 0x33333333L) + ((returnValue >> 2) & 0x33333333L);
-        returnValue = (((returnValue + (returnValue >> 4)) & 0x0F0F0F0FL) * 0x01010101L) >> 24;
-
-        return (int) returnValue;
-    }
-
-    private long getNextPowerOfTwo(long value) {
-        // TODO - Need to do this without a loop
-
-        // Only allow 32-bit values
-        long maskedValue = value & 0xFFFFFFFFL;
-
-        long currentBit = 0x00000001L;
-
-        // Loop until we find that the current bit is larger than the masked value or the current bit is 0x80000000
-        while (((currentBit <= maskedValue) && (currentBit != 0x80000000L))) {
-            currentBit <<= 1;
-        }
-
-        // Is the current bit 0x80000000?
-        if (currentBit == 0x80000000L) {
-            throw new UnsupportedOperationException("Next power of two too large");
-        } else {
-            // No, return the value
-            return currentBit;
-        }
     }
 }
