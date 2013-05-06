@@ -92,9 +92,6 @@ public class Block extends ByteConsumer {
         // Get the block header and remove the bytes it occupied
         blockHeader = new BlockHeader(inputStream, isDebug());
         blockHeader.build();
-        getLogger().info("Difficulty: " + String.format("%08x", blockHeader.getDifficulty()));
-        getLogger().info("Target [bytes]: " + ByteArrayHelper.formatArray(blockHeader.getTargetBytes()));
-        getLogger().info("Target [hex]: " + blockHeader.getTargetBigInteger().toString(16));
 
         // Get the transaction count and return the remaining bytes back into the block header byte list
         VariableLengthInteger temp = new VariableLengthInteger(inputStream, isDebug());
@@ -151,8 +148,6 @@ public class Block extends ByteConsumer {
     private void validateHashAgainstTarget() throws NoSuchAlgorithmException {
         BigInteger currentHash = blockHeader.getHashBigInteger();
         BigInteger currentTarget = blockHeader.getTargetBigInteger();
-
-        getLogger().info("Current hash: " + currentHash.toString(16));
 
         // Is the current hash less than the current target?
         if(currentHash.compareTo(currentTarget) >= 0) {
