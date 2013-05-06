@@ -107,6 +107,11 @@ public class Block extends ByteConsumer {
             transactions.add(transaction);
         }
 
+        // Validate the block
+        validateBlock();
+    }
+
+    private void validateBlock() throws IOException, NoSuchAlgorithmException {
         // Calculate the Merkle root
         byte[] calculatedMerkleRoot = calculateMerkleRoot();
 
