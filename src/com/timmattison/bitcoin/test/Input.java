@@ -125,4 +125,12 @@ public class Input extends ByteConsumer {
 
         return bytes.toByteArray();
     }
+
+    public byte[] getPreviousTransactionHash() {
+        return previousTransactionHash;
+    }
+
+    public long getPreviousOutputIndex() {
+        return previousOutputIndex;
+    }
 }

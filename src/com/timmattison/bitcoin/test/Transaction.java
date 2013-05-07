@@ -185,7 +185,19 @@ public class Transaction extends ByteConsumer {
             throw new UnsupportedOperationException("Not enough outputs, has this transaction been populated?");
         }
 
-        // Get the first output
+        // Get the output
         return outputs.get(outputNumber);
+    }
+
+    public Input getInput(int inputNumber) {
+        if(inputs == null) {
+            throw new UnsupportedOperationException("No inputs, has this transaction been populated?");
+        }
+
+        if(inputs.size() < (inputNumber - 1)) {
+            throw new UnsupportedOperationException("No inputs, has this transaction been populated?");
+        }
+
+        return inputs.get(inputNumber);
     }
 }

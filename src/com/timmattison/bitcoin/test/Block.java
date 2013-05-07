@@ -28,6 +28,7 @@ public class Block extends ByteConsumer {
     private static final int blockSizeLengthInBytes = 4;
 
     // These values are not in the block
+    private BlockChain blockChain;
     private int blockNumber;
     private byte[] previousBlockHash;
     private byte[] headerHash;
@@ -56,9 +57,10 @@ public class Block extends ByteConsumer {
      */
     private List<Transaction> transactions;
 
-    public Block(InputStream inputStream, int blockNumber, byte[] previousBlockHash, boolean debug) throws IOException {
+    public Block(InputStream inputStream, BlockChain blockChain, int blockNumber, byte[] previousBlockHash, boolean debug) throws IOException {
         super(inputStream, debug);
 
+        this.blockChain = blockChain;
         this.blockNumber = blockNumber;
         this.previousBlockHash = previousBlockHash;
     }
@@ -116,10 +118,26 @@ public class Block extends ByteConsumer {
         // Validate the block
         validateBlock();
 
-        // Get the coinbase
-        Output coinbaseOutput = getCoinbaseOutput();
-        getLogger().info("Is single signed output? " + OutputClassifier.getOutputType(coinbaseOutput).equals(OutputType.SingleSignedOutput));
-        getLogger().info(coinbaseOutput.dump(true));
+        // Is there a second transaction?
+        if(transactions.size() > 1) {
+            // Yes, get the second input and output
+            Input input = transactions.get(1).getInput(0);
+            Output output = transactions.get(1).getOutput(0);
+
+            byte[] previousTransactionHash = input.getPreviousTransactionHash();
+            long previousOutputIndex = input.getPreviousOutputIndex();
+            getLogger().info(ByteArrayHelper.formatArray(previousTransactionHash));
+
+            // Do we know about this previous transaction?
+            Block referencedBlock = blockChain.getBlock(previousTransactionHash);
+
+            if(referencedBlock == null) {
+                throw new UnsupportedOperationException("Couldn't find the block reference by this transaction");
+            }
+
+            // Dump the input
+            getLogger().info(input.dump(true));
+        }
     }
 
     private Output getCoinbaseOutput() {

@@ -6,7 +6,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created with IntelliJ IDEA.
@@ -18,6 +20,7 @@ import java.util.List;
 public class BlockChain extends ByteConsumer {
     private static final String name = "BLOCK CHAIN";
     public static int blockNumber = 0;
+    private Map<byte[], Block> blockMap = new HashMap<byte[], Block>();
     private List<Block> blocks = new ArrayList<Block>();
     private Block previousBlock;
 
@@ -48,28 +51,18 @@ public class BlockChain extends ByteConsumer {
             }
 
             // Create and parse the block
-            Block block = new Block(inputStream, blockNumber, previousBlockHash, isDebug());
+            Block block = new Block(inputStream, this, blockNumber, previousBlockHash, isDebug());
             block.build();
 
             // Update the previous block
             previousBlock = block;
 
-            /*
-            byte[] bytes = block.dumpBytes();
-            FileOutputStream output = new FileOutputStream("blah.out");
-            output.write(bytes);
-            output.close();
-            */
+            // Store the block by its header hash
+            blockMap.put(block.getHeaderHash(), block);
+            getLogger().info("Block #" + blockNumber + ": " + ByteArrayHelper.formatArray(block.getHeaderHash()));
 
-            /*
-            if ((blockNumber == 10) || (blockNumber == 171)) {
-                getLogger().info(block.dump(true));
-            }
-
-            if (blockNumber == 171) {
-                throw new UnsupportedOperationException();
-            }
-            */
+            // Store the block in the list of blocks
+            blocks.add(block);
 
             availableBytes = inputStream.available() & 0xFFFFFFFFL;
         }
@@ -107,5 +100,9 @@ public class BlockChain extends ByteConsumer {
 
         // Return a byte array
         return bytes.toByteArray();
+    }
+
+    public Block getBlock(byte[] previousTransactionHash) {
+        return blockMap.get(previousTransactionHash);
     }
 }
