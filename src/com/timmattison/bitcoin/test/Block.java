@@ -133,15 +133,17 @@ public class Block extends ByteConsumer {
             byte[] previousTransactionHash = input.getPreviousTransactionHash();
             long previousOutputIndex = input.getPreviousOutputIndex();
 
-            // Do we know about this previous transaction?
-            getLogger().info("Looking for: " + ByteArrayHelper.formatArray(previousTransactionHash));
+            // Find the referenced transactions
             Transaction referencedTransaction = blockChain.getTransaction(previousTransactionHash);
 
+            // Could we find it?
             if (referencedTransaction == null) {
+                // No, throw an exception
                 throw new UnsupportedOperationException("Couldn't find the block reference by this transaction");
             }
 
             // Dump the input
+            getLogger().info("Transaction to process:");
             getLogger().info(input.dump(true));
         }
     }
