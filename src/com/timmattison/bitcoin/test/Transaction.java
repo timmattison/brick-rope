@@ -3,6 +3,7 @@ package com.timmattison.bitcoin.test;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,6 +21,10 @@ public class Transaction extends ByteConsumer {
     private static final long maxVersionNumber = 2;
     private static final int versionNumberLengthInBytes = 4;
     private static final int lockTimeLengthInBytes = 4;
+
+    // These are not in the block chain
+    private int transactionCounter;
+    private byte[] hash;
 
     /**
      * Version number
@@ -54,8 +59,6 @@ public class Transaction extends ByteConsumer {
      */
     private int lockTime;
     private byte[] lockTimeBytes;
-
-    private int transactionCounter;
 
     public Transaction(InputStream inputStream, int transactionCounter, boolean debug) throws IOException {
         super(inputStream, debug);
@@ -199,5 +202,17 @@ public class Transaction extends ByteConsumer {
         }
 
         return inputs.get(inputNumber);
+    }
+
+    public List<Output> getOutputs() {
+        return outputs;
+    }
+
+    public byte[] getHash() throws IOException, NoSuchAlgorithmException {
+        if(hash == null) {
+            hash = HashHelper.doubleSha256Hash(dumpBytes());
+        }
+
+        return hash;
     }
 }
