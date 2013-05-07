@@ -1,9 +1,11 @@
 package com.timmattison.bitcoin.test;
 
 import com.timmattison.bitcoin.test.script.Word;
+import com.timmattison.bitcoin.test.script.words.bitwiselogic.OpEqual;
 import com.timmattison.bitcoin.test.script.words.constants.OpTrue;
 import com.timmattison.bitcoin.test.script.words.constants.VirtualOpPush;
 import com.timmattison.bitcoin.test.script.words.crypto.OpCheckSig;
+import com.timmattison.bitcoin.test.script.words.crypto.OpHash256;
 import com.timmattison.bitcoin.test.script.words.flowcontrol.OpReturn;
 
 import java.util.List;
@@ -50,7 +52,7 @@ public class OutputClassifier {
         }
 
         // Are there exactly the number of words we need?
-        if (output.getScriptWords().size() != 2) {
+        if (output.getScriptWords().size() != size) {
             // No, this is not what we're looking for
             return false;
         }
@@ -90,7 +92,28 @@ public class OutputClassifier {
     }
 
     private static boolean isHashingPuzzle(Output output) {
-        throw new UnsupportedOperationException("Not implemented yet");
+        // Return immediately if it doesn't pass the basic checks
+        if(!basicSizeCheck(output, 3)) { return false; }
+
+        List<Word> words = output.getScriptWords();
+
+        Word firstWord = words.get(0);
+        Word secondWord = words.get(1);
+        Word thirdWord = words.get(2);
+
+        if(!(firstWord instanceof OpHash256)) {
+            return false;
+        }
+
+        if(!(secondWord instanceof VirtualOpPush)) {
+            return false;
+        }
+
+        if(!(thirdWord instanceof OpEqual)) {
+            return false;
+        }
+
+        return true;
     }
 
     private static boolean isAnyoneCanSpend(Output output) {
@@ -111,7 +134,7 @@ public class OutputClassifier {
 
     private static boolean isProvablyUnspendable(Output output) {
         // Return immediately if it doesn't pass the basic checks
-        if(!basicSizeCheck(output, 1)) { return false; }
+        if(!sizeGreaterThanOrEqualTo(output, 1)) { return false; }
 
         List<Word> words = output.getScriptWords();
 
@@ -123,5 +146,15 @@ public class OutputClassifier {
         else {
             return false;
         }
+    }
+
+    private static boolean sizeGreaterThanOrEqualTo(Output output, int size) {
+        // Are there at least the number of words we need?
+        if (output.getScriptWords().size() < size) {
+            // No, this is not what we're looking for
+            return false;
+        }
+
+        return true;
     }
 }
