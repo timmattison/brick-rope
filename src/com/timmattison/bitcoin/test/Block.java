@@ -6,10 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigInteger;
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -26,13 +23,11 @@ public class Block extends ByteConsumer {
     private static final int requiredMagicNumber = EndiannessHelper.BytesToInt(requiredMagicNumberBytes);
     private static final int magicNumberLengthInBytes = 4;
     private static final int blockSizeLengthInBytes = 4;
-
     // These values are not in the block
     private BlockChain blockChain;
     private int blockNumber;
     private byte[] previousBlockHash;
     private byte[] headerHash;
-
     /**
      * Magic number
      */
@@ -118,20 +113,31 @@ public class Block extends ByteConsumer {
         // Validate the block
         validateBlock();
 
+        // Check output types
+        for (Transaction transaction : transactions) {
+            for (Output output : transaction.getOutputs()) {
+                OutputType outputType = OutputClassifier.getOutputType(output);
+
+                if (!outputType.equals(OutputType.SingleSigned) && !outputType.equals(OutputType.Unknown)) {
+                    getLogger().info("Block #" + blockNumber + ": " + String.valueOf(OutputClassifier.getOutputType(output)));
+                }
+            }
+        }
+
         // Is there a second transaction?
-        if(transactions.size() > 1) {
+        if (transactions.size() > 1) {
             // Yes, get the second input and output
             Input input = transactions.get(1).getInput(0);
             Output output = transactions.get(1).getOutput(0);
 
             byte[] previousTransactionHash = input.getPreviousTransactionHash();
             long previousOutputIndex = input.getPreviousOutputIndex();
-            getLogger().info(ByteArrayHelper.formatArray(previousTransactionHash));
 
             // Do we know about this previous transaction?
-            Block referencedBlock = blockChain.getBlock(previousTransactionHash);
+            getLogger().info("Looking for: " + ByteArrayHelper.formatArray(previousTransactionHash));
+            Transaction referencedTransaction = blockChain.getTransaction(previousTransactionHash);
 
-            if(referencedBlock == null) {
+            if (referencedTransaction == null) {
                 throw new UnsupportedOperationException("Couldn't find the block reference by this transaction");
             }
 
@@ -145,7 +151,7 @@ public class Block extends ByteConsumer {
     }
 
     public byte[] getHeaderHash() throws IOException, NoSuchAlgorithmException {
-        if(headerHash == null) {
+        if (headerHash == null) {
             headerHash = HashHelper.doubleSha256Hash(blockHeader.dumpBytes());
         }
 
@@ -154,9 +160,9 @@ public class Block extends ByteConsumer {
 
     private void validateBlock() throws IOException, NoSuchAlgorithmException {
         // Do we have the hash of the previous block?
-        if(previousBlockHash != null) {
+        if (previousBlockHash != null) {
             // Yes, does it match what we
-            if(!Arrays.equals(previousBlockHash, blockHeader.getPreviousBlockHash())) {
+            if (!Arrays.equals(previousBlockHash, blockHeader.getPreviousBlockHash())) {
                 // No, throw an exception
                 throw new UnsupportedOperationException("Previous block hash doesn't match what this block has for its previous block hash");
             }
@@ -177,7 +183,7 @@ public class Block extends ByteConsumer {
         BigInteger currentTarget = blockHeader.getTargetBigInteger();
 
         // Is the current hash less than the current target?
-        if(currentHash.compareTo(currentTarget) >= 0) {
+        if (currentHash.compareTo(currentTarget) >= 0) {
             // No, it is equal to or greater than the current target.  Throw an exception.
             throw new UnsupportedOperationException("Current hash is greater than the current target");
         }
@@ -204,7 +210,7 @@ public class Block extends ByteConsumer {
 
         // Build the base of the tree by dumping all of the hashes of the transaction bytes into an array
         for (Transaction transaction : transactions) {
-            transactionBytes.add(HashHelper.doubleSha256Hash(transaction.dumpBytes()));
+            transactionBytes.add(transaction.getHash());
         }
 
         // Is there only one value?
@@ -278,5 +284,17 @@ public class Block extends ByteConsumer {
         }
 
         return bytes.toByteArray();
+    }
+
+    public void storeTransactions(Map<String, Transaction> transactionMap) throws IOException, NoSuchAlgorithmException {
+        int counter = 0;
+
+        for(Transaction transaction : transactions) {
+            byte[] transactionHash = transaction.getHash();
+            String hashString = ByteArrayHelper.formatArray(transactionHash);
+            transactionMap.put(hashString, transaction);
+
+            getLogger().info("Block #" + blockNumber + ", transaction #" + counter++ + ", " + hashString);
+        }
     }
 }

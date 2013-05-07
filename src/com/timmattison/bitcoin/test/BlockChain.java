@@ -20,7 +20,7 @@ import java.util.Map;
 public class BlockChain extends ByteConsumer {
     private static final String name = "BLOCK CHAIN";
     public static int blockNumber = 0;
-    private Map<byte[], Block> blockMap = new HashMap<byte[], Block>();
+    private Map<String, Transaction> transactionMap = new HashMap<String, Transaction>();
     private List<Block> blocks = new ArrayList<Block>();
     private Block previousBlock;
 
@@ -57,12 +57,8 @@ public class BlockChain extends ByteConsumer {
             // Update the previous block
             previousBlock = block;
 
-            // Store the block by its header hash
-            blockMap.put(block.getHeaderHash(), block);
-            getLogger().info("Block #" + blockNumber + ": " + ByteArrayHelper.formatArray(block.getHeaderHash()));
-
-            // Store the block in the list of blocks
-            blocks.add(block);
+            // TODO - Store the transactions by their hash
+            block.storeTransactions(transactionMap);
 
             availableBytes = inputStream.available() & 0xFFFFFFFFL;
         }
@@ -102,7 +98,7 @@ public class BlockChain extends ByteConsumer {
         return bytes.toByteArray();
     }
 
-    public Block getBlock(byte[] previousTransactionHash) {
-        return blockMap.get(previousTransactionHash);
+    public Transaction getTransaction(byte[] transactionHash) {
+        return transactionMap.get(ByteArrayHelper.formatArray(transactionHash));
     }
 }

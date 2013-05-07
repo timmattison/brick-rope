@@ -4,6 +4,7 @@
       <w>coinbase</w>
       <w>merkle</w>
       <w>opcode</w>
+      <w>unspendable</w>
     </words>
   </dictionary>
 </component>
