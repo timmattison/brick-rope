@@ -115,6 +115,15 @@ public class Block extends ByteConsumer {
 
         // Validate the block
         validateBlock();
+
+        // Get the coinbase
+        Output coinbaseOutput = getCoinbaseOutput();
+        getLogger().info("Is single signed output? " + OutputClassifier.getOutputType(coinbaseOutput).equals(OutputType.SingleSignedOutput));
+        getLogger().info(coinbaseOutput.dump(true));
+    }
+
+    private Output getCoinbaseOutput() {
+        return transactions.get(0).getOutput(0);
     }
 
     public byte[] getHeaderHash() throws IOException, NoSuchAlgorithmException {

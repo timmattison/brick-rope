@@ -175,4 +175,17 @@ public class Transaction extends ByteConsumer {
 
         return bytes.toByteArray();
     }
+
+    public Output getOutput(int outputNumber) {
+        if(outputs == null) {
+            throw new UnsupportedOperationException("Outputs are NULL, has this transaction been populated?");
+        }
+
+        if(outputs.size() < (outputNumber - 1)) {
+            throw new UnsupportedOperationException("Not enough outputs, has this transaction been populated?");
+        }
+
+        // Get the first output
+        return outputs.get(outputNumber);
+    }
 }

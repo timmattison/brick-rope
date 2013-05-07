@@ -305,4 +305,8 @@ public class Script extends ByteConsumer {
 
         return wordFactory;
     }
+
+    public List<Word> getWords() {
+        return words;
+    }
 }

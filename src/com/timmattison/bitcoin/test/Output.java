@@ -1,10 +1,13 @@
 package com.timmattison.bitcoin.test;
 
+import com.timmattison.bitcoin.test.script.Word;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -105,5 +108,9 @@ public class Output extends ByteConsumer {
         bytes.write(outputScript.dumpBytes());
 
         return bytes.toByteArray();
+    }
+
+    public List<Word> getScriptWords() {
+        return outputScript.getWords();
     }
 }
