@@ -77,4 +77,26 @@ public class ByteArrayHelper {
 
         return returnValue;
     }
+
+    public static int indexOf(byte[] needle, byte[] haystack) {
+        for(int outerLoop = 0; outerLoop < haystack.length; outerLoop++) {
+            boolean matching = true;
+
+            for(int innerLoop = 0; (innerLoop < needle.length) && (matching); innerLoop++) {
+                if(haystack[outerLoop + innerLoop] != needle[innerLoop]) {
+                    matching = false;
+                }
+            }
+
+            // Was this a match?
+            if(matching)
+            {
+                // Yes, return the index
+                return outerLoop;
+            }
+        }
+
+        // No match
+        return -1;
+    }
 }

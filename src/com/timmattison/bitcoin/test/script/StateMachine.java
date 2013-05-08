@@ -125,4 +125,12 @@ public class StateMachine {
         checkScriptBytesNotNull();
         return stack.peek();
     }
+
+    public int getCodeSeparatorPosition() {
+        return codeSeparatorPosition;
+    }
+
+    public byte[] getScriptBytes() {
+        return scriptBytes;
+    }
 }

@@ -5,6 +5,7 @@ import com.timmattison.bitcoin.test.SanityCheckHelper;
 import com.timmattison.bitcoin.test.script.StateMachine;
 import com.timmattison.bitcoin.test.script.Word;
 
+import java.io.ByteArrayOutputStream;
 import java.util.Arrays;
 
 /**
@@ -20,6 +21,7 @@ public class OpCheckSig extends Word {
     private byte[] publicKey;
     private byte[] signature;
     private StateMachine stateMachine;
+    private byte[] subscript;
 
     public OpCheckSig() {
         super(word, opcode, false);
@@ -54,11 +56,15 @@ public class OpCheckSig extends Word {
 
         step1();
 
+        step2();
+
+        step3();
+
         throw new UnsupportedOperationException();
     }
 
     /**
-     * The public key and the signature are popped from the stack, in that order.
+     * The public key and the signature are popped from the stack, in that order.  Hash type is set up.
      */
     private void step1() {
         // Pop the public key from the stack
@@ -92,8 +98,57 @@ public class OpCheckSig extends Word {
         getLogger().info("Signature: " + ByteArrayHelper.formatArray(signature));
     }
 
+    /**
+     * The subscript is created
+     */
     private void step2()
     {
+        int codeSeparatorPosition = stateMachine.getCodeSeparatorPosition();
+        byte[] originalScriptBytes = stateMachine.getScriptBytes();
+
+        // Was there a code separator?
+        if(codeSeparatorPosition < 0) {
+            // No, just use the whole script
+
+            // Copy it
+            subscript = Arrays.copyOf(originalScriptBytes, originalScriptBytes.length);
+        }
+        else {
+            // Yes, just use the script bytes after the separator
+            subscript = Arrays.copyOfRange(originalScriptBytes, codeSeparatorPosition, originalScriptBytes.length);
+        }
+    }
+
+    /**
+     * The sig is deleted from the subscript
+     */
+    private void step3() {
+        int index = ByteArrayHelper.indexOf(signature, subscript);
+
+        getLogger().info("Before step 3 signature: " + ByteArrayHelper.formatArray(signature));
+        getLogger().info("Before step 3 subscript: " + ByteArrayHelper.formatArray(subscript));
+
+        // TODO - This leaves the PUSH operation on the stack that pushed the signature in the first place
+        while(index != -1) {
+            // Remove the signature at the index returned
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+
+            // Get all of the bytes up to the signature
+            byteArrayOutputStream.write(subscript, 0, index);
+
+            // Get all of the bytes after the signature
+            int endIndex = index + signature.length;
+            byteArrayOutputStream.write(subscript, endIndex, subscript.length - endIndex);
+
+            // Dump the byte array
+            subscript = byteArrayOutputStream.toByteArray();
+
+            // Find the next index
+            index = ByteArrayHelper.indexOf(signature, subscript);
+        }
+
+        getLogger().info("After step 3 signature: " + ByteArrayHelper.formatArray(signature));
+        getLogger().info("After step 3 subscript: " + ByteArrayHelper.formatArray(subscript));
 
     }
 }
