@@ -133,4 +133,8 @@ public class Input extends ByteConsumer {
     public long getPreviousOutputIndex() {
         return previousOutputIndex;
     }
+
+    public Script getScript() {
+        return inputScript;
+    }
 }

@@ -50,7 +50,7 @@ public class VirtualOpPush extends ByteConsumingWord {
 
     @Override
     public void execute(StateMachine stateMachine) {
-        stateMachine.stack.push(input);
+        stateMachine.push(input);
 
         if (isInnerDebug()) {
             getLogger().info("Data being pushed on the stack: " + ByteArrayHelper.formatArray(input));

@@ -32,13 +32,13 @@ public abstract class SimpleHashingWord extends Word {
             MessageDigest md = MessageDigest.getInstance(algorithm);
 
             // Get the data to hash
-            byte[] bytesToHash = (byte[]) stateMachine.stack.pop();
+            byte[] bytesToHash = (byte[]) stateMachine.pop();
 
             // Hash it
             md.update(bytesToHash);
 
             // Push the result back on the stack
-            stateMachine.stack.push(md.digest());
+            stateMachine.push(md.digest());
         } catch (NoSuchAlgorithmException e) {
             // Algorithm wasn't found, throw an exception
             throw new UnsupportedOperationException("Hashing algorithm " + algorithm + " doesn't exist");

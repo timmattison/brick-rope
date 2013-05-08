@@ -3,9 +3,9 @@ package com.timmattison.bitcoin.test;
 import com.timmattison.bitcoin.test.script.ByteConsumingWord;
 import com.timmattison.bitcoin.test.script.StateMachine;
 import com.timmattison.bitcoin.test.script.Word;
+import com.timmattison.bitcoin.test.script.words.crypto.OpCodeSeparator;
 
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -83,6 +83,17 @@ public class Script extends ByteConsumer {
         this.scriptNumber = scriptNumber;
     }
 
+    public Script(ByteArrayInputStream byteArrayInputStream, int versionNumber, boolean debug) throws IOException {
+        super(byteArrayInputStream, debug);
+
+        this.lengthInBytes = byteArrayInputStream.available();
+        this.versionNumber = versionNumber;
+
+        this.coinbase = false;
+        this.input = false;
+        this.scriptNumber = -1;
+    }
+
     @Override
     protected String getName() {
         return name;
@@ -99,21 +110,23 @@ public class Script extends ByteConsumer {
         return stringBuilder.toString();
     }
 
-    public boolean execute() {
+    public boolean execute() throws ScriptExecutionException, IOException {
         // Is this the coinbase?
         if (coinbase) {
             // Yes, nothing to execute
             return true;
         }
 
+        StateMachine localStateMachine = getStateMachine(dumpBytes());
+
         // Loop through each word
         for (Word word : words) {
             // Execute the instruction
-            word.execute(getStateMachine());
+            word.execute(localStateMachine);
         }
 
         // Pop the top value of the stack
-        Object topStackValue = getStateMachine().stack.pop();
+        Object topStackValue = localStateMachine.pop();
 
         // Is the top stack non-zero?
         if (topStackValue != null) {
@@ -126,9 +139,10 @@ public class Script extends ByteConsumer {
         }
     }
 
-    private StateMachine getStateMachine() {
+    private StateMachine getStateMachine(byte[] scriptBytes) throws IOException {
         if (stateMachine == null) {
             stateMachine = new StateMachine();
+            stateMachine.setScriptBytes(scriptBytes);
         }
 
         return stateMachine;
@@ -208,9 +222,12 @@ public class Script extends ByteConsumer {
         }
 
         try {
+            int position = 0;
+
             while (byteStream.available() > 0) {
                 // Get the next byte
                 byte currentByte = (byte) byteStream.read();
+                position++;
 
                 // Get the word that the next byte corresponds to
                 Word currentWord = getWordFactory().getWordByOpcode(currentByte);
@@ -218,7 +235,15 @@ public class Script extends ByteConsumer {
                 // Is this a byte consuming word?
                 if (ByteConsumingWord.class.isAssignableFrom(currentWord.getClass())) {
                     // Yes, consume the bytes
-                    ((ByteConsumingWord) currentWord).consumeInput(byteStream);
+                    ByteConsumingWord byteConsumingWord = ((ByteConsumingWord) currentWord);
+                    byteConsumingWord.consumeInput(byteStream);
+                    position += byteConsumingWord.getInputBytesRequired();
+                }
+
+                // Is this a code separator?
+                if(OpCodeSeparator.class.isAssignableFrom(currentWord.getClass())) {
+                    // Yes, store its position
+                    ((OpCodeSeparator) currentWord).setPosition(position);
                 }
 
                 // Add the word to our word list
@@ -308,5 +333,9 @@ public class Script extends ByteConsumer {
 
     public List<Word> getWords() {
         return words;
+    }
+
+    public int getVersionNumber() {
+        return versionNumber;
     }
 }

@@ -42,6 +42,7 @@ public class Output extends ByteConsumer {
 
     // These values are not in the output
     int outputNumber;
+    private Object script;
 
     public Output(InputStream inputStream, int outputNumber, boolean debug) throws IOException {
         super(inputStream, debug);
@@ -112,5 +113,9 @@ public class Output extends ByteConsumer {
 
     public List<Word> getScriptWords() {
         return outputScript.getWords();
+    }
+
+    public Script getScript() {
+        return outputScript;
     }
 }
