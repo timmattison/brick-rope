@@ -1,9 +1,6 @@
 package com.timmattison.bitcoin.test;
 
-import java.io.ByteArrayOutputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.math.BigInteger;
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
@@ -124,27 +121,43 @@ public class Block extends ByteConsumer {
             }
         }
 
+        if(blockNumber == 9) {
+            getLogger().info(transactions.get(0).getOutput(0).dump(true));
+        }
+
         // Is there a second transaction?
         if (transactions.size() > 1) {
             // Yes, get the second input and output
             Input input = transactions.get(1).getInput(0);
-            Output output = transactions.get(1).getOutput(0);
 
             byte[] previousTransactionHash = input.getPreviousTransactionHash();
             long previousOutputIndex = input.getPreviousOutputIndex();
 
-            // Find the referenced transactions
+            // Get the referenced transaction
             Transaction referencedTransaction = blockChain.getTransaction(previousTransactionHash);
 
-            // Could we find it?
+            // Did we find it?
             if (referencedTransaction == null) {
                 // No, throw an exception
                 throw new UnsupportedOperationException("Couldn't find the block reference by this transaction");
             }
 
-            // Dump the input
-            getLogger().info("Transaction to process:");
-            getLogger().info(input.dump(true));
+            Output output = referencedTransaction.getOutput((int) previousOutputIndex);
+            getLogger().info(output.dump(true));
+            getLogger().info(ByteArrayHelper.formatArray(output.getScript().dumpBytes()));
+
+            // Combine the input and the output
+            ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(ByteArrayHelper.concatenate(input.getScript().dumpBytes(), output.getScript().dumpBytes()));
+            Script fullScript = new Script(byteArrayInputStream, output.getScript().getVersionNumber(), isDebug());
+
+            try {
+                // Build and execute the full script and see if it throws an exception
+                fullScript.build();
+                fullScript.execute();
+            }
+            catch (ScriptExecutionException ex) {
+
+            }
         }
     }
 
