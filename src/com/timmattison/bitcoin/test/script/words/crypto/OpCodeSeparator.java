@@ -13,13 +13,18 @@ import com.timmattison.bitcoin.test.script.Word;
 public class OpCodeSeparator extends Word {
     private static final String word = "OP_CODESEPARATOR";
     private static final Byte opcode = (byte) 0xab;
+    private int position;
 
     public OpCodeSeparator() {
         super(word, opcode, false);
     }
 
+    public void setPosition(int value) {
+        this.position = value;
+    }
+
     @Override
     public void execute(StateMachine stateMachine) {
-        throw new UnsupportedOperationException();
+        stateMachine.setCodeSeparatorPosition();
     }
 }
