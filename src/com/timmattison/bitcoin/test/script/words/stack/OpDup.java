@@ -21,6 +21,6 @@ public class OpDup extends Word {
     @Override
     public void execute(StateMachine stateMachine) {
         // Duplicate the top element on the stack
-        stateMachine.stack.push(stateMachine.stack.peek());
+        stateMachine.push(stateMachine.peek());
     }
 }

@@ -23,8 +23,8 @@ public class OpEqual extends Word {
     @Override
     public void execute(StateMachine stateMachine) {
         // Pop the top two items off of the stack so we can compare them
-        Object item1 = stateMachine.stack.pop();
-        Object item2 = stateMachine.stack.pop();
+        Object item1 = stateMachine.pop();
+        Object item2 = stateMachine.pop();
 
         Boolean result = null;
 
@@ -57,6 +57,6 @@ public class OpEqual extends Word {
         }
 
         // Push the result onto the stack
-        stateMachine.stack.push(result);
+        stateMachine.push(result);
     }
 }

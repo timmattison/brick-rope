@@ -29,6 +29,6 @@ public class OpRipEmd160 extends Word {
 
         IMessageDigest md = HashFactory.getInstance(algorithm);
         md.update(bytesToHash, 0, bytesToHash.length);
-        stateMachine.stack.push(md.digest());
+        stateMachine.push(md.digest());
     }
 }
