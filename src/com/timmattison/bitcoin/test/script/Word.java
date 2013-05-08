@@ -1,5 +1,9 @@
 package com.timmattison.bitcoin.test.script;
 
+import com.timmattison.bitcoin.test.BlockChainTest;
+
+import java.util.logging.Logger;
+
 /**
  * Created with IntelliJ IDEA.
  * User: timmattison
@@ -12,6 +16,8 @@ public abstract class Word {
     protected final String word;
     protected Object output;
     private boolean innerDebug;
+
+    protected Logger logger;
 
     public Word(String word, Byte opcode, boolean innerDebug) {
         this.opcode = opcode;
@@ -40,5 +46,19 @@ public abstract class Word {
 
     protected boolean isInnerDebug() {
         return innerDebug;
+    }
+
+    protected Logger getLogger() {
+        if (logger == null) {
+            logger = Logger.getLogger(getWord());
+
+            try {
+                logger.addHandler(BlockChainTest.getHandler());
+            } catch (Exception ex) {
+                // Do nothing, failed to get a handler
+            }
+        }
+
+        return logger;
     }
 }
