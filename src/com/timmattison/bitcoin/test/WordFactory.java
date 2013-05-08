@@ -191,7 +191,7 @@ public class WordFactory {
         Class<Word> clazz = classesByOpcode.get(opcode);
 
         if (clazz == null) {
-            throw new UnsupportedOperationException("No word found for opcode " + opcode + " in block #" + BlockChain.blockNumber);
+            throw new UnsupportedOperationException("No word found for opcode " + opcode + " [" + ByteArrayHelper.toHex(opcode) + "] in block #" + BlockChain.blockNumber);
         }
 
         try {
