@@ -1,8 +1,12 @@
 package com.timmattison.bitcoin.test;
 
+import com.timmattison.bitcoin.test.script.Word;
+
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -18,6 +22,11 @@ public class Input extends ByteConsumer {
     private static final int previousTransactionHashLengthInBytes = 32;
     private static final int previousOutputIndexLengthInBytes = 4;
     private static final int sequenceNumberLengthInBytes = 4;
+
+    // These are not part of the script
+    private boolean coinbase;
+    private int versionNumber;
+    private int inputNumber;
 
     /**
      * Previous transaction hash
@@ -46,11 +55,6 @@ public class Input extends ByteConsumer {
      */
     private long sequenceNumber;
     private byte[] sequenceNumberBytes;
-
-    // These are not part of the script
-    private boolean coinbase;
-    private int versionNumber;
-    private int inputNumber;
 
     public Input(InputStream inputStream, boolean coinbase, int versionNumber, int inputNumber, boolean debug) throws IOException {
         super(inputStream, debug);
@@ -136,5 +140,11 @@ public class Input extends ByteConsumer {
 
     public Script getScript() {
         return inputScript;
+    }
+
+    public void setScript(byte[] scriptBytes) throws IllegalAccessException, IOException, InstantiationException {
+        ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(scriptBytes);
+        inputScript = new Script(byteArrayInputStream, scriptBytes.length, false, -1, -1, false);
+        inputScript.build();
     }
 }

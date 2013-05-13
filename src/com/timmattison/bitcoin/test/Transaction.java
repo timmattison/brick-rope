@@ -1,5 +1,6 @@
 package com.timmattison.bitcoin.test;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -21,39 +22,32 @@ public class Transaction extends ByteConsumer {
     private static final long maxVersionNumber = 2;
     private static final int versionNumberLengthInBytes = 4;
     private static final int lockTimeLengthInBytes = 4;
-
     // These are not in the block chain
     private int transactionCounter;
     private byte[] hash;
-
     /**
      * Version number
      */
     private int versionNumber;
     private byte[] versionNumberBytes;
-
     /**
      * Input counter
      */
     private long inCounter;
     private byte[] inCounterBytes;
-
     /**
      * Inputs
      */
     private List<Input> inputs;
-
     /**
      * Output counter
      */
     private long outCounter;
     private byte[] outCounterBytes;
-
     /**
      * Outputs
      */
     private List<Output> outputs;
-
     /**
      * Lock time
      */
@@ -64,6 +58,20 @@ public class Transaction extends ByteConsumer {
         super(inputStream, debug);
 
         this.transactionCounter = transactionCounter;
+    }
+
+    /**
+     * Copy constructor
+     *
+     * @param transactionToCopy
+     */
+    public static Transaction copyTransaction(Transaction transactionToCopy) throws IOException {
+        ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(transactionToCopy.dumpBytes());
+
+        Transaction newTransaction = new Transaction(byteArrayInputStream, transactionToCopy.getTransactionCounter(), false);
+        newTransaction.build();
+
+        return newTransaction;
     }
 
     @Override
@@ -130,7 +138,7 @@ public class Transaction extends ByteConsumer {
     }
 
     @Override
-    protected String dump(boolean pretty) {
+    public String dump(boolean pretty) {
         StringBuilder stringBuilder = new StringBuilder();
 
         if (pretty) {
@@ -142,13 +150,13 @@ public class Transaction extends ByteConsumer {
         DumpHelper.dump(stringBuilder, pretty, "\tVersion number: ", "\n", versionNumberBytes);
         DumpHelper.dump(stringBuilder, pretty, "\tInput counter: ", "\n", inCounterBytes);
 
-        for(Input input : inputs) {
+        for (Input input : inputs) {
             stringBuilder.append(input.dump(pretty));
         }
 
         DumpHelper.dump(stringBuilder, pretty, "\tOutput counter: ", "\n", outCounterBytes);
 
-        for(Output output : outputs) {
+        for (Output output : outputs) {
             stringBuilder.append(output.dump(pretty));
         }
 
@@ -158,19 +166,19 @@ public class Transaction extends ByteConsumer {
     }
 
     @Override
-    protected byte[] dumpBytes() throws IOException {
+    public byte[] dumpBytes() throws IOException {
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
 
         bytes.write(versionNumberBytes);
         bytes.write(inCounterBytes);
 
-        for(Input input : inputs) {
+        for (Input input : inputs) {
             bytes.write(input.dumpBytes());
         }
 
         bytes.write(outCounterBytes);
 
-        for(Output output : outputs) {
+        for (Output output : outputs) {
             bytes.write(output.dumpBytes());
         }
 
@@ -180,11 +188,11 @@ public class Transaction extends ByteConsumer {
     }
 
     public Output getOutput(int outputNumber) {
-        if(outputs == null) {
+        if (outputs == null) {
             throw new UnsupportedOperationException("Outputs are NULL, has this transaction been populated?");
         }
 
-        if(outputs.size() < (outputNumber - 1)) {
+        if (outputs.size() < (outputNumber - 1)) {
             throw new UnsupportedOperationException("Not enough outputs, has this transaction been populated?");
         }
 
@@ -193,11 +201,11 @@ public class Transaction extends ByteConsumer {
     }
 
     public Input getInput(int inputNumber) {
-        if(inputs == null) {
+        if (inputs == null) {
             throw new UnsupportedOperationException("No inputs, has this transaction been populated?");
         }
 
-        if(inputs.size() < (inputNumber - 1)) {
+        if (inputs.size() < (inputNumber - 1)) {
             throw new UnsupportedOperationException("No inputs, has this transaction been populated?");
         }
 
@@ -209,10 +217,18 @@ public class Transaction extends ByteConsumer {
     }
 
     public byte[] getHash() throws IOException, NoSuchAlgorithmException {
-        if(hash == null) {
+        if (hash == null) {
             hash = HashHelper.doubleSha256Hash(dumpBytes());
         }
 
         return hash;
+    }
+
+    public int getTransactionCounter() {
+        return transactionCounter;
+    }
+
+    public List<Input> getInputs() {
+        return inputs;
     }
 }

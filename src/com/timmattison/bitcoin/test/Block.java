@@ -128,7 +128,8 @@ public class Block extends ByteConsumer {
         // Is there a second transaction?
         if (transactions.size() > 1) {
             // Yes, get the second input and output
-            Input input = transactions.get(1).getInput(0);
+            Transaction currentTransaction = transactions.get(1);
+            Input input = currentTransaction.getInput(0);
 
             byte[] previousTransactionHash = input.getPreviousTransactionHash();
             long previousOutputIndex = input.getPreviousOutputIndex();
@@ -153,6 +154,7 @@ public class Block extends ByteConsumer {
             try {
                 // Build and execute the full script and see if it throws an exception
                 fullScript.build();
+                fullScript.setCurrentTransaction(currentTransaction);
                 fullScript.execute();
             }
             catch (ScriptExecutionException ex) {

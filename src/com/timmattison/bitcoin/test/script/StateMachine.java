@@ -1,6 +1,7 @@
 package com.timmattison.bitcoin.test.script;
 
 import com.timmattison.bitcoin.test.ByteArrayHelper;
+import com.timmattison.bitcoin.test.Transaction;
 
 import java.util.Stack;
 
@@ -16,16 +17,28 @@ public class StateMachine {
     private HashType hashType;
     private byte hashTypeByte = 0;
     private int currentPosition;
-
     /**
      * The position at which the last code separator was encountered
      */
     private int codeSeparatorPosition = -1;
-
     /**
      * The bytes for this script
      */
     private byte[] scriptBytes;
+    private Transaction currentTransaction;
+    private Transaction referencedTransaction;
+    private int referencedOutputIndex;
+
+    // TODO - Remove this Byte[] junk
+    public static byte[] convertByteArray(Byte[] input) {
+        Byte[] array = (Byte[]) input;
+        byte[] bytes = new byte[array.length];
+        for (int loop = 0; loop < array.length; loop++) {
+            bytes[loop] = array[loop];
+        }
+
+        return bytes;
+    }
 
     public Object pop() {
         checkScriptBytesNotNull();
@@ -53,42 +66,32 @@ public class StateMachine {
         }
     }
 
-    // TODO - Remove this Byte[] junk
-    public static byte[] convertByteArray(Byte[] input) {
-        Byte[] array = (Byte[]) input;
-        byte[] bytes = new byte[array.length];
-        for (int loop = 0; loop < array.length; loop++) {
-            bytes[loop] = array[loop];
-        }
-
-        return bytes;
-    }
-
     public HashType getHashType() {
         checkScriptBytesNotNull();
 
         // Is the hash type already set?
-        if(hashType == null) {
+        if (hashType == null) {
             // No, determine which hash type we want
-            if(((hashTypeByte & 31) == HashType.SIGHASH_ALL.getValue())) {
+            if (((hashTypeByte & 31) == HashType.SIGHASH_ALL.getValue())) {
                 // TODO - Check the logic on this.  It is missing from the docs.
                 hashType = HashType.SIGHASH_ALL;
-            }
-            else if((hashTypeByte & 31) == HashType.SIGHASH_NONE.getValue()) {
+            } else if ((hashTypeByte & 31) == HashType.SIGHASH_NONE.getValue()) {
                 hashType = HashType.SIGHASH_NONE;
-            }
-            else if((hashTypeByte & 31) == HashType.SIGHASH_SINGLE.getValue()) {
+            } else if ((hashTypeByte & 31) == HashType.SIGHASH_SINGLE.getValue()) {
                 hashType = HashType.SIGHASH_SINGLE;
-            }
-            else if((hashTypeByte & HashType.SIGHASH_ANYONECANPAY.getValue()) == HashType.SIGHASH_ANYONECANPAY.getValue()) {
+            } else if ((hashTypeByte & HashType.SIGHASH_ANYONECANPAY.getValue()) == HashType.SIGHASH_ANYONECANPAY.getValue()) {
                 hashType = HashType.SIGHASH_SINGLE;
-            }
-            else {
+            } else {
                 throw new UnsupportedOperationException("Unsupported hash type value found: " + hashTypeByte + " [" + ByteArrayHelper.toHex(hashTypeByte) + "]");
             }
         }
 
         return hashType;
+    }
+
+    public byte getHashTypeByte() {
+        checkScriptBytesNotNull();
+        return hashTypeByte;
     }
 
     public void setHashTypeByte(byte hashTypeByte) {
@@ -97,18 +100,9 @@ public class StateMachine {
         hashType = null;
     }
 
-    public byte getHashTypeByte() {
-        checkScriptBytesNotNull();
-        return hashTypeByte;
-    }
-
     public void setCodeSeparatorPosition() {
         checkScriptBytesNotNull();
         this.codeSeparatorPosition = currentPosition;
-    }
-
-    public void setScriptBytes(byte[] scriptBytes) {
-        this.scriptBytes = scriptBytes;
     }
 
     /**
@@ -116,7 +110,7 @@ public class StateMachine {
      * the state machine up properly
      */
     private void checkScriptBytesNotNull() {
-        if(scriptBytes == null) {
+        if (scriptBytes == null) {
             throw new UnsupportedOperationException("Script bytes cannot be NULL");
         }
     }
@@ -132,5 +126,33 @@ public class StateMachine {
 
     public byte[] getScriptBytes() {
         return scriptBytes;
+    }
+
+    public void setScriptBytes(byte[] scriptBytes) {
+        this.scriptBytes = scriptBytes;
+    }
+
+    public Transaction getCurrentTransaction() {
+        return currentTransaction;
+    }
+
+    public void setCurrentTransaction(Transaction transaction) {
+        currentTransaction = transaction;
+    }
+
+    public Transaction getReferencedTransaction() {
+        return referencedTransaction;
+    }
+
+    public void setReferencedTransaction(Transaction referencedTransaction) {
+        this.referencedTransaction = referencedTransaction;
+    }
+
+    public int getReferencedOutputIndex() {
+        return referencedOutputIndex;
+    }
+
+    public void setReferencedOutputIndex(int referencedOutputIndex) {
+        this.referencedOutputIndex = referencedOutputIndex;
     }
 }

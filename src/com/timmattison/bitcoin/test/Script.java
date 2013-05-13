@@ -30,7 +30,6 @@ public class Script extends ByteConsumer {
     private StateMachine stateMachine;
     private WordFactory wordFactory;
     private boolean coinbase;
-
     // Raw bytes, in order they were pulled from the block chain
     private int versionNumber;
     private int blockHeight;
@@ -38,6 +37,9 @@ public class Script extends ByteConsumer {
      * Script bytes
      */
     private byte[] scriptBytes;
+    private Transaction currentTransaction;
+    private Transaction referencedTransaction;
+    private int referencedOutputIndex;
 
     /**
      * Create an input script
@@ -117,7 +119,7 @@ public class Script extends ByteConsumer {
             return true;
         }
 
-        StateMachine localStateMachine = getStateMachine(dumpBytes());
+        StateMachine localStateMachine = getStateMachine(dumpBytes(), getCurrentTransaction(), getReferencedTransaction(), getReferencedOutputIndex());
 
         // Loop through each word
         for (Word word : words) {
@@ -139,10 +141,13 @@ public class Script extends ByteConsumer {
         }
     }
 
-    private StateMachine getStateMachine(byte[] scriptBytes) throws IOException {
+    private StateMachine getStateMachine(byte[] scriptBytes, Transaction currentTransaction, Transaction referencedTransaction, int referencedOutputIndex) throws IOException {
         if (stateMachine == null) {
             stateMachine = new StateMachine();
             stateMachine.setScriptBytes(scriptBytes);
+            stateMachine.setCurrentTransaction(currentTransaction);
+            stateMachine.setReferencedTransaction(referencedTransaction);
+            stateMachine.setReferencedOutputIndex(referencedOutputIndex);
         }
 
         return stateMachine;
@@ -241,7 +246,7 @@ public class Script extends ByteConsumer {
                 }
 
                 // Is this a code separator?
-                if(OpCodeSeparator.class.isAssignableFrom(currentWord.getClass())) {
+                if (OpCodeSeparator.class.isAssignableFrom(currentWord.getClass())) {
                     // Yes, store its position
                     ((OpCodeSeparator) currentWord).setPosition(position);
                 }
@@ -337,5 +342,51 @@ public class Script extends ByteConsumer {
 
     public int getVersionNumber() {
         return versionNumber;
+    }
+
+    public void removeCodeSeparators() throws IOException {
+        // Has the word list been built?
+        if(words == null) {
+            // No, build it
+            build();
+        }
+
+        List<Word> tempWords = new ArrayList<Word>();
+
+        // Loop through all of the words
+        for (Word word : words) {
+            // Is this a code separator?
+            if (!OpCodeSeparator.class.isAssignableFrom(word.getClass())) {
+                // No, add it to the list
+                tempWords.add(word);
+            }
+        }
+
+        // Use this as our new word list
+        words = tempWords;
+    }
+
+    public void setCurrentTransaction(Transaction currentTransaction) {
+        this.currentTransaction = currentTransaction;
+    }
+
+    public Transaction getCurrentTransaction() {
+        return currentTransaction;
+    }
+
+    public Transaction getReferencedTransaction() {
+        return referencedTransaction;
+    }
+
+    public void setReferencedTransaction(Transaction referencedTransaction) {
+        this.referencedTransaction = referencedTransaction;
+    }
+
+    public int getReferencedOutputIndex() {
+        return referencedOutputIndex;
+    }
+
+    public void setReferencedOutputIndex(int referencedOutputIndex) {
+        this.referencedOutputIndex = referencedOutputIndex;
     }
 }

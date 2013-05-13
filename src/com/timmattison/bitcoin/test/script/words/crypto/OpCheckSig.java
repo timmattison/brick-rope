@@ -1,11 +1,15 @@
 package com.timmattison.bitcoin.test.script.words.crypto;
 
-import com.timmattison.bitcoin.test.ByteArrayHelper;
-import com.timmattison.bitcoin.test.SanityCheckHelper;
+import com.timmattison.bitcoin.test.*;
+import com.timmattison.bitcoin.test.script.HashType;
+import com.timmattison.bitcoin.test.script.ScriptHelper;
 import com.timmattison.bitcoin.test.script.StateMachine;
 import com.timmattison.bitcoin.test.script.Word;
+import sun.security.ec.ECKeyFactory;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.Arrays;
 
 /**
@@ -21,7 +25,9 @@ public class OpCheckSig extends Word {
     private byte[] publicKey;
     private byte[] signature;
     private StateMachine stateMachine;
-    private byte[] subscript;
+    private byte[] subscriptBytes;
+    private Script subscript;
+    private Transaction txCopy;
 
     public OpCheckSig() {
         super(word, opcode, false);
@@ -50,15 +56,40 @@ public class OpCheckSig extends Word {
     //
     // 8. The script for the current transaction input in txCopy is set to subScript (lead in by its length as a var-integer encoded!)
 
+    // Step 5 appears to be a dupe
+
     @Override
     public void execute(StateMachine stateMachine) {
         this.stateMachine = stateMachine;
 
-        step1();
+        try {
+            step1();
 
-        step2();
+            step2();
 
-        step3();
+            step3();
+
+            step4();
+
+            step6();
+
+            step7();
+
+            step8();
+
+            // What kind of hash type is this?
+            if(stateMachine.getHashType() == HashType.SIGHASH_ALL) {
+                // Standard, just check the signature
+                ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+                byteArrayOutputStream.write(txCopy.dumpBytes());
+                byteArrayOutputStream.write(stateMachine.getHashType().ordinal());
+
+                byte[] hashedTransaction = HashHelper.doubleSha256Hash(byteArrayOutputStream.toByteArray());
+            }
+        } catch (Exception e) {
+            // Rethrow
+            throw new UnsupportedOperationException(e);
+        }
 
         throw new UnsupportedOperationException();
     }
@@ -85,7 +116,7 @@ public class OpCheckSig extends Word {
         byte lastByteOfSignature = signature[signature.length - 1];
 
         // Is the hash type zero?
-        if(stateMachine.getHashTypeByte() == 0) {
+        if (stateMachine.getHashTypeByte() == 0) {
             // Yes, set the hash type to the last byte of the signature
             stateMachine.setHashTypeByte(lastByteOfSignature);
         }
@@ -101,54 +132,86 @@ public class OpCheckSig extends Word {
     /**
      * The subscript is created
      */
-    private void step2()
-    {
+    private void step2() {
         int codeSeparatorPosition = stateMachine.getCodeSeparatorPosition();
         byte[] originalScriptBytes = stateMachine.getScriptBytes();
 
         // Was there a code separator?
-        if(codeSeparatorPosition < 0) {
+        if (codeSeparatorPosition < 0) {
             // No, just use the whole script
 
             // Copy it
-            subscript = Arrays.copyOf(originalScriptBytes, originalScriptBytes.length);
-        }
-        else {
+            subscriptBytes = Arrays.copyOf(originalScriptBytes, originalScriptBytes.length);
+        } else {
             // Yes, just use the script bytes after the separator
-            subscript = Arrays.copyOfRange(originalScriptBytes, codeSeparatorPosition, originalScriptBytes.length);
+            subscriptBytes = Arrays.copyOfRange(originalScriptBytes, codeSeparatorPosition, originalScriptBytes.length);
         }
     }
 
     /**
      * The sig is deleted from the subscript
+     * TODO - This can't be done with search and replace
      */
     private void step3() {
-        int index = ByteArrayHelper.indexOf(signature, subscript);
+        int index = ByteArrayHelper.indexOf(signature, subscriptBytes);
 
         getLogger().info("Before step 3 signature: " + ByteArrayHelper.formatArray(signature));
-        getLogger().info("Before step 3 subscript: " + ByteArrayHelper.formatArray(subscript));
+        getLogger().info("Before step 3 subscript: " + ByteArrayHelper.formatArray(subscriptBytes));
 
-        // TODO - This leaves the PUSH operation on the stack that pushed the signature in the first place
-        while(index != -1) {
+        while (index != -1) {
+            // Move back one byte to get the push opcode
+            index--;
+
             // Remove the signature at the index returned
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
 
             // Get all of the bytes up to the signature
-            byteArrayOutputStream.write(subscript, 0, index);
+            byteArrayOutputStream.write(subscriptBytes, 0, index);
 
-            // Get all of the bytes after the signature
-            int endIndex = index + signature.length;
-            byteArrayOutputStream.write(subscript, endIndex, subscript.length - endIndex);
+            // Get all of the bytes after the signature (add 2 to get the hashtype byte too)
+            int endIndex = index + signature.length + 2;
+            byteArrayOutputStream.write(subscriptBytes, endIndex, subscriptBytes.length - endIndex);
 
             // Dump the byte array
-            subscript = byteArrayOutputStream.toByteArray();
+            subscriptBytes = byteArrayOutputStream.toByteArray();
 
             // Find the next index
-            index = ByteArrayHelper.indexOf(signature, subscript);
+            index = ByteArrayHelper.indexOf(signature, subscriptBytes);
         }
 
         getLogger().info("After step 3 signature: " + ByteArrayHelper.formatArray(signature));
-        getLogger().info("After step 3 subscript: " + ByteArrayHelper.formatArray(subscript));
+        getLogger().info("After step 3 subscript: " + ByteArrayHelper.formatArray(subscriptBytes));
+    }
 
+    /**
+     * Remove all OP_CODESEPARATORS from the subscript
+     */
+    private void step4() throws IOException {
+        subscript = new Script(new ByteArrayInputStream(subscriptBytes), subscriptBytes.length, false);
+        subscript.removeCodeSeparators();
+    }
+
+    /**
+     * Make a copy of the current transaction
+     */
+    private void step6() throws IOException {
+        // Make a copy of the transaction
+        txCopy = Transaction.copyTransaction(stateMachine.getCurrentTransaction());
+    }
+
+    /**
+     * Set all inputs to empty scripts
+     */
+    private void step7() throws IllegalAccessException, IOException, InstantiationException {
+        for(Input input : txCopy.getInputs()) {
+            input.setScript(ScriptHelper.getEmptyScriptBytes());
+        }
+    }
+
+    /**
+     * Set the current transaction input in txCopy to our subscript
+     */
+    private void step8() throws IllegalAccessException, IOException, InstantiationException {
+        txCopy.getInput(stateMachine.getReferencedOutputIndex()).setScript(subscriptBytes);
     }
 }

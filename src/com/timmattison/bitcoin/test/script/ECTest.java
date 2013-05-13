@@ -1,5 +1,9 @@
 package com.timmattison.bitcoin.test.script;
 
+import org.bouncycastle.asn1.sec.SECNamedCurves;
+import org.bouncycastle.asn1.x9.X9ECParameters;
+import org.bouncycastle.crypto.params.ECDomainParameters;
+import org.bouncycastle.jce.interfaces.ECKey;
 import sun.security.ec.ECKeyFactory;
 
 import javax.crypto.Cipher;
@@ -16,8 +20,14 @@ import java.security.NoSuchAlgorithmException;
  */
 public class ECTest {
     public static void main(String[] args) throws NoSuchAlgorithmException, NoSuchPaddingException {
-        ECKeyFactory a = new ECKeyFactory();
-        KeyPairGenerator g = KeyPairGenerator.getInstance("ECDSA");
-        Cipher cipher = Cipher.getInstance("ECIES");
+    }
+
+    private static void test1() {
+        X9ECParameters params = SECNamedCurves.getByName("secp256k1");
+        ECDomainParameters ecParams = new ECDomainParameters(params.getCurve(), params.getG(), params.getN(), params.getH());
+    }
+
+    private static void test2() {
+        ECKey.verify()
     }
 }
