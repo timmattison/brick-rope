@@ -36,4 +36,12 @@ public class ECHelper {
 
         return temp.toString(16);
     }
+
+    public static boolean compare(String first, String second) {
+        // Convert to lowercase and remove all spaces
+        first = first.toLowerCase().replaceAll(" ", "");
+        second = second.toLowerCase().replaceAll(" ", "");
+
+        return first.equals(second);
+    }
 }

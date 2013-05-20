@@ -75,7 +75,7 @@ public class ECTest {
         String rString = r.toString(16);
 
         // Is it correct?
-        if(!BigIntegerHelper.compare(rString, rOctetString)) {
+        if(!ECHelper.compare(rString, rOctetString)) {
             // No, throw an exception
             throw new Exception("Failed at 2.1.3 3.3.  Expected " + rOctetString + ", got " + rString);
         }
@@ -86,15 +86,63 @@ public class ECTest {
         // Hash the message with SHA-1
         MessageDigest md = MessageDigest.getInstance("SHA1");
         md.update(M.getBytes());
-        String digestString = ByteArrayHelper.toHex(md.digest());
+        String H = ByteArrayHelper.toHex(md.digest());
 
         // Validate the message hash
         String expectedMessageHash = "a9993e364706816aba3e25717850c26c9cd0d89d";
 
         // Is the hash what we expected?
-        if(!BigIntegerHelper.compare(digestString, expectedMessageHash)) {
+        if(!ECHelper.compare(H, expectedMessageHash)) {
             // No, throw an exception
-            throw new Exception("Failed at 2.1.3 4.  Expected " + expectedMessageHash + ", got " + digestString);
+            throw new Exception("Failed at 2.1.3 4.  Expected " + expectedMessageHash + ", got " + H);
+        }
+
+        // Derive e from H
+
+        // Convert H to a bit string
+        String bitStringH = ECHelper.toBitStringFromHexString(H);
+
+        // Validate the bit string
+        String expectedBitString = "10101001 10011001 00111110 00110110 01000111 00000110 10000001 01101010 10111010 00111110 00100101 01110001 01111000 01010000 11000010 01101100 10011100 11010000 11011000 10011101";
+
+        // Are they equal?
+        if(!ECHelper.compare(bitStringH, expectedBitString)) {
+            // No, throw an exception
+            throw new Exception("Failed at 2.1.3 5.1.  Expected " + expectedBitString + ", got " + bitStringH);
+        }
+
+        int lengthCheckValue = bitStringH.length() % 8;
+
+        // TODO - Validate that this is what we should be checking.  The notation is a bit unclear to me in the docs.
+        if(lengthCheckValue != 0) {
+            // No, throw an exception
+            throw new Exception("Failed at 2.1.3 5.2.  Length of bit string for H must be 0 (mod 8).");
+        }
+
+        // Set E string to H string since length H mod 8 equals 0
+        String bitStringE = new String(bitStringH);
+
+        // Convert from the bit string to a hex string
+        String hexStringE = ECHelper.toHexStringFromBitString(bitStringE);
+
+        // Validate the hex string
+        String expectedHexString = "A9993E364706816ABA3E25717850C26C9CD0D89D";
+
+        // Are they equal?
+        if(!ECHelper.compare(hexStringE, expectedHexString)) {
+            // No, throw an exception
+            throw new Exception("Failed at 2.1.3 5.3.  Expected " + expectedHexString + ", got " + hexStringE);
+        }
+
+        BigInteger E = new BigInteger(hexStringE);
+
+        // Validate that E is the correct value
+        BigInteger expectedE = new BigInteger("968236873715988614170569073515315707566766479517", 10);
+
+        // Are they equal?
+        if(!BigIntegerHelper.equals(expectedE, E)) {
+            // No, throw an exception
+            throw new Exception("Failed at 2.1.3 5.4.  Expected " + expectedE + ", got " + E);
         }
     }
 
@@ -110,7 +158,7 @@ public class ECTest {
         // Does it match our expectation?
         String expectedOctetString = "AA374FFC3CE144E6B073307972CB6D57B2A4E982";
 
-        if (!BigIntegerHelper.compare(dUOctetString, expectedOctetString)) {
+        if (!ECHelper.compare(dUOctetString, expectedOctetString)) {
             // No, throw an exception
             throw new Exception("Failed at 2.1.2 1.2, expected " + expectedOctetString + ", got " + dUOctetString);
         }

@@ -14,15 +14,7 @@ public class BigIntegerHelper {
         return input.multiply(input);
     }
 
-    public static boolean compare(String first, String second) {
-        // Convert to lowercase and remove all spaces
-        first = first.toLowerCase().replaceAll(" ", "");
-        second = second.toLowerCase().replaceAll(" ", "");
-
-        return first.equals(second);
-    }
-
-    public static boolean equals(BigInteger first, BigInteger second) {
+   public static boolean equals(BigInteger first, BigInteger second) {
         if ((first == null) || (second == null)) {
             throw new UnsupportedOperationException("BigInteger values cannot be NULL");
         }
