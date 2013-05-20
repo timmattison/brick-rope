@@ -28,6 +28,6 @@ public class ECTest {
     }
 
     private static void test2() {
-        ECKey.verify()
+        //ECKey.verify()
     }
 }
