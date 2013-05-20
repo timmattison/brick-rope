@@ -5,6 +5,7 @@ import com.timmattison.bitcoin.test.ByteArrayHelper;
 
 import java.math.BigInteger;
 import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 /**
  * Created with IntelliJ IDEA.
@@ -14,6 +15,7 @@ import java.security.MessageDigest;
  * To change this template use File | Settings | File Templates.
  */
 public class ECTest {
+
     public static void main(String[] args) throws Exception {
         try {
             test1();
@@ -28,13 +30,28 @@ public class ECTest {
     // Calculated in the first method
     private static ECPointFp Qu;
 
+    // The message
+    private static final String message = "abc";
+    private static final byte[] messageBytes = message.getBytes();
+
+    // Derived from xR
+    private static ECPointFp R;
+
+    // Message signature
+    private static BigInteger s;
+
+    // Derive an integer r from xR (mod n)
+    private static BigInteger r;
+
     /**
      * From GEC 2: Test Vectors for SEC 1, 2.1.2
      */
     private static void test1() throws Exception {
         step1KeyDeploymentForU();
 
-        step2SigningOperationForU(Qu);
+        step2SigningOperationForU();
+
+        step3ValidateSignatureForV();
     }
 
     private static void step1KeyDeploymentForU() throws Exception {
@@ -78,14 +95,14 @@ public class ECTest {
         // String expectedQuOctetString = "0251b4496fecc406ed0e75a24a3c03206251419dc0";
     }
 
-    private static void step2SigningOperationForU(ECPointFp qu) throws Exception {
+    private static void step2SigningOperationForU() throws Exception {
         X9ECParameters secp160r1 = SECNamedCurves.getSecp160r1();
 
         // Selected k value
         BigInteger k = new BigInteger("702232148019446860144825009548118511996283736794", 10);
 
         // Compute R = (xR, yR) = k * G
-        ECPointFp R = secp160r1.getG().multiply(k);
+        R = secp160r1.getG().multiply(k);
 
         // Validate R
         BigInteger xR = new BigInteger("1176954224688105769566774212902092897866168635793", 10);
@@ -108,7 +125,7 @@ public class ECTest {
         }
 
         // Derive an integer r from xR (mod n)
-        BigInteger r = new BigInteger("1176954224688105769566774212902092897866168635793", 10).mod(secp160r1.getN());
+        r = new BigInteger("1176954224688105769566774212902092897866168635793", 10).mod(secp160r1.getN());
 
         // Is r zero?
         if(BigIntegerHelper.equals(r, BigInteger.ZERO)) {
@@ -126,12 +143,9 @@ public class ECTest {
             throw new Exception("Failed at 2.1.3 3.3.  Expected " + rOctetString + ", got " + rString);
         }
 
-        // Message is "abc"
-        String M = "abc";
-
         // Hash the message with SHA-1
         MessageDigest md = MessageDigest.getInstance("SHA1");
-        md.update(M.getBytes());
+        md.update(messageBytes);
         String H = ByteArrayHelper.toHex(md.digest());
 
         // Validate the message hash
@@ -194,7 +208,7 @@ public class ECTest {
         // Step 6: Compute the integer s.
 
         // s = k^-1(e + dU * r) (mod n)
-        BigInteger s = k.modPow(BigInteger.ONE.negate(), secp160r1.getN()).multiply(E.add(dU.multiply(r))).mod(secp160r1.getN());
+        s = k.modPow(BigInteger.ONE.negate(), secp160r1.getN()).multiply(E.add(dU.multiply(r))).mod(secp160r1.getN());
 
         // Validate that s is not zero (mod n)
 
@@ -220,6 +234,44 @@ public class ECTest {
         if(ECHelper.compare(s.toString(16), expectedSOctetString)) {
             // No, throw an exception
             throw new Exception("Failed at 2.1.3 6.3.  Expected " + expectedSOctetString + ", got " + s);
+        }
+    }
+
+    private static void step3ValidateSignatureForV() throws Exception {
+        X9ECParameters secp160r1 = SECNamedCurves.getSecp160r1();
+
+        MessageDigest md = MessageDigest.getInstance("SHA1");
+        md.update(messageBytes);
+        String H = ByteArrayHelper.toHex(md.digest());
+
+        // Convert H to a bit string
+        String bitStringE = ECHelper.toBitStringFromHexString(H);
+
+        // Convert the bit string to a hex string
+        String hexStringE = ECHelper.toHexStringFromBitString(bitStringE);
+
+        BigInteger e = new BigInteger(hexStringE, 16);
+
+        // Compute u1
+        BigInteger u1 = e.multiply(s.modPow(BigInteger.ONE.negate(), secp160r1.getN())).mod(secp160r1.getN());
+
+        // Does u1 match our expectation?
+        BigInteger expectedU1 = new BigInteger("126492345237556041805390442445971246551226394866", 10);
+
+        if(!BigIntegerHelper.equals(u1, expectedU1)) {
+            // No, throw an exception
+            throw new Exception("Failed at 2.1.4 4.  u1 didn't match.");
+        }
+
+        // Compute u2
+        BigInteger u2 = r.multiply(s.modPow(BigInteger.ONE.negate(), secp160r1.getN())).mod(secp160r1.getN());
+
+        // Does u2 match our expectation?
+        BigInteger expectedU2 = new BigInteger("642136937233451268764953375477669732399252982122", 10);
+
+        if(!BigIntegerHelper.equals(u2, expectedU2)) {
+            // No, throw an exception
+            throw new Exception("Failed at 2.1.4 4.  u2 didn't match.");
         }
     }
 }
