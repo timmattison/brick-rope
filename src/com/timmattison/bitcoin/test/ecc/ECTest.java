@@ -1,4 +1,4 @@
-package com.timmattison.bitcoin.test.script;
+package com.timmattison.bitcoin.test.ecc;
 
 import org.bouncycastle.asn1.sec.SECNamedCurves;
 import org.bouncycastle.asn1.x9.X9ECParameters;

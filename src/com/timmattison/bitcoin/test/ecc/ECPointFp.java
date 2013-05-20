@@ -1,4 +1,6 @@
-package com.timmattison.bitcoin.test;
+package com.timmattison.bitcoin.test.ecc;
+
+import com.timmattison.bitcoin.test.BigIntegerHelper;
 
 import java.math.BigInteger;
 
