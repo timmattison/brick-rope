@@ -1,11 +1,10 @@
-package com.timmattison.bitcoin.test.ecc;
+package com.timmattison.bitcoin.test.ecc.fp;
 
 import com.timmattison.bitcoin.test.BigIntegerHelper;
 import com.timmattison.bitcoin.test.ByteArrayHelper;
 
 import java.math.BigInteger;
 import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 
 /**
  * Created with IntelliJ IDEA.
@@ -14,7 +13,7 @@ import java.security.NoSuchAlgorithmException;
  * Time: 7:23 AM
  * To change this template use File | Settings | File Templates.
  */
-public class ECTest {
+public class ECTestFp {
 
     public static void main(String[] args) throws Exception {
         try {
@@ -63,7 +62,7 @@ public class ECTest {
         // Does it match our expectation?
         String expectedOctetString = "AA374FFC3CE144E6B073307972CB6D57B2A4E982";
 
-        if (!ECHelper.compare(dUOctetString, expectedOctetString)) {
+        if (!ECHelperFp.compare(dUOctetString, expectedOctetString)) {
             // No, throw an exception
             throw new Exception("Failed at 2.1.2 1.2, expected " + expectedOctetString + ", got " + dUOctetString);
         }
@@ -138,7 +137,7 @@ public class ECTest {
         String rString = r.toString(16);
 
         // Is it correct?
-        if(!ECHelper.compare(rString, rOctetString)) {
+        if(!ECHelperFp.compare(rString, rOctetString)) {
             // No, throw an exception
             throw new Exception("Failed at 2.1.3 3.3.  Expected " + rOctetString + ", got " + rString);
         }
@@ -152,7 +151,7 @@ public class ECTest {
         String expectedMessageHash = "a9993e364706816aba3e25717850c26c9cd0d89d";
 
         // Is the hash what we expected?
-        if(!ECHelper.compare(H, expectedMessageHash)) {
+        if(!ECHelperFp.compare(H, expectedMessageHash)) {
             // No, throw an exception
             throw new Exception("Failed at 2.1.3 4.  Expected " + expectedMessageHash + ", got " + H);
         }
@@ -160,13 +159,13 @@ public class ECTest {
         // Derive e from H
 
         // Convert H to a bit string
-        String bitStringH = ECHelper.toBitStringFromHexString(H);
+        String bitStringH = ECHelperFp.toBitStringFromHexString(H);
 
         // Validate the bit string
         String expectedBitString = "10101001 10011001 00111110 00110110 01000111 00000110 10000001 01101010 10111010 00111110 00100101 01110001 01111000 01010000 11000010 01101100 10011100 11010000 11011000 10011101";
 
         // Are they equal?
-        if(!ECHelper.compare(bitStringH, expectedBitString)) {
+        if(!ECHelperFp.compare(bitStringH, expectedBitString)) {
             // No, throw an exception
             throw new Exception("Failed at 2.1.3 5.1.  Expected " + expectedBitString + ", got " + bitStringH);
         }
@@ -183,13 +182,13 @@ public class ECTest {
         String bitStringE = new String(bitStringH);
 
         // Convert from the bit string to a hex string
-        String hexStringE = ECHelper.toHexStringFromBitString(bitStringE);
+        String hexStringE = ECHelperFp.toHexStringFromBitString(bitStringE);
 
         // Validate the hex string
         String expectedHexString = "A9993E364706816ABA3E25717850C26C9CD0D89D";
 
         // Are they equal?
-        if(!ECHelper.compare(hexStringE, expectedHexString)) {
+        if(!ECHelperFp.compare(hexStringE, expectedHexString)) {
             // No, throw an exception
             throw new Exception("Failed at 2.1.3 5.3.  Expected " + expectedHexString + ", got " + hexStringE);
         }
@@ -231,7 +230,7 @@ public class ECTest {
         String expectedSOctetString = "3480EC371A091A464B31CE47DF0CB8AA2D98B54";
 
         // Are they equal?
-        if(ECHelper.compare(s.toString(16), expectedSOctetString)) {
+        if(ECHelperFp.compare(s.toString(16), expectedSOctetString)) {
             // No, throw an exception
             throw new Exception("Failed at 2.1.3 6.3.  Expected " + expectedSOctetString + ", got " + s);
         }
@@ -245,10 +244,10 @@ public class ECTest {
         String H = ByteArrayHelper.toHex(md.digest());
 
         // Convert H to a bit string
-        String bitStringE = ECHelper.toBitStringFromHexString(H);
+        String bitStringE = ECHelperFp.toBitStringFromHexString(H);
 
         // Convert the bit string to a hex string
-        String hexStringE = ECHelper.toHexStringFromBitString(bitStringE);
+        String hexStringE = ECHelperFp.toHexStringFromBitString(bitStringE);
 
         BigInteger e = new BigInteger(hexStringE, 16);
 
