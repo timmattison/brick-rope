@@ -12,13 +12,13 @@ import java.util.Map;
  * To change this template use File | Settings | File Templates.
  */
 public class SECNamedCurves {
-    private HashMap<String, X9ECParameters> curveMap;
+    private static HashMap<String, X9ECParameters> curveMap;
 
-    public BigInteger fromHex(String s) {
+    public static BigInteger fromHex(String s) {
         return new BigInteger(s, 16);
     }
 
-    public X9ECParameters secp128r1() {
+    public static X9ECParameters secp128r1() {
         // p = 2^128 - 2^97 - 1
         BigInteger p = fromHex("FFFFFFFDFFFFFFFFFFFFFFFFFFFFFFFF");
         BigInteger a = fromHex("FFFFFFFDFFFFFFFFFFFFFFFFFFFFFFFC");
@@ -33,7 +33,7 @@ public class SECNamedCurves {
         return new X9ECParameters(curve, G, n, h);
     }
 
-    public X9ECParameters secp160k1() {
+    public static X9ECParameters secp160k1() {
         // p = 2^160 - 2^32 - 2^14 - 2^12 - 2^9 - 2^8 - 2^7 - 2^3 - 2^2 - 1
         BigInteger p = fromHex("FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEFFFFAC73");
         BigInteger a = BigInteger.ZERO;
@@ -48,7 +48,7 @@ public class SECNamedCurves {
         return new X9ECParameters(curve, G, n, h);
     }
 
-    public X9ECParameters secp160r1() {
+    public static X9ECParameters secp160r1() {
         // p = 2^160 - 2^31 - 1
         BigInteger p = fromHex("FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF7FFFFFFF");
         BigInteger a = fromHex("FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF7FFFFFFC");
@@ -63,7 +63,7 @@ public class SECNamedCurves {
         return new X9ECParameters(curve, G, n, h);
     }
 
-    public X9ECParameters secp192k1() {
+    public static X9ECParameters secp192k1() {
         // p = 2^192 - 2^32 - 2^12 - 2^8 - 2^7 - 2^6 - 2^3 - 1
         BigInteger p = fromHex("FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEFFFFEE37");
         BigInteger a = BigInteger.ZERO;
@@ -78,7 +78,7 @@ public class SECNamedCurves {
         return new X9ECParameters(curve, G, n, h);
     }
 
-    public X9ECParameters secp192r1() {
+    public static X9ECParameters secp192r1() {
         // p = 2^192 - 2^64 - 1
         BigInteger p = fromHex("FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEFFFFFFFFFFFFFFFF");
         BigInteger a = fromHex("FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEFFFFFFFFFFFFFFFC");
@@ -93,7 +93,7 @@ public class SECNamedCurves {
         return new X9ECParameters(curve, G, n, h);
     }
 
-    public X9ECParameters secp224r1() {
+    public static X9ECParameters secp224r1() {
         // p = 2^224 - 2^96 + 1
         BigInteger p = fromHex("FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF000000000000000000000001");
         BigInteger a = fromHex("FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEFFFFFFFFFFFFFFFFFFFFFFFE");
@@ -108,7 +108,7 @@ public class SECNamedCurves {
         return new X9ECParameters(curve, G, n, h);
     }
 
-    public X9ECParameters secp256r1() {
+    public static X9ECParameters secp256r1() {
         // p = 2^224 (2^32 - 1) + 2^192 + 2^96 - 1
         BigInteger p = fromHex("FFFFFFFF00000001000000000000000000000000FFFFFFFFFFFFFFFFFFFFFFFF");
         BigInteger a = fromHex("FFFFFFFF00000001000000000000000000000000FFFFFFFFFFFFFFFFFFFFFFFC");
@@ -123,13 +123,13 @@ public class SECNamedCurves {
         return new X9ECParameters(curve, G, n, h);
     }
 
-    public X9ECParameters getSECCurveByName(String name) {
+    public static X9ECParameters getSECCurveByName(String name) {
         HashMap<String, X9ECParameters> map = getCurveMap();
 
         return map.get(name);
     }
 
-    public HashMap<String, X9ECParameters> getCurveMap() {
+    public static HashMap<String, X9ECParameters> getCurveMap() {
         if (curveMap == null) {
             curveMap = new HashMap<String, X9ECParameters>();
 

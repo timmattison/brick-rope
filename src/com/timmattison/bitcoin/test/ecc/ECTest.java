@@ -1,15 +1,9 @@
 package com.timmattison.bitcoin.test.ecc;
 
-import org.bouncycastle.asn1.sec.SECNamedCurves;
-import org.bouncycastle.asn1.x9.X9ECParameters;
+import com.timmattison.bitcoin.test.BigIntegerHelper;
 import org.bouncycastle.crypto.params.ECDomainParameters;
-import org.bouncycastle.jce.interfaces.ECKey;
-import sun.security.ec.ECKeyFactory;
 
-import javax.crypto.Cipher;
-import javax.crypto.NoSuchPaddingException;
-import java.security.KeyPairGenerator;
-import java.security.NoSuchAlgorithmException;
+import java.math.BigInteger;
 
 /**
  * Created with IntelliJ IDEA.
@@ -19,15 +13,30 @@ import java.security.NoSuchAlgorithmException;
  * To change this template use File | Settings | File Templates.
  */
 public class ECTest {
-    public static void main(String[] args) throws NoSuchAlgorithmException, NoSuchPaddingException {
+    public static void main(String[] args) throws Exception {
+        try {
+            test1();
+        } catch (Exception ex) {
+            throw ex;
+        }
     }
 
-    private static void test1() {
-        X9ECParameters params = SECNamedCurves.getByName("secp256k1");
-        ECDomainParameters ecParams = new ECDomainParameters(params.getCurve(), params.getG(), params.getN(), params.getH());
-    }
+    /**
+     * From GEC 2: Test Vectors for SEC 1, 2.1.2
+     */
+    private static void test1() throws Exception {
+        // Instantiate big integer value
+        BigInteger dU = new BigInteger("971761939728640320549601132085879836204587084162", 10);
 
-    private static void test2() {
-        //ECKey.verify()
+        // Convert to octet string
+        String dUOctetString = dU.toString(16);
+
+        // Does it match our expectation?
+        String expectedOctetString = "AA374FFC3CE144E6B073307972CB6D57B2A4E982";
+
+        if (!BigIntegerHelper.compare(dUOctetString, expectedOctetString)) {
+            // No, throw an exception
+            throw new Exception("Failed at 1.2, expected " + expectedOctetString + ", got " + dUOctetString);
+        }
     }
 }
