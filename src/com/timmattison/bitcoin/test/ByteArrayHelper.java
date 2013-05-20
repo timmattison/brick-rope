@@ -99,4 +99,14 @@ public class ByteArrayHelper {
         // No match
         return -1;
     }
+
+    public static String toHex(byte[] input) {
+        StringBuilder stringBuilder = new StringBuilder();
+
+        for(byte value : input) {
+            stringBuilder.append(String.format("%02x", value));
+        }
+
+        return stringBuilder.toString();
+    }
 }
