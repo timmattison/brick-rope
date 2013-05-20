@@ -69,7 +69,7 @@ public class ECTest {
         }
 
         // Calculate Qu = (xU, yU) = dU * G
-        ECPointFp Qu = secp160r1.getG().multiply(dU);
+        Qu = secp160r1.getG().multiply(dU);
 
         // Validate Qu
         BigInteger xU = new BigInteger("466448783855397898016055842232266600516272889280", 10);
@@ -273,6 +273,46 @@ public class ECTest {
             // No, throw an exception
             throw new Exception("Failed at 2.1.4 4.  u2 didn't match.");
         }
+
+        // Compute R = (xR, yR) = u1G + u2Qu
+        ECPointFp u1G = secp160r1.getG().multiply(u1);
+        ECPointFp u2Qu = Qu.multiply(u2);
+
+        ECPointFp R = u1G.add(u2Qu);
+
+        // Validate that R is what we expect
+        BigInteger expectedXr = new BigInteger("1176954224688105769566774212902092897866168635793", 10);
+        BigInteger expectedYr = new BigInteger("1130322298812061698910820170565981471918861336822", 10);
+
+        // Are the points equal?
+        if(!BigIntegerHelper.equals(R.getX().toBigInteger(), expectedXr)) {
+            // No, throw an exception
+            throw new Exception("Failed at 2.1.4 5.3.  xR didn't match.");
+        }
+
+        if(!BigIntegerHelper.equals(R.getY().toBigInteger(), expectedYr)) {
+            // No, throw an exception
+            throw new Exception("Failed at 2.1.4 5.3.  yR didn't match.");
+        }
+
+        // v = xR mod n
+        BigInteger v = R.getX().toBigInteger().mod(secp160r1.getN());
+
+        // Validate that v is what we expect
+        BigInteger expectedV = new BigInteger("1176954224688105769566774212902092897866168635793", 10);
+
+        if(!BigIntegerHelper.equals(v, expectedV)) {
+            // No, throw an exception
+            throw new Exception("Failed at 2.1.4 7.  v didn't match");
+        }
+
+        // Validate that v == r, are they equal?
+        if(!BigIntegerHelper.equals(v, R.getX().toBigInteger())) {
+            // No, throw an exception
+            throw new Exception("Failed at 2.1.4 8.  v != r");
+        }
+
+        // The message is valid
     }
 }
 
