@@ -60,9 +60,11 @@ public class ECCurveFp {
             case 4:
             case 6:
             case 7:
-                int len = (s.length() - 2) / 2;
-                String xHex = s.substring(2, len);
-                String yHex = s.substring(len + 2, len);
+                int start = 2;
+                int end = s.length();
+                int middle = (end - start) / 2;
+                String xHex = s.substring(start, middle + start);
+                String yHex = s.substring(middle + start, end);
                 return new ECPointFp(this,
                         this.fromBigInteger(new BigInteger(xHex, 16)),
                         this.fromBigInteger(new BigInteger(yHex, 16)), null);
