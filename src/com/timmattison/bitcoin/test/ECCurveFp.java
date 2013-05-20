@@ -48,7 +48,7 @@ public class ECCurveFp {
     }
 
     // for now, work with hex strings because they're easier in JS
-    public ECPointFp curveFpDecodePointHex(String s) {
+    public ECPointFp decodePointHex(String s) {
         switch (Integer.parseInt(s.substring(0, 2), 16)) {
             // first byte
             case 0:
