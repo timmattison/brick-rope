@@ -120,4 +120,18 @@ public class SECNamedCurves {
                 + "4FE342E2FE1A7F9B8EE7EB4A7C0F9E162BCE33576B315ECECBB6406837BF51F5");
         return new X9ECParameters(curve, G, n, h);
     }
+
+    public static X9ECParameters getSecp256k1() {
+        // p = 2^256 - 2^32 - 2^9 - 2^8 - 2^7 - 2^6 - 2^4 - 1
+        BigInteger p = fromHex("FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEFFFFFC2F");
+        BigInteger a = fromHex("0000000000000000000000000000000000000000000000000000000000000000");
+        BigInteger b = fromHex("0000000000000000000000000000000000000000000000000000000000000007");
+        BigInteger n = fromHex("FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEBAAEDCE6AF48A03BBFD25E8CD0364141");
+        BigInteger h = BigInteger.ONE;
+        ECCurveFp curve = new ECCurveFp(p, a, b);
+        ECPointFp G = curve.decodePointHex("04"
+                + "79BE667EF9DCBBAC55A06295CE870B07029BFCDB2DCE28D959F2815B16F81798"
+                + "483ADA7726A3C4655DA4FBFC0E1108A8FD17B448A68554199C47D08FFB10D4B8");
+        return new X9ECParameters(curve, G, n, h);
+    }
 }
