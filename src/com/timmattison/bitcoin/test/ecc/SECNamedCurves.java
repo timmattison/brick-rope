@@ -12,13 +12,11 @@ import java.util.Map;
  * To change this template use File | Settings | File Templates.
  */
 public class SECNamedCurves {
-    private static HashMap<String, X9ECParameters> curveMap;
-
     public static BigInteger fromHex(String s) {
         return new BigInteger(s, 16);
     }
 
-    public static X9ECParameters secp128r1() {
+    public static X9ECParameters getSecp128r1() {
         // p = 2^128 - 2^97 - 1
         BigInteger p = fromHex("FFFFFFFDFFFFFFFFFFFFFFFFFFFFFFFF");
         BigInteger a = fromHex("FFFFFFFDFFFFFFFFFFFFFFFFFFFFFFFC");
@@ -33,7 +31,7 @@ public class SECNamedCurves {
         return new X9ECParameters(curve, G, n, h);
     }
 
-    public static X9ECParameters secp160k1() {
+    public static X9ECParameters getSecp160k1() {
         // p = 2^160 - 2^32 - 2^14 - 2^12 - 2^9 - 2^8 - 2^7 - 2^3 - 2^2 - 1
         BigInteger p = fromHex("FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEFFFFAC73");
         BigInteger a = BigInteger.ZERO;
@@ -48,7 +46,7 @@ public class SECNamedCurves {
         return new X9ECParameters(curve, G, n, h);
     }
 
-    public static X9ECParameters secp160r1() {
+    public static X9ECParameters getSecp160r1() {
         // p = 2^160 - 2^31 - 1
         BigInteger p = fromHex("FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF7FFFFFFF");
         BigInteger a = fromHex("FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF7FFFFFFC");
@@ -63,7 +61,7 @@ public class SECNamedCurves {
         return new X9ECParameters(curve, G, n, h);
     }
 
-    public static X9ECParameters secp192k1() {
+    public static X9ECParameters getSecp192k1() {
         // p = 2^192 - 2^32 - 2^12 - 2^8 - 2^7 - 2^6 - 2^3 - 1
         BigInteger p = fromHex("FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEFFFFEE37");
         BigInteger a = BigInteger.ZERO;
@@ -78,7 +76,7 @@ public class SECNamedCurves {
         return new X9ECParameters(curve, G, n, h);
     }
 
-    public static X9ECParameters secp192r1() {
+    public static X9ECParameters getSecp192r1() {
         // p = 2^192 - 2^64 - 1
         BigInteger p = fromHex("FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEFFFFFFFFFFFFFFFF");
         BigInteger a = fromHex("FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEFFFFFFFFFFFFFFFC");
@@ -93,7 +91,7 @@ public class SECNamedCurves {
         return new X9ECParameters(curve, G, n, h);
     }
 
-    public static X9ECParameters secp224r1() {
+    public static X9ECParameters getSecp224r1() {
         // p = 2^224 - 2^96 + 1
         BigInteger p = fromHex("FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF000000000000000000000001");
         BigInteger a = fromHex("FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEFFFFFFFFFFFFFFFFFFFFFFFE");
@@ -108,7 +106,7 @@ public class SECNamedCurves {
         return new X9ECParameters(curve, G, n, h);
     }
 
-    public static X9ECParameters secp256r1() {
+    public static X9ECParameters getSecp256r1() {
         // p = 2^224 (2^32 - 1) + 2^192 + 2^96 - 1
         BigInteger p = fromHex("FFFFFFFF00000001000000000000000000000000FFFFFFFFFFFFFFFFFFFFFFFF");
         BigInteger a = fromHex("FFFFFFFF00000001000000000000000000000000FFFFFFFFFFFFFFFFFFFFFFFC");
@@ -121,27 +119,5 @@ public class SECNamedCurves {
                 + "6B17D1F2E12C4247F8BCE6E563A440F277037D812DEB33A0F4A13945D898C296"
                 + "4FE342E2FE1A7F9B8EE7EB4A7C0F9E162BCE33576B315ECECBB6406837BF51F5");
         return new X9ECParameters(curve, G, n, h);
-    }
-
-    public static X9ECParameters getSECCurveByName(String name) {
-        HashMap<String, X9ECParameters> map = getCurveMap();
-
-        return map.get(name);
-    }
-
-    public static HashMap<String, X9ECParameters> getCurveMap() {
-        if (curveMap == null) {
-            curveMap = new HashMap<String, X9ECParameters>();
-
-            curveMap.put("secp128r1", secp128r1());
-            curveMap.put("secp160k1", secp160k1());
-            curveMap.put("secp160r1", secp160r1());
-            curveMap.put("secp192k1", secp192k1());
-            curveMap.put("secp192r1", secp192r1());
-            curveMap.put("secp224r1", secp224r1());
-            curveMap.put("secp256r1", secp256r1());
-        }
-
-        return curveMap;
     }
 }
