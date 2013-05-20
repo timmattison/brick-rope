@@ -2,7 +2,6 @@ package com.timmattison.bitcoin.test.ecc;
 
 import com.timmattison.bitcoin.test.BigIntegerHelper;
 import com.timmattison.bitcoin.test.ByteArrayHelper;
-import org.bouncycastle.crypto.params.ECDomainParameters;
 
 import java.math.BigInteger;
 import java.security.MessageDigest;
@@ -23,16 +22,63 @@ public class ECTest {
         }
     }
 
+    // (Chosen) Instantiate the dU value
+    private static final BigInteger dU = new BigInteger("971761939728640320549601132085879836204587084162", 10);
+
+    // Calculated in the first method
+    private static ECPointFp Qu;
+
     /**
      * From GEC 2: Test Vectors for SEC 1, 2.1.2
      */
     private static void test1() throws Exception {
-        ECPointFp Qu = keyDeploymentForU();
+        step1KeyDeploymentForU();
 
-        signingOperationForU(Qu);
+        step2SigningOperationForU(Qu);
     }
 
-    private static void signingOperationForU(ECPointFp qu) throws Exception {
+    private static void step1KeyDeploymentForU() throws Exception {
+        X9ECParameters secp160r1 = SECNamedCurves.getSecp160r1();
+
+        // Convert to octet string
+        String dUOctetString = dU.toString(16);
+
+        // Does it match our expectation?
+        String expectedOctetString = "AA374FFC3CE144E6B073307972CB6D57B2A4E982";
+
+        if (!ECHelper.compare(dUOctetString, expectedOctetString)) {
+            // No, throw an exception
+            throw new Exception("Failed at 2.1.2 1.2, expected " + expectedOctetString + ", got " + dUOctetString);
+        }
+
+        // Calculate Qu = (xU, yU) = dU * G
+        ECPointFp Qu = secp160r1.getG().multiply(dU);
+
+        // Validate Qu
+        BigInteger xU = new BigInteger("466448783855397898016055842232266600516272889280", 10);
+        BigInteger yU = new BigInteger("1110706324081757720403272427311003102474457754220", 10);
+
+        // Does xU match?
+        BigInteger QuX = Qu.getX().toBigInteger();
+
+        if(!BigIntegerHelper.equals(QuX, xU)) {
+            // No, throw an exception
+            throw new Exception("Failed at 2, Qu doesn't match xU.  Expected " + xU.toString(16) + ", got " + QuX.toString(16));
+        }
+
+        // Does yU match?
+        BigInteger QuY = Qu.getY().toBigInteger();
+
+        if(!BigIntegerHelper.equals(QuY, yU)) {
+            // No, throw an exception
+            throw new Exception("Failed at 2, Qu doesn't match yU.  Expected " + yU.toString(16) + ", got " + QuY.toString(16));
+        }
+
+        // TODO - Validate the Qu octet string
+        // String expectedQuOctetString = "0251b4496fecc406ed0e75a24a3c03206251419dc0";
+    }
+
+    private static void step2SigningOperationForU(ECPointFp qu) throws Exception {
         X9ECParameters secp160r1 = SECNamedCurves.getSecp160r1();
 
         // Selected k value
@@ -62,7 +108,7 @@ public class ECTest {
         }
 
         // Derive an integer r from xR (mod n)
-        BigInteger r = new BigInteger("1176954224688105769566774212902092897866168635793", 10);
+        BigInteger r = new BigInteger("1176954224688105769566774212902092897866168635793", 10).mod(secp160r1.getN());
 
         // Is r zero?
         if(BigIntegerHelper.equals(r, BigInteger.ZERO)) {
@@ -134,7 +180,7 @@ public class ECTest {
             throw new Exception("Failed at 2.1.3 5.3.  Expected " + expectedHexString + ", got " + hexStringE);
         }
 
-        BigInteger E = new BigInteger(hexStringE);
+        BigInteger E = new BigInteger(hexStringE, 16);
 
         // Validate that E is the correct value
         BigInteger expectedE = new BigInteger("968236873715988614170569073515315707566766479517", 10);
@@ -144,51 +190,37 @@ public class ECTest {
             // No, throw an exception
             throw new Exception("Failed at 2.1.3 5.4.  Expected " + expectedE + ", got " + E);
         }
-    }
 
-    private static ECPointFp keyDeploymentForU() throws Exception {
-        X9ECParameters secp160r1 = SECNamedCurves.getSecp160r1();
+        // Step 6: Compute the integer s.
 
-        // Instantiate big integer value
-        BigInteger dU = new BigInteger("971761939728640320549601132085879836204587084162", 10);
+        // s = k^-1(e + dU * r) (mod n)
+        BigInteger s = k.modPow(BigInteger.ONE.negate(), secp160r1.getN()).multiply(E.add(dU.multiply(r))).mod(secp160r1.getN());
 
-        // Convert to octet string
-        String dUOctetString = dU.toString(16);
+        // Validate that s is not zero (mod n)
 
-        // Does it match our expectation?
-        String expectedOctetString = "AA374FFC3CE144E6B073307972CB6D57B2A4E982";
-
-        if (!ECHelper.compare(dUOctetString, expectedOctetString)) {
-            // No, throw an exception
-            throw new Exception("Failed at 2.1.2 1.2, expected " + expectedOctetString + ", got " + dUOctetString);
+        // Is it zero (mod n)?
+        if(s.equals(BigInteger.ZERO)) {
+            // Yes, throw an exception
+            throw new Exception("s cannot be zero (mod n)");
         }
 
-        // Calculate Qu = (xU, yU) = dU * G
-        ECPointFp Qu = secp160r1.getG().multiply(dU);
+        // Validate that s is the value we expect
+        BigInteger expectedS = new BigInteger("299742580584132926933316745664091704165278518100", 10);
 
-        // Validate Qu
-        BigInteger xU = new BigInteger("466448783855397898016055842232266600516272889280", 10);
-        BigInteger yU = new BigInteger("1110706324081757720403272427311003102474457754220", 10);
-
-        // Does xU match?
-        BigInteger QuX = Qu.getX().toBigInteger();
-
-        if(!BigIntegerHelper.equals(QuX, xU)) {
+        // Is it equal to the value we expect?
+        if(!BigIntegerHelper.equals(s, expectedS)) {
             // No, throw an exception
-            throw new Exception("Failed at 2, Qu doesn't match xU.  Expected " + xU.toString(16) + ", got " + QuX.toString(16));
+            throw new Exception("Failed at 2.1.3 6.1.  Expected " + expectedS + ", got " + s);
         }
 
-        // Does yU match?
-        BigInteger QuY = Qu.getY().toBigInteger();
+        // Validate the octet string representation of the signature
+        String expectedSOctetString = "3480EC371A091A464B31CE47DF0CB8AA2D98B54";
 
-        if(!BigIntegerHelper.equals(QuY, yU)) {
+        // Are they equal?
+        if(ECHelper.compare(s.toString(16), expectedSOctetString)) {
             // No, throw an exception
-            throw new Exception("Failed at 2, Qu doesn't match yU.  Expected " + yU.toString(16) + ", got " + QuY.toString(16));
+            throw new Exception("Failed at 2.1.3 6.3.  Expected " + expectedSOctetString + ", got " + s);
         }
-
-        // TODO - Validate the Qu octet string
-        // String expectedQuOctetString = "0251b4496fecc406ed0e75a24a3c03206251419dc0";
-
-        return Qu;
     }
 }
+
