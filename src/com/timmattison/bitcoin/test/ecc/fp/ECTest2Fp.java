@@ -23,7 +23,9 @@ public class ECTest2Fp {
     private static final byte[] messageBytes = message.getBytes();
 
     public static void main(String[] args) throws Exception {
-        ECSignatureFp signature = signMessage(dU, messageBytes);
+        ECKeyPairFp privateKey = new ECKeyPairFp(SECNamedCurves.getSecp160k1(), dU);
+
+        ECSignatureFp signature = signMessage(privateKey, messageBytes);
 
         boolean valid = validateSignature(messageBytes, signature);
 
@@ -32,20 +34,18 @@ public class ECTest2Fp {
         }
     }
 
-    public static ECSignatureFp signMessage(BigInteger dU, byte[] messageBytes) throws Exception {
-        ECKeyPairFp keyPair = new ECKeyPairFp(SECNamedCurves.getSecp160k1(), dU);
-
+    public static ECSignatureFp signMessage(ECKeyPairFp privateKey, byte[] messageBytes) throws Exception {
         // Select a k value
         BigInteger k = new BigInteger("702232148019446860144825009548118511996283736794", 10);
 
         // Get the mod n value of k
-        k = k.mod(keyPair.getN());
+        k = k.mod(privateKey.getN());
 
         // Compute R = (xR, yR) = k * G
-        ECPointFp R = keyPair.getG().multiply(k);
+        ECPointFp R = privateKey.getG().multiply(k);
 
         // Derive an integer r from xR (mod n)
-        BigInteger r = R.getX().toBigInteger().mod(keyPair.getN());
+        BigInteger r = R.getX().toBigInteger().mod(privateKey.getN());
 
         // Is r zero?
         if(BigIntegerHelper.equals(r, BigInteger.ZERO)) {
@@ -60,10 +60,10 @@ public class ECTest2Fp {
         String H = ByteArrayHelper.toHex(md.digest());
 
         // Calculate e
-        BigInteger e = ECHelperFp.calculateE(keyPair, H, hashBytes);
+        BigInteger e = ECHelperFp.calculateE(privateKey, H, hashBytes);
 
         // Compute s -  s = k^-1(e + dU * r) (mod n)
-        BigInteger s = ECHelperFp.calculateS(keyPair, k, e, dU, r);
+        BigInteger s = ECHelperFp.calculateS(privateKey, k, e, r);
 
         // Is it zero (mod n)?
         if(s.equals(BigInteger.ZERO)) {
@@ -71,7 +71,7 @@ public class ECTest2Fp {
             throw new Exception("s cannot be zero (mod n)");
         }
 
-        ECSignatureFp signature = new ECSignatureFp(keyPair.getX9ECParameters(), r, s, keyPair.getQu());
+        ECSignatureFp signature = new ECSignatureFp(privateKey.getX9ECParameters(), r, s, privateKey.getQu());
 
         return signature;
     }

@@ -45,8 +45,8 @@ public class ECHelperFp {
         return first.equals(second);
     }
 
-    public static BigInteger calculateS(ECKeyPairFp keyPair, BigInteger k, BigInteger e, BigInteger dU, BigInteger r) {
-        return calculateS(k, keyPair.getN(), e, dU, r);
+    public static BigInteger calculateS(ECKeyPairFp keyPair, BigInteger k, BigInteger e, BigInteger r) {
+        return calculateS(k, keyPair.getN(), e, keyPair.getDu(), r);
     }
 
     private static BigInteger calculateS(BigInteger k, BigInteger n, BigInteger e, BigInteger dU, BigInteger r) {

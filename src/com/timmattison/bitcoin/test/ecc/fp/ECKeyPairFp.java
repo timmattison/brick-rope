@@ -15,7 +15,6 @@ public class ECKeyPairFp {
     private final BigInteger dU;
     private final ECPointFp Qu;
     private final X9ECParameters x9ECParameters;
-    private Vector g;
 
     public ECKeyPairFp(X9ECParameters x9ECParameters, BigInteger dU) {
         this.x9ECParameters = x9ECParameters;
