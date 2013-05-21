@@ -12,24 +12,24 @@ import java.math.BigInteger;
  * To change this template use File | Settings | File Templates.
  */
 public class ECKeyPairFp {
-    private final BigInteger dU;
-    private final ECPointFp Qu;
+    private final BigInteger d;
+    private final ECPointFp q;
     private final X9ECParameters x9ECParameters;
 
-    public ECKeyPairFp(X9ECParameters x9ECParameters, BigInteger dU) {
+    public ECKeyPairFp(X9ECParameters x9ECParameters, BigInteger d) {
         this.x9ECParameters = x9ECParameters;
-        this.dU = dU;
+        this.d = d;
 
-        // Calculate Qu = (xU, yU) = dU * G
-        this.Qu = this.x9ECParameters.getG().multiply(dU);
+        // Calculate q = (x, y) = d * G
+        this.q = this.x9ECParameters.getG().multiply(d);
     }
 
-    public BigInteger getDu() {
-        return dU;
+    public BigInteger getD() {
+        return d;
     }
 
-    public ECPointFp getQu() {
-        return Qu;
+    public ECPointFp getQ() {
+        return q;
     }
 
     public BigInteger getN() {

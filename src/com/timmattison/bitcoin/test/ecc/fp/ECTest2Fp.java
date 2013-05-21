@@ -71,7 +71,7 @@ public class ECTest2Fp {
             throw new Exception("s cannot be zero (mod n)");
         }
 
-        ECSignatureFp signature = new ECSignatureFp(privateKey.getX9ECParameters(), r, s, privateKey.getQu());
+        ECSignatureFp signature = new ECSignatureFp(privateKey.getX9ECParameters(), r, s, privateKey.getQ());
 
         return signature;
     }
