@@ -13,7 +13,7 @@ import java.security.MessageDigest;
  * Time: 7:23 AM
  * To change this template use File | Settings | File Templates.
  */
-public class ECTestFp {
+public class ECTest1Fp {
 
     public static void main(String[] args) throws Exception {
         try {
