@@ -87,14 +87,49 @@ public class Base58Encoder {
             stringBuilder.append(base58Alphabet.get(currentValue.intValue()));
         }
 
+        // Reverse the string since it has the least significant values first
         String step4ResultBeforePruning = stringBuilder.reverse().toString();
 
         // Remove all leading 1's
         String step4Result = step4ResultBeforePruning.replaceAll("^1", "");
 
-        // Step 5+6: TODO - Really implement this, for now we just add a leading 1
-        String step5Result = "1" + step4Result;
+        // Step 5: Count the number of leading zero bytes
+        int leadingZeroBytes = 0;
 
-        return step5Result;
+        for(int loop = 0; loop < (step1Result.length + step2Result.length); loop++) {
+            byte currentByte;
+
+            // Are we in the first result?
+            if(loop > step1Result.length) {
+                // No, get the byte from the second result
+                currentByte = step2Result[loop - step1Result.length];
+            }
+            else {
+                // Yes, get the byte from the first result
+                currentByte = step1Result[loop];
+            }
+
+            // Is the current byte zero?
+            if(currentByte == 0x00) {
+                // Yes, increment the count
+                leadingZeroBytes++;
+            }
+            else {
+                // No, done counting
+                break;
+            }
+        }
+
+        // Step 6: Add a "1" for each leading zero byte
+        stringBuilder = new StringBuilder();
+
+        for(int loop = 0; loop < leadingZeroBytes; loop++) {
+            stringBuilder.append("1");
+        }
+
+        stringBuilder.append(step4Result);
+        String step6Result = stringBuilder.toString();
+
+        return step6Result;
     }
 }
