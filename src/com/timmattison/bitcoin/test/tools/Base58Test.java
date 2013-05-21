@@ -1,5 +1,7 @@
 package com.timmattison.bitcoin.test.tools;
 
+import com.timmattison.bitcoin.test.HashHelper;
+
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 
@@ -20,6 +22,8 @@ public class Base58Test {
 
     public static void main(String[] args) throws IOException, NoSuchAlgorithmException {
         String result = Base58Encoder.base58Encode(leadingByte, privateKey);
+
+        byte[] ripemd160Hash = HashHelper.ripemd160Hash(result.getBytes());
         result = "";
     }
 }
