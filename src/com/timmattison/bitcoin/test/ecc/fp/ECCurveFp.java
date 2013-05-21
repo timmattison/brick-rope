@@ -11,19 +11,19 @@ import java.math.BigInteger;
  */
 public class ECCurveFp {
     private final ECPointFp infinity;
-    private BigInteger q;
+    private BigInteger p;
     private ECFieldElementFp a;
     private ECFieldElementFp b;
 
-    public ECCurveFp(BigInteger q, BigInteger a, BigInteger b) {
-        this.q = q;
+    public ECCurveFp(BigInteger p, BigInteger a, BigInteger b) {
+        this.p = p;
         this.a = this.fromBigInteger(a);
         this.b = this.fromBigInteger(b);
         this.infinity = new ECPointFp(this, null, null, null);
     }
 
-    public BigInteger getQ() {
-        return this.q;
+    public BigInteger getP() {
+        return this.p;
     }
 
     public ECFieldElementFp getA() {
@@ -36,7 +36,7 @@ public class ECCurveFp {
 
     public boolean equals(ECCurveFp other) {
         if (other == this) return true;
-        return (this.q.equals(other.q) && this.a.equals(other.a) && this.b.equals(other.b));
+        return (this.p.equals(other.p) && this.a.equals(other.a) && this.b.equals(other.b));
     }
 
     public ECPointFp getInfinity() {
@@ -44,7 +44,7 @@ public class ECCurveFp {
     }
 
     public ECFieldElementFp fromBigInteger(BigInteger x) {
-        return new ECFieldElementFp(this.q, x);
+        return new ECFieldElementFp(this.p, x);
     }
 
     // for now, work with hex strings because they're easier in JS

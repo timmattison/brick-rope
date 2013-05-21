@@ -35,16 +35,16 @@ public class ECPointFp {
 
     ECFieldElementFp getX() {
         if (this.zinv == null) {
-            this.zinv = this.z.modInverse(this.curve.getQ());
+            this.zinv = this.z.modInverse(this.curve.getP());
         }
-        return this.curve.fromBigInteger(this.x.toBigInteger().multiply(this.zinv).mod(this.curve.getQ()));
+        return this.curve.fromBigInteger(this.x.toBigInteger().multiply(this.zinv).mod(this.curve.getP()));
     }
 
     ECFieldElementFp getY() {
         if (this.zinv == null) {
-            this.zinv = this.z.modInverse(this.curve.getQ());
+            this.zinv = this.z.modInverse(this.curve.getP());
         }
-        return this.curve.fromBigInteger(this.y.toBigInteger().multiply(this.zinv).mod(this.curve.getQ()));
+        return this.curve.fromBigInteger(this.y.toBigInteger().multiply(this.zinv).mod(this.curve.getP()));
     }
 
     boolean equals(ECPointFp other) {
@@ -53,10 +53,10 @@ public class ECPointFp {
         if (other.isInfinity()) return this.isInfinity();
         BigInteger u, v;
         // u = Y2 * Z1 - Y1 * Z2
-        u = other.y.toBigInteger().multiply(this.z).subtract(this.y.toBigInteger().multiply(other.z)).mod(this.curve.getQ());
+        u = other.y.toBigInteger().multiply(this.z).subtract(this.y.toBigInteger().multiply(other.z)).mod(this.curve.getP());
         if (!u.equals(BigInteger.ZERO)) return false;
         // v = X2 * Z1 - X1 * Z2
-        v = other.x.toBigInteger().multiply(this.z).subtract(this.x.toBigInteger().multiply(other.z)).mod(this.curve.getQ());
+        v = other.x.toBigInteger().multiply(this.z).subtract(this.x.toBigInteger().multiply(other.z)).mod(this.curve.getP());
         return v.equals(BigInteger.ZERO);
     }
 
@@ -73,9 +73,9 @@ public class ECPointFp {
         if (this.isInfinity()) return b;
         if (b.isInfinity()) return this;
         // u = Y2 * Z1 - Y1 * Z2
-        BigInteger u = b.y.toBigInteger().multiply(this.z).subtract(this.y.toBigInteger().multiply(b.z)).mod(this.curve.getQ());
+        BigInteger u = b.y.toBigInteger().multiply(this.z).subtract(this.y.toBigInteger().multiply(b.z)).mod(this.curve.getP());
         // v = X2 * Z1 - X1 * Z2
-        BigInteger v = b.x.toBigInteger().multiply(this.z).subtract(this.x.toBigInteger().multiply(b.z)).mod(this.curve.getQ());
+        BigInteger v = b.x.toBigInteger().multiply(this.z).subtract(this.x.toBigInteger().multiply(b.z)).mod(this.curve.getP());
         if (BigInteger.ZERO.equals(v)) {
             if (BigInteger.ZERO.equals(u)) {
                 return this.twice(); // this == b, so double
@@ -93,11 +93,11 @@ public class ECPointFp {
         BigInteger zu2 = BigIntegerHelper.squareBigInteger(u).multiply(this.z);
 
         // x3 = v * (z2 * (z1 * u^2 - 2 * x1 * v^2) - v^3)
-        BigInteger x3 = zu2.subtract(x1v2.shiftLeft(1)).multiply(b.z).subtract(v3).multiply(v).mod(this.curve.getQ());
+        BigInteger x3 = zu2.subtract(x1v2.shiftLeft(1)).multiply(b.z).subtract(v3).multiply(v).mod(this.curve.getP());
         // y3 = z2 * (3 * x1 * u * v^2 - y1 * v^3 - z1 * u^3) + u * v^3
-        BigInteger y3 = x1v2.multiply(THREE).multiply(u).subtract(y1.multiply(v3)).subtract(zu2.multiply(u)).multiply(b.z).add(u.multiply(v3)).mod(this.curve.getQ());
+        BigInteger y3 = x1v2.multiply(THREE).multiply(u).subtract(y1.multiply(v3)).subtract(zu2.multiply(u)).multiply(b.z).add(u.multiply(v3)).mod(this.curve.getP());
         // z3 = v^3 * z1 * z2
-        BigInteger z3 = v3.multiply(this.z).multiply(b.z).mod(this.curve.getQ());
+        BigInteger z3 = v3.multiply(this.z).multiply(b.z).mod(this.curve.getP());
 
         return new ECPointFp(this.curve, this.curve.fromBigInteger(x3), this.curve.fromBigInteger(y3), z3);
     }
@@ -110,20 +110,20 @@ public class ECPointFp {
         BigInteger x1 = this.x.toBigInteger();
         BigInteger y1 = this.y.toBigInteger();
         BigInteger y1z1 = y1.multiply(this.z);
-        BigInteger y1sqz1 = y1z1.multiply(y1).mod(this.curve.getQ());
+        BigInteger y1sqz1 = y1z1.multiply(y1).mod(this.curve.getP());
         BigInteger a = this.curve.getA().toBigInteger();
         // w = 3 * x1^2 + a * z1^2
         BigInteger w = BigIntegerHelper.squareBigInteger(x1).multiply(THREE);
         if (!BigInteger.ZERO.equals(a)) {
             w = w.add(BigIntegerHelper.squareBigInteger(this.z).multiply(a));
         }
-        w = w.mod(this.curve.getQ());
+        w = w.mod(this.curve.getP());
         // x3 = 2 * y1 * z1 * (w^2 - 8 * x1 * y1^2 * z1)
-        BigInteger x3 = BigIntegerHelper.squareBigInteger(w).subtract(x1.shiftLeft(3).multiply(y1sqz1)).shiftLeft(1).multiply(y1z1).mod(this.curve.getQ());
+        BigInteger x3 = BigIntegerHelper.squareBigInteger(w).subtract(x1.shiftLeft(3).multiply(y1sqz1)).shiftLeft(1).multiply(y1z1).mod(this.curve.getP());
         // y3 = 4 * y1^2 * z1 * (3 * w * x1 - 2 * y1^2 * z1) - w^3
-        BigInteger y3 = w.multiply(THREE).multiply(x1).subtract(y1sqz1.shiftLeft(1)).shiftLeft(2).multiply(y1sqz1).subtract(BigIntegerHelper.squareBigInteger(w).multiply(w)).mod(this.curve.getQ());
+        BigInteger y3 = w.multiply(THREE).multiply(x1).subtract(y1sqz1.shiftLeft(1)).shiftLeft(2).multiply(y1sqz1).subtract(BigIntegerHelper.squareBigInteger(w).multiply(w)).mod(this.curve.getP());
         // z3 = 8 * (y1 * z1)^3
-        BigInteger z3 = BigIntegerHelper.squareBigInteger(y1z1).multiply(y1z1).shiftLeft(3).mod(this.curve.getQ());
+        BigInteger z3 = BigIntegerHelper.squareBigInteger(y1z1).multiply(y1z1).shiftLeft(3).mod(this.curve.getP());
         return new ECPointFp(this.curve, this.curve.fromBigInteger(x3), this.curve.fromBigInteger(y3), z3);
     }
 
