@@ -1,17 +1,12 @@
-package com.timmattison.cryptocurrency.bitcoin;
+package com.timmattison.cryptocurrency.standard;
 
 import com.google.inject.Inject;
-import com.timmattison.cryptocurrency.interfaces.BlockFactory;
-import com.timmattison.cryptocurrency.interfaces.Block;
-import com.timmattison.cryptocurrency.interfaces.BlockChain;
-import com.timmattison.cryptocurrency.interfaces.BlockHashCalculator;
-import com.timmattison.cryptocurrency.interfaces.Hash;
-import com.timmattison.cryptocurrency.interfaces.HashCalculator;
+import com.timmattison.cryptocurrency.interfaces.*;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.*;
+import java.util.Iterator;
 
 /**
  * Created with IntelliJ IDEA.
@@ -20,15 +15,17 @@ import java.util.*;
  * Time: 8:37 AM
  * To change this template use File | Settings | File Templates.
  */
-public class BitcoinBlockChain implements BlockChain, Iterator<Block> {
+public class StandardBlockChain implements BlockChain, Iterator<Block> {
     private final InputStream inputStream;
+    private final HashCalculator hashCalculator;
     private final BlockFactory blockFactory;
     private Long blockCount;
 
     @Inject
-    public BitcoinBlockChain(InputStream inputStream, BlockFactory blockFactory) throws IOException {
+    public StandardBlockChain(InputStream inputStream, BlockFactory blockFactory, HashCalculator hashCalculator) throws IOException {
         this.inputStream = inputStream;
         this.blockFactory = blockFactory;
+        this.hashCalculator = hashCalculator;
     }
 
     @Override

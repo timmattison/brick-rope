@@ -15,4 +15,6 @@ public interface Block extends BlockChainPart {
     BlockHeader getBlockHeader();
 
     Iterator<Transaction> getTransactionIterator();
+
+    boolean isParentOf(Block block);
 }
