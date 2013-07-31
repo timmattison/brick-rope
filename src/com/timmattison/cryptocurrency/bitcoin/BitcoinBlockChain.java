@@ -46,15 +46,15 @@ public class BitcoinBlockChain implements BlockChain, Iterator<Block> {
         while (availableBytes > 0) {
             Hash previousBlockHash = null;
 
-            // Is there a previous block?
-            if(previousBlock != null) {
-                // Yes, get its hash
-                previousBlockHash = hashCalculator.calculateHash(previousBlock.getBlockHeader());
-            }
-
             // Create and parse the block
             Block block = blockFactory.createBlock();
             block.build(inputStream);
+
+            // Is the previous block a valid parent of this block?
+            if((previousBlock != null) && (!previousBlock.isParentOf(block))) {
+                // No, this is an issue
+                throw new IllegalStateException("Previous block is not the parent of the current block");
+            }
 
             // Update the previous block
             previousBlock = block;
