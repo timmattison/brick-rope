@@ -3,15 +3,13 @@ package com.timmattison.cryptocurrency.bitcoin;
 import com.timmattison.cryptocurrency.helpers.EndiannessHelper;
 import com.timmattison.cryptocurrency.helpers.InputStreamHelper;
 import com.timmattison.cryptocurrency.interfaces.Output;
-import com.timmattison.cryptocurrency.interfaces.OutputScript;
+import com.timmattison.cryptocurrency.standard.OutputScript;
 import com.timmattison.cryptocurrency.interfaces.ScriptFactory;
 import com.timmattison.cryptocurrency.standard.VariableLengthInteger;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
-import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.

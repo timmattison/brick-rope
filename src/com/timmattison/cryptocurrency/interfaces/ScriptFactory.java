@@ -1,5 +1,8 @@
 package com.timmattison.cryptocurrency.interfaces;
 
+import com.timmattison.cryptocurrency.standard.InputScript;
+import com.timmattison.cryptocurrency.standard.OutputScript;
+
 import java.io.InputStream;
 
 /**

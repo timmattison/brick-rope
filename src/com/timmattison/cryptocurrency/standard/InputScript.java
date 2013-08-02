@@ -1,4 +1,4 @@
-package com.timmattison.cryptocurrency.interfaces;
+package com.timmattison.cryptocurrency.standard;
 
 /**
  * Created with IntelliJ IDEA.
@@ -7,6 +7,5 @@ package com.timmattison.cryptocurrency.interfaces;
  * Time: 6:32 PM
  * To change this template use File | Settings | File Templates.
  */
-public interface Script {
-    void build();
+public interface InputScript extends Script {
 }

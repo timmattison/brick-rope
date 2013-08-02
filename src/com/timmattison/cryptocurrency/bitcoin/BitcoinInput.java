@@ -3,7 +3,7 @@ package com.timmattison.cryptocurrency.bitcoin;
 import com.timmattison.cryptocurrency.helpers.EndiannessHelper;
 import com.timmattison.cryptocurrency.helpers.InputStreamHelper;
 import com.timmattison.cryptocurrency.interfaces.Input;
-import com.timmattison.cryptocurrency.interfaces.InputScript;
+import com.timmattison.cryptocurrency.standard.InputScript;
 import com.timmattison.cryptocurrency.interfaces.ScriptFactory;
 import com.timmattison.cryptocurrency.standard.VariableLengthInteger;
 
