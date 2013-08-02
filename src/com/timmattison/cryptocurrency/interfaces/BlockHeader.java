@@ -8,5 +8,5 @@ package com.timmattison.cryptocurrency.interfaces;
  * To change this template use File | Settings | File Templates.
  */
 public interface BlockHeader {
-    void build();
+    byte[] build();
 }

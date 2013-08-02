@@ -13,4 +13,6 @@ public interface StateMachine {
     public void push(Object object);
 
     public Object peek();
+
+    void reset();
 }

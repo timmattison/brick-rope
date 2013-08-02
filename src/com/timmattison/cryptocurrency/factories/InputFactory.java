@@ -12,5 +12,5 @@ import java.io.InputStream;
  * To change this template use File | Settings | File Templates.
  */
 public interface InputFactory {
-    Input createInput(InputStream inputStream, boolean coinbase, int inputNumber);
+    Input createInput(byte[] data, boolean coinbase, int inputNumber);
 }

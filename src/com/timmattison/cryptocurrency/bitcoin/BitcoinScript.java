@@ -2,6 +2,7 @@ package com.timmattison.cryptocurrency.bitcoin;
 
 import com.timmattison.cryptocurrency.bitcoin.exceptions.ScriptExecutionException;
 import com.timmattison.cryptocurrency.bitcoin.factories.BitcoinWordFactory;
+import com.timmattison.cryptocurrency.helpers.EndiannessHelper;
 import com.timmattison.cryptocurrency.helpers.InputStreamHelper;
 import com.timmattison.cryptocurrency.interfaces.Transaction;
 import com.timmattison.cryptocurrency.standard.Script;
@@ -90,16 +91,16 @@ public class BitcoinScript implements Script {
             return true;
         }
 
-        StateMachine localStateMachine = getStateMachine(dumpBytes(), getCurrentTransaction(), getReferencedTransaction(), getReferencedOutputIndex());
+        stateMachine.reset();
 
         // Loop through each word
         for (Word word : words) {
             // Execute the instruction
-            word.execute(localStateMachine);
+            word.execute();
         }
 
         // Pop the top value of the stack
-        Object topStackValue = localStateMachine.pop();
+        Object topStackValue = stateMachine.pop();
 
         // Is the top stack non-zero?
         if (topStackValue != null) {
@@ -137,13 +138,11 @@ public class BitcoinScript implements Script {
             // Is this a version 2 script?
             if (versionNumber == 2) {
                 // Yes, no version 2 script can be zero bytes
-                pullDebugBytes();
                 throw new UnsupportedOperationException("Version 2 scripts cannot be zero bytes long, [coinbase? " + (coinbase ? "Yes" : "No") + "] [version: " + versionNumber + "]");
             }
             // Is this a version 1 coinbase?
             else if ((versionNumber == 1) && (!coinbase)) {
                 // No, no version 1 non-coinbase script can be zero bytes
-                pullDebugBytes();
                 throw new UnsupportedOperationException("Version 1 scripts cannot be zero bytes long unless they are the coinbase");
             }
 
@@ -155,7 +154,7 @@ public class BitcoinScript implements Script {
          * Move the bytes we want into a new list.  This is so we can be sure that a misbehaving opcode doesn't try to
          * read past the end of the script.  NOTE: Technically we only support scripts up to 2GB!
          */
-        scriptBytes = pullBytes((int) lengthInBytes, "script, " + lengthInBytes + " byte(s) to process");
+        scriptBytes = InputStreamHelper.pullBytes(inputStream, (int) lengthInBytes);
 
         ByteArrayInputStream byteStream = new ByteArrayInputStream(scriptBytes);
 

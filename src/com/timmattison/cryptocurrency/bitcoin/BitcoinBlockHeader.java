@@ -1,13 +1,10 @@
 package com.timmattison.cryptocurrency.bitcoin;
 
 import com.timmattison.cryptocurrency.helpers.EndiannessHelper;
-import com.timmattison.cryptocurrency.helpers.InputStreamHelper;
 import com.timmattison.cryptocurrency.interfaces.BlockHeader;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.math.BigInteger;
+import java.util.Arrays;
 
 /**
  * Created with IntelliJ IDEA.
@@ -23,7 +20,7 @@ public class BitcoinBlockHeader implements BlockHeader {
     private static final int timestampLengthInBytes = 4;
     private static final int bitsLengthInBytes = 4;
     private static final int nonceLengthInBytes = 4;
-    private final InputStream inputStream;
+    private final byte[] data;
 
     /**
      * The target.  This is not in the block chain.  It is derived from the difficulty.
@@ -66,36 +63,43 @@ public class BitcoinBlockHeader implements BlockHeader {
     private int nonce;
     private byte[] nonceBytes;
 
-    public BitcoinBlockHeader(InputStream inputStream) {
-        this.inputStream = inputStream;
+    public BitcoinBlockHeader(byte[] data) {
+        this.data = data;
     }
 
     @Override
-    public void build() {
-        try {
-            // Get the version
-            versionBytes = InputStreamHelper.pullBytes(inputStream, versionLengthInBytes);
-            version = EndiannessHelper.BytesToInt(versionBytes);
+    public byte[] build() {
+        int position = 0;
 
-            // Get the previous block hash
-            prevBlock = InputStreamHelper.pullBytes(inputStream, prevBlockLengthInBytes);
+        // Get the version
+        versionBytes = Arrays.copyOfRange(data, position, position + versionLengthInBytes);
+        position += versionLengthInBytes;
+        version = EndiannessHelper.BytesToInt(versionBytes);
 
-            // Get the Merkle root
-            merkleRoot = InputStreamHelper.pullBytes(inputStream, merkleRootLengthInBytes);
+        // Get the previous block hash
+        prevBlock = Arrays.copyOfRange(data, position, position + prevBlockLengthInBytes);
+        position += prevBlockLengthInBytes;
 
-            // Get the timestamp
-            timestampBytes = InputStreamHelper.pullBytes(inputStream, timestampLengthInBytes);
-            timestamp = EndiannessHelper.BytesToInt(timestampBytes);
+        // Get the Merkle root
+        merkleRoot = Arrays.copyOfRange(data, position, position + merkleRootLengthInBytes);
+        position += merkleRootLengthInBytes;
 
-            // Get the difficulty
-            bitsBytes = InputStreamHelper.pullBytes(inputStream, bitsLengthInBytes);
-            bits = EndiannessHelper.BytesToInt(bitsBytes);
+        // Get the timestamp
+        timestampBytes = Arrays.copyOfRange(data, position, position + timestampLengthInBytes);
+        position += timestampLengthInBytes;
+        timestamp = EndiannessHelper.BytesToInt(timestampBytes);
 
-            // Get the nonce
-            nonceBytes = InputStreamHelper.pullBytes(inputStream, nonceLengthInBytes);
-            nonce = EndiannessHelper.BytesToInt(nonceBytes);
-        } catch (IOException e) {
-            throw new IllegalStateException(e);
-        }
+        // Get the difficulty
+        bitsBytes = Arrays.copyOfRange(data, position, position + bitsLengthInBytes);
+        position += bitsLengthInBytes;
+        bits = EndiannessHelper.BytesToInt(bitsBytes);
+
+        // Get the nonce
+        nonceBytes = Arrays.copyOfRange(data, position, position + nonceLengthInBytes);
+        position += nonceLengthInBytes;
+        nonce = EndiannessHelper.BytesToInt(nonceBytes);
+
+        // Return what is left
+        return Arrays.copyOfRange(data, position, data.length);
     }
 }

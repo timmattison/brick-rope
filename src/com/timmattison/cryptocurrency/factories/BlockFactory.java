@@ -12,5 +12,5 @@ import java.io.InputStream;
  * To change this template use File | Settings | File Templates.
  */
 public interface BlockFactory {
-    Block createBlock(InputStream inputStream);
+    Block createBlock(byte[] data);
 }

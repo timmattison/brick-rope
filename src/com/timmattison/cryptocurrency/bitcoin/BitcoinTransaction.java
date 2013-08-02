@@ -13,6 +13,7 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
@@ -26,7 +27,7 @@ import java.util.List;
 public class BitcoinTransaction implements Transaction {
     private static final int versionNumberLengthInBytes = 4;
     private static final int lockTimeLengthInBytes = 4;
-    private final InputStream inputStream;
+    private final byte[] data;
     private final long maxVersionNumber;
     private final int transactionCounter;
     private final InputFactory inputFactory;
@@ -60,8 +61,8 @@ public class BitcoinTransaction implements Transaction {
     private int lockTime;
     private byte[] lockTimeBytes;
 
-    public BitcoinTransaction(InputStream inputStream, InputFactory inputFactory, OutputFactory outputFactory, long maxVersionNumber, int transactionCounter) {
-        this.inputStream = inputStream;
+    public BitcoinTransaction(byte[] data, InputFactory inputFactory, OutputFactory outputFactory, long maxVersionNumber, int transactionCounter) {
+        this.data = data;
         this.inputFactory = inputFactory;
         this.outputFactory = outputFactory;
         this.maxVersionNumber = maxVersionNumber;
@@ -69,8 +70,8 @@ public class BitcoinTransaction implements Transaction {
     }
 
     // TEMP: This is the current max version number in the Bitcoin block chain right now
-    public BitcoinTransaction(InputStream inputStream, InputFactory inputFactory, OutputFactory outputFactory, int transactionCounter) {
-        this.inputStream = inputStream;
+    public BitcoinTransaction(byte[] data, InputFactory inputFactory, OutputFactory outputFactory, int transactionCounter) {
+        this.data = data;
         this.inputFactory = inputFactory;
         this.outputFactory = outputFactory;
         this.maxVersionNumber = 2;
@@ -90,8 +91,11 @@ public class BitcoinTransaction implements Transaction {
     @Override
     public void build() {
         try {
+            int position = 0;
+
             // Get the version number
-            versionNumberBytes = InputStreamHelper.pullBytes(inputStream, versionNumberLengthInBytes);
+            versionNumberBytes = Arrays.copyOfRange(data, position, position + versionNumberLengthInBytes);
+            position += versionNumberLengthInBytes;
             versionNumber = EndiannessHelper.BytesToInt(versionNumberBytes);
 
             // Sanity check the version number
