@@ -9,12 +9,10 @@ import java.util.Iterator;
  * Time: 7:31 AM
  * To change this template use File | Settings | File Templates.
  */
-public interface Block extends BlockChainPart {
-    long getTransactionCount();
-
+public interface Block extends Iterator<Transaction> {
     BlockHeader getBlockHeader();
 
-    Iterator<Transaction> getTransactionIterator();
-
     boolean isParentOf(Block block);
+
+    void build();
 }

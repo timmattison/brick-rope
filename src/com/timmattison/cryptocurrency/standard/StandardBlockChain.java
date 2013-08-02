@@ -1,9 +1,12 @@
 package com.timmattison.cryptocurrency.standard;
 
 import com.google.inject.Inject;
-import com.timmattison.cryptocurrency.interfaces.*;
+import com.timmattison.cryptocurrency.factories.BlockFactory;
+import com.timmattison.cryptocurrency.helpers.InputStreamHelper;
+import com.timmattison.cryptocurrency.interfaces.Block;
+import com.timmattison.cryptocurrency.interfaces.BlockChain;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Iterator;
@@ -17,108 +20,52 @@ import java.util.Iterator;
  */
 public class StandardBlockChain implements BlockChain, Iterator<Block> {
     private final InputStream inputStream;
-    private final HashCalculator hashCalculator;
     private final BlockFactory blockFactory;
-    private Long blockCount;
+    private Block previousBlock = null;
 
     @Inject
-    public StandardBlockChain(InputStream inputStream, BlockFactory blockFactory, HashCalculator hashCalculator) throws IOException {
+    public StandardBlockChain(InputStream inputStream, BlockFactory blockFactory) throws IOException {
         this.inputStream = inputStream;
         this.blockFactory = blockFactory;
-        this.hashCalculator = hashCalculator;
-    }
-
-    @Override
-    protected void build() {
-        long availableBytes = 0;
-        try {
-            availableBytes = inputStream.available() & 0xFFFFFFFFL;
-        } catch (IOException e) {
-            throw new IllegalStateException(e);
-        }
-
-        Block previousBlock = null;
-
-        // Loop until there is no more input stream data available
-        while (availableBytes > 0) {
-            Hash previousBlockHash = null;
-
-            // Is there a previous block?
-            if(previousBlock != null) {
-                // Yes, get its hash
-                previousBlockHash = hashCalculator.calculateHash(previousBlock.getBlockHeader());
-            }
-
-            // Create and parse the block
-            Block block = blockFactory.createBlock();
-            block.build(inputStream);
-
-            // Update the previous block
-            previousBlock = block;
-
-            try {
-                availableBytes = inputStream.available() & 0xFFFFFFFFL;
-            } catch (IOException e) {
-                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-            }
-        }
-    }
-
-    @Override
-    public long getBlockCount() {
-        if(blockCount == null) {
-            blockCount = new Long(0);
-
-            Iterator<Block> blockIterator = getBlockIterator();
-
-            while(blockIterator.hasNext()) {
-                blockCount++;
-                blockIterator.next();
-            }
-        }
-
-        return blockCount;
-    }
-
-    @Override
-    public Iterator<Block> getBlockIterator() {
-        return this;
-    }
-
-    @Override
-    public byte[] dump() {
-        Iterator<Block> blockIterator = getBlockIterator();
-
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-
-        while(blockIterator.hasNext()) {
-            try {
-                byteArrayOutputStream.write(blockIterator.next().dump());
-            } catch (IOException e) {
-                throw new IllegalStateException(e);
-            }
-        }
-
-        return byteArrayOutputStream.toByteArray();
-    }
-
-    @Override
-    public String dumpPretty() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override
     public boolean hasNext() {
-        return false;  //To change body of implemented methods use File | Settings | File Templates.
+        // Do we have any bytes left?
+        if (InputStreamHelper.getAvailableBytes(inputStream) > 0) {
+            // Yes, assume there is another block.  This may not be true if the bitstream is incomplete.
+            return true;
+        } else {
+            // No, we must be done
+            return false;
+        }
     }
 
     @Override
     public Block next() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        // Are there bytes available?
+        if (InputStreamHelper.getAvailableBytes(inputStream) > 0) {
+            // Yes, create and parse the block
+            Block block = blockFactory.createBlock(inputStream);
+            block.build();
+
+            // Is the previous block a valid parent of this block?
+            if ((previousBlock != null) && (!previousBlock.isParentOf(block))) {
+                // No, this is an issue
+                throw new IllegalStateException("Previous block is not the parent of the current block");
+            }
+
+            // Update the previous block
+            previousBlock = block;
+
+            return block;
+        } else {
+            return null;
+        }
     }
 
     @Override
     public void remove() {
-        throw new IllegalStateException("Cannot remove blocks from a block chain");
+        throw new NotImplementedException();
     }
 }

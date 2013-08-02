@@ -9,6 +9,6 @@ import java.util.Iterator;
  * Time: 7:34 AM
  * To change this template use File | Settings | File Templates.
  */
-public interface Input extends BlockChainPart {
-    Iterator<InputScript> getInputScriptIterator();
+public interface Input {
+    void build();
 }

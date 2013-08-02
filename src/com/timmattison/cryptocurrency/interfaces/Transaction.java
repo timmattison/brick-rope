@@ -1,7 +1,5 @@
 package com.timmattison.cryptocurrency.interfaces;
 
-import com.timmattison.bitcoin.test.Output;
-
 import java.util.Iterator;
 
 /**
@@ -11,8 +9,10 @@ import java.util.Iterator;
  * Time: 7:32 AM
  * To change this template use File | Settings | File Templates.
  */
-public interface Transaction extends BlockChainPart {
+public interface Transaction {
     Iterator<Input> getInputIterator();
 
     Iterator<Output> getOutputIterator();
+
+    void build();
 }
