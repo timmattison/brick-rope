@@ -1,6 +1,6 @@
 package com.timmattison.cryptocurrency.interfaces;
 
-import java.util.Iterator;
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -9,10 +9,12 @@ import java.util.Iterator;
  * Time: 7:31 AM
  * To change this template use File | Settings | File Templates.
  */
-public interface Block extends Iterator<Transaction> {
+public interface Block {
     BlockHeader getBlockHeader();
 
     boolean isParentOf(Block block);
+
+    List<Transaction> getTransactions();
 
     void build();
 }

@@ -5,7 +5,7 @@ import com.timmattison.cryptocurrency.factories.BlockFactory;
 import com.timmattison.cryptocurrency.helpers.InputStreamHelper;
 import com.timmattison.cryptocurrency.interfaces.Block;
 import com.timmattison.cryptocurrency.interfaces.BlockChain;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+import sun.reflect.generics.reflectiveObjects.UnsupportedOperationException;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -66,6 +66,6 @@ public class StandardBlockChain implements BlockChain, Iterator<Block> {
 
     @Override
     public void remove() {
-        throw new NotImplementedException();
+        throw new UnsupportedOperationException();
     }
 }

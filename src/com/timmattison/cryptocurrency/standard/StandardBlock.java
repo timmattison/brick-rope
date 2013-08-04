@@ -6,11 +6,14 @@ import com.timmattison.cryptocurrency.helpers.InputStreamHelper;
 import com.timmattison.cryptocurrency.interfaces.Block;
 import com.timmattison.cryptocurrency.interfaces.BlockHeader;
 import com.timmattison.cryptocurrency.interfaces.Transaction;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+import sun.reflect.generics.reflectiveObjects.UnsupportedOperationException;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -20,13 +23,15 @@ import java.util.Iterator;
  * To change this template use File | Settings | File Templates.
  */
 public abstract class StandardBlock implements Block {
-    private final InputStream inputStream;
+    private final byte[] data;
+    private byte[] dataAfterBlockHeader;
     private final BlockHeaderFactory blockHeaderFactory;
     private final TransactionFactory transactionFactory;
+    private List<Transaction> transactions;
     BlockHeader blockHeader = null;
 
-    public StandardBlock(InputStream inputStream, BlockHeaderFactory blockHeaderFactory, TransactionFactory transactionFactory) {
-        this.inputStream = inputStream;
+    public StandardBlock(byte[] data, BlockHeaderFactory blockHeaderFactory, TransactionFactory transactionFactory) {
+        this.data = data;
         this.blockHeaderFactory = blockHeaderFactory;
         this.transactionFactory = transactionFactory;
     }
@@ -35,10 +40,10 @@ public abstract class StandardBlock implements Block {
     public BlockHeader getBlockHeader() {
         if(blockHeader == null) {
             // Are there bytes available?
-            if (InputStreamHelper.getAvailableBytes(inputStream) > 0) {
+            if (data.length > 0) {
                 // Yes, create and parse the block
-                blockHeader = blockHeaderFactory.createBlockHeader(inputStream);
-                blockHeader.build();
+                blockHeader = blockHeaderFactory.createBlockHeader(data);
+                dataAfterBlockHeader = blockHeader.build();
             }
             else {
                 throw new IllegalStateException("No bytes available when trying to build the block header");
@@ -49,39 +54,31 @@ public abstract class StandardBlock implements Block {
     }
 
     @Override
-    public boolean hasNext() {
-        // Do we have any bytes left?
-        if(InputStreamHelper.getAvailableBytes(inputStream) > 0) {
-            // Yes, assume there is another transaction.  This may not be true if the bitstream is incomplete.
-            return true;
-        }
-        else {
-            // No, we must be done
-            return false;
-        }
-    }
-
-    @Override
-    public Transaction next() {
+    public void build() {
         // Make sure the block header has been read already
         getBlockHeader();
 
-        // Are there bytes available?
-        if (InputStreamHelper.getAvailableBytes(inputStream) > 0) {
-            // Yes, create and parse the block
-            Transaction transaction = transactionFactory.createTransaction(inputStream);
-            transaction.build();
+        byte[] tempData = Arrays.copyOf(dataAfterBlockHeader, dataAfterBlockHeader.length);
 
-            return transaction;
-        }
-        else {
-            return null;
+        int position = 0;
+        transactions = new ArrayList<Transaction>();
+
+        // Are there bytes available?
+        while ((tempData != null) && (tempData.length > 0)) {
+            // Yes, create and parse the block
+            Transaction transaction = transactionFactory.createTransaction(Arrays.copyOf(tempData, tempData.length));
+            tempData = transaction.build();
+
+            transactions.add(transaction);
         }
     }
 
     @Override
-    public void remove() {
-        //To change body of implemented methods use File | Settings | File Templates.
-        throw new NotImplementedException();
+    public List<Transaction> getTransactions() {
+        if(transactions == null) {
+            build();
+        }
+
+        return transactions;
     }
 }

@@ -7,6 +7,5 @@ package com.timmattison.cryptocurrency.interfaces;
  * Time: 7:32 AM
  * To change this template use File | Settings | File Templates.
  */
-public interface BlockHeader {
-    byte[] build();
+public interface BlockHeader extends Buildable {
 }

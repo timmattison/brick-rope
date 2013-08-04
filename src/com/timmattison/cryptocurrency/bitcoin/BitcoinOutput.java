@@ -1,15 +1,13 @@
 package com.timmattison.cryptocurrency.bitcoin;
 
 import com.timmattison.cryptocurrency.helpers.EndiannessHelper;
-import com.timmattison.cryptocurrency.helpers.InputStreamHelper;
 import com.timmattison.cryptocurrency.interfaces.Output;
-import com.timmattison.cryptocurrency.standard.OutputScript;
 import com.timmattison.cryptocurrency.interfaces.ScriptFactory;
+import com.timmattison.cryptocurrency.standard.OutputScript;
 import com.timmattison.cryptocurrency.standard.VariableLengthInteger;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.math.BigDecimal;
+import java.util.Arrays;
 
 /**
  * Created with IntelliJ IDEA.
@@ -22,7 +20,7 @@ import java.math.BigDecimal;
 public class BitcoinOutput implements Output {
     private static final int valueLengthInBytes = 8;
     private static final BigDecimal satoshiPerBitcoin = new BigDecimal(100000000);
-    private final InputStream inputStream;
+    private final byte[] data;
     private final ScriptFactory scriptFactory;
 
     /**
@@ -44,32 +42,31 @@ public class BitcoinOutput implements Output {
 
     // These values are not in the output
     int outputNumber;
-    private Object script;
+    private OutputScript script;
 
-    public BitcoinOutput(InputStream inputStream, ScriptFactory scriptFactory, int outputNumber) {
-        this.inputStream = inputStream;
+    public BitcoinOutput(byte[] data, ScriptFactory scriptFactory, int outputNumber) {
+        this.data = data;
         this.scriptFactory = scriptFactory;
         this.outputNumber = outputNumber;
     }
 
     @Override
-    public void build() {
-        try {
-            // Get the value
-            valueBytes = InputStreamHelper.pullBytes(inputStream, valueLengthInBytes);
-            value = EndiannessHelper.BytesToLong(valueBytes);
+    public byte[] build() {
+        int position = 0;
 
-            // Get the output script length
-            VariableLengthInteger temp = new VariableLengthInteger(inputStream);
-            temp.build();
-            outputScriptLengthBytes = temp.getValueBytes();
-            outputScriptLength = temp.getValue();
+        // Get the value
+        valueBytes = Arrays.copyOfRange(data, position, position + valueLengthInBytes);
+        position += valueLengthInBytes;
+        value = EndiannessHelper.BytesToLong(valueBytes);
 
-            // Get the input script
-            outputScript = scriptFactory.createOutputScript(inputStream, outputScriptLength);
-            outputScript.build();
-        } catch (IOException e) {
-            throw new IllegalStateException(e);
-        }
+        // Get the output script length
+        VariableLengthInteger temp = new VariableLengthInteger(data);
+        byte[] tempData = temp.build();
+        outputScriptLengthBytes = temp.getValueBytes();
+        outputScriptLength = temp.getValue();
+
+        // Get the output script
+        outputScript = scriptFactory.createOutputScript(tempData, outputScriptLength);
+        return outputScript.build();
     }
 }

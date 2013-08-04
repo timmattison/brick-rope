@@ -9,6 +9,5 @@ import java.util.Iterator;
  * Time: 7:34 AM
  * To change this template use File | Settings | File Templates.
  */
-public interface Input {
-    void build();
+public interface Input extends Buildable {
 }

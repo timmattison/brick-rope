@@ -8,5 +8,5 @@ package com.timmattison.cryptocurrency.standard;
  * To change this template use File | Settings | File Templates.
  */
 public interface Script {
-    void build();
+    byte[] build();
 }

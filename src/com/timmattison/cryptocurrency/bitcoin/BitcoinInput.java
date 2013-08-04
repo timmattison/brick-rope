@@ -1,14 +1,12 @@
 package com.timmattison.cryptocurrency.bitcoin;
 
 import com.timmattison.cryptocurrency.helpers.EndiannessHelper;
-import com.timmattison.cryptocurrency.helpers.InputStreamHelper;
 import com.timmattison.cryptocurrency.interfaces.Input;
-import com.timmattison.cryptocurrency.standard.InputScript;
 import com.timmattison.cryptocurrency.interfaces.ScriptFactory;
+import com.timmattison.cryptocurrency.standard.InputScript;
 import com.timmattison.cryptocurrency.standard.VariableLengthInteger;
 
-import java.io.IOException;
-import java.io.InputStream;
+import java.util.Arrays;
 
 /**
  * Created with IntelliJ IDEA.
@@ -22,7 +20,7 @@ public class BitcoinInput implements Input {
     private static final int previousTransactionHashLengthInBytes = 32;
     private static final int previousOutputIndexLengthInBytes = 4;
     private static final int sequenceNumberLengthInBytes = 4;
-    private final InputStream inputStream;
+    private final byte[] data;
     private final ScriptFactory scriptFactory;
 
     // These are not part of the script
@@ -57,44 +55,43 @@ public class BitcoinInput implements Input {
     private long sequenceNumber;
     private byte[] sequenceNumberBytes;
 
-    public BitcoinInput(InputStream inputStream, ScriptFactory scriptFactory, boolean coinbase, int inputNumber) {
-        this.inputStream = inputStream;
+    public BitcoinInput(byte[] data, ScriptFactory scriptFactory, boolean coinbase, int inputNumber) {
+        this.data = data;
         this.scriptFactory = scriptFactory;
         this.coinbase = coinbase;
         this.inputNumber = inputNumber;
     }
 
     @Override
-    public void build() {
-        try {
-            // Get the previous transaction hash
-            previousTransactionHash = InputStreamHelper.pullBytes(inputStream, previousTransactionHashLengthInBytes);
+    public byte[] build() {
+        int position = 0;
 
-            // Get the previous output index
-            previousOutputIndexBytes = InputStreamHelper.pullBytes(inputStream, previousOutputIndexLengthInBytes);
-            previousOutputIndex = EndiannessHelper.BytesToInt(previousOutputIndexBytes);
+        // Get the previous transaction hash
+        previousTransactionHash = Arrays.copyOfRange(data, position, position + previousTransactionHashLengthInBytes);
+        position += previousTransactionHashLengthInBytes;
 
-            // Get the input script length
-            VariableLengthInteger temp = new VariableLengthInteger(inputStream);
-            temp.build();
-            inputScriptLengthBytes = temp.getValueBytes();
-            inputScriptLength = temp.getValue();
+        // Get the previous output index
+        previousOutputIndexBytes = Arrays.copyOfRange(data, position, position + previousOutputIndexLengthInBytes);
+        position += previousOutputIndexLengthInBytes;
+        previousOutputIndex = EndiannessHelper.BytesToInt(previousOutputIndexBytes);
 
-            // Get the input script
-            inputScript = scriptFactory.createInputScript(inputStream, inputScriptLength, coinbase);
-            inputScript.build();
+        // Get the input script length
+        VariableLengthInteger temp = new VariableLengthInteger(data);
+        byte[] tempBytes = temp.build();
+        inputScriptLengthBytes = temp.getValueBytes();
+        inputScriptLength = temp.getValue();
 
-            sequenceNumber = EndiannessHelper.BytesToInt(sequenceNumberBytes);
-        } catch (IOException e) {
-            throw new IllegalStateException(e);
-        }
-    }
+        // Get the input script
+        inputScript = scriptFactory.createInputScript(tempBytes, inputScriptLength, coinbase);
+        tempBytes = inputScript.build();
 
-    public byte[] getPreviousTransactionHash() {
-        return previousTransactionHash;
-    }
+        // Start position over as we're working with the temporary array
+        position = 0;
 
-    public long getPreviousOutputIndex() {
-        return previousOutputIndex;
+        sequenceNumberBytes = Arrays.copyOfRange(tempBytes, position, position + sequenceNumberLengthInBytes);
+        position += sequenceNumberLengthInBytes;
+        sequenceNumber = EndiannessHelper.BytesToInt(sequenceNumberBytes);
+
+        return Arrays.copyOfRange(tempBytes, position, tempBytes.length);
     }
 }

@@ -11,6 +11,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -23,7 +24,7 @@ import java.util.List;
 public class BitcoinScript implements Script {
     //private static final int MAX_WORD_LIST_LENGTH = 201;
     private static final int MAX_WORD_LIST_LENGTH = 9999;
-    private final InputStream inputStream;
+    private final byte[] data;
     // These values are not in the script
 
     // XXX - The input/non-input logic be another class with the common functionality in an abstract super class
@@ -54,8 +55,8 @@ public class BitcoinScript implements Script {
      * @param coinbase
      * @param scriptNumber
      */
-    public BitcoinScript(InputStream inputStream, BitcoinWordFactory wordFactory, BitcoinStateMachine stateMachine, long lengthInBytes, boolean coinbase, int scriptNumber) {
-        this.inputStream = inputStream;
+    public BitcoinScript(byte[] data, BitcoinWordFactory wordFactory, BitcoinStateMachine stateMachine, long lengthInBytes, boolean coinbase, int scriptNumber) {
+        this.data = data;
         this.wordFactory = wordFactory;
         this.stateMachine = stateMachine;
 
@@ -72,8 +73,8 @@ public class BitcoinScript implements Script {
      * @param lengthInBytes
      * @param scriptNumber
      */
-    public BitcoinScript(InputStream inputStream, BitcoinWordFactory wordFactory, BitcoinStateMachine stateMachine, long lengthInBytes, int scriptNumber) {
-        this.inputStream = inputStream;
+    public BitcoinScript(byte[] data, BitcoinWordFactory wordFactory, BitcoinStateMachine stateMachine, long lengthInBytes, int scriptNumber) {
+        this.data = data;
         this.wordFactory = wordFactory;
         this.stateMachine = stateMachine;
 
@@ -114,21 +115,19 @@ public class BitcoinScript implements Script {
     }
 
     @Override
-    public void build() {
+    public byte[] build() {
         words = new ArrayList<Word>();
 
         // Is there any data?
-        long availableBytes = InputStreamHelper.getAvailableBytes(inputStream);
-
-        if (availableBytes == 0) {
+        if (data.length == 0) {
             // No, throw an exception
             throw new UnsupportedOperationException("The script is empty");
         }
 
         // Are there enough bytes to support that?
-        if (availableBytes < lengthInBytes) {
+        if (data.length < lengthInBytes) {
             // No, throw an exception
-            throw new UnsupportedOperationException("Script is supposed to have " + lengthInBytes + " byte(s) but only " + availableBytes + " byte(s) are left");
+            throw new UnsupportedOperationException("Script is supposed to have " + lengthInBytes + " byte(s) but only " + data.length + " byte(s) are left");
         }
 
         // Is the length valid?
@@ -147,14 +146,17 @@ public class BitcoinScript implements Script {
             }
 
             // This is a version 1 coinbase, a zero length script is permitted
-            return;
+            return data;
         }
+
+        int position = 0;
 
         /**
          * Move the bytes we want into a new list.  This is so we can be sure that a misbehaving opcode doesn't try to
          * read past the end of the script.  NOTE: Technically we only support scripts up to 2GB!
          */
-        scriptBytes = InputStreamHelper.pullBytes(inputStream, (int) lengthInBytes);
+        scriptBytes = Arrays.copyOfRange(data, position, position + (int) lengthInBytes);
+        position += lengthInBytes;
 
         ByteArrayInputStream byteStream = new ByteArrayInputStream(scriptBytes);
 
@@ -181,13 +183,13 @@ public class BitcoinScript implements Script {
             }
 
             // Return immediately
-            return;
+            return Arrays.copyOfRange(data, position, data.length);
         }
 
-        try {
-            int position = 0;
+        int innerPosition = 0;
 
-            while (byteStream.available() > 0) {
+        try {
+            while (innerPosition < lengthInBytes) {
                 // Get the next byte
                 byte currentByte = (byte) byteStream.read();
                 position++;

@@ -1,10 +1,8 @@
 package com.timmattison.cryptocurrency.standard;
 
 import com.timmattison.bitcoin.test.EndiannessHelper;
-import com.timmattison.cryptocurrency.helpers.InputStreamHelper;
 
-import java.io.IOException;
-import java.io.InputStream;
+import java.util.Arrays;
 
 /**
  * Created with IntelliJ IDEA.
@@ -17,7 +15,7 @@ public class VariableLengthInteger {
     private static final int header16BitInteger = 0xfd;
     private static final int header32BitInteger = 0xfe;
     private static final int header64BitInteger = 0xff;
-    private final InputStream inputStream;
+    private final byte[] data;
 
     /**
      * Value
@@ -25,60 +23,61 @@ public class VariableLengthInteger {
     long value;
     private byte[] valueBytes;
 
-    public VariableLengthInteger(InputStream inputStream) {
-        this.inputStream = inputStream;
+    public VariableLengthInteger(byte[] data) {
+        this.data = data;
     }
 
-    public void build() {
-        if (valueBytes != null) {
-            throw new IllegalStateException("Cannot build a variable length integer more than once");
+    public byte[] build() {
+        int position = 0;
+
+        // Get the first byte
+        byte firstByte = data[position];
+        position++;
+
+        int bytesToRead = 0;
+
+        // What size value is this?
+        if (firstByte == (byte) header16BitInteger) {
+            // 16-bit
+            bytesToRead = 2;
+            valueBytes = Arrays.copyOfRange(data, position, position + bytesToRead);
+            position += bytesToRead;
+            value = EndiannessHelper.BytesToShort(valueBytes);
+        } else if (firstByte == (byte) header32BitInteger) {
+            // 32-bit
+            bytesToRead = 4;
+            valueBytes = Arrays.copyOfRange(data, position, position + bytesToRead);
+            position += bytesToRead;
+            value = EndiannessHelper.BytesToInt(valueBytes);
+        } else if (firstByte == (byte) header64BitInteger) {
+            // 64-bit
+            bytesToRead = 8;
+            valueBytes = Arrays.copyOfRange(data, position, position + bytesToRead);
+            position += bytesToRead;
+            value = EndiannessHelper.BytesToLong(valueBytes);
+        } else {
+            // 8-bit (mask this so that we don't get negative values)
+            valueBytes = new byte[1];
+            value = (firstByte & 0x0FF);
+            valueBytes[0] = (byte) value;
         }
 
-        try {
-            // Get the first byte
-            byte firstByte = InputStreamHelper.pullBytes(inputStream, 1)[0];
+        // Did we have a multi-byte value?
+        if (valueBytes.length != 1) {
+            // Yes, add the missing first byte
+            byte[] tempValueBytes = new byte[valueBytes.length + 1];
+            tempValueBytes[0] = (byte) firstByte;
 
-            int bytesToRead = 0;
-
-            // What size value is this?
-            if (firstByte == (byte) header16BitInteger) {
-                // 16-bit
-                bytesToRead = 2;
-                valueBytes = InputStreamHelper.pullBytes(inputStream, bytesToRead);
-                value = EndiannessHelper.BytesToShort(valueBytes);
-            } else if (firstByte == (byte) header32BitInteger) {
-                // 32-bit
-                bytesToRead = 4;
-                valueBytes = InputStreamHelper.pullBytes(inputStream, bytesToRead);
-                value = EndiannessHelper.BytesToInt(valueBytes);
-            } else if (firstByte == (byte) header64BitInteger) {
-                // 64-bit
-                bytesToRead = 8;
-                valueBytes = InputStreamHelper.pullBytes(inputStream, bytesToRead);
-                value = EndiannessHelper.BytesToLong(valueBytes);
-            } else {
-                // 8-bit (mask this so that we don't get negative values)
-                valueBytes = new byte[1];
-                value = (firstByte & 0x0FF);
-                valueBytes[0] = (byte) value;
+            for (int loop = 0; loop < valueBytes.length; loop++) {
+                tempValueBytes[loop + 1] = valueBytes[loop];
             }
 
-            // Did we have a multi-byte value?
-            if (valueBytes.length != 1) {
-                // Yes, add the missing first byte
-                byte[] tempValueBytes = new byte[valueBytes.length + 1];
-                tempValueBytes[0] = (byte) firstByte;
-
-                for (int loop = 0; loop < valueBytes.length; loop++) {
-                    tempValueBytes[loop + 1] = valueBytes[loop];
-                }
-
-                // Store the true bytes back in valueBytes
-                valueBytes = tempValueBytes;
-            }
-        } catch (IOException e) {
-            throw new IllegalStateException(e);
+            // Store the true bytes back in valueBytes
+            valueBytes = tempValueBytes;
         }
+
+        // Return what is left
+        return Arrays.copyOfRange(data, position, data.length);
     }
 
     public long getValue() {

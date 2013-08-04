@@ -3,18 +3,13 @@ package com.timmattison.cryptocurrency.bitcoin;
 import com.timmattison.cryptocurrency.factories.InputFactory;
 import com.timmattison.cryptocurrency.factories.OutputFactory;
 import com.timmattison.cryptocurrency.helpers.EndiannessHelper;
-import com.timmattison.cryptocurrency.helpers.InputStreamHelper;
 import com.timmattison.cryptocurrency.interfaces.Input;
 import com.timmattison.cryptocurrency.interfaces.Output;
 import com.timmattison.cryptocurrency.interfaces.Transaction;
 import com.timmattison.cryptocurrency.standard.VariableLengthInteger;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -79,66 +74,60 @@ public class BitcoinTransaction implements Transaction {
     }
 
     @Override
-    public Iterator<Input> getInputIterator() {
-        return inputs.iterator();
-    }
+    public byte[] build() {
+        int position = 0;
 
-    @Override
-    public Iterator<Output> getOutputIterator() {
-        return outputs.iterator();
-    }
+        // Get the version number
+        versionNumberBytes = Arrays.copyOfRange(data, position, position + versionNumberLengthInBytes);
+        position += versionNumberLengthInBytes;
+        versionNumber = EndiannessHelper.BytesToInt(versionNumberBytes);
 
-    @Override
-    public void build() {
-        try {
-            int position = 0;
-
-            // Get the version number
-            versionNumberBytes = Arrays.copyOfRange(data, position, position + versionNumberLengthInBytes);
-            position += versionNumberLengthInBytes;
-            versionNumber = EndiannessHelper.BytesToInt(versionNumberBytes);
-
-            // Sanity check the version number
-            if (versionNumber > maxVersionNumber) {
-                throw new UnsupportedOperationException("Max version number is " + maxVersionNumber + ", saw " + versionNumber);
-            }
-
-            // Get the input counter
-            VariableLengthInteger temp = new VariableLengthInteger(inputStream);
-            inCounterBytes = temp.getValueBytes();
-            inCounter = temp.getValue();
-
-            // Get the inputs
-            for (int inputLoop = 0; inputLoop < inCounter; inputLoop++) {
-                // Input 0 is the coinbase, all other inputs are not
-                boolean coinbase = ((transactionCounter == 0) && (inputLoop == 0)) ? true : false;
-                Input input = inputFactory.createInput(inputStream, coinbase, inputLoop);
-                input.build();
-                addInput(input);
-            }
-
-            // Get the output counter
-            temp = new VariableLengthInteger(inputStream);
-            outCounterBytes = temp.getValueBytes();
-            outCounter = temp.getValue();
-
-            // Get the outputs
-            for (int outputLoop = 0; outputLoop < outCounter; outputLoop++) {
-                Output output = outputFactory.createOutput(inputStream, outputLoop);
-                output.build();
-                addOutput(output);
-            }
-
-            // Get the lock time
-            lockTimeBytes = InputStreamHelper.pullBytes(inputStream, lockTimeLengthInBytes);
-            lockTime = EndiannessHelper.BytesToInt(lockTimeBytes);
-        } catch (IOException e) {
-            throw new IllegalStateException(e);
+        // Sanity check the version number
+        if (versionNumber > maxVersionNumber) {
+            throw new UnsupportedOperationException("Max version number is " + maxVersionNumber + ", saw " + versionNumber);
         }
+
+        // Get the input counter
+        VariableLengthInteger temp = new VariableLengthInteger(data);
+        byte[] tempData = temp.build();
+        inCounterBytes = temp.getValueBytes();
+        inCounter = temp.getValue();
+
+        // Get the inputs
+        for (int inputLoop = 0; inputLoop < inCounter; inputLoop++) {
+            // Input 0 is the coinbase, all other inputs are not
+            boolean coinbase = ((transactionCounter == 0) && (inputLoop == 0)) ? true : false;
+            Input input = inputFactory.createInput(tempData, coinbase, inputLoop);
+            tempData = input.build();
+            addInput(input);
+        }
+
+        // Get the output counter
+        temp = new VariableLengthInteger(tempData);
+        tempData = temp.build();
+        outCounterBytes = temp.getValueBytes();
+        outCounter = temp.getValue();
+
+        // Get the outputs
+        for (int outputLoop = 0; outputLoop < outCounter; outputLoop++) {
+            Output output = outputFactory.createOutput(tempData, outputLoop);
+            tempData = output.build();
+            addOutput(output);
+        }
+
+        // Reset the position since we're working with temporary data
+        position = 0;
+
+        // Get the lock time
+        lockTimeBytes = Arrays.copyOfRange(data, position, position + lockTimeLengthInBytes);
+        position += lockTimeLengthInBytes;
+        lockTime = EndiannessHelper.BytesToInt(lockTimeBytes);
+
+        return Arrays.copyOfRange(data, position, data.length);
     }
 
     private void addInput(Input input) {
-        if(inputs == null) {
+        if (inputs == null) {
             inputs = new ArrayList<Input>();
         }
 
@@ -146,10 +135,20 @@ public class BitcoinTransaction implements Transaction {
     }
 
     private void addOutput(Output output) {
-        if(outputs == null) {
+        if (outputs == null) {
             outputs = new ArrayList<Output>();
         }
 
         outputs.add(output);
+    }
+
+    @Override
+    public List<Input> getInputs() {
+        return new ArrayList<Input>(inputs);
+    }
+
+    @Override
+    public List<Output> getOutputs() {
+        return new ArrayList<Output>(outputs);
     }
 }

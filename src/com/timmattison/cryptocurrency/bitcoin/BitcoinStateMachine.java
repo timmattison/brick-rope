@@ -1,5 +1,7 @@
 package com.timmattison.cryptocurrency.bitcoin;
 
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+
 import java.util.Stack;
 
 /**
@@ -28,6 +30,11 @@ public class BitcoinStateMachine implements StateMachine {
     public Object peek() {
         throwExceptionIfStackNotInitialized();
         return stack.peek();
+    }
+
+    @Override
+    public void reset() {
+        throw new UnsupportedOperationException();
     }
 
     private void throwExceptionIfStackNotInitialized() {

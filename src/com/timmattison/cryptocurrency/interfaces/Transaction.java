@@ -1,6 +1,6 @@
 package com.timmattison.cryptocurrency.interfaces;
 
-import java.util.Iterator;
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -9,10 +9,8 @@ import java.util.Iterator;
  * Time: 7:32 AM
  * To change this template use File | Settings | File Templates.
  */
-public interface Transaction {
-    Iterator<Input> getInputIterator();
+public interface Transaction extends Buildable {
+    List<Input> getInputs();
 
-    Iterator<Output> getOutputIterator();
-
-    void build();
+    List<Output> getOutputs();
 }
