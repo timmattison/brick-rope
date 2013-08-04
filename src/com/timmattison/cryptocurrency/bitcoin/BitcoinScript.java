@@ -3,13 +3,10 @@ package com.timmattison.cryptocurrency.bitcoin;
 import com.timmattison.cryptocurrency.bitcoin.exceptions.ScriptExecutionException;
 import com.timmattison.cryptocurrency.bitcoin.factories.BitcoinWordFactory;
 import com.timmattison.cryptocurrency.helpers.EndiannessHelper;
-import com.timmattison.cryptocurrency.helpers.InputStreamHelper;
 import com.timmattison.cryptocurrency.interfaces.Transaction;
 import com.timmattison.cryptocurrency.standard.Script;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -50,7 +47,7 @@ public class BitcoinScript implements Script {
     /**
      * Create an input script
      *
-     * @param inputStream
+     * @param data
      * @param lengthInBytes
      * @param coinbase
      * @param scriptNumber
@@ -69,7 +66,7 @@ public class BitcoinScript implements Script {
     /**
      * Create an output script
      *
-     * @param inputStream
+     * @param data
      * @param lengthInBytes
      * @param scriptNumber
      */
@@ -158,7 +155,7 @@ public class BitcoinScript implements Script {
         scriptBytes = Arrays.copyOfRange(data, position, position + (int) lengthInBytes);
         position += lengthInBytes;
 
-        ByteArrayInputStream byteStream = new ByteArrayInputStream(scriptBytes);
+        byte[] dataAfterScript = Arrays.copyOfRange(data, position, data.length);
 
         // Is this the coinbase?
         if (coinbase) {
@@ -166,12 +163,15 @@ public class BitcoinScript implements Script {
             if (versionNumber == 2) {
                 // Yes, process the additional fields
 
+                int scriptBytesPosition = 0;
+
                 // Get the length of the block height value that is coming up
-                int lengthOfBlockHeight = (int) EndiannessHelper.ToRealByte((byte) byteStream.read());
+                int lengthOfBlockHeight = (int) EndiannessHelper.ToRealByte(scriptBytes[scriptBytesPosition]);
+                scriptBytesPosition++;
 
                 // Read the block height
-                byte[] blockHeightBytes = new byte[lengthOfBlockHeight];
-                byteStream.read(blockHeightBytes, 0, lengthOfBlockHeight);
+                byte[] blockHeightBytes = Arrays.copyOfRange(scriptBytes, scriptBytesPosition, lengthOfBlockHeight);
+                scriptBytesPosition += lengthOfBlockHeight;
 
                 // Convert the block height bytes into a number
                 blockHeight = (int) EndiannessHelper.BytesToValue(blockHeightBytes);
@@ -183,170 +183,33 @@ public class BitcoinScript implements Script {
             }
 
             // Return immediately
-            return Arrays.copyOfRange(data, position, data.length);
+            return dataAfterScript;
         }
 
-        int innerPosition = 0;
+        byte[] tempData = Arrays.copyOf(scriptBytes, scriptBytes.length);
 
-        try {
-            while (innerPosition < lengthInBytes) {
-                // Get the next byte
-                byte currentByte = (byte) byteStream.read();
-                position++;
+        do {
+            int tempDataPosition = 0;
 
-                // Get the word that the next byte corresponds to
-                Word currentWord = getWordFactory().getWordByOpcode(currentByte);
+            // Build the next word
+            byte currentByte = (byte) tempData[tempDataPosition];
+            tempDataPosition++;
 
-                // Is this a byte consuming word?
-                if (ByteConsumingWord.class.isAssignableFrom(currentWord.getClass())) {
-                    // Yes, consume the bytes
-                    ByteConsumingWord byteConsumingWord = ((ByteConsumingWord) currentWord);
-                    byteConsumingWord.consumeInput(byteStream);
-                    position += byteConsumingWord.getInputBytesRequired();
-                }
+            // Get the word that the next byte corresponds to
+            Word currentWord = wordFactory.createWord(currentByte);
+            tempData = currentWord.build();
 
-                // Is this a code separator?
-                if (OpCodeSeparator.class.isAssignableFrom(currentWord.getClass())) {
-                    // Yes, store its position
-                    ((OpCodeSeparator) currentWord).setPosition(position);
-                }
-
-                // Add the word to our word list
-                words.add(currentWord);
-            }
-        } catch (IllegalAccessException e) {
-            throw new UnsupportedOperationException(e);
-        } catch (InstantiationException e) {
-            throw new UnsupportedOperationException(e);
-        }
+            // Add the word to our word list
+            words.add(currentWord);
+        } while ((tempData != null) && (tempData.length > 0));
 
         // Are there too many words?
         if (words.size() > MAX_WORD_LIST_LENGTH) {
             // Yes, throw an exception
             throw new UnsupportedOperationException("The maximum number of words in a script is " + MAX_WORD_LIST_LENGTH + ", saw " + words.size() + " word(s)");
         }
-    }
 
-    @Override
-    protected String dump(boolean pretty) {
-        StringBuilder stringBuilder = new StringBuilder();
-
-        if (pretty) {
-            if (input) {
-                stringBuilder.append("Input");
-            } else {
-                stringBuilder.append("Output");
-            }
-
-            stringBuilder.append(" script #");
-            stringBuilder.append(scriptNumber);
-            stringBuilder.append(" data:\n");
-        }
-
-        int counter = 0;
-
-        // Is this the coinbase?
-        if (coinbase) {
-            // Yes, no words are stored for the coinbase.  Just dump the bytes.
-            stringBuilder.append("Coinbase bytes: ");
-            stringBuilder.append(ByteArrayHelper.formatArray(scriptBytes));
-            stringBuilder.append("\n");
-        }
-
-        for (Word word : words) {
-            if (pretty) {
-                stringBuilder.append("Opcode #");
-                stringBuilder.append(counter);
-                stringBuilder.append(": ");
-                stringBuilder.append(word.getWord());
-                stringBuilder.append(" - [");
-            }
-
-            stringBuilder.append(ByteArrayHelper.toHex(word.getOpcode()));
-
-            if (pretty) {
-                stringBuilder.append("] ");
-            }
-
-            if (word instanceof ByteConsumingWord) {
-                ByteConsumingWord byteConsumingWord = (ByteConsumingWord) word;
-
-                if (byteConsumingWord.getInputBytesRequired() != 0) {
-                    stringBuilder.append(ByteArrayHelper.formatArray(byteConsumingWord.getInput()));
-                }
-            }
-
-            stringBuilder.append("\n");
-            counter++;
-        }
-
-        return stringBuilder.toString();
-    }
-
-    @Override
-    protected byte[] dumpBytes() throws IOException {
-        return scriptBytes;
-    }
-
-    private BitcoinWordFactory getWordFactory() throws IllegalAccessException, InstantiationException {
-        if (wordFactory == null) {
-            wordFactory = new BitcoinWordFactory();
-        }
-
-        return wordFactory;
-    }
-
-    public List<Word> getWords() {
-        return words;
-    }
-
-    public int getVersionNumber() {
-        return versionNumber;
-    }
-
-    public void removeCodeSeparators() throws IOException {
-        // Has the word list been built?
-        if (words == null) {
-            // No, build it
-            build();
-        }
-
-        List<Word> tempWords = new ArrayList<Word>();
-
-        // Loop through all of the words
-        for (Word word : words) {
-            // Is this a code separator?
-            if (!OpCodeSeparator.class.isAssignableFrom(word.getClass())) {
-                // No, add it to the list
-                tempWords.add(word);
-            }
-        }
-
-        // Use this as our new word list
-        words = tempWords;
-    }
-
-    public void setCurrentTransaction(Transaction currentTransaction) {
-        this.currentTransaction = currentTransaction;
-    }
-
-    public Transaction getCurrentTransaction() {
-        return currentTransaction;
-    }
-
-    public Transaction getReferencedTransaction() {
-        return referencedTransaction;
-    }
-
-    public void setReferencedTransaction(Transaction referencedTransaction) {
-        this.referencedTransaction = referencedTransaction;
-    }
-
-    public int getReferencedOutputIndex() {
-        return referencedOutputIndex;
-    }
-
-    public void setReferencedOutputIndex(int referencedOutputIndex) {
-        this.referencedOutputIndex = referencedOutputIndex;
+        // Return the data that is after the script
+        return dataAfterScript;
     }
 }

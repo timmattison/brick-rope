@@ -2,17 +2,12 @@ package com.timmattison.cryptocurrency.standard;
 
 import com.timmattison.cryptocurrency.factories.BlockHeaderFactory;
 import com.timmattison.cryptocurrency.factories.TransactionFactory;
-import com.timmattison.cryptocurrency.helpers.InputStreamHelper;
 import com.timmattison.cryptocurrency.interfaces.Block;
 import com.timmattison.cryptocurrency.interfaces.BlockHeader;
 import com.timmattison.cryptocurrency.interfaces.Transaction;
-import sun.reflect.generics.reflectiveObjects.UnsupportedOperationException;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -28,7 +23,7 @@ public abstract class StandardBlock implements Block {
     private final BlockHeaderFactory blockHeaderFactory;
     private final TransactionFactory transactionFactory;
     private List<Transaction> transactions;
-    BlockHeader blockHeader = null;
+    private BlockHeader blockHeader = null;
 
     public StandardBlock(byte[] data, BlockHeaderFactory blockHeaderFactory, TransactionFactory transactionFactory) {
         this.data = data;
@@ -38,14 +33,13 @@ public abstract class StandardBlock implements Block {
 
     @Override
     public BlockHeader getBlockHeader() {
-        if(blockHeader == null) {
+        if (blockHeader == null) {
             // Are there bytes available?
             if (data.length > 0) {
                 // Yes, create and parse the block
                 blockHeader = blockHeaderFactory.createBlockHeader(data);
                 dataAfterBlockHeader = blockHeader.build();
-            }
-            else {
+            } else {
                 throw new IllegalStateException("No bytes available when trying to build the block header");
             }
         }
@@ -75,7 +69,7 @@ public abstract class StandardBlock implements Block {
 
     @Override
     public List<Transaction> getTransactions() {
-        if(transactions == null) {
+        if (transactions == null) {
             build();
         }
 

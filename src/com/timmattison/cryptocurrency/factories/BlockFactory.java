@@ -2,6 +2,7 @@ package com.timmattison.cryptocurrency.factories;
 
 import com.timmattison.cryptocurrency.interfaces.Block;
 
+import java.io.IOException;
 import java.io.InputStream;
 
 /**
@@ -12,5 +13,5 @@ import java.io.InputStream;
  * To change this template use File | Settings | File Templates.
  */
 public interface BlockFactory {
-    Block createBlock(byte[] data);
+    Block createBlock() throws IOException;
 }

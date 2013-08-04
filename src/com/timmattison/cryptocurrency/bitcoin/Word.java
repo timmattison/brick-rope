@@ -1,5 +1,7 @@
 package com.timmattison.cryptocurrency.bitcoin;
 
+import com.timmattison.cryptocurrency.interfaces.Buildable;
+
 /**
  * Created with IntelliJ IDEA.
  * User: Tim
@@ -7,7 +9,7 @@ package com.timmattison.cryptocurrency.bitcoin;
  * Time: 8:44 AM
  * To change this template use File | Settings | File Templates.
  */
-public interface Word<T> {
+public interface Word<T> extends Buildable {
     public Byte getOpcode();
 
     public String getName();

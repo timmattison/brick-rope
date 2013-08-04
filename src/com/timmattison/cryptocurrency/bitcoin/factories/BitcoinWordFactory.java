@@ -10,5 +10,5 @@ import com.timmattison.cryptocurrency.bitcoin.BitcoinWord;
  * To change this template use File | Settings | File Templates.
  */
 public interface BitcoinWordFactory {
-    BitcoinWord createWord();
+    BitcoinWord createWord(byte opcode);
 }

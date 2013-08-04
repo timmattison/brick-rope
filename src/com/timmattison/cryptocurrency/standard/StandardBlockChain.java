@@ -5,7 +5,6 @@ import com.timmattison.cryptocurrency.factories.BlockFactory;
 import com.timmattison.cryptocurrency.helpers.InputStreamHelper;
 import com.timmattison.cryptocurrency.interfaces.Block;
 import com.timmattison.cryptocurrency.interfaces.BlockChain;
-import sun.reflect.generics.reflectiveObjects.UnsupportedOperationException;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -43,24 +42,28 @@ public class StandardBlockChain implements BlockChain, Iterator<Block> {
 
     @Override
     public Block next() {
-        // Are there bytes available?
-        if (InputStreamHelper.getAvailableBytes(inputStream) > 0) {
-            // Yes, create and parse the block
-            Block block = blockFactory.createBlock(inputStream);
-            block.build();
+        try {
+            // Are there bytes available?
+            if (InputStreamHelper.getAvailableBytes(inputStream) > 0) {
+                // Yes, create and parse the block
+                Block block = blockFactory.createBlock();
+                block.build();
 
-            // Is the previous block a valid parent of this block?
-            if ((previousBlock != null) && (!previousBlock.isParentOf(block))) {
-                // No, this is an issue
-                throw new IllegalStateException("Previous block is not the parent of the current block");
+                // Is the previous block a valid parent of this block?
+                if ((previousBlock != null) && (!previousBlock.isParentOf(block))) {
+                    // No, this is an issue
+                    throw new IllegalStateException("Previous block is not the parent of the current block");
+                }
+
+                // Update the previous block
+                previousBlock = block;
+
+                return block;
+            } else {
+                return null;
             }
-
-            // Update the previous block
-            previousBlock = block;
-
-            return block;
-        } else {
-            return null;
+        } catch (IOException e) {
+            throw new UnsupportedOperationException(e);
         }
     }
 

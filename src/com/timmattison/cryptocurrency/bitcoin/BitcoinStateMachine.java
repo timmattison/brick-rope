@@ -1,7 +1,5 @@
 package com.timmattison.cryptocurrency.bitcoin;
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
-
 import java.util.Stack;
 
 /**
