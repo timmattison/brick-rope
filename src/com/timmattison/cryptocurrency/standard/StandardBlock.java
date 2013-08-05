@@ -19,7 +19,6 @@ import java.util.List;
  * To change this template use File | Settings | File Templates.
  */
 public abstract class StandardBlock implements Block {
-    private byte[] dataAfterBlockHeader;
     private final BlockHeaderFactory blockHeaderFactory;
     private final TransactionFactory transactionFactory;
     private List<Transaction> transactions;
@@ -40,25 +39,11 @@ public abstract class StandardBlock implements Block {
         return blockHeader;
     }
 
-    private void buildBlockHeader(byte[] data) {
-        if(blockHeader != null) {
-            // Are there bytes available?
-            if (data.length > 0) {
-                // Yes, create and parse the block
-                blockHeader = blockHeaderFactory.createBlockHeader();
-                dataAfterBlockHeader = blockHeader.build(data);
-            } else {
-                throw new IllegalStateException("No bytes available when trying to build the block header");
-            }
-        }
-    }
-
     @Override
     public byte[] build(byte[] data) {
         // Make sure the block header has been read already
-        buildBlockHeader(data);
-
-        byte[] tempData = Arrays.copyOf(dataAfterBlockHeader, dataAfterBlockHeader.length);
+        blockHeader = blockHeaderFactory.createBlockHeader();
+        byte[] tempData = blockHeader.build(data);
 
         int transactionNumber = 0;
         transactions = new ArrayList<Transaction>();
