@@ -7,6 +7,7 @@ import com.timmattison.cryptocurrency.factories.TransactionFactory;
 import com.timmattison.cryptocurrency.interfaces.Block;
 import com.timmattison.cryptocurrency.interfaces.BlockReader;
 
+import javax.inject.Inject;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -23,19 +24,21 @@ public class BitcoinBlockFactory implements BlockFactory {
     private final TransactionFactory transactionFactory;
     private BitcoinBlockReader bitcoinBlockReader;
 
+    @Inject
     public BitcoinBlockFactory(BlockReader blockReader, BlockHeaderFactory blockHeaderFactory, TransactionFactory transactionFactory) {
         this.blockReader = blockReader;
         this.blockHeaderFactory = blockHeaderFactory;
         this.transactionFactory = transactionFactory;
     }
+
     @Override
     public Block createBlock(InputStream inputStream) throws IOException {
         if(bitcoinBlockReader == null) {
-            bitcoinBlockReader = new BitcoinBlockReader(inputStream);
+            bitcoinBlockReader = new BitcoinBlockReader();
         }
 
         BitcoinBlock bitcoinBlock = new BitcoinBlock(blockHeaderFactory, transactionFactory);
-        bitcoinBlock.build(bitcoinBlockReader.getNextBlock());
+        bitcoinBlock.build(bitcoinBlockReader.getNextBlock(inputStream));
 
         return bitcoinBlock;
     }

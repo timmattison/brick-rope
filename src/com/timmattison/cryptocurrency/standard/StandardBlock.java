@@ -60,13 +60,13 @@ public abstract class StandardBlock implements Block {
 
         byte[] tempData = Arrays.copyOf(dataAfterBlockHeader, dataAfterBlockHeader.length);
 
-        int position = 0;
+        int transactionNumber = 0;
         transactions = new ArrayList<Transaction>();
 
         // Are there bytes available?
         while ((tempData != null) && (tempData.length > 0)) {
             // Yes, create and parse the block
-            Transaction transaction = transactionFactory.createTransaction();
+            Transaction transaction = transactionFactory.createTransaction(transactionNumber);
             tempData = transaction.build(Arrays.copyOf(tempData, tempData.length));
 
             transactions.add(transaction);

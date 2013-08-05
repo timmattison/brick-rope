@@ -1,5 +1,7 @@
 package com.timmattison.cryptocurrency.standard;
 
+import com.timmattison.cryptocurrency.interfaces.Buildable;
+
 /**
  * Created with IntelliJ IDEA.
  * User: Tim
@@ -7,6 +9,5 @@ package com.timmattison.cryptocurrency.standard;
  * Time: 6:32 PM
  * To change this template use File | Settings | File Templates.
  */
-public interface Script {
-    byte[] build();
+public interface Script extends Buildable {
 }

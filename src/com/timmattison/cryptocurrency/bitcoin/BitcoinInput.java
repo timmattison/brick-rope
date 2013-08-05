@@ -2,7 +2,7 @@ package com.timmattison.cryptocurrency.bitcoin;
 
 import com.timmattison.cryptocurrency.helpers.EndiannessHelper;
 import com.timmattison.cryptocurrency.interfaces.Input;
-import com.timmattison.cryptocurrency.interfaces.ScriptFactory;
+import com.timmattison.cryptocurrency.factories.ScriptFactory;
 import com.timmattison.cryptocurrency.standard.InputScript;
 import com.timmattison.cryptocurrency.standard.VariableLengthInteger;
 
@@ -80,8 +80,8 @@ public class BitcoinInput implements Input {
         inputScriptLength = temp.getValue();
 
         // Get the input script
-        inputScript = scriptFactory.createInputScript(tempBytes, inputScriptLength, coinbase);
-        tempBytes = inputScript.build();
+        inputScript = scriptFactory.createInputScript(inputScriptLength, coinbase);
+        tempBytes = inputScript.build(tempBytes);
 
         // Start position over as we're working with the temporary array
         position = 0;

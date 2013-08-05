@@ -16,5 +16,5 @@ import java.util.Arrays;
  * To change this template use File | Settings | File Templates.
  */
 public interface BlockReader {
-    public byte[] getNextBlock() throws IOException;
+    public byte[] getNextBlock(InputStream inputStream) throws IOException;
 }

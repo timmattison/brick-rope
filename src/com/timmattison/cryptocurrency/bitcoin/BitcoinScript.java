@@ -2,6 +2,7 @@ package com.timmattison.cryptocurrency.bitcoin;
 
 import com.timmattison.cryptocurrency.bitcoin.exceptions.ScriptExecutionException;
 import com.timmattison.cryptocurrency.bitcoin.factories.BitcoinWordFactory;
+import com.timmattison.cryptocurrency.factories.WordFactory;
 import com.timmattison.cryptocurrency.helpers.EndiannessHelper;
 import com.timmattison.cryptocurrency.interfaces.Transaction;
 import com.timmattison.cryptocurrency.standard.Script;
@@ -21,17 +22,14 @@ import java.util.List;
 public class BitcoinScript implements Script {
     //private static final int MAX_WORD_LIST_LENGTH = 201;
     private static final int MAX_WORD_LIST_LENGTH = 9999;
-    private final byte[] data;
     // These values are not in the script
 
     // XXX - The input/non-input logic be another class with the common functionality in an abstract super class
     boolean input;
 
-    int scriptNumber;
     private long lengthInBytes;
     private List<Word> words;
-    private StateMachine stateMachine;
-    private BitcoinWordFactory wordFactory;
+    private WordFactory wordFactory;
     private boolean coinbase;
     // Raw bytes, in order they were pulled from the block chain
     private int versionNumber;
@@ -47,42 +45,32 @@ public class BitcoinScript implements Script {
     /**
      * Create an input script
      *
-     * @param data
      * @param lengthInBytes
      * @param coinbase
-     * @param scriptNumber
      */
-    public BitcoinScript(byte[] data, BitcoinWordFactory wordFactory, BitcoinStateMachine stateMachine, long lengthInBytes, boolean coinbase, int scriptNumber) {
-        this.data = data;
+    public BitcoinScript(BitcoinWordFactory wordFactory, long lengthInBytes, boolean coinbase) {
         this.wordFactory = wordFactory;
-        this.stateMachine = stateMachine;
 
         this.lengthInBytes = lengthInBytes;
         this.coinbase = coinbase;
-        this.scriptNumber = scriptNumber;
         this.input = true;
     }
 
     /**
      * Create an output script
      *
-     * @param data
      * @param lengthInBytes
-     * @param scriptNumber
      */
-    public BitcoinScript(byte[] data, BitcoinWordFactory wordFactory, BitcoinStateMachine stateMachine, long lengthInBytes, int scriptNumber) {
-        this.data = data;
+    public BitcoinScript(BitcoinWordFactory wordFactory, long lengthInBytes) {
         this.wordFactory = wordFactory;
-        this.stateMachine = stateMachine;
 
         this.lengthInBytes = lengthInBytes;
         this.coinbase = false;
         this.versionNumber = 1;
         this.input = false;
-        this.scriptNumber = scriptNumber;
     }
 
-    public boolean execute() throws ScriptExecutionException, IOException {
+    public boolean execute(StateMachine stateMachine) throws ScriptExecutionException, IOException {
         // Is this the coinbase?
         if (coinbase) {
             // Yes, nothing to execute
@@ -112,7 +100,7 @@ public class BitcoinScript implements Script {
     }
 
     @Override
-    public byte[] build() {
+    public byte[] build(byte[] data) {
         words = new ArrayList<Word>();
 
         // Is there any data?

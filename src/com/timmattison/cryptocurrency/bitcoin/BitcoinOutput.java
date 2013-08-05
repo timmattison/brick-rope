@@ -2,7 +2,7 @@ package com.timmattison.cryptocurrency.bitcoin;
 
 import com.timmattison.cryptocurrency.helpers.EndiannessHelper;
 import com.timmattison.cryptocurrency.interfaces.Output;
-import com.timmattison.cryptocurrency.interfaces.ScriptFactory;
+import com.timmattison.cryptocurrency.factories.ScriptFactory;
 import com.timmattison.cryptocurrency.standard.OutputScript;
 import com.timmattison.cryptocurrency.standard.VariableLengthInteger;
 
@@ -64,7 +64,7 @@ public class BitcoinOutput implements Output {
         outputScriptLength = temp.getValue();
 
         // Get the output script
-        outputScript = scriptFactory.createOutputScript(tempData, outputScriptLength);
-        return outputScript.build();
+        outputScript = scriptFactory.createOutputScript(outputScriptLength);
+        return outputScript.build(tempData);
     }
 }

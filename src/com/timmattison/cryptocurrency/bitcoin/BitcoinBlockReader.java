@@ -5,6 +5,7 @@ import com.timmattison.cryptocurrency.helpers.ByteArrayHelper;
 import com.timmattison.cryptocurrency.helpers.InputStreamHelper;
 import com.timmattison.cryptocurrency.interfaces.BlockReader;
 
+import javax.inject.Inject;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
@@ -17,8 +18,6 @@ import java.util.Arrays;
  * To change this template use File | Settings | File Templates.
  */
 public class BitcoinBlockReader implements BlockReader {
-    private final InputStream inputStream;
-
     // XXX - Duplicated from other classes, this should be shared somehow!
     private static final byte[] requiredMagicNumberBytes = new byte[]{(byte) 0xf9, (byte) 0xbe, (byte) 0xb4, (byte) 0xd9};
     private static final int requiredMagicNumber = EndiannessHelper.BytesToInt(requiredMagicNumberBytes);
@@ -26,11 +25,11 @@ public class BitcoinBlockReader implements BlockReader {
     private static final int blockSizeLengthInBytes = 4;
     private static final int bytesRequired = magicNumberLengthInBytes + blockSizeLengthInBytes;
 
-    public BitcoinBlockReader(InputStream inputStream) {
-        this.inputStream = inputStream;
+    public BitcoinBlockReader() {
     }
 
-    public byte[] getNextBlock() throws IOException {
+    @Override
+    public byte[] getNextBlock(InputStream inputStream) throws IOException {
         // Are there enough bytes to read the values we need?
         if(InputStreamHelper.getAvailableBytes(inputStream) < bytesRequired) {
             // No, just return NULL

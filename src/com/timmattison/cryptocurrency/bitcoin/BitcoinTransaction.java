@@ -8,6 +8,7 @@ import com.timmattison.cryptocurrency.interfaces.Output;
 import com.timmattison.cryptocurrency.interfaces.Transaction;
 import com.timmattison.cryptocurrency.standard.VariableLengthInteger;
 
+import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -59,14 +60,6 @@ public class BitcoinTransaction implements Transaction {
         this.inputFactory = inputFactory;
         this.outputFactory = outputFactory;
         this.maxVersionNumber = maxVersionNumber;
-        this.transactionCounter = transactionCounter;
-    }
-
-    // TEMP: This is the current max version number in the Bitcoin block chain right now
-    public BitcoinTransaction(InputFactory inputFactory, OutputFactory outputFactory, int transactionCounter) {
-        this.inputFactory = inputFactory;
-        this.outputFactory = outputFactory;
-        this.maxVersionNumber = 2;
         this.transactionCounter = transactionCounter;
     }
 
