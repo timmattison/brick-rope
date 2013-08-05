@@ -74,7 +74,7 @@ public class BitcoinBlockReader implements BlockReader {
         }
 
         // Everything looks good, now we can put everything together and return it
-        System.arraycopy(requiredMagicNumber, 0, blockData, 0, magicNumberLengthInBytes);
+        System.arraycopy(requiredMagicNumberBytes, 0, blockData, 0, magicNumberLengthInBytes);
         System.arraycopy(blockSizeBytes, 0, blockData, magicNumberLengthInBytes, blockSizeLengthInBytes);
 
         return blockData;
