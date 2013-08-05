@@ -65,11 +65,8 @@ public class BitcoinTransaction implements Transaction {
 
     @Override
     public byte[] build(byte[] data) {
-        int position = 0;
-
         // Get the version number
-        versionNumberBytes = Arrays.copyOfRange(data, position, position + versionNumberLengthInBytes);
-        position += versionNumberLengthInBytes;
+        versionNumberBytes = Arrays.copyOfRange(data, 0, versionNumberLengthInBytes);
         versionNumber = EndiannessHelper.BytesToInt(versionNumberBytes);
 
         // Sanity check the version number
@@ -83,41 +80,36 @@ public class BitcoinTransaction implements Transaction {
 
         // Get the input counter
         VariableLengthInteger temp = new VariableLengthInteger();
-        byte[] tempData = temp.build(data);
+        data = temp.build(data);
         inCounterBytes = temp.getValueBytes();
         inCounter = temp.getValue();
 
         // Get the inputs
         for (int inputLoop = 0; inputLoop < inCounter; inputLoop++) {
             // Input 0 is the coinbase, all other inputs are not
-            boolean coinbase = ((transactionCounter == 0) && (inputLoop == 0)) ? true : false;
-            Input input = inputFactory.createInput(coinbase, inputLoop);
-            tempData = input.build(tempData);
+            Input input = inputFactory.createInput(inputLoop);
+            data = input.build(data);
             addInput(input);
         }
 
         // Get the output counter
         temp = new VariableLengthInteger();
-        tempData = temp.build(tempData);
+        data = temp.build(data);
         outCounterBytes = temp.getValueBytes();
         outCounter = temp.getValue();
 
         // Get the outputs
         for (int outputLoop = 0; outputLoop < outCounter; outputLoop++) {
             Output output = outputFactory.createOutput(outputLoop);
-            tempData = output.build(tempData);
+            data = output.build(data);
             addOutput(output);
         }
 
-        // Reset the position since we're working with temporary data
-        position = 0;
-
         // Get the lock time
-        lockTimeBytes = Arrays.copyOfRange(data, position, position + lockTimeLengthInBytes);
-        position += lockTimeLengthInBytes;
+        lockTimeBytes = Arrays.copyOfRange(data, 0, lockTimeLengthInBytes);
         lockTime = EndiannessHelper.BytesToInt(lockTimeBytes);
 
-        return Arrays.copyOfRange(data, position, data.length);
+        return Arrays.copyOfRange(data, lockTimeLengthInBytes, data.length);
     }
 
     private void addInput(Input input) {
