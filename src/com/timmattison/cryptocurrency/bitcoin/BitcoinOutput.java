@@ -20,7 +20,6 @@ import java.util.Arrays;
 public class BitcoinOutput implements Output {
     private static final int valueLengthInBytes = 8;
     private static final BigDecimal satoshiPerBitcoin = new BigDecimal(100000000);
-    private final byte[] data;
     private final ScriptFactory scriptFactory;
 
     /**
@@ -44,14 +43,13 @@ public class BitcoinOutput implements Output {
     int outputNumber;
     private OutputScript script;
 
-    public BitcoinOutput(byte[] data, ScriptFactory scriptFactory, int outputNumber) {
-        this.data = data;
+    public BitcoinOutput(ScriptFactory scriptFactory, int outputNumber) {
         this.scriptFactory = scriptFactory;
         this.outputNumber = outputNumber;
     }
 
     @Override
-    public byte[] build() {
+    public byte[] build(byte[] data) {
         int position = 0;
 
         // Get the value

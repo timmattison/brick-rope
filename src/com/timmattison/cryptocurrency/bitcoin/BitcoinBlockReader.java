@@ -3,6 +3,7 @@ package com.timmattison.cryptocurrency.bitcoin;
 import com.timmattison.bitcoin.test.EndiannessHelper;
 import com.timmattison.cryptocurrency.helpers.ByteArrayHelper;
 import com.timmattison.cryptocurrency.helpers.InputStreamHelper;
+import com.timmattison.cryptocurrency.interfaces.BlockReader;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -15,7 +16,7 @@ import java.util.Arrays;
  * Time: 6:06 PM
  * To change this template use File | Settings | File Templates.
  */
-public class BitcoinBlockReader {
+public class BitcoinBlockReader implements BlockReader {
     private final InputStream inputStream;
 
     // XXX - Duplicated from other classes, this should be shared somehow!

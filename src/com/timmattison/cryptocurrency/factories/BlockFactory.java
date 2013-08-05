@@ -13,5 +13,5 @@ import java.io.InputStream;
  * To change this template use File | Settings | File Templates.
  */
 public interface BlockFactory {
-    Block createBlock() throws IOException;
+    Block createBlock(InputStream inputStream) throws IOException;
 }

@@ -6,6 +6,7 @@ import com.timmattison.cryptocurrency.interfaces.Block;
 import com.timmattison.cryptocurrency.interfaces.BlockHeader;
 import com.timmattison.cryptocurrency.interfaces.Transaction;
 
+import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -18,15 +19,14 @@ import java.util.List;
  * To change this template use File | Settings | File Templates.
  */
 public abstract class StandardBlock implements Block {
-    private final byte[] data;
     private byte[] dataAfterBlockHeader;
     private final BlockHeaderFactory blockHeaderFactory;
     private final TransactionFactory transactionFactory;
     private List<Transaction> transactions;
     private BlockHeader blockHeader = null;
 
-    public StandardBlock(byte[] data, BlockHeaderFactory blockHeaderFactory, TransactionFactory transactionFactory) {
-        this.data = data;
+    @Inject
+    public StandardBlock(BlockHeaderFactory blockHeaderFactory, TransactionFactory transactionFactory) {
         this.blockHeaderFactory = blockHeaderFactory;
         this.transactionFactory = transactionFactory;
     }
@@ -34,23 +34,29 @@ public abstract class StandardBlock implements Block {
     @Override
     public BlockHeader getBlockHeader() {
         if (blockHeader == null) {
-            // Are there bytes available?
-            if (data.length > 0) {
-                // Yes, create and parse the block
-                blockHeader = blockHeaderFactory.createBlockHeader(data);
-                dataAfterBlockHeader = blockHeader.build();
-            } else {
-                throw new IllegalStateException("No bytes available when trying to build the block header");
-            }
+            throw new IllegalStateException("Block not built yet");
         }
 
         return blockHeader;
     }
 
+    private void buildBlockHeader(byte[] data) {
+        if(blockHeader != null) {
+            // Are there bytes available?
+            if (data.length > 0) {
+                // Yes, create and parse the block
+                blockHeader = blockHeaderFactory.createBlockHeader();
+                dataAfterBlockHeader = blockHeader.build(data);
+            } else {
+                throw new IllegalStateException("No bytes available when trying to build the block header");
+            }
+        }
+    }
+
     @Override
-    public void build() {
+    public byte[] build(byte[] data) {
         // Make sure the block header has been read already
-        getBlockHeader();
+        buildBlockHeader(data);
 
         byte[] tempData = Arrays.copyOf(dataAfterBlockHeader, dataAfterBlockHeader.length);
 
@@ -60,17 +66,19 @@ public abstract class StandardBlock implements Block {
         // Are there bytes available?
         while ((tempData != null) && (tempData.length > 0)) {
             // Yes, create and parse the block
-            Transaction transaction = transactionFactory.createTransaction(Arrays.copyOf(tempData, tempData.length));
-            tempData = transaction.build();
+            Transaction transaction = transactionFactory.createTransaction();
+            tempData = transaction.build(Arrays.copyOf(tempData, tempData.length));
 
             transactions.add(transaction);
         }
+
+        return tempData;
     }
 
     @Override
     public List<Transaction> getTransactions() {
         if (transactions == null) {
-            build();
+            throw new IllegalStateException("Block has not been built yet");
         }
 
         return transactions;

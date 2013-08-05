@@ -197,7 +197,7 @@ public class BitcoinScript implements Script {
 
             // Get the word that the next byte corresponds to
             Word currentWord = wordFactory.createWord(currentByte);
-            tempData = currentWord.build();
+            tempData = currentWord.build(Arrays.copyOfRange(tempData, tempDataPosition, tempData.length));
 
             // Add the word to our word list
             words.add(currentWord);

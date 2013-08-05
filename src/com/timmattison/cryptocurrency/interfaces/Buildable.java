@@ -12,5 +12,5 @@ public interface Buildable {
      * Builds the object and returns a byte array containing any bytes that were left over from its input
      * @return
      */
-    byte[] build();
+    byte[] build(byte[] data);
 }

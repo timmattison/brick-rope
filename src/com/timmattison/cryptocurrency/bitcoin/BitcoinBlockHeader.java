@@ -3,6 +3,7 @@ package com.timmattison.cryptocurrency.bitcoin;
 import com.timmattison.cryptocurrency.helpers.EndiannessHelper;
 import com.timmattison.cryptocurrency.interfaces.BlockHeader;
 
+import javax.inject.Inject;
 import java.math.BigInteger;
 import java.util.Arrays;
 
@@ -20,7 +21,6 @@ public class BitcoinBlockHeader implements BlockHeader {
     private static final int timestampLengthInBytes = 4;
     private static final int bitsLengthInBytes = 4;
     private static final int nonceLengthInBytes = 4;
-    private final byte[] data;
 
     /**
      * The target.  This is not in the block chain.  It is derived from the difficulty.
@@ -63,12 +63,11 @@ public class BitcoinBlockHeader implements BlockHeader {
     private int nonce;
     private byte[] nonceBytes;
 
-    public BitcoinBlockHeader(byte[] data) {
-        this.data = data;
+    public BitcoinBlockHeader() {
     }
 
     @Override
-    public byte[] build() {
+    public byte[] build(byte[] data) {
         int position = 0;
 
         // Get the version

@@ -20,7 +20,6 @@ public class BitcoinInput implements Input {
     private static final int previousTransactionHashLengthInBytes = 32;
     private static final int previousOutputIndexLengthInBytes = 4;
     private static final int sequenceNumberLengthInBytes = 4;
-    private final byte[] data;
     private final ScriptFactory scriptFactory;
 
     // These are not part of the script
@@ -55,15 +54,14 @@ public class BitcoinInput implements Input {
     private long sequenceNumber;
     private byte[] sequenceNumberBytes;
 
-    public BitcoinInput(byte[] data, ScriptFactory scriptFactory, boolean coinbase, int inputNumber) {
-        this.data = data;
+    public BitcoinInput(ScriptFactory scriptFactory, boolean coinbase, int inputNumber) {
         this.scriptFactory = scriptFactory;
         this.coinbase = coinbase;
         this.inputNumber = inputNumber;
     }
 
     @Override
-    public byte[] build() {
+    public byte[] build(byte[] data) {
         int position = 0;
 
         // Get the previous transaction hash

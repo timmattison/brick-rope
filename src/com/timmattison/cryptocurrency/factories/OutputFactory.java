@@ -12,5 +12,5 @@ import java.io.InputStream;
  * To change this template use File | Settings | File Templates.
  */
 public interface OutputFactory {
-    Output createOutput(byte[] data, int outputNumber);
+    Output createOutput(int outputNumber);
 }

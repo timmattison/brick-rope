@@ -1,16 +1,12 @@
 package com.timmattison.cryptocurrency.bitcoin;
 
 import com.google.inject.AbstractModule;
-import com.google.inject.Provides;
-import com.timmattison.cryptocurrency.interfaces.Block;
-import com.timmattison.cryptocurrency.interfaces.BlockChain;
-import com.timmattison.cryptocurrency.interfaces.BlockHeader;
-import com.timmattison.cryptocurrency.interfaces.Transaction;
+import com.timmattison.cryptocurrency.bitcoin.factories.BitcoinBlockFactory;
+import com.timmattison.cryptocurrency.factories.BlockFactory;
+import com.timmattison.cryptocurrency.factories.BlockHeaderFactory;
+import com.timmattison.cryptocurrency.interfaces.*;
 import com.timmattison.cryptocurrency.standard.StandardBlock;
 import com.timmattison.cryptocurrency.standard.StandardBlockChain;
-
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 
 /**
  * Created with IntelliJ IDEA.
@@ -22,18 +18,24 @@ import java.security.NoSuchAlgorithmException;
 public class BitcoinModule extends AbstractModule {
     @Override
     protected void configure() {
+        bind(BlockReader.class).to(BitcoinBlockReader.class);
+
         bind(BlockChain.class).to(StandardBlockChain.class);
-        bind(Block.class).to(StandardBlock.class);
+        bind(Block.class).to(BitcoinBlock.class);
         bind(BlockHeader.class).to(BitcoinBlockHeader.class);
         bind(Transaction.class).to(BitcoinTransaction.class);
+        bind(Block.class).to(BitcoinBlock.class);
+
+        bind(BlockFactory.class).to(BitcoinBlockFactory.class);
+        bind(BlockHeaderFactory.class).to(BitcoinBlockHeaderFactory.class);
     }
 
-    @Provides
-    MessageDigest getMessageDigest() {
-        try {
-            return MessageDigest.getInstance("SHA-256");
-        } catch (NoSuchAlgorithmException e) {
-            throw new IllegalStateException(e);
-        }
-    }
+    //@Provides
+    //MessageDigest getMessageDigest() {
+    //    try {
+    //        return MessageDigest.getInstance("SHA-256");
+    //    } catch (NoSuchAlgorithmException e) {
+    //        throw new IllegalStateException(e);
+    //    }
+    //}
 }

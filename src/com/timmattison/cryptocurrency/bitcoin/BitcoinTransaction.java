@@ -22,7 +22,6 @@ import java.util.List;
 public class BitcoinTransaction implements Transaction {
     private static final int versionNumberLengthInBytes = 4;
     private static final int lockTimeLengthInBytes = 4;
-    private final byte[] data;
     private final long maxVersionNumber;
     private final int transactionCounter;
     private final InputFactory inputFactory;
@@ -56,8 +55,7 @@ public class BitcoinTransaction implements Transaction {
     private int lockTime;
     private byte[] lockTimeBytes;
 
-    public BitcoinTransaction(byte[] data, InputFactory inputFactory, OutputFactory outputFactory, long maxVersionNumber, int transactionCounter) {
-        this.data = data;
+    public BitcoinTransaction(InputFactory inputFactory, OutputFactory outputFactory, long maxVersionNumber, int transactionCounter) {
         this.inputFactory = inputFactory;
         this.outputFactory = outputFactory;
         this.maxVersionNumber = maxVersionNumber;
@@ -65,8 +63,7 @@ public class BitcoinTransaction implements Transaction {
     }
 
     // TEMP: This is the current max version number in the Bitcoin block chain right now
-    public BitcoinTransaction(byte[] data, InputFactory inputFactory, OutputFactory outputFactory, int transactionCounter) {
-        this.data = data;
+    public BitcoinTransaction(InputFactory inputFactory, OutputFactory outputFactory, int transactionCounter) {
         this.inputFactory = inputFactory;
         this.outputFactory = outputFactory;
         this.maxVersionNumber = 2;
@@ -74,7 +71,7 @@ public class BitcoinTransaction implements Transaction {
     }
 
     @Override
-    public byte[] build() {
+    public byte[] build(byte[] data) {
         int position = 0;
 
         // Get the version number
@@ -97,8 +94,8 @@ public class BitcoinTransaction implements Transaction {
         for (int inputLoop = 0; inputLoop < inCounter; inputLoop++) {
             // Input 0 is the coinbase, all other inputs are not
             boolean coinbase = ((transactionCounter == 0) && (inputLoop == 0)) ? true : false;
-            Input input = inputFactory.createInput(tempData, coinbase, inputLoop);
-            tempData = input.build();
+            Input input = inputFactory.createInput(coinbase, inputLoop);
+            tempData = input.build(tempData);
             addInput(input);
         }
 
@@ -110,8 +107,8 @@ public class BitcoinTransaction implements Transaction {
 
         // Get the outputs
         for (int outputLoop = 0; outputLoop < outCounter; outputLoop++) {
-            Output output = outputFactory.createOutput(tempData, outputLoop);
-            tempData = output.build();
+            Output output = outputFactory.createOutput(outputLoop);
+            tempData = output.build(tempData);
             addOutput(output);
         }
 

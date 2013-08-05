@@ -7,6 +7,7 @@ import com.timmattison.cryptocurrency.interfaces.BlockHeader;
 import com.timmattison.cryptocurrency.interfaces.Transaction;
 import com.timmattison.cryptocurrency.standard.StandardBlock;
 
+import javax.inject.Inject;
 import java.util.List;
 
 /**
@@ -17,8 +18,9 @@ import java.util.List;
  * To change this template use File | Settings | File Templates.
  */
 public class BitcoinBlock extends StandardBlock {
-    public BitcoinBlock(byte[] data, BlockHeaderFactory blockHeaderFactory, TransactionFactory transactionFactory) {
-        super(data, blockHeaderFactory, transactionFactory);
+    @Inject
+    public BitcoinBlock(BlockHeaderFactory blockHeaderFactory, TransactionFactory transactionFactory) {
+        super(blockHeaderFactory, transactionFactory);
     }
 
     @Override

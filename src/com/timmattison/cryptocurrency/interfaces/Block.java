@@ -9,12 +9,10 @@ import java.util.List;
  * Time: 7:31 AM
  * To change this template use File | Settings | File Templates.
  */
-public interface Block {
+public interface Block extends Buildable {
     BlockHeader getBlockHeader();
 
     boolean isParentOf(Block block);
 
     List<Transaction> getTransactions();
-
-    void build();
 }

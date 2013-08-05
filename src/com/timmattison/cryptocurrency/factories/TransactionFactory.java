@@ -12,5 +12,5 @@ import java.io.InputStream;
  * To change this template use File | Settings | File Templates.
  */
 public interface TransactionFactory {
-    Transaction createTransaction(byte[] data);
+    Transaction createTransaction();
 }

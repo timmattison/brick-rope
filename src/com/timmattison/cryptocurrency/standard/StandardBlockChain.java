@@ -18,13 +18,12 @@ import java.util.Iterator;
  * To change this template use File | Settings | File Templates.
  */
 public class StandardBlockChain implements BlockChain, Iterator<Block> {
-    private final InputStream inputStream;
+    private InputStream inputStream;
     private final BlockFactory blockFactory;
     private Block previousBlock = null;
 
     @Inject
-    public StandardBlockChain(InputStream inputStream, BlockFactory blockFactory) throws IOException {
-        this.inputStream = inputStream;
+    public StandardBlockChain(BlockFactory blockFactory) throws IOException {
         this.blockFactory = blockFactory;
     }
 
@@ -46,8 +45,7 @@ public class StandardBlockChain implements BlockChain, Iterator<Block> {
             // Are there bytes available?
             if (InputStreamHelper.getAvailableBytes(inputStream) > 0) {
                 // Yes, create and parse the block
-                Block block = blockFactory.createBlock();
-                block.build();
+                Block block = blockFactory.createBlock(inputStream);
 
                 // Is the previous block a valid parent of this block?
                 if ((previousBlock != null) && (!previousBlock.isParentOf(block))) {
@@ -70,5 +68,10 @@ public class StandardBlockChain implements BlockChain, Iterator<Block> {
     @Override
     public void remove() {
         throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void setInputStream(InputStream inputStream) {
+        this.inputStream = inputStream;
     }
 }
