@@ -23,7 +23,6 @@ public class BitcoinInput implements Input {
     private final ScriptFactory scriptFactory;
 
     // These are not part of the script
-    private boolean coinbase;
     private int inputNumber;
 
     /**
@@ -54,9 +53,8 @@ public class BitcoinInput implements Input {
     private long sequenceNumber;
     private byte[] sequenceNumberBytes;
 
-    public BitcoinInput(ScriptFactory scriptFactory, boolean coinbase, int inputNumber) {
+    public BitcoinInput(ScriptFactory scriptFactory, int inputNumber) {
         this.scriptFactory = scriptFactory;
-        this.coinbase = coinbase;
         this.inputNumber = inputNumber;
     }
 
@@ -80,7 +78,7 @@ public class BitcoinInput implements Input {
         inputScriptLength = temp.getValue();
 
         // Get the input script
-        inputScript = scriptFactory.createInputScript(inputScriptLength, coinbase);
+        inputScript = scriptFactory.createInputScript(inputScriptLength, isCoinbase());
         tempBytes = inputScript.build(tempBytes);
 
         // Start position over as we're working with the temporary array
@@ -91,5 +89,10 @@ public class BitcoinInput implements Input {
         sequenceNumber = EndiannessHelper.BytesToInt(sequenceNumberBytes);
 
         return Arrays.copyOfRange(tempBytes, position, tempBytes.length);
+    }
+
+    @Override
+    public boolean isCoinbase() {
+        return (inputNumber == 0);
     }
 }

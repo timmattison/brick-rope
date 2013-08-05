@@ -19,21 +19,16 @@ import java.util.List;
  * Time: 8:49 AM
  * To change this template use File | Settings | File Templates.
  */
-public class BitcoinScript implements Script {
+public abstract class BitcoinScript implements Script {
     //private static final int MAX_WORD_LIST_LENGTH = 201;
     private static final int MAX_WORD_LIST_LENGTH = 9999;
     // These values are not in the script
 
-    // XXX - The input/non-input logic be another class with the common functionality in an abstract super class
-    boolean input;
-
-    private long lengthInBytes;
-    private List<Word> words;
-    private WordFactory wordFactory;
-    private boolean coinbase;
+    protected long lengthInBytes;
+    protected List<Word> words;
+    protected WordFactory wordFactory;
     // Raw bytes, in order they were pulled from the block chain
-    private int versionNumber;
-    private int blockHeight;
+    protected int versionNumber;
     /**
      * Script bytes
      */
@@ -42,38 +37,12 @@ public class BitcoinScript implements Script {
     private Transaction referencedTransaction;
     private int referencedOutputIndex;
 
-    /**
-     * Create an input script
-     *
-     * @param lengthInBytes
-     * @param coinbase
-     */
-    public BitcoinScript(BitcoinWordFactory wordFactory, long lengthInBytes, boolean coinbase) {
-        this.wordFactory = wordFactory;
-
-        this.lengthInBytes = lengthInBytes;
-        this.coinbase = coinbase;
-        this.input = true;
-    }
-
-    /**
-     * Create an output script
-     *
-     * @param lengthInBytes
-     */
-    public BitcoinScript(BitcoinWordFactory wordFactory, long lengthInBytes) {
-        this.wordFactory = wordFactory;
-
-        this.lengthInBytes = lengthInBytes;
-        this.coinbase = false;
-        this.versionNumber = 1;
-        this.input = false;
-    }
+    protected abstract boolean isExecutable();
 
     public boolean execute(StateMachine stateMachine) throws ScriptExecutionException, IOException {
-        // Is this the coinbase?
-        if (coinbase) {
-            // Yes, nothing to execute
+        // Is this executable?
+        if (!isExecutable()) {
+            // No, nothing to execute
             return true;
         }
 
@@ -115,22 +84,12 @@ public class BitcoinScript implements Script {
             throw new UnsupportedOperationException("Script is supposed to have " + lengthInBytes + " byte(s) but only " + data.length + " byte(s) are left");
         }
 
-        // Is the length valid?
+        // Validate the length
+        validateLength();
+
+        // Is there anything to process?
         if (lengthInBytes == 0) {
-            // Possibly not
-
-            // Is this a version 2 script?
-            if (versionNumber == 2) {
-                // Yes, no version 2 script can be zero bytes
-                throw new UnsupportedOperationException("Version 2 scripts cannot be zero bytes long, [coinbase? " + (coinbase ? "Yes" : "No") + "] [version: " + versionNumber + "]");
-            }
-            // Is this a version 1 coinbase?
-            else if ((versionNumber == 1) && (!coinbase)) {
-                // No, no version 1 non-coinbase script can be zero bytes
-                throw new UnsupportedOperationException("Version 1 scripts cannot be zero bytes long unless they are the coinbase");
-            }
-
-            // This is a version 1 coinbase, a zero length script is permitted
+            // No, just return the bytes we were given
             return data;
         }
 
@@ -145,31 +104,9 @@ public class BitcoinScript implements Script {
 
         byte[] dataAfterScript = Arrays.copyOfRange(data, position, data.length);
 
-        // Is this the coinbase?
-        if (coinbase) {
-            // Yes, is this a version 2 block?
-            if (versionNumber == 2) {
-                // Yes, process the additional fields
+        preprocessScriptBytes(scriptBytes);
 
-                int scriptBytesPosition = 0;
-
-                // Get the length of the block height value that is coming up
-                int lengthOfBlockHeight = (int) EndiannessHelper.ToRealByte(scriptBytes[scriptBytesPosition]);
-                scriptBytesPosition++;
-
-                // Read the block height
-                byte[] blockHeightBytes = Arrays.copyOfRange(scriptBytes, scriptBytesPosition, lengthOfBlockHeight);
-                scriptBytesPosition += lengthOfBlockHeight;
-
-                // Convert the block height bytes into a number
-                blockHeight = (int) EndiannessHelper.BytesToValue(blockHeightBytes);
-            } else if (versionNumber == 1) {
-                // No, this is a version 1 block, do nothing
-            } else {
-                // Unknown version number
-                throw new UnsupportedOperationException("Expected version 1 or version 2, saw " + versionNumber);
-            }
-
+        if(!isExecutable()) {
             // Return immediately
             return dataAfterScript;
         }
@@ -200,4 +137,8 @@ public class BitcoinScript implements Script {
         // Return the data that is after the script
         return dataAfterScript;
     }
+
+    protected abstract void preprocessScriptBytes(byte[] scriptBytes);
+
+    protected abstract void validateLength();
 }
