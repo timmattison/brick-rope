@@ -18,5 +18,5 @@ public interface Word<T> extends Buildable {
 
     public boolean isEnabled();
 
-    public void execute();
+    public void execute(StateMachine stateMachine);
 }

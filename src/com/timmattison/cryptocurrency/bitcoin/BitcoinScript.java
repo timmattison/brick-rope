@@ -51,7 +51,7 @@ public abstract class BitcoinScript implements Script {
         // Loop through each word
         for (Word word : words) {
             // Execute the instruction
-            word.execute();
+            word.execute(stateMachine);
         }
 
         // Pop the top value of the stack
