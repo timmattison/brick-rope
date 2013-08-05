@@ -1,5 +1,7 @@
 package com.timmattison.cryptocurrency.bitcoin.factories;
 
+import com.timmattison.cryptocurrency.bitcoin.BitcoinInputScript;
+import com.timmattison.cryptocurrency.bitcoin.BitcoinOutputScript;
 import com.timmattison.cryptocurrency.bitcoin.BitcoinScript;
 import com.timmattison.cryptocurrency.factories.ScriptFactory;
 import com.timmattison.cryptocurrency.standard.InputScript;
@@ -24,11 +26,11 @@ public class BitcoinScriptFactory implements ScriptFactory {
 
     @Override
     public InputScript createInputScript(long scriptLength, boolean coinbase) {
-        return (InputScript) new BitcoinScript(bitcoinWordFactory, scriptLength, coinbase);
+        return (InputScript) new BitcoinInputScript(bitcoinWordFactory, scriptLength, coinbase);
     }
 
     @Override
     public OutputScript createOutputScript(long scriptLength) {
-        return (OutputScript) new BitcoinScript(bitcoinWordFactory, scriptLength);
+        return (OutputScript) new BitcoinOutputScript(bitcoinWordFactory, scriptLength);
     }
 }

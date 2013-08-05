@@ -23,7 +23,7 @@ public class BitcoinInputFactory implements InputFactory {
     }
 
     @Override
-    public Input createInput(boolean coinbase, int inputNumber) {
-        return new BitcoinInput(scriptFactory, coinbase, inputNumber);
+    public Input createInput(int inputNumber) {
+        return new BitcoinInput(scriptFactory, inputNumber);
     }
 }
