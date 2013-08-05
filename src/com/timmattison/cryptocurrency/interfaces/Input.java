@@ -10,4 +10,5 @@ import java.util.Iterator;
  * To change this template use File | Settings | File Templates.
  */
 public interface Input extends Buildable {
+    public boolean isCoinbase();
 }
