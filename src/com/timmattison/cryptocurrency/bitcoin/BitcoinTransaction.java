@@ -23,11 +23,12 @@ import java.util.List;
 public class BitcoinTransaction implements Transaction {
     private static final int versionNumberLengthInBytes = 4;
     private static final int lockTimeLengthInBytes = 4;
-    private final long maxVersionNumber;
+    private final long maxVersionNumber = 1;
     private final int transactionCounter;
     private final InputFactory inputFactory;
     private final OutputFactory outputFactory;
-    /**
+
+   /**
      * Version number
      */
     private int versionNumber;
@@ -56,10 +57,9 @@ public class BitcoinTransaction implements Transaction {
     private int lockTime;
     private byte[] lockTimeBytes;
 
-    public BitcoinTransaction(InputFactory inputFactory, OutputFactory outputFactory, long maxVersionNumber, int transactionCounter) {
+    public BitcoinTransaction(InputFactory inputFactory, OutputFactory outputFactory, int transactionCounter) {
         this.inputFactory = inputFactory;
         this.outputFactory = outputFactory;
-        this.maxVersionNumber = maxVersionNumber;
         this.transactionCounter = transactionCounter;
     }
 
@@ -75,6 +75,10 @@ public class BitcoinTransaction implements Transaction {
         // Sanity check the version number
         if (versionNumber > maxVersionNumber) {
             throw new UnsupportedOperationException("Max version number is " + maxVersionNumber + ", saw " + versionNumber);
+        }
+
+        if(versionNumber <= 0) {
+            throw new UnsupportedOperationException("Version number cannot be less than or equal to zero");
         }
 
         // Get the input counter

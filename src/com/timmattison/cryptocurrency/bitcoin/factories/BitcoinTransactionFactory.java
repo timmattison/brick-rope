@@ -19,11 +19,6 @@ public class BitcoinTransactionFactory implements TransactionFactory {
     private InputFactory inputFactory;
     private OutputFactory outputFactory;
 
-    /**
-     * This is the max version number available right now
-     */
-    private static final int maxVersionNumber = 2;
-
     @Inject
     public BitcoinTransactionFactory(InputFactory inputFactory, OutputFactory outputFactory) {
         this.inputFactory = inputFactory;
@@ -32,6 +27,6 @@ public class BitcoinTransactionFactory implements TransactionFactory {
 
     @Override
     public Transaction createTransaction(int transactionNumber) {
-        return new BitcoinTransaction(inputFactory, outputFactory, maxVersionNumber, transactionNumber);
+        return new BitcoinTransaction(inputFactory, outputFactory, transactionNumber);
     }
 }
