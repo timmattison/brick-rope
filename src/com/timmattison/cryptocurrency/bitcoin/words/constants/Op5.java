@@ -1,7 +1,6 @@
 package com.timmattison.cryptocurrency.bitcoin.words.constants;
 
-import com.timmattison.bitcoin.test.script.StateMachine;
-import com.timmattison.bitcoin.test.script.Word;
+import com.timmattison.cryptocurrency.bitcoin.StateMachine;
 
 /**
  * Created with IntelliJ IDEA.
@@ -10,16 +9,22 @@ import com.timmattison.bitcoin.test.script.Word;
  * Time: 9:51 AM
  * To change this template use File | Settings | File Templates.
  */
-public class Op5 extends Word {
+public class Op5 extends ConstantOp {
     private static final String word = "OP_5";
     private static final Byte opcode = (byte) 0x55;
-
-    public Op5() {
-        super(word, opcode, false);
-    }
 
     @Override
     public void execute(StateMachine stateMachine) {
         throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public Byte getOpcode() {
+        return opcode;
+    }
+
+    @Override
+    public String getName() {
+        return word;
     }
 }
