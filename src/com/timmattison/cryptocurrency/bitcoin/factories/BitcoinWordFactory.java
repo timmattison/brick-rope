@@ -1,20 +1,17 @@
 package com.timmattison.cryptocurrency.bitcoin.factories;
 
-import com.timmattison.bitcoin.test.BlockChain;
-import com.timmattison.bitcoin.test.ByteArrayHelper;
-import com.timmattison.bitcoin.test.script.words.arithmetic.*;
-import com.timmattison.bitcoin.test.script.words.bitwiselogic.*;
-import com.timmattison.bitcoin.test.script.words.constants.*;
-import com.timmattison.bitcoin.test.script.words.crypto.*;
-import com.timmattison.bitcoin.test.script.words.flowcontrol.*;
-import com.timmattison.bitcoin.test.script.words.pseudowords.OpInvalidOpcode;
-import com.timmattison.bitcoin.test.script.words.pseudowords.OpPubKey;
-import com.timmattison.bitcoin.test.script.words.pseudowords.OpPubKeyHash;
-import com.timmattison.bitcoin.test.script.words.reservedwords.*;
-import com.timmattison.bitcoin.test.script.words.splice.*;
-import com.timmattison.bitcoin.test.script.words.stack.*;
 import com.timmattison.cryptocurrency.bitcoin.Word;
+import com.timmattison.cryptocurrency.bitcoin.words.arithmetic.*;
+import com.timmattison.cryptocurrency.bitcoin.words.bitwiselogic.*;
+import com.timmattison.cryptocurrency.bitcoin.words.constants.*;
+import com.timmattison.cryptocurrency.bitcoin.words.crypto.*;
+import com.timmattison.cryptocurrency.bitcoin.words.flowcontrol.*;
+import com.timmattison.cryptocurrency.bitcoin.words.pseudowords.*;
+import com.timmattison.cryptocurrency.bitcoin.words.reservedwords.*;
+import com.timmattison.cryptocurrency.bitcoin.words.splice.*;
+import com.timmattison.cryptocurrency.bitcoin.words.stack.*;
 import com.timmattison.cryptocurrency.factories.WordFactory;
+import com.timmattison.cryptocurrency.helpers.ByteArrayHelper;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -200,7 +197,7 @@ public class BitcoinWordFactory implements WordFactory {
         Class<Word> clazz = classesByOpcode.get(opcode);
 
         if (clazz == null) {
-            throw new UnsupportedOperationException("No word found for opcode " + opcode + " [" + ByteArrayHelper.toHex(opcode) + "] in block #" + BlockChain.blockNumber);
+            throw new UnsupportedOperationException("No word found for opcode " + opcode + " [" + ByteArrayHelper.toHex(opcode) + "]");
         }
 
         try {
