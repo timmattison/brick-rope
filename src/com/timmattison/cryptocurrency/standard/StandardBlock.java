@@ -45,11 +45,11 @@ public abstract class StandardBlock implements Block {
     public byte[] build(byte[] data) {
         // Make sure the block header has been read already
         blockHeader = blockHeaderFactory.createBlockHeader();
-        byte[] tempData = blockHeader.build(data);
+        data = blockHeader.build(data);
 
         // Get the transaction count and return the remaining bytes back
         VariableLengthInteger temp = new VariableLengthInteger();
-        tempData = temp.build(tempData);
+        data = temp.build(data);
         transactionCountBytes = temp.getValueBytes();
         transactionCount = (int) temp.getValue();
 
@@ -60,13 +60,13 @@ public abstract class StandardBlock implements Block {
         while (transactionNumber < transactionCount) {
             // Yes, create and parse the block
             Transaction transaction = transactionFactory.createTransaction(transactionNumber);
-            tempData = transaction.build(tempData);
+            data = transaction.build(data);
 
             transactions.add(transaction);
             transactionNumber++;
         }
 
-        return tempData;
+        return data;
     }
 
     @Override

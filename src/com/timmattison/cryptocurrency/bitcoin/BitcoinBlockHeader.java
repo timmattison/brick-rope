@@ -68,37 +68,35 @@ public class BitcoinBlockHeader implements BlockHeader {
 
     @Override
     public byte[] build(byte[] data) {
-        int position = 0;
-
         // Get the version
-        versionBytes = Arrays.copyOfRange(data, position, position + versionLengthInBytes);
-        position += versionLengthInBytes;
+        versionBytes = Arrays.copyOfRange(data, 0, versionLengthInBytes);
+        data = Arrays.copyOfRange(data, versionLengthInBytes, data.length);
         version = EndiannessHelper.BytesToInt(versionBytes);
 
         // Get the previous block hash
-        prevBlock = Arrays.copyOfRange(data, position, position + prevBlockLengthInBytes);
-        position += prevBlockLengthInBytes;
+        prevBlock = Arrays.copyOfRange(data, 0, prevBlockLengthInBytes);
+        data = Arrays.copyOfRange(data, prevBlockLengthInBytes, data.length);
 
         // Get the Merkle root
-        merkleRoot = Arrays.copyOfRange(data, position, position + merkleRootLengthInBytes);
-        position += merkleRootLengthInBytes;
+        merkleRoot = Arrays.copyOfRange(data, 0, merkleRootLengthInBytes);
+        data = Arrays.copyOfRange(data, merkleRootLengthInBytes, data.length);
 
         // Get the timestamp
-        timestampBytes = Arrays.copyOfRange(data, position, position + timestampLengthInBytes);
-        position += timestampLengthInBytes;
+        timestampBytes = Arrays.copyOfRange(data, 0, timestampLengthInBytes);
+        data = Arrays.copyOfRange(data, timestampLengthInBytes, data.length);
         timestamp = EndiannessHelper.BytesToInt(timestampBytes);
 
         // Get the difficulty
-        bitsBytes = Arrays.copyOfRange(data, position, position + bitsLengthInBytes);
-        position += bitsLengthInBytes;
+        bitsBytes = Arrays.copyOfRange(data, 0, bitsLengthInBytes);
+        data = Arrays.copyOfRange(data, bitsLengthInBytes, data.length);
         bits = EndiannessHelper.BytesToInt(bitsBytes);
 
         // Get the nonce
-        nonceBytes = Arrays.copyOfRange(data, position, position + nonceLengthInBytes);
-        position += nonceLengthInBytes;
+        nonceBytes = Arrays.copyOfRange(data, 0, nonceLengthInBytes);
+        data = Arrays.copyOfRange(data, nonceLengthInBytes, data.length);
         nonce = EndiannessHelper.BytesToInt(nonceBytes);
 
         // Return what is left
-        return Arrays.copyOfRange(data, position, data.length);
+        return data;
     }
 }

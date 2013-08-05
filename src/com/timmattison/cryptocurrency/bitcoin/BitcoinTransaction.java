@@ -67,6 +67,7 @@ public class BitcoinTransaction implements Transaction {
     public byte[] build(byte[] data) {
         // Get the version number
         versionNumberBytes = Arrays.copyOfRange(data, 0, versionNumberLengthInBytes);
+        data = Arrays.copyOfRange(data, versionNumberLengthInBytes, data.length);
         versionNumber = EndiannessHelper.BytesToInt(versionNumberBytes);
 
         // Sanity check the version number

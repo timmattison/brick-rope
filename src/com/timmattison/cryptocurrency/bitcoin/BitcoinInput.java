@@ -62,35 +62,31 @@ public class BitcoinInput implements Input {
 
     @Override
     public byte[] build(byte[] data) {
-        int position = 0;
-
         // Get the previous transaction hash
-        previousTransactionHash = Arrays.copyOfRange(data, position, position + previousTransactionHashLengthInBytes);
-        position += previousTransactionHashLengthInBytes;
+        previousTransactionHash = Arrays.copyOfRange(data, 0, previousTransactionHashLengthInBytes);
+        data = Arrays.copyOfRange(data, previousTransactionHashLengthInBytes, data.length);
 
         // Get the previous output index
-        previousOutputIndexBytes = Arrays.copyOfRange(data, position, position + previousOutputIndexLengthInBytes);
-        position += previousOutputIndexLengthInBytes;
+        previousOutputIndexBytes = Arrays.copyOfRange(data, 0, previousOutputIndexLengthInBytes);
+        data = Arrays.copyOfRange(data, previousOutputIndexLengthInBytes, data.length);
         previousOutputIndex = EndiannessHelper.BytesToInt(previousOutputIndexBytes);
 
         // Get the input script length
         VariableLengthInteger temp = new VariableLengthInteger();
-        byte[] tempBytes = temp.build(data);
+        data = temp.build(data);
         inputScriptLengthBytes = temp.getValueBytes();
         inputScriptLength = temp.getValue();
 
         // Get the input script
         inputScript = scriptFactory.createInputScript(transactionVersionNumber, inputScriptLength, isCoinbase());
-        tempBytes = inputScript.build(tempBytes);
+        data = inputScript.build(data);
 
-        // Start position over as we're working with the temporary array
-        position = 0;
-
-        sequenceNumberBytes = Arrays.copyOfRange(tempBytes, position, position + sequenceNumberLengthInBytes);
-        position += sequenceNumberLengthInBytes;
+        // Get the sequence number
+        sequenceNumberBytes = Arrays.copyOfRange(data, 0, sequenceNumberLengthInBytes);
+        data = Arrays.copyOfRange(data, sequenceNumberLengthInBytes, data.length);
         sequenceNumber = EndiannessHelper.BytesToInt(sequenceNumberBytes);
 
-        return Arrays.copyOfRange(tempBytes, position, tempBytes.length);
+        return data;
     }
 
     @Override
