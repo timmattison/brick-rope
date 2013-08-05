@@ -51,8 +51,8 @@ public abstract class StandardBlock implements Block {
         // Are there bytes available?
         while ((tempData != null) && (tempData.length > 0)) {
             // Yes, create and parse the block
-            Transaction transaction = transactionFactory.createTransaction(transactionNumber);
-            tempData = transaction.build(Arrays.copyOf(tempData, tempData.length));
+            Transaction transaction = transactionFactory.createTransaction(transactionNumber++);
+            tempData = transaction.build(tempData);
 
             transactions.add(transaction);
         }
