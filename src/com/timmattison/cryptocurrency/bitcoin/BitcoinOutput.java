@@ -40,11 +40,13 @@ public class BitcoinOutput implements Output {
     private OutputScript outputScript;
 
     // These values are not in the output
-    int outputNumber;
+    private final int transactionVersionNumber;
+    private final int outputNumber;
     private OutputScript script;
 
-    public BitcoinOutput(ScriptFactory scriptFactory, int outputNumber) {
+    public BitcoinOutput(ScriptFactory scriptFactory, int transactionVersionNumber, int outputNumber) {
         this.scriptFactory = scriptFactory;
+        this.transactionVersionNumber = transactionVersionNumber;
         this.outputNumber = outputNumber;
     }
 
@@ -64,7 +66,7 @@ public class BitcoinOutput implements Output {
         outputScriptLength = temp.getValue();
 
         // Get the output script
-        outputScript = scriptFactory.createOutputScript(outputScriptLength);
+        outputScript = scriptFactory.createOutputScript(transactionVersionNumber, outputScriptLength);
         return outputScript.build(tempData);
     }
 }

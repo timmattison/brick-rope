@@ -23,7 +23,8 @@ public class BitcoinInput implements Input {
     private final ScriptFactory scriptFactory;
 
     // These are not part of the script
-    private int inputNumber;
+    private final int transactionVersionNumber;
+    private final int inputNumber;
 
     /**
      * Previous transaction hash
@@ -53,8 +54,9 @@ public class BitcoinInput implements Input {
     private long sequenceNumber;
     private byte[] sequenceNumberBytes;
 
-    public BitcoinInput(ScriptFactory scriptFactory, int inputNumber) {
+    public BitcoinInput(ScriptFactory scriptFactory, int transactionVersionNumber, int inputNumber) {
         this.scriptFactory = scriptFactory;
+        this.transactionVersionNumber = transactionVersionNumber;
         this.inputNumber = inputNumber;
     }
 
@@ -78,7 +80,7 @@ public class BitcoinInput implements Input {
         inputScriptLength = temp.getValue();
 
         // Get the input script
-        inputScript = scriptFactory.createInputScript(inputScriptLength, isCoinbase());
+        inputScript = scriptFactory.createInputScript(transactionVersionNumber, inputScriptLength, isCoinbase());
         tempBytes = inputScript.build(tempBytes);
 
         // Start position over as we're working with the temporary array

@@ -25,12 +25,12 @@ public class BitcoinScriptFactory implements ScriptFactory {
     }
 
     @Override
-    public InputScript createInputScript(long scriptLength, boolean coinbase) {
-        return (InputScript) new BitcoinInputScript(bitcoinWordFactory, scriptLength, coinbase);
+    public InputScript createInputScript(int transactionVersionNumber, long scriptLength, boolean coinbase) {
+        return (InputScript) new BitcoinInputScript(bitcoinWordFactory, transactionVersionNumber, scriptLength, coinbase);
     }
 
     @Override
-    public OutputScript createOutputScript(long scriptLength) {
-        return (OutputScript) new BitcoinOutputScript(bitcoinWordFactory, scriptLength);
+    public OutputScript createOutputScript(int transactionVersionNumber, long scriptLength) {
+        return (OutputScript) new BitcoinOutputScript(bitcoinWordFactory, transactionVersionNumber, scriptLength);
     }
 }

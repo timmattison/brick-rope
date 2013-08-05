@@ -30,8 +30,9 @@ public class BitcoinInputScript extends BitcoinScript implements InputScript {
      * @param lengthInBytes
      * @param coinbase
      */
-    public BitcoinInputScript(BitcoinWordFactory wordFactory, long lengthInBytes, boolean coinbase) {
+    public BitcoinInputScript(BitcoinWordFactory wordFactory, int transactionVersionNumber, long lengthInBytes, boolean coinbase) {
         this.wordFactory = wordFactory;
+        this.transactionVersionNumber = transactionVersionNumber;
 
         this.lengthInBytes = lengthInBytes;
         this.coinbase = coinbase;
@@ -42,7 +43,6 @@ public class BitcoinInputScript extends BitcoinScript implements InputScript {
         return coinbase;
     }
 
-
     @Override
     protected void validateLength() {
         // Is the length valid?
@@ -50,12 +50,12 @@ public class BitcoinInputScript extends BitcoinScript implements InputScript {
             // Possibly not
 
             // Is this a version 2 script?
-            if (versionNumber == 2) {
+            if (transactionVersionNumber == 2) {
                 // Yes, no version 2 script can be zero bytes
-                throw new UnsupportedOperationException("Version 2 scripts cannot be zero bytes long, [coinbase? " + (coinbase ? "Yes" : "No") + "] [version: " + versionNumber + "]");
+                throw new UnsupportedOperationException("Version 2 scripts cannot be zero bytes long, [coinbase? " + (coinbase ? "Yes" : "No") + "] [version: " + transactionVersionNumber + "]");
             }
             // Is this a version 1 coinbase?
-            else if ((versionNumber == 1) && (!coinbase)) {
+            else if ((transactionVersionNumber == 1) && (!coinbase)) {
                 // No, no version 1 non-coinbase script can be zero bytes
                 throw new UnsupportedOperationException("Version 1 scripts cannot be zero bytes long unless they are the coinbase");
             }
@@ -67,7 +67,7 @@ public class BitcoinInputScript extends BitcoinScript implements InputScript {
         // Is this the coinbase?
         if (coinbase) {
             // Yes, is this a version 2 block?
-            if (versionNumber == 2) {
+            if (transactionVersionNumber == 2) {
                 // Yes, process the additional fields
 
                 int scriptBytesPosition = 0;
@@ -82,11 +82,11 @@ public class BitcoinInputScript extends BitcoinScript implements InputScript {
 
                 // Convert the block height bytes into a number
                 blockHeight = (int) EndiannessHelper.BytesToValue(blockHeightBytes);
-            } else if (versionNumber == 1) {
+            } else if (transactionVersionNumber == 1) {
                 // No, this is a version 1 block, do nothing
             } else {
                 // Unknown version number
-                throw new UnsupportedOperationException("Expected version 1 or version 2, saw " + versionNumber);
+                throw new UnsupportedOperationException("Expected version 1 or version 2, saw " + transactionVersionNumber);
             }
         }
     }

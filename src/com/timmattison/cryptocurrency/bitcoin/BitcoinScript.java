@@ -28,7 +28,7 @@ public abstract class BitcoinScript implements Script {
     protected List<Word> words;
     protected WordFactory wordFactory;
     // Raw bytes, in order they were pulled from the block chain
-    protected int versionNumber;
+    protected int transactionVersionNumber;
     /**
      * Script bytes
      */

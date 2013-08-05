@@ -23,7 +23,7 @@ public class BitcoinOutputFactory implements OutputFactory {
     }
 
     @Override
-    public Output createOutput(int outputNumber) {
-        return new BitcoinOutput(scriptFactory, outputNumber);
+    public Output createOutput(int transactionVersionNumber, int outputNumber) {
+        return new BitcoinOutput(scriptFactory, transactionVersionNumber, outputNumber);
     }
 }

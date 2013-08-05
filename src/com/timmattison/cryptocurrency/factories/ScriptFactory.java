@@ -13,7 +13,7 @@ import java.io.InputStream;
  * To change this template use File | Settings | File Templates.
  */
 public interface ScriptFactory {
-    InputScript createInputScript(long scriptLength, boolean coinbase);
+    InputScript createInputScript(int transactionVersionNumber, long scriptLength, boolean coinbase);
 
-    OutputScript createOutputScript(long scriptLength);
+    OutputScript createOutputScript(int transactionVersionNumber, long scriptLength);
 }

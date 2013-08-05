@@ -87,7 +87,7 @@ public class BitcoinTransaction implements Transaction {
         // Get the inputs
         for (int inputLoop = 0; inputLoop < inCounter; inputLoop++) {
             // Input 0 is the coinbase, all other inputs are not
-            Input input = inputFactory.createInput(inputLoop);
+            Input input = inputFactory.createInput(versionNumber, inputLoop);
             data = input.build(data);
             addInput(input);
         }
@@ -100,7 +100,7 @@ public class BitcoinTransaction implements Transaction {
 
         // Get the outputs
         for (int outputLoop = 0; outputLoop < outCounter; outputLoop++) {
-            Output output = outputFactory.createOutput(outputLoop);
+            Output output = outputFactory.createOutput(versionNumber, outputLoop);
             data = output.build(data);
             addOutput(output);
         }

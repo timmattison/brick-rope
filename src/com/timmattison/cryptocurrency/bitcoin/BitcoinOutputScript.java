@@ -26,11 +26,11 @@ public class BitcoinOutputScript extends BitcoinScript implements OutputScript {
      *
      * @param lengthInBytes
      */
-    public BitcoinOutputScript(BitcoinWordFactory wordFactory, long lengthInBytes) {
+    public BitcoinOutputScript(BitcoinWordFactory wordFactory, int transactionVersionNumber, long lengthInBytes) {
         this.wordFactory = wordFactory;
+        this.transactionVersionNumber = transactionVersionNumber;
 
         this.lengthInBytes = lengthInBytes;
-        this.versionNumber = 1;
     }
 
     @Override
