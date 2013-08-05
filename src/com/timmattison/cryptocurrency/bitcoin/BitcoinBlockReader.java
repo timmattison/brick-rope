@@ -56,6 +56,12 @@ public class BitcoinBlockReader implements BlockReader {
         byte[] blockSizeBytes = new byte[blockSizeLengthInBytes];
         bytesRead = inputStream.read(blockSizeBytes, 0, blockSizeLengthInBytes);
 
+        // Did we get the right number of bytes?
+        if(bytesRead != blockSizeLengthInBytes) {
+            // No, don't be clever and just throw an exception
+            throwExceptionWhenIncorrectLengthRead("the block size", blockSizeLengthInBytes, bytesRead);
+        }
+
         // Convert the block size to a value we can use
         int blockSize = EndiannessHelper.BytesToInt(blockSizeBytes);
 
@@ -66,16 +72,12 @@ public class BitcoinBlockReader implements BlockReader {
         }
 
         // Read the rest of the block data
-        byte[] blockData = new byte[blockSize + bytesRequired];
-        bytesRead = inputStream.read(blockData, bytesRequired, blockSize);
+        byte[] blockData = new byte[blockSize];
+        bytesRead = inputStream.read(blockData, 0, blockSize);
 
         if(blockSize != bytesRead) {
             throwExceptionWhenIncorrectLengthRead("the block data", magicNumberLengthInBytes, bytesRead);
         }
-
-        // Everything looks good, now we can put everything together and return it
-        System.arraycopy(requiredMagicNumberBytes, 0, blockData, 0, magicNumberLengthInBytes);
-        System.arraycopy(blockSizeBytes, 0, blockData, magicNumberLengthInBytes, blockSizeLengthInBytes);
 
         return blockData;
     }
