@@ -53,7 +53,6 @@ public class StateMachine {
     }
 
     public byte[] popByteArray() {
-
         Object item = stack.pop();
 
         // TODO - Remove this Byte[] junk
