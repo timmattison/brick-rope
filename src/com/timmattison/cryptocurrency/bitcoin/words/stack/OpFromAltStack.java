@@ -10,16 +10,28 @@ import com.timmattison.bitcoin.test.script.Word;
  * Time: 11:57 AM
  * To change this template use File | Settings | File Templates.
  */
-public class OpFromAltStack extends Word {
+public class OpFromAltStack extends StackOp {
     private static final String word = "OP_FROMALTSTACK";
     private static final Byte opcode = (byte) 0x6c;
 
-    public OpFromAltStack() {
-        super(word, opcode, false);
+    @Override
+    public void execute(com.timmattison.cryptocurrency.bitcoin.StateMachine stateMachine) {
+        throw new UnsupportedOperationException();
     }
 
     @Override
-    public void execute(StateMachine stateMachine) {
+    public Byte getOpcode() {
+        return opcode;
+    }
+
+    @Override
+    public String getName() {
+        return word;
+    }
+
+    @Override
+    public byte[] build(byte[] data) {
+        //To change body of implemented methods use File | Settings | File Templates.
         throw new UnsupportedOperationException();
     }
 }

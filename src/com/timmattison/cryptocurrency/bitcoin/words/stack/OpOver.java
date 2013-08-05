@@ -1,7 +1,6 @@
 package com.timmattison.cryptocurrency.bitcoin.words.stack;
 
-import com.timmattison.bitcoin.test.script.StateMachine;
-import com.timmattison.bitcoin.test.script.Word;
+import com.timmattison.cryptocurrency.bitcoin.StateMachine;
 
 /**
  * Created with IntelliJ IDEA.
@@ -10,16 +9,28 @@ import com.timmattison.bitcoin.test.script.Word;
  * Time: 11:57 AM
  * To change this template use File | Settings | File Templates.
  */
-public class OpOver extends Word {
+public class OpOver extends StackOp {
     private static final String word = "OP_OVER";
     private static final Byte opcode = (byte) 0x78;
 
-    public OpOver() {
-        super(word, opcode, false);
+    @Override
+    public void execute(StateMachine stateMachine) {
+        throw new UnsupportedOperationException();
     }
 
     @Override
-    public void execute(StateMachine stateMachine) {
+    public Byte getOpcode() {
+        return opcode;
+    }
+
+    @Override
+    public String getName() {
+        return word;
+    }
+
+    @Override
+    public byte[] build(byte[] data) {
+        //To change body of implemented methods use File | Settings | File Templates.
         throw new UnsupportedOperationException();
     }
 }
