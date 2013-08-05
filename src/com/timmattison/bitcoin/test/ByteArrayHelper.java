@@ -110,4 +110,15 @@ public class ByteArrayHelper {
 
         return stringBuilder.toString();
     }
+
+    // TODO - Remove this Byte[] junk
+    public static byte[] convertByteArray(Byte[] input) {
+        Byte[] array = (Byte[]) input;
+        byte[] bytes = new byte[array.length];
+        for (int loop = 0; loop < array.length; loop++) {
+            bytes[loop] = array[loop];
+        }
+
+        return bytes;
+    }
 }

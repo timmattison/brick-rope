@@ -10,16 +10,17 @@ import com.timmattison.bitcoin.test.script.Word;
  * Time: 11:57 AM
  * To change this template use File | Settings | File Templates.
  */
-public class OpXor extends Word {
+public class OpXor extends BitwiseOp {
     private static final String word = "OP_XOR";
     private static final Byte opcode = (byte) 0x86;
 
-    public OpXor() {
-        super(word, opcode, false);
+    @Override
+    public Byte getOpcode() {
+        return opcode;
     }
 
     @Override
-    public void execute(StateMachine stateMachine) {
-        throw new UnsupportedOperationException();
+    public String getName() {
+        return word;
     }
 }
