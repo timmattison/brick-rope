@@ -78,8 +78,8 @@ public class BitcoinTransaction implements Transaction {
         }
 
         // Get the input counter
-        VariableLengthInteger temp = new VariableLengthInteger(data);
-        byte[] tempData = temp.build();
+        VariableLengthInteger temp = new VariableLengthInteger();
+        byte[] tempData = temp.build(data);
         inCounterBytes = temp.getValueBytes();
         inCounter = temp.getValue();
 
@@ -93,8 +93,8 @@ public class BitcoinTransaction implements Transaction {
         }
 
         // Get the output counter
-        temp = new VariableLengthInteger(tempData);
-        tempData = temp.build();
+        temp = new VariableLengthInteger();
+        tempData = temp.build(tempData);
         outCounterBytes = temp.getValueBytes();
         outCounter = temp.getValue();
 

@@ -74,8 +74,8 @@ public class BitcoinInput implements Input {
         previousOutputIndex = EndiannessHelper.BytesToInt(previousOutputIndexBytes);
 
         // Get the input script length
-        VariableLengthInteger temp = new VariableLengthInteger(data);
-        byte[] tempBytes = temp.build();
+        VariableLengthInteger temp = new VariableLengthInteger();
+        byte[] tempBytes = temp.build(data);
         inputScriptLengthBytes = temp.getValueBytes();
         inputScriptLength = temp.getValue();
 

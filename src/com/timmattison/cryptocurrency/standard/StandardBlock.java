@@ -21,6 +21,8 @@ import java.util.List;
 public abstract class StandardBlock implements Block {
     private final BlockHeaderFactory blockHeaderFactory;
     private final TransactionFactory transactionFactory;
+    private byte[] transactionCountBytes;
+    private long transactionCount;
     private List<Transaction> transactions;
     private BlockHeader blockHeader = null;
 
@@ -45,16 +47,23 @@ public abstract class StandardBlock implements Block {
         blockHeader = blockHeaderFactory.createBlockHeader();
         byte[] tempData = blockHeader.build(data);
 
+        // Get the transaction count and return the remaining bytes back
+        VariableLengthInteger temp = new VariableLengthInteger();
+        tempData = temp.build(tempData);
+        transactionCountBytes = temp.getValueBytes();
+        transactionCount = (int) temp.getValue();
+
         int transactionNumber = 0;
         transactions = new ArrayList<Transaction>();
 
         // Are there bytes available?
-        while ((tempData != null) && (tempData.length > 0)) {
+        while (transactionNumber < transactionCount) {
             // Yes, create and parse the block
-            Transaction transaction = transactionFactory.createTransaction(transactionNumber++);
+            Transaction transaction = transactionFactory.createTransaction(transactionNumber);
             tempData = transaction.build(tempData);
 
             transactions.add(transaction);
+            transactionNumber++;
         }
 
         return tempData;

@@ -58,8 +58,8 @@ public class BitcoinOutput implements Output {
         value = EndiannessHelper.BytesToLong(valueBytes);
 
         // Get the output script length
-        VariableLengthInteger temp = new VariableLengthInteger(data);
-        byte[] tempData = temp.build();
+        VariableLengthInteger temp = new VariableLengthInteger();
+        byte[] tempData = temp.build(data);
         outputScriptLengthBytes = temp.getValueBytes();
         outputScriptLength = temp.getValue();
 

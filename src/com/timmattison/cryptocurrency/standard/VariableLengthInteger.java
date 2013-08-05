@@ -1,6 +1,7 @@
 package com.timmattison.cryptocurrency.standard;
 
 import com.timmattison.bitcoin.test.EndiannessHelper;
+import com.timmattison.cryptocurrency.interfaces.Buildable;
 
 import java.util.Arrays;
 
@@ -11,11 +12,10 @@ import java.util.Arrays;
  * Time: 10:22 AM
  * To change this template use File | Settings | File Templates.
  */
-public class VariableLengthInteger {
+public class VariableLengthInteger implements Buildable {
     private static final int header16BitInteger = 0xfd;
     private static final int header32BitInteger = 0xfe;
     private static final int header64BitInteger = 0xff;
-    private final byte[] data;
 
     /**
      * Value
@@ -23,11 +23,10 @@ public class VariableLengthInteger {
     long value;
     private byte[] valueBytes;
 
-    public VariableLengthInteger(byte[] data) {
-        this.data = data;
+    public VariableLengthInteger() {
     }
 
-    public byte[] build() {
+    public byte[] build(byte[] data) {
         int position = 0;
 
         // Get the first byte
