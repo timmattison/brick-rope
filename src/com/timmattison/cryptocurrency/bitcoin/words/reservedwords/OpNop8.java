@@ -1,8 +1,5 @@
 package com.timmattison.cryptocurrency.bitcoin.words.reservedwords;
 
-import com.timmattison.bitcoin.test.script.StateMachine;
-import com.timmattison.bitcoin.test.script.Word;
-
 /**
  * Created with IntelliJ IDEA.
  * User: timmattison
@@ -10,16 +7,22 @@ import com.timmattison.bitcoin.test.script.Word;
  * Time: 11:57 AM
  * To change this template use File | Settings | File Templates.
  */
-public class OpNop8 extends Word {
+public class OpNop8 extends ReservedWordOp {
     private static final String word = "OP_NOP8";
     private static final Byte opcode = (byte) 0xb7;
 
-    public OpNop8() {
-        super(word, opcode, false);
+    @Override
+    public void execute(com.timmattison.cryptocurrency.bitcoin.StateMachine stateMachine) {
+        throw new UnsupportedOperationException();
     }
 
     @Override
-    public void execute(StateMachine stateMachine) {
-        throw new UnsupportedOperationException();
+    public Byte getOpcode() {
+        return opcode;
+    }
+
+    @Override
+    public String getName() {
+        return word;
     }
 }
