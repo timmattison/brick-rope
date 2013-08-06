@@ -1,10 +1,6 @@
 package com.timmattison.cryptocurrency.bitcoin.words.crypto;
 
 import com.timmattison.bitcoin.test.script.Constants;
-import com.timmattison.bitcoin.test.script.StateMachine;
-import com.timmattison.bitcoin.test.script.Word;
-import gnu.crypto.hash.HashFactory;
-import gnu.crypto.hash.IMessageDigest;
 
 /**
  * Created with IntelliJ IDEA.
@@ -14,15 +10,26 @@ import gnu.crypto.hash.IMessageDigest;
  * <p/>
  * Hashes the value on the top of the stack with RIPEMD-160
  */
-public class OpRipEmd160 extends Word {
+public class OpRipEmd160 extends CryptoOp {
     private static final String algorithm = Constants.RIPEMD160_ALGORITHM;
     private static final String word = "OP_RIPEMD160";
     private static final Byte opcode = (byte) 0xa6;
 
-    public OpRipEmd160() {
-        super(word, opcode, false);
+    @Override
+    public void execute(com.timmattison.cryptocurrency.bitcoin.StateMachine stateMachine) {
+        throw new UnsupportedOperationException();
     }
 
+    @Override
+    public Byte getOpcode() {
+        return opcode;
+    }
+
+    @Override
+    public String getName() {
+        return word;
+    }
+    /*
     @Override
     public void execute(StateMachine stateMachine) {
         byte[] bytesToHash = stateMachine.popByteArray();
@@ -31,4 +38,5 @@ public class OpRipEmd160 extends Word {
         md.update(bytesToHash, 0, bytesToHash.length);
         stateMachine.push(md.digest());
     }
+    */
 }

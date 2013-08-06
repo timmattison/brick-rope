@@ -1,7 +1,6 @@
 package com.timmattison.cryptocurrency.bitcoin.words.crypto;
 
-import com.timmattison.bitcoin.test.script.StateMachine;
-import com.timmattison.bitcoin.test.script.Word;
+import com.timmattison.cryptocurrency.bitcoin.StateMachine;
 
 /**
  * Created with IntelliJ IDEA.
@@ -10,21 +9,23 @@ import com.timmattison.bitcoin.test.script.Word;
  * Time: 11:57 AM
  * To change this template use File | Settings | File Templates.
  */
-public class OpCodeSeparator extends Word {
+public class OpCodeSeparator extends CryptoOp {
     private static final String word = "OP_CODESEPARATOR";
     private static final Byte opcode = (byte) 0xab;
     private int position;
 
-    public OpCodeSeparator() {
-        super(word, opcode, false);
-    }
-
-    public void setPosition(int value) {
-        this.position = value;
+    @Override
+    public void execute(StateMachine stateMachine) {
+        throw new UnsupportedOperationException();
     }
 
     @Override
-    public void execute(StateMachine stateMachine) {
-        stateMachine.setCodeSeparatorPosition();
+    public Byte getOpcode() {
+        return opcode;
+    }
+
+    @Override
+    public String getName() {
+        return word;
     }
 }

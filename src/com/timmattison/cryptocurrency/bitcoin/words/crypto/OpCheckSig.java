@@ -1,15 +1,8 @@
 package com.timmattison.cryptocurrency.bitcoin.words.crypto;
 
-import com.timmattison.bitcoin.test.*;
-import com.timmattison.bitcoin.test.script.HashType;
-import com.timmattison.bitcoin.test.script.ScriptHelper;
-import com.timmattison.bitcoin.test.script.StateMachine;
-import com.timmattison.bitcoin.test.script.Word;
-
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.util.Arrays;
+import com.timmattison.bitcoin.test.Script;
+import com.timmattison.cryptocurrency.bitcoin.StateMachine;
+import com.timmattison.cryptocurrency.interfaces.Transaction;
 
 /**
  * Created with IntelliJ IDEA.
@@ -18,7 +11,7 @@ import java.util.Arrays;
  * Time: 11:57 AM
  * To change this template use File | Settings | File Templates.
  */
-public class OpCheckSig extends Word {
+public class OpCheckSig extends CryptoOp {
     private static final String word = "OP_CHECKSIG";
     private static final Byte opcode = (byte) 0xac;
     private byte[] publicKey;
@@ -28,8 +21,14 @@ public class OpCheckSig extends Word {
     private Script subscript;
     private Transaction txCopy;
 
-    public OpCheckSig() {
-        super(word, opcode, false);
+    @Override
+    public Byte getOpcode() {
+        return opcode;
+    }
+
+    @Override
+    public String getName() {
+        return word;
     }
 
     // From the wiki:
@@ -59,6 +58,10 @@ public class OpCheckSig extends Word {
 
     @Override
     public void execute(StateMachine stateMachine) {
+        throw new UnsupportedOperationException("Not implemented yet");
+    }
+
+    /*
         this.stateMachine = stateMachine;
 
         try {
@@ -96,6 +99,7 @@ public class OpCheckSig extends Word {
     /**
      * The public key and the signature are popped from the stack, in that order.  Hash type is set up.
      */
+    /*
     private void step1() {
         // Pop the public key from the stack
         publicKey = (byte[]) stateMachine.pop();
@@ -131,6 +135,7 @@ public class OpCheckSig extends Word {
     /**
      * The subscript is created
      */
+    /*
     private void step2() {
         int codeSeparatorPosition = stateMachine.getCodeSeparatorPosition();
         byte[] originalScriptBytes = stateMachine.getScriptBytes();
@@ -151,6 +156,7 @@ public class OpCheckSig extends Word {
      * The sig is deleted from the subscript
      * TODO - This can't be done with search and replace
      */
+    /*
     private void step3() {
         int index = ByteArrayHelper.indexOf(signature, subscriptBytes);
 
@@ -185,6 +191,7 @@ public class OpCheckSig extends Word {
     /**
      * Remove all OP_CODESEPARATORS from the subscript
      */
+    /*
     private void step4() throws IOException {
         subscript = new Script(new ByteArrayInputStream(subscriptBytes), subscriptBytes.length, false);
         subscript.removeCodeSeparators();
@@ -193,6 +200,7 @@ public class OpCheckSig extends Word {
     /**
      * Make a copy of the current transaction
      */
+   /*
     private void step6() throws IOException {
         // Make a copy of the transaction
         txCopy = Transaction.copyTransaction(stateMachine.getCurrentTransaction());
@@ -201,6 +209,7 @@ public class OpCheckSig extends Word {
     /**
      * Set all inputs to empty scripts
      */
+   /*
     private void step7() throws IllegalAccessException, IOException, InstantiationException {
         for(Input input : txCopy.getInputs()) {
             input.setScript(ScriptHelper.getEmptyScriptBytes());
@@ -210,7 +219,9 @@ public class OpCheckSig extends Word {
     /**
      * Set the current transaction input in txCopy to our subscript
      */
+   /*
     private void step8() throws IllegalAccessException, IOException, InstantiationException {
         txCopy.getInput(stateMachine.getReferencedOutputIndex()).setScript(subscriptBytes);
     }
+    */
 }
