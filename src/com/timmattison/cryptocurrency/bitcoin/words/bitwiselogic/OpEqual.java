@@ -63,6 +63,7 @@ public class OpEqual extends BitwiseOp {
         }
 
         // Push the result onto the stack
-        stateMachine.push(result);
+        int intResult = result ? 1 : 0;
+        stateMachine.push(intResult);
     }
 }

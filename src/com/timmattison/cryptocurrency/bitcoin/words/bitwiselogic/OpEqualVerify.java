@@ -1,7 +1,7 @@
 package com.timmattison.cryptocurrency.bitcoin.words.bitwiselogic;
 
-import com.timmattison.bitcoin.test.script.StateMachine;
-import com.timmattison.bitcoin.test.script.Word;
+import com.timmattison.cryptocurrency.bitcoin.StateMachine;
+import com.timmattison.cryptocurrency.bitcoin.Word;
 
 /**
  * Created with IntelliJ IDEA.
@@ -22,5 +22,14 @@ public class OpEqualVerify extends BitwiseOp {
     @Override
     public String getName() {
         return word;
+    }
+
+    @Override
+    public void execute(StateMachine stateMachine) {
+        Word equal = new OpEqual();
+        Word verify = new OpEqual();
+
+        equal.execute(stateMachine);
+        verify.execute(stateMachine);
     }
 }
