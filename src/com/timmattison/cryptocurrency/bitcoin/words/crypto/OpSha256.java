@@ -23,7 +23,7 @@ public class OpSha256 extends CryptoOp {
     public void execute(StateMachine stateMachine) {
         Object value = stateMachine.pop();
 
-        if(!(value instanceof byte[])) {
+        if (!(value instanceof byte[])) {
             throw new UnsupportedOperationException("Only byte arrays can be hashed");
         }
 
