@@ -18,7 +18,7 @@ public abstract class PseudoWordOp implements Word {
 
     @Override
     public final byte[] build(byte[] data) {
-        // Flow control operations manipulate the stack but do not consume any bytes
+        // Pseudo-word operations manipulate the stack but do not consume any bytes
         return data;
     }
 
