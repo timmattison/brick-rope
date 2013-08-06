@@ -3,11 +3,7 @@ package com.timmattison.cryptocurrency.bitcoin.words.stack;
 import com.timmattison.cryptocurrency.bitcoin.StateMachine;
 
 /**
- * Created with IntelliJ IDEA.
- * User: timmattison
- * Date: 4/11/13
- * Time: 11:57 AM
- * To change this template use File | Settings | File Templates.
+ * Duplicates the top stack item
  */
 public class OpDup extends StackOp {
     private static final String word = "OP_DUP";
@@ -15,7 +11,9 @@ public class OpDup extends StackOp {
 
     @Override
     public void execute(StateMachine stateMachine) {
-        throw new UnsupportedOperationException();
+        Object currentTopOfStack = stateMachine.pop();
+        stateMachine.push(currentTopOfStack);
+        stateMachine.push(currentTopOfStack);
     }
 
     @Override
@@ -30,7 +28,6 @@ public class OpDup extends StackOp {
 
     @Override
     public byte[] build(byte[] data) {
-        //To change body of implemented methods use File | Settings | File Templates.
-        throw new UnsupportedOperationException();
+        return data;
     }
 }
