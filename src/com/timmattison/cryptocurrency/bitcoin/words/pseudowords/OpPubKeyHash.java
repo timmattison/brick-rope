@@ -1,7 +1,6 @@
 package com.timmattison.cryptocurrency.bitcoin.words.pseudowords;
 
-import com.timmattison.bitcoin.test.script.StateMachine;
-import com.timmattison.bitcoin.test.script.Word;
+import com.timmattison.cryptocurrency.bitcoin.StateMachine;
 
 /**
  * Created with IntelliJ IDEA.
@@ -10,16 +9,22 @@ import com.timmattison.bitcoin.test.script.Word;
  * Time: 11:57 AM
  * To change this template use File | Settings | File Templates.
  */
-public class OpPubKeyHash extends Word {
+public class OpPubKeyHash extends PseudoWordOp {
     private static final String word = "OP_PUBKEYHASH";
     private static final Byte opcode = (byte) 0xfd;
-
-    public OpPubKeyHash() {
-        super(word, opcode, false);
-    }
 
     @Override
     public void execute(StateMachine stateMachine) {
         throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public Byte getOpcode() {
+        return opcode;
+    }
+
+    @Override
+    public String getName() {
+        return word;
     }
 }
