@@ -3,6 +3,9 @@ package com.timmattison.cryptocurrency.bitcoin.words.crypto;
 import com.timmattison.bitcoin.test.script.Constants;
 import com.timmattison.cryptocurrency.bitcoin.StateMachine;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+
 /**
  * Created with IntelliJ IDEA.
  * User: timmattison
@@ -18,7 +21,20 @@ public class OpSha256 extends CryptoOp {
 
     @Override
     public void execute(StateMachine stateMachine) {
-        throw new UnsupportedOperationException();
+        Object value = stateMachine.pop();
+
+        if(!(value instanceof byte[])) {
+            throw new UnsupportedOperationException("Only byte arrays can be hashed");
+        }
+
+        byte[] byteArrayValue = (byte[]) value;
+
+        try {
+            MessageDigest messageDigest = MessageDigest.getInstance(algorithm);
+            stateMachine.push(messageDigest.digest(byteArrayValue));
+        } catch (NoSuchAlgorithmException e) {
+            throw new UnsupportedOperationException(e);
+        }
     }
 
     @Override
