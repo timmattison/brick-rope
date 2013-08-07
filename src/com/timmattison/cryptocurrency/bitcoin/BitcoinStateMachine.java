@@ -15,6 +15,7 @@ import java.util.Stack;
  * To change this template use File | Settings | File Templates.
  */
 public class BitcoinStateMachine implements StateMachine {
+    private static final int MAX_WORD_LIST_LENGTH = 9999;
     private final WordFactory wordFactory;
     Stack<Object> stack;
 
@@ -49,6 +50,7 @@ public class BitcoinStateMachine implements StateMachine {
     @Override
     public void execute(Script script) {
         byte[] scriptData = Arrays.copyOf(script.getBytes(), script.getBytes().length);
+        int wordCounter = 0;
 
         reset();
 
@@ -57,6 +59,12 @@ public class BitcoinStateMachine implements StateMachine {
         }
 
         do {
+            // Are there too many words?
+            if (wordCounter > MAX_WORD_LIST_LENGTH) {
+                // Yes, throw an exception
+                throw new UnsupportedOperationException("The maximum number of words in a script is " + MAX_WORD_LIST_LENGTH + ", saw " + wordCounter++ + " word(s)");
+            }
+
             // Build the next word
             byte currentByte = scriptData[0];
 
@@ -68,12 +76,6 @@ public class BitcoinStateMachine implements StateMachine {
             currentWord.execute(this);
         } while ((scriptData != null) && (scriptData.length > 0));
 
-
-        // Are there too many words?
-        //if (words.size() > MAX_WORD_LIST_LENGTH) {
-        // Yes, throw an exception
-        //    throw new UnsupportedOperationException("The maximum number of words in a script is " + MAX_WORD_LIST_LENGTH + ", saw " + words.size() + " word(s)");
-        // }
 
         // Pop the top value of the stack
         Object topStackValue = pop();
