@@ -30,7 +30,7 @@ public class Bitcoin {
         Block ninthBlock = null;
         Block oneHundredAndSeventythBlock = null;
 
-        for (int loop = 0; loop < 171; loop++) {
+        for (int loop = 0; loop < 99999; loop++) {
             Block block = blockChain.next();
 
             if (loop == 9) {

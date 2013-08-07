@@ -9,4 +9,6 @@ package com.timmattison.cryptocurrency.interfaces;
  */
 public interface BlockHeader extends Buildable {
     byte[] hash();
+
+    byte[] getPreviousBlockHash();
 }

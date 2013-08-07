@@ -108,18 +108,25 @@ public class BitcoinBlockHeader implements BlockHeader {
     @Override
     public byte[] hash() {
         if(hashBytes == null) {
-            MessageDigest messageDigest = messageDigestFactory.createMessageDigest();
+            MessageDigest messageDigest1 = messageDigestFactory.createMessageDigest();
 
-            messageDigest.update(versionBytes);
-            messageDigest.update(prevBlock);
-            messageDigest.update(merkleRoot);
-            messageDigest.update(timestampBytes);
-            messageDigest.update(bitsBytes);
-            messageDigest.update(nonceBytes);
+            messageDigest1.update(versionBytes);
+            messageDigest1.update(prevBlock);
+            messageDigest1.update(merkleRoot);
+            messageDigest1.update(timestampBytes);
+            messageDigest1.update(bitsBytes);
+            messageDigest1.update(nonceBytes);
 
-            hashBytes = messageDigest.digest();
+            MessageDigest messageDigest2 = messageDigestFactory.createMessageDigest();
+
+            hashBytes = messageDigest2.digest(messageDigest1.digest());
         }
 
         return hashBytes;
+    }
+
+    @Override
+    public byte[] getPreviousBlockHash() {
+        return prevBlock;
     }
 }
