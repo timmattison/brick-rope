@@ -40,7 +40,7 @@ public class BitcoinInputScript extends BitcoinScript implements InputScript {
 
     @Override
     protected boolean isExecutable() {
-        return coinbase;
+        return !coinbase;
     }
 
     @Override
