@@ -1,5 +1,6 @@
 package com.timmattison.cryptocurrency.bitcoin.words.crypto;
 
+import com.timmattison.cryptocurrency.bitcoin.StateMachine;
 import org.bouncycastle.crypto.digests.RIPEMD160Digest;
 
 /**
@@ -15,7 +16,7 @@ public class OpRipEmd160 extends CryptoOp {
     private static final Byte opcode = (byte) 0xa6;
 
     @Override
-    public void execute(com.timmattison.cryptocurrency.bitcoin.StateMachine stateMachine) {
+    public void execute(StateMachine stateMachine) {
         Object value = stateMachine.pop();
 
         if (!(value instanceof byte[])) {
