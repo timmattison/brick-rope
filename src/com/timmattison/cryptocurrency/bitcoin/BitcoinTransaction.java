@@ -1,5 +1,6 @@
 package com.timmattison.cryptocurrency.bitcoin;
 
+import com.timmattison.cryptocurrency.bitcoin.factories.HasherFactory;
 import com.timmattison.cryptocurrency.factories.InputFactory;
 import com.timmattison.cryptocurrency.factories.OutputFactory;
 import com.timmattison.cryptocurrency.helpers.EndiannessHelper;
@@ -27,8 +28,8 @@ public class BitcoinTransaction implements Transaction {
     private final int transactionCounter;
     private final InputFactory inputFactory;
     private final OutputFactory outputFactory;
-
-   /**
+    private final HasherFactory hasherFactory;
+    /**
      * Version number
      */
     private int versionNumber;
@@ -57,9 +58,11 @@ public class BitcoinTransaction implements Transaction {
     private int lockTime;
     private byte[] lockTimeBytes;
 
-    public BitcoinTransaction(InputFactory inputFactory, OutputFactory outputFactory, int transactionCounter) {
+    @Inject
+    public BitcoinTransaction(InputFactory inputFactory, OutputFactory outputFactory, HasherFactory hasherFactory, int transactionCounter) {
         this.inputFactory = inputFactory;
         this.outputFactory = outputFactory;
+        this.hasherFactory = hasherFactory;
         this.transactionCounter = transactionCounter;
     }
 
@@ -75,7 +78,7 @@ public class BitcoinTransaction implements Transaction {
             throw new UnsupportedOperationException("Max version number is " + maxVersionNumber + ", saw " + versionNumber);
         }
 
-        if(versionNumber <= 0) {
+        if (versionNumber <= 0) {
             throw new UnsupportedOperationException("Version number cannot be less than or equal to zero");
         }
 

@@ -18,15 +18,17 @@ import javax.inject.Inject;
 public class BitcoinTransactionFactory implements TransactionFactory {
     private InputFactory inputFactory;
     private OutputFactory outputFactory;
+    private HasherFactory hasherFactory;
 
     @Inject
-    public BitcoinTransactionFactory(InputFactory inputFactory, OutputFactory outputFactory) {
+    public BitcoinTransactionFactory(InputFactory inputFactory, OutputFactory outputFactory, HasherFactory hasherFactory) {
         this.inputFactory = inputFactory;
         this.outputFactory = outputFactory;
+        this.hasherFactory = hasherFactory;
     }
 
     @Override
     public Transaction createTransaction(int transactionNumber) {
-        return new BitcoinTransaction(inputFactory, outputFactory, transactionNumber);
+        return new BitcoinTransaction(inputFactory, outputFactory, hasherFactory, transactionNumber);
     }
 }

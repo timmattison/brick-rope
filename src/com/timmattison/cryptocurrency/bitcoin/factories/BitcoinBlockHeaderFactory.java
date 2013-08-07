@@ -14,15 +14,15 @@ import javax.inject.Inject;
  * To change this template use File | Settings | File Templates.
  */
 public class BitcoinBlockHeaderFactory implements BlockHeaderFactory {
-    private final MessageDigestFactory messageDigestFactory;
+    private final HasherFactory hasherFactory;
 
     @Inject
-    BitcoinBlockHeaderFactory(MessageDigestFactory messageDigestFactory) {
-        this.messageDigestFactory = messageDigestFactory;
+    BitcoinBlockHeaderFactory(HasherFactory hasherFactory) {
+        this.hasherFactory = hasherFactory;
     }
 
     @Override
     public BlockHeader createBlockHeader() {
-        return new BitcoinBlockHeader(messageDigestFactory);
+        return new BitcoinBlockHeader(hasherFactory);
     }
 }

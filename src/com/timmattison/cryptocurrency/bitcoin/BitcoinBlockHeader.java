@@ -1,12 +1,13 @@
 package com.timmattison.cryptocurrency.bitcoin;
 
-import com.timmattison.cryptocurrency.bitcoin.factories.MessageDigestFactory;
+import com.timmattison.cryptocurrency.bitcoin.factories.HasherFactory;
 import com.timmattison.cryptocurrency.helpers.EndiannessHelper;
 import com.timmattison.cryptocurrency.interfaces.BlockHeader;
 
 import javax.inject.Inject;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.math.BigInteger;
-import java.security.MessageDigest;
 import java.util.Arrays;
 
 /**
@@ -23,20 +24,17 @@ public class BitcoinBlockHeader implements BlockHeader {
     private static final int timestampLengthInBytes = 4;
     private static final int bitsLengthInBytes = 4;
     private static final int nonceLengthInBytes = 4;
-    private final MessageDigestFactory messageDigestFactory;
-
+    private final HasherFactory hasherFactory;
     /**
      * The target.  This is not in the block chain.  It is derived from the difficulty.
      */
     private BigInteger targetBigInteger;
     private byte[] targetBytes;
-
     /**
      * This is the hash of the header.  This is not in the block chain.  It is derived from the double SHA256 hash of the block header bytes.
      */
     private byte[] hashBytes;
     private BigInteger hashBigInteger;
-
     /**
      * The software version that created this block
      */
@@ -67,8 +65,8 @@ public class BitcoinBlockHeader implements BlockHeader {
     private byte[] nonceBytes;
 
     @Inject
-    public BitcoinBlockHeader(MessageDigestFactory messageDigestFactory) {
-        this.messageDigestFactory = messageDigestFactory;
+    public BitcoinBlockHeader(HasherFactory hasherFactory) {
+        this.hasherFactory = hasherFactory;
     }
 
     @Override
@@ -107,19 +105,20 @@ public class BitcoinBlockHeader implements BlockHeader {
 
     @Override
     public byte[] hash() {
-        if(hashBytes == null) {
-            MessageDigest messageDigest1 = messageDigestFactory.createMessageDigest();
+        if (hashBytes == null) {
+            try {
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                baos.write(versionBytes);
+                baos.write(prevBlock);
+                baos.write(merkleRoot);
+                baos.write(timestampBytes);
+                baos.write(bitsBytes);
+                baos.write(nonceBytes);
 
-            messageDigest1.update(versionBytes);
-            messageDigest1.update(prevBlock);
-            messageDigest1.update(merkleRoot);
-            messageDigest1.update(timestampBytes);
-            messageDigest1.update(bitsBytes);
-            messageDigest1.update(nonceBytes);
-
-            MessageDigest messageDigest2 = messageDigestFactory.createMessageDigest();
-
-            hashBytes = messageDigest2.digest(messageDigest1.digest());
+                hashBytes = hasherFactory.createHasher(baos.toByteArray()).getOutput();
+            } catch (IOException e) {
+                throw new UnsupportedOperationException(e);
+            }
         }
 
         return hashBytes;

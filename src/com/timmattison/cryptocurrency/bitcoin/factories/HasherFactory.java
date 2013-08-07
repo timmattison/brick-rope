@@ -1,5 +1,7 @@
 package com.timmattison.cryptocurrency.bitcoin.factories;
 
+import com.timmattison.cryptocurrency.interfaces.Hash;
+
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -10,6 +12,6 @@ import java.security.NoSuchAlgorithmException;
  * Time: 2:35 PM
  * To change this template use File | Settings | File Templates.
  */
-public interface MessageDigestFactory {
-    public MessageDigest createMessageDigest();
+public interface HasherFactory {
+    public Hash createHasher(byte[] input);
 }
