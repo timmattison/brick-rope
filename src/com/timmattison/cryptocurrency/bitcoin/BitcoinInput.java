@@ -4,6 +4,7 @@ import com.timmattison.cryptocurrency.helpers.EndiannessHelper;
 import com.timmattison.cryptocurrency.interfaces.Input;
 import com.timmattison.cryptocurrency.factories.ScriptFactory;
 import com.timmattison.cryptocurrency.standard.InputScript;
+import com.timmattison.cryptocurrency.standard.Script;
 import com.timmattison.cryptocurrency.standard.VariableLengthInteger;
 
 import java.util.Arrays;
@@ -92,5 +93,10 @@ public class BitcoinInput implements Input {
     @Override
     public boolean isCoinbase() {
         return (inputNumber == 0);
+    }
+
+    @Override
+    public Script getScript() {
+        return inputScript;
     }
 }

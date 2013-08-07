@@ -4,6 +4,7 @@ import com.timmattison.cryptocurrency.helpers.EndiannessHelper;
 import com.timmattison.cryptocurrency.interfaces.Output;
 import com.timmattison.cryptocurrency.factories.ScriptFactory;
 import com.timmattison.cryptocurrency.standard.OutputScript;
+import com.timmattison.cryptocurrency.standard.Script;
 import com.timmattison.cryptocurrency.standard.VariableLengthInteger;
 
 import java.math.BigDecimal;
@@ -66,5 +67,10 @@ public class BitcoinOutput implements Output {
         // Get the output script
         outputScript = scriptFactory.createOutputScript(transactionVersionNumber, outputScriptLength);
         return outputScript.build(data);
+    }
+
+    @Override
+    public Script getScript() {
+        return outputScript;
     }
 }
