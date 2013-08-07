@@ -16,7 +16,7 @@ import java.io.FileNotFoundException;
  * Time: 5:58 PM
  * To change this template use File | Settings | File Templates.
  */
-public class Bitcoin {
+public class BitcoinExtractBlock {
     public static void main(String[] args) throws FileNotFoundException {
         Injector injector = Guice.createInjector(new BitcoinModule());
 
