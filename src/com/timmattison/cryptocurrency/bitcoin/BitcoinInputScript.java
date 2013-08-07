@@ -39,7 +39,8 @@ public class BitcoinInputScript extends BitcoinScript implements InputScript {
     }
 
     @Override
-    protected boolean isExecutable() {
+    public boolean isExecutable() {
+        // XXX - This may depend on the version number
         return !coinbase;
     }
 
@@ -62,6 +63,7 @@ public class BitcoinInputScript extends BitcoinScript implements InputScript {
         }
     }
 
+    /*
     @Override
     protected void preprocessScriptBytes(byte[] scriptBytes) {
         // Is this the coinbase?
@@ -90,4 +92,5 @@ public class BitcoinInputScript extends BitcoinScript implements InputScript {
             }
         }
     }
+    */
 }

@@ -22,7 +22,7 @@ public class Bitcoin {
 
         BlockChain blockChain = injector.getInstance(BlockChain.class);
 
-        File inputFile = new File("blockchain.dat");
+        File inputFile = new File("bitcoin-blockchain.dat");
         FileInputStream inputStream = new FileInputStream(inputFile);
 
         blockChain.setInputStream(inputStream);

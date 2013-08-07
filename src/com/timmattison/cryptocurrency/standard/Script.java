@@ -10,4 +10,7 @@ import com.timmattison.cryptocurrency.interfaces.Buildable;
  * To change this template use File | Settings | File Templates.
  */
 public interface Script extends Buildable {
+    boolean isExecutable();
+
+    byte[] getBytes();
 }

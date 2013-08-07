@@ -1,5 +1,7 @@
 package com.timmattison.cryptocurrency.bitcoin;
 
+import com.timmattison.cryptocurrency.standard.Script;
+
 /**
  * Created with IntelliJ IDEA.
  * User: Tim
@@ -15,4 +17,6 @@ public interface StateMachine {
     public Object peek();
 
     void reset();
+
+    public void execute(Script script);
 }

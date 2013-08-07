@@ -34,13 +34,8 @@ public class BitcoinOutputScript extends BitcoinScript implements OutputScript {
     }
 
     @Override
-    protected boolean isExecutable() {
+    public boolean isExecutable() {
         return true;  //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    @Override
-    protected void preprocessScriptBytes(byte[] scriptBytes) {
-        // Nothing to do here
     }
 
     @Override
