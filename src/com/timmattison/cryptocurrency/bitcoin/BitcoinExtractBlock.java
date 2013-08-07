@@ -25,7 +25,7 @@ public class BitcoinExtractBlock {
 
         blockChain.setInputStream(inputStream);
 
-        for (int loop = 0; loop < 170; loop++) {
+        for (int loop = 0; loop < 172; loop++) {
             Block block = blockChain.next();
             File outputFile = new File("bitcoin-block-" + String.format("%06d", loop) + ".dat");
 
