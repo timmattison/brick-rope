@@ -31,11 +31,17 @@ public class BitcoinBlockValidator implements BlockValidator {
 
     @Override
     public boolean isValid(Block block) {
+        byte[] merkleRoot = block.getBlockHeader().getMerkleRoot();
+        byte[] calculatedMerkleRoot = calculateMerkleRoot(block);
+
         return Arrays.equals(block.getBlockHeader().getMerkleRoot(), calculateMerkleRoot(block));
     }
 
     @Override
     public boolean isParentOf(Block parentBlock, Block childBlock) {
+        byte[] hash1 = childBlock.getBlockHeader().getPreviousBlockHash();
+        byte[] hash2 = parentBlock.getBlockHeader().getHash();
+
         return Arrays.equals(childBlock.getBlockHeader().getPreviousBlockHash(), parentBlock.getBlockHeader().getHash());
     }
 
