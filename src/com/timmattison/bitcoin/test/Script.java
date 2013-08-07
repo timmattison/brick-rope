@@ -130,15 +130,28 @@ public class Script extends ByteConsumer {
         // Pop the top value of the stack
         Object topStackValue = localStateMachine.pop();
 
-        // Is the top stack non-zero?
-        if (topStackValue != null) {
-            // Yes, success!
-            // XXX - This needs to check for zero values, not just NULLs
-            return true;
-        } else {
+        // Is the top stack value NULL?
+        if (topStackValue == null) {
             // No, failure
             return false;
         }
+
+        // Is the top stack value an integer
+        if(!(topStackValue instanceof Integer)) {
+            // No, failure
+            return false;
+        }
+
+        // Is the top stack value 1?
+        int intTopStackValue = (Integer) topStackValue;
+
+        if(intTopStackValue != 1) {
+            // No, failure
+            return false;
+        }
+
+        // Success
+        return true;
     }
 
     private StateMachine getStateMachine(byte[] scriptBytes, Transaction currentTransaction, Transaction referencedTransaction, int referencedOutputIndex) throws IOException {
