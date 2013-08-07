@@ -40,7 +40,7 @@ public class BitcoinOutputScript extends BitcoinScript implements OutputScript {
 
     @Override
     protected void validateLength() {
-        if(lengthInBytes > 0) {
+        if(lengthInBytes == 0) {
             throw new UnsupportedOperationException("Output scripts cannot be zero length");
         }
     }
