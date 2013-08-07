@@ -63,6 +63,12 @@ public class BitcoinInputScript extends BitcoinScript implements InputScript {
         }
     }
 
+    @Override
+    public byte[] dump() {
+        //To change body of implemented methods use File | Settings | File Templates.
+        throw new UnsupportedOperationException("Not implemented yet");
+    }
+
     /*
     @Override
     protected void preprocessScriptBytes(byte[] scriptBytes) {

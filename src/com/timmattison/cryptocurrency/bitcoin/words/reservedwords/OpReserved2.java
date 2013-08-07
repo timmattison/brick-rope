@@ -27,4 +27,11 @@ public class OpReserved2 extends ReservedWordOp {
     public String getName() {
         return word;
     }
+
+    @Override
+    public byte[] dump() {
+        byte[] dump = new byte[1];
+        dump[0] = getOpcode();
+        return dump;
+    }
 }

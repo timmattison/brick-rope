@@ -13,4 +13,10 @@ public interface Buildable {
      * @return
      */
     byte[] build(byte[] data);
+
+    /**
+     * Dumps an object back to the byte stream that created it
+     * @return
+     */
+    byte[] dump();
 }

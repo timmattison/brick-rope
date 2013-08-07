@@ -5,9 +5,7 @@ import com.google.inject.Injector;
 import com.timmattison.cryptocurrency.interfaces.Block;
 import com.timmattison.cryptocurrency.interfaces.BlockChain;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+import java.io.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -17,7 +15,7 @@ import java.io.FileNotFoundException;
  * To change this template use File | Settings | File Templates.
  */
 public class BitcoinExtractBlock {
-    public static void main(String[] args) throws FileNotFoundException {
+    public static void main(String[] args) throws IOException {
         Injector injector = Guice.createInjector(new BitcoinModule());
 
         BlockChain blockChain = injector.getInstance(BlockChain.class);
@@ -30,21 +28,12 @@ public class BitcoinExtractBlock {
         Block ninthBlock = null;
         Block oneHundredAndSeventythBlock = null;
 
-        for (int loop = 0; loop < 99999; loop++) {
+        for (int loop = 0; loop < 170; loop++) {
             Block block = blockChain.next();
+            File outputFile = new File("bitcoin-block-" + String.format("%06d", loop) + ".dat");
 
-            if (loop == 9) {
-                ninthBlock = block;
-            } else if (loop == 170) {
-                oneHundredAndSeventythBlock = block;
-            }
+            OutputStream outputStream = new FileOutputStream(outputFile);
+            outputStream.write(block.dump());
         }
-
-        //    BlockHeader blockHeader = block.getBlockHeader();
-        //    List<Transaction> transactions = block.getTransactions();
-        //    Output firstOutput = transactions.get(0).getOutputs().get(0);
-
-        //    StateMachine stateMachine = injector.getInstance(StateMachine.class);
-        //    stateMachine.execute(firstOutput.getScript());
     }
 }

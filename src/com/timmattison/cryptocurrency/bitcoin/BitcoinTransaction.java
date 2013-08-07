@@ -146,7 +146,7 @@ public class BitcoinTransaction implements Transaction {
     }
 
     @Override
-    public byte[] dumpBytes() {
+    public byte[] dump() {
         try {
             ByteArrayOutputStream bytes = new ByteArrayOutputStream();
 
@@ -174,7 +174,7 @@ public class BitcoinTransaction implements Transaction {
     @Override
     public byte[] hash() {
         if (hashBytes == null) {
-            hashBytes = hasherFactory.createHasher(dumpBytes()).getOutput();
+            hashBytes = hasherFactory.createHasher(dump()).getOutput();
         }
 
         return hashBytes;

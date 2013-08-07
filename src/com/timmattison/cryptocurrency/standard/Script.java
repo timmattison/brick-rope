@@ -11,6 +11,4 @@ import com.timmattison.cryptocurrency.interfaces.Buildable;
  */
 public interface Script extends Buildable {
     boolean isExecutable();
-
-    byte[] getBytes();
 }

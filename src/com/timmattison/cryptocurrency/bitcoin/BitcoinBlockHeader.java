@@ -104,21 +104,26 @@ public class BitcoinBlockHeader implements BlockHeader {
     }
 
     @Override
+    public byte[] dump() {
+        try {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            baos.write(versionBytes);
+            baos.write(prevBlock);
+            baos.write(merkleRoot);
+            baos.write(timestampBytes);
+            baos.write(bitsBytes);
+            baos.write(nonceBytes);
+
+            return hasherFactory.createHasher(baos.toByteArray()).getOutput();
+        } catch (IOException e) {
+            throw new UnsupportedOperationException(e);
+        }
+    }
+
+    @Override
     public byte[] getHash() {
         if (hashBytes == null) {
-            try {
-                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                baos.write(versionBytes);
-                baos.write(prevBlock);
-                baos.write(merkleRoot);
-                baos.write(timestampBytes);
-                baos.write(bitsBytes);
-                baos.write(nonceBytes);
-
-                hashBytes = hasherFactory.createHasher(baos.toByteArray()).getOutput();
-            } catch (IOException e) {
-                throw new UnsupportedOperationException(e);
-            }
+            hashBytes = hasherFactory.createHasher(dump()).getOutput();
         }
 
         return hashBytes;

@@ -25,4 +25,11 @@ public abstract class StackOp implements Word {
     public void execute(StateMachine stateMachine) {
         throw new UnsupportedOperationException("Not implemented yet");
     }
+
+    @Override
+    public byte[] dump() {
+        byte[] dump = new byte[1];
+        dump[0] = getOpcode();
+        return dump;
+    }
 }

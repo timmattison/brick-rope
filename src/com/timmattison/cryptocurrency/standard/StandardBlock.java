@@ -7,8 +7,9 @@ import com.timmattison.cryptocurrency.interfaces.BlockHeader;
 import com.timmattison.cryptocurrency.interfaces.Transaction;
 
 import javax.inject.Inject;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -76,5 +77,23 @@ public abstract class StandardBlock implements Block {
         }
 
         return transactions;
+    }
+
+    @Override
+    public byte[] dump() {
+        try {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+
+            baos.write(blockHeader.dump());
+            baos.write(transactionCountBytes);
+
+            for (Transaction transaction : transactions) {
+                baos.write(transaction.dump());
+            }
+
+            return baos.toByteArray();
+        } catch (IOException e) {
+            throw new UnsupportedOperationException(e);
+        }
     }
 }

@@ -21,6 +21,7 @@ import java.util.Iterator;
 public class StandardBlockChain implements BlockChain, Iterator<Block> {
     private final BlockFactory blockFactory;
     private final BlockValidator blockValidator;
+    private int blockNumber;
     private InputStream inputStream;
     private Block previousBlock = null;
 
@@ -28,6 +29,7 @@ public class StandardBlockChain implements BlockChain, Iterator<Block> {
     public StandardBlockChain(BlockFactory blockFactory, BlockValidator blockValidator) throws IOException {
         this.blockFactory = blockFactory;
         this.blockValidator = blockValidator;
+        blockNumber = 0;
     }
 
     @Override
@@ -53,7 +55,7 @@ public class StandardBlockChain implements BlockChain, Iterator<Block> {
                 // Validate the block
                 if(!blockValidator.isValid(block)) {
                     // No, current block is not valid
-                    throw new IllegalStateException("Block is not valid");
+                    throw new IllegalStateException("Block [" + blockNumber + "] is not valid");
                 }
 
                 // Is the previous block a valid parent of this block?
@@ -65,6 +67,7 @@ public class StandardBlockChain implements BlockChain, Iterator<Block> {
                 // Update the previous block
                 previousBlock = block;
 
+                blockNumber++;
                 return block;
             } else {
                 return null;

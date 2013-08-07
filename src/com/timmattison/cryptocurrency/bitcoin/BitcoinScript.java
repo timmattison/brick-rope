@@ -23,7 +23,7 @@ public abstract class BitcoinScript implements Script {
     /**
      * Script bytes
      */
-    private byte[] scriptBytes;
+    protected byte[] scriptBytes;
 
     @Override
     public byte[] build(byte[] data) {
@@ -58,10 +58,6 @@ public abstract class BitcoinScript implements Script {
         position += lengthInBytes;
 
         return Arrays.copyOfRange(data, position, data.length);
-    }
-
-    public byte[] getBytes() {
-        return scriptBytes;
     }
 
     protected abstract void validateLength();

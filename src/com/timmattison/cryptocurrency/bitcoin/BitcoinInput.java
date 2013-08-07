@@ -87,6 +87,23 @@ public class BitcoinInput implements Input {
     }
 
     @Override
+    public byte[] dump() {
+        try {
+            ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+
+            bytes.write(previousTransactionHash);
+            bytes.write(previousOutputIndexBytes);
+            bytes.write(inputScriptLengthBytes);
+            bytes.write(inputScript.dump());
+            bytes.write(sequenceNumberBytes);
+
+            return bytes.toByteArray();
+        } catch (IOException e) {
+            throw new UnsupportedOperationException(e);
+        }
+    }
+
+    @Override
     public boolean isCoinbase() {
         return (inputNumber == 0);
     }

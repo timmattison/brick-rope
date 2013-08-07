@@ -9,7 +9,6 @@ import com.timmattison.cryptocurrency.standard.VariableLengthInteger;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.util.Arrays;
 
 /**
@@ -64,6 +63,22 @@ public class BitcoinOutput implements Output {
         // Get the output script
         outputScript = scriptFactory.createOutputScript(transactionVersionNumber, outputScriptLength);
         return outputScript.build(data);
+    }
+
+    @Override
+    public byte[] dump() {
+        try {
+            ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+
+            bytes.write(valueBytes);
+            bytes.write(outputScriptLengthBytes);
+
+            bytes.write(outputScript.dump());
+
+            return bytes.toByteArray();
+        } catch (IOException e) {
+            throw new UnsupportedOperationException(e);
+        }
     }
 
     @Override
