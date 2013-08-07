@@ -10,6 +10,8 @@ import com.timmattison.cryptocurrency.interfaces.Transaction;
 import com.timmattison.cryptocurrency.standard.VariableLengthInteger;
 
 import javax.inject.Inject;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -29,6 +31,7 @@ public class BitcoinTransaction implements Transaction {
     private final InputFactory inputFactory;
     private final OutputFactory outputFactory;
     private final HasherFactory hasherFactory;
+    private byte[] hashBytes;
     /**
      * Version number
      */
@@ -140,5 +143,40 @@ public class BitcoinTransaction implements Transaction {
     @Override
     public List<Output> getOutputs() {
         return new ArrayList<Output>(outputs);
+    }
+
+    @Override
+    public byte[] dumpBytes() {
+        try {
+            ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+
+            bytes.write(versionNumberBytes);
+            bytes.write(inCounterBytes);
+
+            for (Input input : inputs) {
+                bytes.write(input.dumpBytes());
+            }
+
+            bytes.write(outCounterBytes);
+
+            for (Output output : outputs) {
+                bytes.write(output.dumpBytes());
+            }
+
+            bytes.write(lockTimeBytes);
+
+            return bytes.toByteArray();
+        } catch (IOException e) {
+            throw new UnsupportedOperationException(e);
+        }
+    }
+
+    @Override
+    public byte[] hash() {
+        if (hashBytes == null) {
+            hashBytes = hasherFactory.createHasher(dumpBytes()).getOutput();
+        }
+
+        return hashBytes;
     }
 }

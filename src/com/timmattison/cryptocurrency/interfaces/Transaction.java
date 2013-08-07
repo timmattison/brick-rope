@@ -13,4 +13,8 @@ public interface Transaction extends Buildable {
     List<Input> getInputs();
 
     List<Output> getOutputs();
+
+    byte[] dumpBytes();
+
+    byte[] hash();
 }

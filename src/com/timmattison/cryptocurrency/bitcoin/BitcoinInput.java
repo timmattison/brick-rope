@@ -1,12 +1,14 @@
 package com.timmattison.cryptocurrency.bitcoin;
 
+import com.timmattison.cryptocurrency.factories.ScriptFactory;
 import com.timmattison.cryptocurrency.helpers.EndiannessHelper;
 import com.timmattison.cryptocurrency.interfaces.Input;
-import com.timmattison.cryptocurrency.factories.ScriptFactory;
 import com.timmattison.cryptocurrency.standard.InputScript;
 import com.timmattison.cryptocurrency.standard.Script;
 import com.timmattison.cryptocurrency.standard.VariableLengthInteger;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.Arrays;
 
 /**
@@ -22,33 +24,27 @@ public class BitcoinInput implements Input {
     private static final int previousOutputIndexLengthInBytes = 4;
     private static final int sequenceNumberLengthInBytes = 4;
     private final ScriptFactory scriptFactory;
-
     // These are not part of the script
     private final int transactionVersionNumber;
     private final int inputNumber;
-
     /**
      * Previous transaction hash
      */
     private byte[] previousTransactionHash;
-
     /**
      * Previous output index
      */
     private long previousOutputIndex;
     private byte[] previousOutputIndexBytes;
-
     /**
      * Input script length
      */
     private long inputScriptLength;
     private byte[] inputScriptLengthBytes;
-
     /**
      * Input script
      */
     private InputScript inputScript;
-
     /**
      * Sequence number
      */
@@ -98,5 +94,22 @@ public class BitcoinInput implements Input {
     @Override
     public Script getScript() {
         return inputScript;
+    }
+
+    @Override
+    public byte[] dumpBytes() {
+        try {
+            ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+
+            bytes.write(previousTransactionHash);
+            bytes.write(previousOutputIndexBytes);
+            bytes.write(inputScriptLengthBytes);
+            bytes.write(inputScript.getBytes());
+            bytes.write(sequenceNumberBytes);
+
+            return bytes.toByteArray();
+        } catch (IOException e) {
+            throw new UnsupportedOperationException(e);
+        }
     }
 }

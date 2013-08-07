@@ -1,12 +1,14 @@
 package com.timmattison.cryptocurrency.bitcoin;
 
+import com.timmattison.cryptocurrency.factories.ScriptFactory;
 import com.timmattison.cryptocurrency.helpers.EndiannessHelper;
 import com.timmattison.cryptocurrency.interfaces.Output;
-import com.timmattison.cryptocurrency.factories.ScriptFactory;
 import com.timmattison.cryptocurrency.standard.OutputScript;
 import com.timmattison.cryptocurrency.standard.Script;
 import com.timmattison.cryptocurrency.standard.VariableLengthInteger;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Arrays;
 
@@ -20,29 +22,24 @@ import java.util.Arrays;
  */
 public class BitcoinOutput implements Output {
     private static final int valueLengthInBytes = 8;
-    private static final BigDecimal satoshiPerBitcoin = new BigDecimal(100000000);
     private final ScriptFactory scriptFactory;
-
+    // These values are not in the output
+    private final int transactionVersionNumber;
+    private final int outputNumber;
     /**
      * Value
      */
     private long value;
     private byte[] valueBytes;
-
     /**
      * Output script length
      */
     private long outputScriptLength;
     private byte[] outputScriptLengthBytes;
-
     /**
      * Output script
      */
     private OutputScript outputScript;
-
-    // These values are not in the output
-    private final int transactionVersionNumber;
-    private final int outputNumber;
     private OutputScript script;
 
     public BitcoinOutput(ScriptFactory scriptFactory, int transactionVersionNumber, int outputNumber) {
@@ -72,5 +69,21 @@ public class BitcoinOutput implements Output {
     @Override
     public Script getScript() {
         return outputScript;
+    }
+
+    @Override
+    public byte[] dumpBytes() {
+        try {
+            ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+
+            bytes.write(valueBytes);
+            bytes.write(outputScriptLengthBytes);
+
+            bytes.write(outputScript.getBytes());
+
+            return bytes.toByteArray();
+        } catch (IOException e) {
+            throw new UnsupportedOperationException(e);
+        }
     }
 }
