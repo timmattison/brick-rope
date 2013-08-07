@@ -1,5 +1,7 @@
 package com.timmattison.cryptocurrency.interfaces;
 
+import com.timmattison.cryptocurrency.standard.Script;
+
 import java.util.Iterator;
 
 /**
@@ -10,4 +12,5 @@ import java.util.Iterator;
  * To change this template use File | Settings | File Templates.
  */
 public interface Output extends Buildable {
+    Script getScript();
 }

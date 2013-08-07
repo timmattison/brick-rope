@@ -1,5 +1,7 @@
 package com.timmattison.cryptocurrency.interfaces;
 
+import com.timmattison.cryptocurrency.standard.Script;
+
 import java.util.Iterator;
 
 /**
@@ -11,4 +13,6 @@ import java.util.Iterator;
  */
 public interface Input extends Buildable {
     public boolean isCoinbase();
+
+    public Script getScript();
 }
