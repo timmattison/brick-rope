@@ -94,7 +94,7 @@ public class BitcoinOutput implements Output {
             bytes.write(valueBytes);
             bytes.write(outputScriptLengthBytes);
 
-            bytes.write(outputScript.getBytes());
+            bytes.write(outputScript.dump());
 
             return bytes.toByteArray();
         } catch (IOException e) {

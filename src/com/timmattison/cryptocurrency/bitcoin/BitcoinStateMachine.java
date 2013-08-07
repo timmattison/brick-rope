@@ -49,7 +49,7 @@ public class BitcoinStateMachine implements StateMachine {
 
     @Override
     public void execute(Script script) {
-        byte[] scriptData = Arrays.copyOf(script.getBytes(), script.getBytes().length);
+        byte[] scriptData = Arrays.copyOf(script.dump(), script.dump().length);
         int wordCounter = 0;
 
         reset();

@@ -44,4 +44,9 @@ public class BitcoinOutputScript extends BitcoinScript implements OutputScript {
             throw new UnsupportedOperationException("Output scripts cannot be zero length");
         }
     }
+
+    @Override
+    public byte[] dump() {
+        return scriptBytes;
+    }
 }

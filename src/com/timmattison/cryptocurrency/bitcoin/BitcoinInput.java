@@ -121,7 +121,7 @@ public class BitcoinInput implements Input {
             bytes.write(previousTransactionHash);
             bytes.write(previousOutputIndexBytes);
             bytes.write(inputScriptLengthBytes);
-            bytes.write(inputScript.getBytes());
+            bytes.write(inputScript.dump());
             bytes.write(sequenceNumberBytes);
 
             return bytes.toByteArray();

@@ -61,7 +61,7 @@ public class StandardBlockChain implements BlockChain, Iterator<Block> {
                 // Is the previous block a valid parent of this block?
                 if ((previousBlock != null) && (!blockValidator.isParentOf(previousBlock, block))) {
                     // No, this is an issue
-                    throw new IllegalStateException("Previous block is not the parent of the current block");
+                    throw new IllegalStateException("Previous block is not the parent of the current block [" + blockNumber + "]");
                 }
 
                 // Update the previous block

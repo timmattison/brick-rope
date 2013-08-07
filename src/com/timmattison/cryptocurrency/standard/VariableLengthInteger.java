@@ -79,6 +79,11 @@ public class VariableLengthInteger implements Buildable {
         return Arrays.copyOfRange(data, position, data.length);
     }
 
+    @Override
+    public byte[] dump() {
+        return valueBytes;
+    }
+
     public long getValue() {
         throwExceptionIfNotBuilt();
         return value;
