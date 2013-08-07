@@ -114,7 +114,7 @@ public class BitcoinBlockHeader implements BlockHeader {
             baos.write(bitsBytes);
             baos.write(nonceBytes);
 
-            return hasherFactory.createHasher(baos.toByteArray()).getOutput();
+            return baos.toByteArray();
         } catch (IOException e) {
             throw new UnsupportedOperationException(e);
         }
