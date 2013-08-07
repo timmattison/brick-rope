@@ -1,9 +1,7 @@
 package com.timmattison.cryptocurrency.bitcoin;
 
 import com.timmattison.cryptocurrency.bitcoin.exceptions.ScriptExecutionException;
-import com.timmattison.cryptocurrency.bitcoin.factories.BitcoinWordFactory;
 import com.timmattison.cryptocurrency.factories.WordFactory;
-import com.timmattison.cryptocurrency.helpers.EndiannessHelper;
 import com.timmattison.cryptocurrency.interfaces.Transaction;
 import com.timmattison.cryptocurrency.standard.Script;
 
@@ -57,15 +55,28 @@ public abstract class BitcoinScript implements Script {
         // Pop the top value of the stack
         Object topStackValue = stateMachine.pop();
 
-        // Is the top stack non-zero?
-        if (topStackValue != null) {
-            // Yes, success!
-            // XXX - This needs to check for zero values, not just NULLs
-            return true;
-        } else {
+        // Is the top stack value NULL?
+        if (topStackValue == null) {
             // No, failure
             return false;
         }
+
+        // Is the top stack value an integer
+        if (!(topStackValue instanceof Integer)) {
+            // No, failure
+            return false;
+        }
+
+        // Is the top stack value 1?
+        int intTopStackValue = (Integer) topStackValue;
+
+        if (intTopStackValue != 1) {
+            // No, failure
+            return false;
+        }
+
+        // Success
+        return true;
     }
 
     @Override
@@ -106,7 +117,7 @@ public abstract class BitcoinScript implements Script {
 
         preprocessScriptBytes(scriptBytes);
 
-        if(!isExecutable()) {
+        if (!isExecutable()) {
             // Return immediately
             return dataAfterScript;
         }
