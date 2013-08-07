@@ -1,6 +1,6 @@
 package com.timmattison.cryptocurrency.bitcoin.words.crypto;
 
-import com.timmattison.bitcoin.test.script.Constants;
+import org.bouncycastle.crypto.digests.RIPEMD160Digest;
 
 /**
  * Created with IntelliJ IDEA.
@@ -11,13 +11,24 @@ import com.timmattison.bitcoin.test.script.Constants;
  * Hashes the value on the top of the stack with RIPEMD-160
  */
 public class OpRipEmd160 extends CryptoOp {
-    private static final String algorithm = Constants.RIPEMD160_ALGORITHM;
     private static final String word = "OP_RIPEMD160";
     private static final Byte opcode = (byte) 0xa6;
 
     @Override
     public void execute(com.timmattison.cryptocurrency.bitcoin.StateMachine stateMachine) {
-        throw new UnsupportedOperationException();
+        Object value = stateMachine.pop();
+
+        if (!(value instanceof byte[])) {
+            throw new UnsupportedOperationException("Only byte arrays can be hashed");
+        }
+
+        byte[] byteArrayValue = (byte[]) value;
+
+        RIPEMD160Digest ripemd160Digest = new RIPEMD160Digest();
+        ripemd160Digest.update(byteArrayValue, 0, byteArrayValue.length);
+        byte[] output = new byte[20];
+        ripemd160Digest.doFinal(output, 0);
+        stateMachine.push(output);
     }
 
     @Override
