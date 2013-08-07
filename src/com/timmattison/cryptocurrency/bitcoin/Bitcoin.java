@@ -2,12 +2,12 @@ package com.timmattison.cryptocurrency.bitcoin;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import com.timmattison.cryptocurrency.interfaces.Block;
-import com.timmattison.cryptocurrency.interfaces.BlockChain;
+import com.timmattison.cryptocurrency.interfaces.*;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -27,5 +27,12 @@ public class Bitcoin {
 
         blockChain.setInputStream(inputStream);
         Block block = blockChain.next();
+
+        BlockHeader blockHeader = block.getBlockHeader();
+        List<Transaction> transactions = block.getTransactions();
+        Output firstOutput = transactions.get(0).getOutputs().get(0);
+
+        StateMachine stateMachine = injector.getInstance(StateMachine.class);
+        stateMachine.execute(firstOutput.getScript());
     }
 }

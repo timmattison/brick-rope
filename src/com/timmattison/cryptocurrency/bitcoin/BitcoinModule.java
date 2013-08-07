@@ -26,6 +26,7 @@ public class BitcoinModule extends AbstractModule {
         bind(Block.class).to(BitcoinBlock.class);
         bind(BlockHeader.class).to(BitcoinBlockHeader.class);
         bind(Block.class).to(BitcoinBlock.class);
+        bind(StateMachine.class).to(BitcoinStateMachine.class);
 
         bind(TransactionFactory.class).to(BitcoinTransactionFactory.class);
         bind(BlockFactory.class).to(BitcoinBlockFactory.class);
@@ -33,6 +34,7 @@ public class BitcoinModule extends AbstractModule {
         bind(InputFactory.class).to(BitcoinInputFactory.class);
         bind(OutputFactory.class).to(BitcoinOutputFactory.class);
         bind(ScriptFactory.class).to(BitcoinScriptFactory.class);
+        bind(WordFactory.class).to(BitcoinWordFactory.class);
     }
 
     @Provides

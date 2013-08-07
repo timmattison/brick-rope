@@ -43,7 +43,7 @@ public class BitcoinStateMachine implements StateMachine {
 
     @Override
     public void reset() {
-        throw new UnsupportedOperationException();
+        stack = null;
     }
 
     @Override

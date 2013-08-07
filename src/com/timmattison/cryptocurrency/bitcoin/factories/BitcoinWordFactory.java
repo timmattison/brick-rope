@@ -28,7 +28,7 @@ import java.util.Map;
 public class BitcoinWordFactory implements WordFactory {
     @Override
     public Word createWord(byte opcode) {
-        throw new UnsupportedOperationException("Not implemented yet");
+        return getWordByOpcode(opcode);
     }
 
     private static Map<Byte, Class<Word>> classesByOpcode;
@@ -189,7 +189,7 @@ public class BitcoinWordFactory implements WordFactory {
         }
     }
 
-    public Word getWordByOpcode(byte opcode) {
+    private Word getWordByOpcode(byte opcode) {
         if ((opcode >= 0x01) && (opcode <= 0x4B)) {
             return new VirtualOpPush(opcode);
         }
@@ -209,7 +209,7 @@ public class BitcoinWordFactory implements WordFactory {
         }
     }
 
-    public Word getWordByName(String name) {
+    private Word getWordByName(String name) {
         Class<Word> clazz = classesByName.get(name);
 
         if (clazz == null) {
