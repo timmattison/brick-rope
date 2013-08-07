@@ -4,6 +4,8 @@ import com.timmattison.cryptocurrency.bitcoin.BitcoinBlockHeader;
 import com.timmattison.cryptocurrency.factories.BlockHeaderFactory;
 import com.timmattison.cryptocurrency.interfaces.BlockHeader;
 
+import javax.inject.Inject;
+
 /**
  * Created with IntelliJ IDEA.
  * User: Tim
@@ -12,8 +14,15 @@ import com.timmattison.cryptocurrency.interfaces.BlockHeader;
  * To change this template use File | Settings | File Templates.
  */
 public class BitcoinBlockHeaderFactory implements BlockHeaderFactory {
+    private final MessageDigestFactory messageDigestFactory;
+
+    @Inject
+    BitcoinBlockHeaderFactory(MessageDigestFactory messageDigestFactory) {
+        this.messageDigestFactory = messageDigestFactory;
+    }
+
     @Override
     public BlockHeader createBlockHeader() {
-        return new BitcoinBlockHeader();
+        return new BitcoinBlockHeader(messageDigestFactory);
     }
 }

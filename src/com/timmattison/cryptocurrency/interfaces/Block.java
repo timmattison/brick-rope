@@ -12,7 +12,5 @@ import java.util.List;
 public interface Block extends Buildable {
     BlockHeader getBlockHeader();
 
-    boolean isParentOf(Block block);
-
     List<Transaction> getTransactions();
 }

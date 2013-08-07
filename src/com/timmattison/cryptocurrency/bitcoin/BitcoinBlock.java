@@ -22,10 +22,4 @@ public class BitcoinBlock extends StandardBlock {
     public BitcoinBlock(BlockHeaderFactory blockHeaderFactory, TransactionFactory transactionFactory) {
         super(blockHeaderFactory, transactionFactory);
     }
-
-    @Override
-    public boolean isParentOf(Block block) {
-        //To change body of implemented methods use File | Settings | File Templates.
-        throw new UnsupportedOperationException();
-    }
 }

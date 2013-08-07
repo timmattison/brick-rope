@@ -1,10 +1,12 @@
 package com.timmattison.cryptocurrency.bitcoin;
 
+import com.timmattison.cryptocurrency.bitcoin.factories.MessageDigestFactory;
 import com.timmattison.cryptocurrency.helpers.EndiannessHelper;
 import com.timmattison.cryptocurrency.interfaces.BlockHeader;
 
 import javax.inject.Inject;
 import java.math.BigInteger;
+import java.security.MessageDigest;
 import java.util.Arrays;
 
 /**
@@ -21,6 +23,7 @@ public class BitcoinBlockHeader implements BlockHeader {
     private static final int timestampLengthInBytes = 4;
     private static final int bitsLengthInBytes = 4;
     private static final int nonceLengthInBytes = 4;
+    private final MessageDigestFactory messageDigestFactory;
 
     /**
      * The target.  This is not in the block chain.  It is derived from the difficulty.
@@ -63,7 +66,9 @@ public class BitcoinBlockHeader implements BlockHeader {
     private int nonce;
     private byte[] nonceBytes;
 
-    public BitcoinBlockHeader() {
+    @Inject
+    public BitcoinBlockHeader(MessageDigestFactory messageDigestFactory) {
+        this.messageDigestFactory = messageDigestFactory;
     }
 
     @Override
@@ -98,5 +103,23 @@ public class BitcoinBlockHeader implements BlockHeader {
 
         // Return what is left
         return data;
+    }
+
+    @Override
+    public byte[] hash() {
+        if(hashBytes == null) {
+            MessageDigest messageDigest = messageDigestFactory.createMessageDigest();
+
+            messageDigest.update(versionBytes);
+            messageDigest.update(prevBlock);
+            messageDigest.update(merkleRoot);
+            messageDigest.update(timestampBytes);
+            messageDigest.update(bitsBytes);
+            messageDigest.update(nonceBytes);
+
+            hashBytes = messageDigest.digest();
+        }
+
+        return hashBytes;
     }
 }

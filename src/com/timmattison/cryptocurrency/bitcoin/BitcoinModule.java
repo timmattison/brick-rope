@@ -27,6 +27,7 @@ public class BitcoinModule extends AbstractModule {
         bind(BlockHeader.class).to(BitcoinBlockHeader.class);
         bind(Block.class).to(BitcoinBlock.class);
         bind(StateMachine.class).to(BitcoinStateMachine.class);
+        bind(BlockValidator.class).to(BitcoinBlockValidator.class);
 
         bind(TransactionFactory.class).to(BitcoinTransactionFactory.class);
         bind(BlockFactory.class).to(BitcoinBlockFactory.class);
@@ -35,14 +36,7 @@ public class BitcoinModule extends AbstractModule {
         bind(OutputFactory.class).to(BitcoinOutputFactory.class);
         bind(ScriptFactory.class).to(BitcoinScriptFactory.class);
         bind(WordFactory.class).to(BitcoinWordFactory.class);
-    }
 
-    @Provides
-    MessageDigest getMessageDigest() {
-        try {
-            return MessageDigest.getInstance("SHA-256");
-        } catch (NoSuchAlgorithmException e) {
-            throw new IllegalStateException(e);
-        }
+        bind(MessageDigestFactory.class).to(Sha256Factory.class);
     }
 }

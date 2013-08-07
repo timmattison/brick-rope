@@ -5,6 +5,7 @@ import com.timmattison.cryptocurrency.factories.BlockFactory;
 import com.timmattison.cryptocurrency.helpers.InputStreamHelper;
 import com.timmattison.cryptocurrency.interfaces.Block;
 import com.timmattison.cryptocurrency.interfaces.BlockChain;
+import com.timmattison.cryptocurrency.interfaces.BlockValidator;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -18,13 +19,15 @@ import java.util.Iterator;
  * To change this template use File | Settings | File Templates.
  */
 public class StandardBlockChain implements BlockChain, Iterator<Block> {
-    private InputStream inputStream;
     private final BlockFactory blockFactory;
+    private final BlockValidator blockValidator;
+    private InputStream inputStream;
     private Block previousBlock = null;
 
     @Inject
-    public StandardBlockChain(BlockFactory blockFactory) throws IOException {
+    public StandardBlockChain(BlockFactory blockFactory, BlockValidator blockValidator) throws IOException {
         this.blockFactory = blockFactory;
+        this.blockValidator = blockValidator;
     }
 
     @Override
@@ -47,8 +50,14 @@ public class StandardBlockChain implements BlockChain, Iterator<Block> {
                 // Yes, create and parse the block
                 Block block = blockFactory.createBlock(inputStream);
 
+                // Validate the block
+                if(!blockValidator.isValid(block)) {
+                    // No, current block is not valid
+                    throw new IllegalStateException("Block is not valid");
+                }
+
                 // Is the previous block a valid parent of this block?
-                if ((previousBlock != null) && (!previousBlock.isParentOf(block))) {
+                if ((previousBlock != null) && (!blockValidator.isParentOf(previousBlock, block))) {
                     // No, this is an issue
                     throw new IllegalStateException("Previous block is not the parent of the current block");
                 }
