@@ -52,21 +52,19 @@ public class BitcoinOutput implements Output {
 
     @Override
     public byte[] build(byte[] data) {
-        int position = 0;
-
         // Get the value
-        valueBytes = Arrays.copyOfRange(data, position, position + valueLengthInBytes);
-        position += valueLengthInBytes;
+        valueBytes = Arrays.copyOfRange(data, 0, valueLengthInBytes);
+        data = Arrays.copyOfRange(data, valueLengthInBytes, data.length);
         value = EndiannessHelper.BytesToLong(valueBytes);
 
         // Get the output script length
         VariableLengthInteger temp = new VariableLengthInteger();
-        byte[] tempData = temp.build(data);
+        data = temp.build(data);
         outputScriptLengthBytes = temp.getValueBytes();
         outputScriptLength = temp.getValue();
 
         // Get the output script
         outputScript = scriptFactory.createOutputScript(transactionVersionNumber, outputScriptLength);
-        return outputScript.build(tempData);
+        return outputScript.build(data);
     }
 }
