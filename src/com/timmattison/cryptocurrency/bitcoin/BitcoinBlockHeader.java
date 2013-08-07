@@ -104,7 +104,7 @@ public class BitcoinBlockHeader implements BlockHeader {
     }
 
     @Override
-    public byte[] hash() {
+    public byte[] getHash() {
         if (hashBytes == null) {
             try {
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -127,5 +127,10 @@ public class BitcoinBlockHeader implements BlockHeader {
     @Override
     public byte[] getPreviousBlockHash() {
         return prevBlock;
+    }
+
+    @Override
+    public byte[] getMerkleRoot() {
+        return merkleRoot;
     }
 }

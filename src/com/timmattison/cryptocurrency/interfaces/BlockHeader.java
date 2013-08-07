@@ -8,7 +8,9 @@ package com.timmattison.cryptocurrency.interfaces;
  * To change this template use File | Settings | File Templates.
  */
 public interface BlockHeader extends Buildable {
-    byte[] hash();
+    byte[] getHash();
 
     byte[] getPreviousBlockHash();
+
+    byte[] getMerkleRoot();
 }
