@@ -65,7 +65,6 @@ public class DoubleSha256HashTests {
     public void block72785Merkle1() throws IOException {
         final byte[] leaf1 = TestHelper.fromHexString("2d7f4d1c25893dcaf538fdd1f34104687211ca7d8a1ba43c16b618d5fbc620c3");
         final byte[] leaf2 = TestHelper.fromHexString("3407a84dce0fe04fdab91608d1974941af3683ea6e4d904a30469485c50d336a");
-        final byte[] leavesx = TestHelper.fromHexString("2d7f4d1c25893dcaf538fdd1f34104687211ca7d8a1ba43c16b618d5fbc620c33407a84dce0fe04fdab91608d1974941af3683ea6e4d904a30469485c50d336a");
         final byte[] expected = TestHelper.fromHexString("8ebc6ac1c5c656c19632f8b7efd130303a9710ed1c0ea12935255d6fefc5d3b4");
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -73,10 +72,6 @@ public class DoubleSha256HashTests {
         baos.write(leaf2);
 
         final byte[] leaves = baos.toByteArray();
-
-        if(!Arrays.equals(leavesx, leaves)) {
-            throw new UnsupportedOperationException("SHIT");
-        }
 
         final DoubleSha256Hash hasher = new DoubleSha256Hash(leaves);
 
