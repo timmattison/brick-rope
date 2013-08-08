@@ -14,6 +14,7 @@ public class HashComparator implements Comparator<byte[]> {
     @Override
     public int compare(byte[] left, byte[] right) {
         // From: http://stackoverflow.com/questions/5108091/java-comparator-for-byte-array-lexicographic
+        // Modified to sort from last byte to first since we're dealing with different endianness
         for (int i = (left.length - 1), j = (right.length - 1); i >= 0 && j >= 0; i--, j--) {
             int a = (left[i] & 0xff);
             int b = (right[j] & 0xff);
