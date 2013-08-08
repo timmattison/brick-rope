@@ -1,5 +1,9 @@
 package com.timmattison.cryptocurrency.bitcoin.applications;
 
+import java.util.logging.Handler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  * Created with IntelliJ IDEA.
  * User: timmattison
@@ -8,4 +12,11 @@ package com.timmattison.cryptocurrency.bitcoin.applications;
  * To change this template use File | Settings | File Templates.
  */
 public class ApplicationHelper {
+    public static void logFine() {
+        Handler[] handlers = Logger.getLogger("").getHandlers();
+
+        for(Handler handler : handlers) {
+            handler.setLevel(Level.FINE);
+        }
+    }
 }
