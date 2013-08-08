@@ -29,7 +29,11 @@ public class TestHelper {
         return result;
     }
 
-    public static byte[] fromHexString(String string) {
+    public static byte[] fromLittleEndianHexString(String string) {
+        return fromHexString(string, true);
+    }
+
+    public static byte[] fromBigEndianHexString(String string) {
         return fromHexString(string, false);
     }
 

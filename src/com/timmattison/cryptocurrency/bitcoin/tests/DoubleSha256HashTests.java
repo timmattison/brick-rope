@@ -23,6 +23,7 @@ import java.util.Arrays;
  * To change this template use File | Settings | File Templates.
  */
 public class DoubleSha256HashTests {
+    final byte[] helloStringExpectedHash = TestHelper.fromBigEndianHexString("9595c9df90075148eb06860365df33584b75bff782a510c6cd4883a419833d50");
 
     @BeforeClass
     public static void setUpClass() {
@@ -37,7 +38,6 @@ public class DoubleSha256HashTests {
     @Test
     public void helloStringTest() {
         final String helloString = "hello";
-        final byte[] expected = TestHelper.fromHexString("9595c9df90075148eb06860365df33584b75bff782a510c6cd4883a419833d50");
         final byte[] helloBytes = helloString.getBytes();
 
         final DoubleSha256Hash hasher = new DoubleSha256Hash(helloBytes);
@@ -45,27 +45,26 @@ public class DoubleSha256HashTests {
         final byte[] result = hasher.getOutput();
         final String resultString = ByteArrayHelper.toHex(result);
 
-        Assert.assertTrue(Arrays.equals(result, expected));
+        Assert.assertTrue(Arrays.equals(result, helloStringExpectedHash));
     }
 
     @Test
     public void helloHexStringTest() {
-        final byte[] expected = TestHelper.fromHexString("9595c9df90075148eb06860365df33584b75bff782a510c6cd4883a419833d50");
-        final byte[] helloBytes = TestHelper.fromHexString("68656c6c6f");
+        final byte[] helloBytes = TestHelper.fromBigEndianHexString("68656c6c6f");
 
         final DoubleSha256Hash hasher = new DoubleSha256Hash(helloBytes);
 
         final byte[] result = hasher.getOutput();
         final String resultString = ByteArrayHelper.toHex(result);
 
-        Assert.assertTrue(Arrays.equals(result, expected));
+        Assert.assertTrue(Arrays.equals(result, helloStringExpectedHash));
     }
 
     @Test
     public void opensslVerified1() throws IOException {
-        final byte[] leaf1 = TestHelper.fromHexString("2d7f4d1c25893dcaf538fdd1f34104687211ca7d8a1ba43c16b618d5fbc620c3");
-        final byte[] leaf2 = TestHelper.fromHexString("3407a84dce0fe04fdab91608d1974941af3683ea6e4d904a30469485c50d336a");
-        final byte[] expected = TestHelper.fromHexString("f840ae66eeb6336a576b7e0d543d47063c4d49ae9d04c89b8bba5c257f134652");
+        final byte[] leaf1 = TestHelper.fromBigEndianHexString("2d7f4d1c25893dcaf538fdd1f34104687211ca7d8a1ba43c16b618d5fbc620c3");
+        final byte[] leaf2 = TestHelper.fromBigEndianHexString("3407a84dce0fe04fdab91608d1974941af3683ea6e4d904a30469485c50d336a");
+        final byte[] expected = TestHelper.fromBigEndianHexString("f840ae66eeb6336a576b7e0d543d47063c4d49ae9d04c89b8bba5c257f134652");
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         baos.write(leaf1);
