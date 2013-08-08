@@ -11,4 +11,6 @@ import java.util.List;
  */
 public interface MerkleRootCalculator {
     byte[] calculateMerkleRoot(List<byte[]> input);
+
+    byte[] calculateMerkleRoot(Block block);
 }

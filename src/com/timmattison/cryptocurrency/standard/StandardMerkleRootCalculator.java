@@ -1,7 +1,9 @@
 package com.timmattison.cryptocurrency.standard;
 
 import com.timmattison.cryptocurrency.bitcoin.factories.HasherFactory;
+import com.timmattison.cryptocurrency.interfaces.Block;
 import com.timmattison.cryptocurrency.interfaces.MerkleRootCalculator;
+import com.timmattison.cryptocurrency.interfaces.Transaction;
 
 import javax.inject.Inject;
 import java.io.ByteArrayOutputStream;
@@ -67,5 +69,16 @@ public class StandardMerkleRootCalculator implements MerkleRootCalculator {
 
         return transactionBytes.get(0);
 
+    }
+
+    @Override
+    public byte[] calculateMerkleRoot(Block block) {
+        List<byte[]> transactionBytes = new ArrayList<byte[]>();
+
+        for(Transaction transaction : block.getTransactions()) {
+            transactionBytes.add(hasherFactory.createHasher(transaction.dump()).getOutput());
+        }
+
+        return calculateMerkleRoot(transactionBytes);
     }
 }
