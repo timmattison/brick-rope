@@ -45,4 +45,16 @@ public class HashComparatorTests {
         Assert.assertTrue(Arrays.equals(list.get(0), merkleRootBlock1));
         Assert.assertTrue(Arrays.equals(list.get(1), merkleRootBlock0));
     }
+
+    @Test
+    public void syntheticTest1() {
+        List<byte[]> list = new ArrayList<byte[]>();
+        list.add(merkleRootBlock1);
+        list.add(merkleRootBlock0);
+
+        Collections.sort(list, hashComparator);
+
+        Assert.assertTrue(Arrays.equals(list.get(0), merkleRootBlock1));
+        Assert.assertTrue(Arrays.equals(list.get(1), merkleRootBlock0));
+    }
 }

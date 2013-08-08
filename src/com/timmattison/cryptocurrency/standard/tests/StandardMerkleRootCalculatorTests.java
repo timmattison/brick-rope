@@ -22,7 +22,6 @@ import java.util.List;
  */
 public class StandardMerkleRootCalculatorTests {
     private final boolean changeEndianness = false;
-
     private final StandardMerkleRootCalculator calculator = new StandardMerkleRootCalculator(new DoubleSha256Factory(), new HashComparator());
     private final byte[] merkleRootBlock0 = TestHelper.fromHexString("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b", changeEndianness);
     private final byte[] merkleRootBlock1 = TestHelper.fromHexString("0e3e2357e806b6cdb1f70b54c3a3a17b6714ee1f0e68bebb44a74b1efd512098", changeEndianness);
@@ -73,8 +72,9 @@ public class StandardMerkleRootCalculatorTests {
         Assert.assertTrue(Arrays.equals(result, merkleRootBlock170));
     }
 
-   @Test
+    @Test
     public void syntheticTest1() {
+        // From: https://bitcointalk.org/index.php?topic=44707.msg534605#msg534605
         final byte[] tx0 = TestHelper.fromHexString("3a459eab5f0cf8394a21e04d2ed3b2beeaa59795912e20b9c680e9db74dfb18c", changeEndianness);
         final byte[] tx1 = TestHelper.fromHexString("be38f46f0eccba72416aed715851fd07b881ffb7928b7622847314588e06a6b7", changeEndianness);
         final byte[] tx2 = TestHelper.fromHexString("d173f2a12b6ff63a77d9fe7bbb590bdb02b826d07739f90ebb016dc9297332be", changeEndianness);
@@ -99,6 +99,7 @@ public class StandardMerkleRootCalculatorTests {
 
     @Test
     public void syntheticTest2() {
+        // From: https://bitcointalk.org/index.php?topic=44707.msg534605#msg534605
         final byte[] tx0 = TestHelper.fromHexString("59545fd8dfdd821ca7accecab0655d77437f5bba5aaa5ea8c042a26bc9ae514b", changeEndianness);
         final byte[] tx1 = TestHelper.fromHexString("15eca0aa3e2cc2b9b4fbe0629f1dda87f329500fcdcd6ef546d163211266b3b3", changeEndianness);
 

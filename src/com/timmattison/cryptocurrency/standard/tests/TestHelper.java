@@ -1,5 +1,8 @@
 package com.timmattison.cryptocurrency.standard.tests;
 
+import java.math.BigInteger;
+import java.util.Arrays;
+
 /**
  * Created with IntelliJ IDEA.
  * User: timmattison
@@ -8,12 +11,12 @@ package com.timmattison.cryptocurrency.standard.tests;
  * To change this template use File | Settings | File Templates.
  */
 public class TestHelper {
-    public static byte[] fromHexString(String string, boolean changeEndianness) {
+    public static byte[] fromHexStringWrong(String string, boolean changeEndianness) {
         if ((string.length() % 2) != 0)
             throw new IllegalArgumentException("Input string must contain an even number of characters");
 
-        if(changeEndianness) {
-        string = changeEndianness(string);
+        if (changeEndianness) {
+            string = changeEndianness(string);
         }
 
         final byte result[] = new byte[string.length() / 2];
@@ -26,10 +29,26 @@ public class TestHelper {
         return result;
     }
 
+    public static byte[] fromHexString(String string, boolean changeEndianness) {
+        if (changeEndianness) {
+            string = changeEndianness(string);
+        }
+
+        BigInteger bigInteger = new BigInteger(string, 16);
+        byte[] result = bigInteger.toByteArray();
+
+        if(result[0] == 0) {
+            return Arrays.copyOfRange(result, 1, result.length);
+        }
+        else {
+            return result;
+        }
+    }
+
     private static String changeEndianness(String string) {
         StringBuilder stringBuilder = new StringBuilder();
 
-        for(int loop = 0; loop < string.length() / 2; loop++) {
+        for (int loop = 0; loop < string.length() / 2; loop++) {
             int startIndex = string.length() - ((loop + 1) * 2);
             int endIndex = startIndex + 2;
             String substring = string.substring(startIndex, endIndex);
