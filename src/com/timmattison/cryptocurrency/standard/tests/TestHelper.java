@@ -29,6 +29,10 @@ public class TestHelper {
         return result;
     }
 
+    public static byte[] fromHexString(String string) {
+        return fromHexString(string, false);
+    }
+
     public static byte[] fromHexString(String string, boolean changeEndianness) {
         if (changeEndianness) {
             string = changeEndianness(string);

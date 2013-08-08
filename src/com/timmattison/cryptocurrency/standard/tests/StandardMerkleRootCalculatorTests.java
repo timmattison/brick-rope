@@ -73,6 +73,19 @@ public class StandardMerkleRootCalculatorTests {
     }
 
     @Test
+    public void bitcoinBlock170Test2() {
+        final byte[] hashOfBlock170Transaction0 = ByteArrayHelper.reverseBytes(TestHelper.fromHexString("b1fea52486ce0c62bb442b530a3f0132b826c74e473d1f2c220bfa78111c5082"));
+        final byte[] hashOfBlock170Transaction1 = ByteArrayHelper.reverseBytes(TestHelper.fromHexString("f4184fc596403b9d638783cf57adfe4c75c605f6356fbc91338530e9831e9e16"));
+        final List<byte[]> input = new ArrayList<byte[]>();
+        input.add(hashOfBlock170Transaction0);
+        input.add(hashOfBlock170Transaction1);
+
+        byte[] result = calculator.calculateMerkleRoot(input);
+
+        Assert.assertTrue(Arrays.equals(result, merkleRootBlock170));
+    }
+
+    @Test
     public void syntheticTest1() {
         // From: https://bitcointalk.org/index.php?topic=44707.msg534605#msg534605
         final byte[] tx0 = TestHelper.fromHexString("3a459eab5f0cf8394a21e04d2ed3b2beeaa59795912e20b9c680e9db74dfb18c", changeEndianness);
@@ -108,6 +121,37 @@ public class StandardMerkleRootCalculatorTests {
         final List<byte[]> input = new ArrayList<byte[]>();
         input.add(tx0);
         input.add(tx1);
+
+        byte[] result = calculator.calculateMerkleRoot(input);
+        String resultHex = ByteArrayHelper.toHex(result);
+
+        Assert.assertTrue(Arrays.equals(result, expectedRoot));
+    }
+
+    @Test
+    public void block72785() {
+        // https://en.bitcoin.it/wiki/Dump_format#CBlock
+        // http://blockexplorer.com/block/00000000009ffdadbb2a8bcf8e8b1d68e1696802856c6a1d61561b1f630e79e7
+        // http://blockexplorer.com/rawblock/00000000009ffdadbb2a8bcf8e8b1d68e1696802856c6a1d61561b1f630e79e7
+
+        final byte[] tx0 = TestHelper.fromHexString("2d7f4d1c25893dcaf538fdd1f34104687211ca7d8a1ba43c16b618d5fbc620c3");
+        final byte[] tx1 = TestHelper.fromHexString("3407a84dce0fe04fdab91608d1974941af3683ea6e4d904a30469485c50d336a");
+        final byte[] tx2 = TestHelper.fromHexString("5edf5acf8f517d965219a5495321e0bedd761daf45bcdc59a33b07b520968b8c");
+        final byte[] tx3 = TestHelper.fromHexString("65c35615b476c86f28a4d3a8985ea161cc2e35e6574eacbd68942782ce29804c");
+        final byte[] tx4 = TestHelper.fromHexString("89aa32f6e1b047e740401ce4fd43a865631de5a959fde7451936c28c52249b56");
+        final byte[] tx5 = TestHelper.fromHexString("e3e69c802b7e36d220151e4ccdeace1d58ca2af97c5fd970314bbecd9767a514");
+
+        final String tx0String = ByteArrayHelper.toHex(tx0);
+
+        final byte[] expectedRoot = TestHelper.fromHexString("e81287dc0c00422aaf0db3e4586c48b01acd82b3108da6956cbd6baf19cfaf9a");
+
+        final List<byte[]> input = new ArrayList<byte[]>();
+        input.add(tx0);
+        input.add(tx1);
+        input.add(tx2);
+        input.add(tx3);
+        input.add(tx4);
+        input.add(tx5);
 
         byte[] result = calculator.calculateMerkleRoot(input);
         String resultHex = ByteArrayHelper.toHex(result);
