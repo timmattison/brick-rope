@@ -2,6 +2,7 @@ package com.timmattison.cryptocurrency.helpers;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.logging.Logger;
 
 /**
  * Created with IntelliJ IDEA.
@@ -11,9 +12,7 @@ import java.io.IOException;
  * To change this template use File | Settings | File Templates.
  */
 public class ByteArrayHelper {
-    public static void printArray(byte[] array) {
-        System.out.println(formatArray(array));
-    }
+    private static final Logger logger = Logger.getLogger(ByteArrayHelper.class.getName());
 
     public static String toHex(Byte input) {
         return String.format("%02x", input);
@@ -38,12 +37,12 @@ public class ByteArrayHelper {
 
         for (int loop = 0; loop < length; loop++) {
             if (!array1[loop].equals(array2[loop])) {
-                System.out.println("Arrays differ at byte " + loop + " [" + ByteArrayHelper.toHex(array1[loop]) + "][" + ByteArrayHelper.toHex(array2[loop]) + "]");
+                logger.info("Arrays differ at byte " + loop + " [" + ByteArrayHelper.toHex(array1[loop]) + "][" + ByteArrayHelper.toHex(array2[loop]) + "]");
                 return;
             }
         }
 
-        System.out.println("Arrays are equal up to byte " + length);
+        logger.info("Arrays are equal up to byte " + length);
     }
 
     public static byte[] concatenate(byte[] input1, byte[] input2) throws IOException {

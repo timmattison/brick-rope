@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Logger;
 
 /**
  * Created with IntelliJ IDEA.
@@ -25,6 +26,8 @@ import java.util.List;
  * To change this template use File | Settings | File Templates.
  */
 public class BitcoinTransaction implements Transaction {
+    private static final Logger logger = Logger.getLogger(BitcoinTransaction.class.getName());
+
     private static final int versionNumberLengthInBytes = 4;
     private static final int lockTimeLengthInBytes = 4;
     private final long maxVersionNumber = 1;
@@ -151,25 +154,25 @@ public class BitcoinTransaction implements Transaction {
         try {
             ByteArrayOutputStream bytes = new ByteArrayOutputStream();
 
-            System.out.println("Version number bytes: " + ByteArrayHelper.toHex(versionNumberBytes));
+            logger.fine("Version number bytes: " + ByteArrayHelper.toHex(versionNumberBytes));
             bytes.write(versionNumberBytes);
-            System.out.println("In counter bytes: " + ByteArrayHelper.toHex(inCounterBytes));
+            logger.fine("In counter bytes: " + ByteArrayHelper.toHex(inCounterBytes));
             bytes.write(inCounterBytes);
 
             for (Input input : inputs) {
-                System.out.println("Input: " + ByteArrayHelper.toHex(input.dump()));
+                logger.fine("Input: " + ByteArrayHelper.toHex(input.dump()));
                 bytes.write(input.dump());
             }
 
-            System.out.println("Out counter bytes: " + ByteArrayHelper.toHex(outCounterBytes));
+            logger.fine("Out counter bytes: " + ByteArrayHelper.toHex(outCounterBytes));
             bytes.write(outCounterBytes);
 
             for (Output output : outputs) {
-                System.out.println("Output: " + ByteArrayHelper.toHex(output.dump()));
+                logger.fine("Output: " + ByteArrayHelper.toHex(output.dump()));
                 bytes.write(output.dump());
             }
 
-            System.out.println("Lock time bytes: " + ByteArrayHelper.toHex(lockTimeBytes));
+            logger.fine("Lock time bytes: " + ByteArrayHelper.toHex(lockTimeBytes));
             bytes.write(lockTimeBytes);
 
             return bytes.toByteArray();
