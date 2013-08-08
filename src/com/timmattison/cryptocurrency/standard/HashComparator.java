@@ -14,7 +14,7 @@ public class HashComparator implements Comparator<byte[]> {
     @Override
     public int compare(byte[] left, byte[] right) {
         // From: http://stackoverflow.com/questions/5108091/java-comparator-for-byte-array-lexicographic
-        for (int i = 0, j = 0; i < left.length && j < right.length; i++, j++) {
+        for (int i = (left.length - 1), j = (right.length - 1); i >= 0 && j >= 0; i--, j--) {
             int a = (left[i] & 0xff);
             int b = (right[j] & 0xff);
             if (a != b) {
