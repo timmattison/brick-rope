@@ -1,5 +1,6 @@
 package com.timmattison.cryptocurrency.standard;
 
+import com.timmattison.bitcoin.test.ByteArrayHelper;
 import com.timmattison.cryptocurrency.bitcoin.factories.HasherFactory;
 import com.timmattison.cryptocurrency.interfaces.Block;
 import com.timmattison.cryptocurrency.interfaces.MerkleRootCalculator;
@@ -58,9 +59,20 @@ public class StandardMerkleRootCalculator implements MerkleRootCalculator {
             for (int loop = 0; loop < (tempTransactionBytes.size() / 2); loop++) {
                 try {
                     ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                    baos.write(tempTransactionBytes.get(loop * 2));
-                    baos.write(tempTransactionBytes.get((loop * 2) + 1));
-                    transactionBytes.add(hasherFactory.createHasher(baos.toByteArray()).getOutput());
+
+                    byte[] firstTransaction = tempTransactionBytes.get(loop * 2);
+                    byte[] secondTransaction = tempTransactionBytes.get((loop * 2) + 1);
+
+                    String firstTransactionHex = ByteArrayHelper.toHex(firstTransaction);
+                    String secondTransactionHex = ByteArrayHelper.toHex(secondTransaction);
+
+                    baos.write(firstTransaction);
+                    baos.write(secondTransaction);
+
+                    byte[] result = hasherFactory.createHasher(baos.toByteArray()).getOutput();
+                    String resultHex = ByteArrayHelper.toHex(result);
+
+                    transactionBytes.add(result);
                 } catch (IOException e) {
                     throw new UnsupportedOperationException(e);
                 }
