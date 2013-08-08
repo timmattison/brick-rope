@@ -1,6 +1,7 @@
 package com.timmattison.cryptocurrency.bitcoin.factories;
 
 import com.timmattison.cryptocurrency.bitcoin.DoubleSha256Hash;
+import com.timmattison.cryptocurrency.bitcoin.SingleSha256Hash;
 import com.timmattison.cryptocurrency.interfaces.Hash;
 
 /**
@@ -12,6 +13,6 @@ import com.timmattison.cryptocurrency.interfaces.Hash;
  */
 public class SingleSha256Factory implements HasherFactory {
     public Hash createHasher(byte[] input) {
-        return new DoubleSha256Hash(input);
+        return new SingleSha256Hash(input);
     }
 }

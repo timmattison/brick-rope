@@ -25,9 +25,7 @@ public class SingleSha256Hash implements Hash {
             try {
                 MessageDigest messageDigest1 = MessageDigest.getInstance(Constants.SHA256_ALGORITHM);
 
-                MessageDigest messageDigest2 = MessageDigest.getInstance(Constants.SHA256_ALGORITHM);
-
-                output = messageDigest2.digest(messageDigest1.digest(input));
+                output = messageDigest1.digest(input);
             } catch (NoSuchAlgorithmException e) {
                 throw new UnsupportedOperationException(e);
             }
