@@ -28,12 +28,12 @@ public class HashComparator implements Comparator<byte[]> {
         // They are equal in length
         for(int loop = (o1.length - 1); loop >= 0; loop--) {
             int o1Value = (o1[loop] & 0xFF);
-            int o2Value = (o1[loop] & 0xFF);
+            int o2Value = (o2[loop] & 0xFF);
             if(o1Value < o2Value) {
                 // o1 is smaller
                 return 1;
             }
-            else if(o1[loop] > o2[loop]) {
+            else if(o1Value > o2Value) {
                 // o1 is larger
                 return -1;
             }
