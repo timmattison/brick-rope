@@ -31,7 +31,7 @@ public class BlockChainTest {
         }
 
         // Open the input file
-        File inputFile = new File("blockchain.dat");
+        File inputFile = new File("bitcoin-blockchain.dat");
 
         // Get a file input stream for this input file
         BufferedInputStream inputStream = new BufferedInputStream(new FileInputStream(inputFile));

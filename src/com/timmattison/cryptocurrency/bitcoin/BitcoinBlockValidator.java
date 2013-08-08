@@ -67,8 +67,6 @@ public class BitcoinBlockValidator implements BlockValidator {
 
         Collections.sort(transactionBytes, new HashComparator());
 
-        int level = 0;
-
         // Keep looping and hashing until there is only one value
         do {
             // Is the number of transactions odd?
@@ -76,8 +74,6 @@ public class BitcoinBlockValidator implements BlockValidator {
                 // Yes, duplicate the last transaction getHash
                 transactionBytes.add(transactionBytes.get(transactionBytes.size() - 1));
             }
-
-            //logTree(level++, transactionBytes);
 
             // Copy the original data
             List<byte[]> tempTransactionBytes = new ArrayList<byte[]>(transactionBytes);
