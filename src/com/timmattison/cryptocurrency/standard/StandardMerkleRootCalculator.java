@@ -75,7 +75,9 @@ public class StandardMerkleRootCalculator implements MerkleRootCalculator {
                     baos.write(secondTransaction);
 
                     byte[] result = hasherFactory.createHasher(baos.toByteArray()).getOutput();
+
                     String resultHex = ByteArrayHelper.toHex(result);
+                    logger.fine("Result hash:" + resultHex);
 
                     transactionBytes.add(result);
                 } catch (IOException e) {
