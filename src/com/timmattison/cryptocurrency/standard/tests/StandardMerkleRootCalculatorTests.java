@@ -73,49 +73,6 @@ public class StandardMerkleRootCalculatorTests {
     }
 
     @Test
-    public void syntheticTest1() {
-        // From: https://bitcointalk.org/index.php?topic=44707.msg534605#msg534605
-        final byte[] tx0 = TestHelper.fromLittleEndianHexString("3a459eab5f0cf8394a21e04d2ed3b2beeaa59795912e20b9c680e9db74dfb18c");
-        final byte[] tx1 = TestHelper.fromLittleEndianHexString("be38f46f0eccba72416aed715851fd07b881ffb7928b7622847314588e06a6b7");
-        final byte[] tx2 = TestHelper.fromLittleEndianHexString("d173f2a12b6ff63a77d9fe7bbb590bdb02b826d07739f90ebb016dc9297332be");
-        final byte[] tx3 = TestHelper.fromLittleEndianHexString("59d1e83e5268bbb491234ff23cbbf2a7c0aa87df553484afee9e82385fc7052f");
-        final byte[] tx4 = TestHelper.fromLittleEndianHexString("f1ce77a69d06efb79e3b08a0ff441fa3b1deaf71b358df55244d56dd797ac60c");
-        final byte[] tx5 = TestHelper.fromLittleEndianHexString("84053cba91fe659fd3afa1bf2fd0e3746b99215b50cd74e44bda507d8edf52e0");
-
-        final byte[] expectedRoot = TestHelper.fromLittleEndianHexString("9cdf7722eb64015731ba9794e32bdefd9cf69b42456d31f5e59aedb68c57ed52");
-
-        final List<byte[]> input = new ArrayList<byte[]>();
-        input.add(tx0);
-        input.add(tx1);
-        input.add(tx2);
-        input.add(tx3);
-        input.add(tx4);
-        input.add(tx5);
-
-        byte[] result = calculator.calculateMerkleRoot(input);
-
-        Assert.assertTrue(Arrays.equals(result, expectedRoot));
-    }
-
-    @Test
-    public void syntheticTest2() {
-        // From: https://bitcointalk.org/index.php?topic=44707.msg534605#msg534605
-        final byte[] tx0 = TestHelper.fromLittleEndianHexString("59545fd8dfdd821ca7accecab0655d77437f5bba5aaa5ea8c042a26bc9ae514b");
-        final byte[] tx1 = TestHelper.fromLittleEndianHexString("15eca0aa3e2cc2b9b4fbe0629f1dda87f329500fcdcd6ef546d163211266b3b3");
-
-        final byte[] expectedRoot = TestHelper.fromLittleEndianHexString("9cdf7722eb64015731ba9794e32bdefd9cf69b42456d31f5e59aedb68c57ed52");
-
-        final List<byte[]> input = new ArrayList<byte[]>();
-        input.add(tx0);
-        input.add(tx1);
-
-        byte[] result = calculator.calculateMerkleRoot(input);
-        String resultHex = ByteArrayHelper.toHex(result);
-
-        Assert.assertTrue(Arrays.equals(result, expectedRoot));
-    }
-
-    @Test
     public void block72785() {
         // https://en.bitcoin.it/wiki/Dump_format#CBlock
         // http://blockexplorer.com/block/00000000009ffdadbb2a8bcf8e8b1d68e1696802856c6a1d61561b1f630e79e7
