@@ -33,7 +33,7 @@ public class TestHelper {
         return fromHexString(string, false);
     }
 
-    public static byte[] fromHexString(String string, boolean changeEndianness) {
+    private static byte[] fromHexString(String string, boolean changeEndianness) {
         if (changeEndianness) {
             string = changeEndianness(string);
         }
