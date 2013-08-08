@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.logging.Logger;
 
 /**
  * Created with IntelliJ IDEA.
@@ -22,6 +23,7 @@ import java.util.List;
  * To change this template use File | Settings | File Templates.
  */
 public class StandardMerkleRootCalculator implements MerkleRootCalculator {
+    private final static Logger logger = Logger.getLogger(StandardMerkleRootCalculator.class.getName());
     private final HasherFactory hasherFactory;
     private final Comparator<byte[]> comparator;
 
@@ -65,6 +67,9 @@ public class StandardMerkleRootCalculator implements MerkleRootCalculator {
 
                     String firstTransactionHex = ByteArrayHelper.toHex(firstTransaction);
                     String secondTransactionHex = ByteArrayHelper.toHex(secondTransaction);
+
+                    logger.fine("First hash : " + firstTransactionHex);
+                    logger.fine("Second hash: " + secondTransactionHex);
 
                     baos.write(firstTransaction);
                     baos.write(secondTransaction);

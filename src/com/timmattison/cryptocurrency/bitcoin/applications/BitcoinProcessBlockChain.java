@@ -19,6 +19,8 @@ import java.io.FileNotFoundException;
  */
 public class BitcoinProcessBlockChain {
     public static void main(String[] args) throws FileNotFoundException {
+        ApplicationHelper.logFine();
+
         Injector injector = Guice.createInjector(new BitcoinModule());
 
         BlockChain blockChain = injector.getInstance(BlockChain.class);
