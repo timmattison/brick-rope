@@ -102,4 +102,25 @@ public class StandardMerkleRootCalculatorTests {
 
         Assert.assertTrue(Arrays.equals(result, expectedRoot));
     }
+
+    @Test
+    public void block183() {
+        // https://en.bitcoin.it/wiki/Dump_format#CBlock
+        // http://blockexplorer.com/block/00000000f46e513f038baf6f2d9a95b2a28d8a6c985bcf24b9e07f0f63a29888
+        // http://blockexplorer.com/rawblock/00000000f46e513f038baf6f2d9a95b2a28d8a6c985bcf24b9e07f0f63a29888
+
+        final byte[] tx0 = TestHelper.fromBigEndianHexString("b2e561eb278f5aba7a2c78d46422f496f4998003635cc65807e230407190a355");
+        final byte[] tx1 = TestHelper.fromBigEndianHexString("12b5633bad1f9c167d523ad1aa1947b2732a865bf5414eab2f9e5ae5d5c191ba");
+
+        final String tx0String = ByteArrayHelper.toHex(tx0);
+
+        final byte[] expectedRoot = TestHelper.fromBigEndianHexString("df25983b51d84d40b4efcb5556cdd6d524ac2d21bca49037494e413ae0712529");
+
+        final List<byte[]> input = new ArrayList<byte[]>();
+        input.add(tx0);
+        input.add(tx1);
+
+        byte[] result = calculator.calculateMerkleRoot(input);
+        String resultHex = ByteArrayHelper.toHex(result);
+    }
 }
