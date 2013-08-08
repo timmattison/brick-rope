@@ -92,7 +92,9 @@ public class StandardMerkleRootCalculator implements MerkleRootCalculator {
     public byte[] calculateMerkleRoot(Block block) {
         List<byte[]> transactionBytes = new ArrayList<byte[]>();
 
-        for(Transaction transaction : block.getTransactions()) {
+        logger.fine("Number of transactions used in merkle root calculation: " + block.getTransactions().size());
+
+        for (Transaction transaction : block.getTransactions()) {
             transactionBytes.add(hasherFactory.createHasher(transaction.dump()).getOutput());
         }
 

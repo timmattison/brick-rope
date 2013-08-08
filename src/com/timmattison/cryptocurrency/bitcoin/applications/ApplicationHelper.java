@@ -16,7 +16,7 @@ public class ApplicationHelper {
         Handler[] handlers = Logger.getLogger("").getHandlers();
 
         for(Handler handler : handlers) {
-            handler.setLevel(Level.FINE);
+            handler.setLevel(Level.FINEST);
         }
     }
 }
