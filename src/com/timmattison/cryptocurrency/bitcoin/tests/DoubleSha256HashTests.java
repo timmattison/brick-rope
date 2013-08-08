@@ -62,10 +62,10 @@ public class DoubleSha256HashTests {
     }
 
     @Test
-    public void block72785Merkle1() throws IOException {
+    public void opensslVerified1() throws IOException {
         final byte[] leaf1 = TestHelper.fromHexString("2d7f4d1c25893dcaf538fdd1f34104687211ca7d8a1ba43c16b618d5fbc620c3");
         final byte[] leaf2 = TestHelper.fromHexString("3407a84dce0fe04fdab91608d1974941af3683ea6e4d904a30469485c50d336a");
-        final byte[] expected = TestHelper.fromHexString("8ebc6ac1c5c656c19632f8b7efd130303a9710ed1c0ea12935255d6fefc5d3b4");
+        final byte[] expected = TestHelper.fromHexString("f840ae66eeb6336a576b7e0d543d47063c4d49ae9d04c89b8bba5c257f134652");
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         baos.write(leaf1);
