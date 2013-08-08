@@ -2,6 +2,7 @@ package com.timmattison.cryptocurrency.bitcoin;
 
 import com.timmattison.cryptocurrency.factories.ScriptFactory;
 import com.timmattison.cryptocurrency.helpers.EndiannessHelper;
+import com.timmattison.cryptocurrency.interfaces.Buildable;
 import com.timmattison.cryptocurrency.interfaces.Input;
 import com.timmattison.cryptocurrency.standard.InputScript;
 import com.timmattison.cryptocurrency.standard.Script;
@@ -111,22 +112,5 @@ public class BitcoinInput implements Input {
     @Override
     public Script getScript() {
         return inputScript;
-    }
-
-    @Override
-    public byte[] dumpBytes() {
-        try {
-            ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-
-            bytes.write(previousTransactionHash);
-            bytes.write(previousOutputIndexBytes);
-            bytes.write(inputScriptLengthBytes);
-            bytes.write(inputScript.dump());
-            bytes.write(sequenceNumberBytes);
-
-            return bytes.toByteArray();
-        } catch (IOException e) {
-            throw new UnsupportedOperationException(e);
-        }
     }
 }

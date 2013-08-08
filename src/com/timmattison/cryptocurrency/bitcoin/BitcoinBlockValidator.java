@@ -1,9 +1,11 @@
 package com.timmattison.cryptocurrency.bitcoin;
 
+import com.timmattison.bitcoin.test.ByteArrayHelper;
 import com.timmattison.bitcoin.test.HashComparator;
 import com.timmattison.cryptocurrency.bitcoin.factories.HasherFactory;
 import com.timmattison.cryptocurrency.interfaces.Block;
 import com.timmattison.cryptocurrency.interfaces.BlockValidator;
+import com.timmattison.cryptocurrency.interfaces.MerkleRootCalculator;
 import com.timmattison.cryptocurrency.interfaces.Transaction;
 
 import javax.inject.Inject;
@@ -23,10 +25,12 @@ import java.util.List;
  */
 public class BitcoinBlockValidator implements BlockValidator {
     private final HasherFactory hasherFactory;
+    private final MerkleRootCalculator merkleRootCalculator;
 
     @Inject
-    public BitcoinBlockValidator(HasherFactory hasherFactory) {
+    public BitcoinBlockValidator(HasherFactory hasherFactory, MerkleRootCalculator merkleRootCalculator) {
         this.hasherFactory = hasherFactory;
+        this.merkleRootCalculator = merkleRootCalculator;
     }
 
     @Override
@@ -62,6 +66,7 @@ public class BitcoinBlockValidator implements BlockValidator {
         // Is there only one value?
         if (transactionBytes.size() == 1) {
             // Yes, there is only one value.  Just return it.
+            System.out.println("Final transaction hash: " + ByteArrayHelper.toHex(transactionBytes.get(0)));
             return transactionBytes.get(0);
         }
 
@@ -88,6 +93,7 @@ public class BitcoinBlockValidator implements BlockValidator {
                     baos.write(tempTransactionBytes.get(loop * 2));
                     baos.write(tempTransactionBytes.get((loop * 2) + 1));
                     transactionBytes.add(hasherFactory.createHasher(baos.toByteArray()).getOutput());
+                    System.out.println("Intermediate hash [" + loop + "]: " + ByteArrayHelper.toHex(transactionBytes.get(0)));
                 } catch (IOException e) {
                     throw new UnsupportedOperationException(e);
                 }

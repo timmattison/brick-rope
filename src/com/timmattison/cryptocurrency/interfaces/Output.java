@@ -13,6 +13,4 @@ import java.util.Iterator;
  */
 public interface Output extends Buildable {
     Script getScript();
-
-    byte[] dumpBytes();
 }

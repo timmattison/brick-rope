@@ -85,20 +85,4 @@ public class BitcoinOutput implements Output {
     public Script getScript() {
         return outputScript;
     }
-
-    @Override
-    public byte[] dumpBytes() {
-        try {
-            ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-
-            bytes.write(valueBytes);
-            bytes.write(outputScriptLengthBytes);
-
-            bytes.write(outputScript.dump());
-
-            return bytes.toByteArray();
-        } catch (IOException e) {
-            throw new UnsupportedOperationException(e);
-        }
-    }
 }

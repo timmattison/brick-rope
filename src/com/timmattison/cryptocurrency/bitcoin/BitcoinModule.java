@@ -1,10 +1,15 @@
 package com.timmattison.cryptocurrency.bitcoin;
 
 import com.google.inject.AbstractModule;
+import com.google.inject.TypeLiteral;
 import com.timmattison.cryptocurrency.bitcoin.factories.*;
 import com.timmattison.cryptocurrency.factories.*;
 import com.timmattison.cryptocurrency.interfaces.*;
+import com.timmattison.cryptocurrency.standard.HashComparator;
 import com.timmattison.cryptocurrency.standard.StandardBlockChain;
+import com.timmattison.cryptocurrency.standard.StandardMerkleRootCalculator;
+
+import java.util.Comparator;
 
 /**
  * Created with IntelliJ IDEA.
@@ -34,5 +39,8 @@ public class BitcoinModule extends AbstractModule {
         bind(WordFactory.class).to(BitcoinWordFactory.class);
 
         bind(HasherFactory.class).to(DoubleSha256Factory.class);
+
+        bind(MerkleRootCalculator.class).to(StandardMerkleRootCalculator.class);
+        bind(new TypeLiteral<Comparator<byte[]>>(){}).to(new TypeLiteral<HashComparator>(){});
     }
 }

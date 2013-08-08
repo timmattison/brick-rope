@@ -3,6 +3,7 @@ package com.timmattison.cryptocurrency.bitcoin;
 import com.timmattison.cryptocurrency.bitcoin.factories.HasherFactory;
 import com.timmattison.cryptocurrency.factories.InputFactory;
 import com.timmattison.cryptocurrency.factories.OutputFactory;
+import com.timmattison.cryptocurrency.helpers.ByteArrayHelper;
 import com.timmattison.cryptocurrency.helpers.EndiannessHelper;
 import com.timmattison.cryptocurrency.interfaces.Input;
 import com.timmattison.cryptocurrency.interfaces.Output;
@@ -150,19 +151,25 @@ public class BitcoinTransaction implements Transaction {
         try {
             ByteArrayOutputStream bytes = new ByteArrayOutputStream();
 
+            System.out.println("Version number bytes: " + ByteArrayHelper.toHex(versionNumberBytes));
             bytes.write(versionNumberBytes);
+            System.out.println("In counter bytes: " + ByteArrayHelper.toHex(inCounterBytes));
             bytes.write(inCounterBytes);
 
             for (Input input : inputs) {
-                bytes.write(input.dumpBytes());
+                System.out.println("Input: " + ByteArrayHelper.toHex(input.dump()));
+                bytes.write(input.dump());
             }
 
+            System.out.println("Out counter bytes: " + ByteArrayHelper.toHex(outCounterBytes));
             bytes.write(outCounterBytes);
 
             for (Output output : outputs) {
-                bytes.write(output.dumpBytes());
+                System.out.println("Output: " + ByteArrayHelper.toHex(output.dump()));
+                bytes.write(output.dump());
             }
 
+            System.out.println("Lock time bytes: " + ByteArrayHelper.toHex(lockTimeBytes));
             bytes.write(lockTimeBytes);
 
             return bytes.toByteArray();

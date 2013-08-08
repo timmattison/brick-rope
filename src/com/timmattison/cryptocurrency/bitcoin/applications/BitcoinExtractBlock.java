@@ -1,7 +1,8 @@
-package com.timmattison.cryptocurrency.bitcoin;
+package com.timmattison.cryptocurrency.bitcoin.applications;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import com.timmattison.cryptocurrency.bitcoin.BitcoinModule;
 import com.timmattison.cryptocurrency.interfaces.Block;
 import com.timmattison.cryptocurrency.interfaces.BlockChain;
 
@@ -27,7 +28,7 @@ public class BitcoinExtractBlock {
 
         for (int loop = 0; loop < 172; loop++) {
             Block block = blockChain.next();
-            File outputFile = new File("bitcoin-block-" + String.format("%06d", loop) + ".dat");
+            File outputFile = new File("blocks/bitcoin-block-" + String.format("%06d", loop) + ".dat");
 
             OutputStream outputStream = new FileOutputStream(outputFile);
             outputStream.write(block.dump());
