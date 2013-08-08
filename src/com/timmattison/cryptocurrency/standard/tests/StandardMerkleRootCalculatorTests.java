@@ -73,19 +73,6 @@ public class StandardMerkleRootCalculatorTests {
     }
 
     @Test
-    public void bitcoinBlock170Test2() {
-        final byte[] hashOfBlock170Transaction0 = ByteArrayHelper.reverseBytes(TestHelper.fromHexString("b1fea52486ce0c62bb442b530a3f0132b826c74e473d1f2c220bfa78111c5082"));
-        final byte[] hashOfBlock170Transaction1 = ByteArrayHelper.reverseBytes(TestHelper.fromHexString("f4184fc596403b9d638783cf57adfe4c75c605f6356fbc91338530e9831e9e16"));
-        final List<byte[]> input = new ArrayList<byte[]>();
-        input.add(hashOfBlock170Transaction0);
-        input.add(hashOfBlock170Transaction1);
-
-        byte[] result = calculator.calculateMerkleRoot(input);
-
-        Assert.assertTrue(Arrays.equals(result, merkleRootBlock170));
-    }
-
-    @Test
     public void syntheticTest1() {
         // From: https://bitcointalk.org/index.php?topic=44707.msg534605#msg534605
         final byte[] tx0 = TestHelper.fromHexString("3a459eab5f0cf8394a21e04d2ed3b2beeaa59795912e20b9c680e9db74dfb18c", changeEndianness);
