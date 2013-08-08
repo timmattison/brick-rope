@@ -48,16 +48,13 @@ public abstract class BitcoinScript implements Script {
             return data;
         }
 
-        int position = 0;
-
         /**
          * Move the bytes we want into a new list.  This is so we can be sure that a misbehaving opcode doesn't try to
          * read past the end of the script.  NOTE: Technically we only support scripts up to 2GB!
          */
-        scriptBytes = Arrays.copyOfRange(data, position, position + (int) lengthInBytes);
-        position += lengthInBytes;
+        scriptBytes = Arrays.copyOfRange(data, 0, (int) lengthInBytes);
 
-        return Arrays.copyOfRange(data, position, data.length);
+        return Arrays.copyOfRange(data, (int) lengthInBytes, data.length);
     }
 
     protected abstract void validateLength();

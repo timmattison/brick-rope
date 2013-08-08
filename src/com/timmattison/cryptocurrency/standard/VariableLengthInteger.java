@@ -27,11 +27,9 @@ public class VariableLengthInteger implements Buildable {
     }
 
     public byte[] build(byte[] data) {
-        int position = 0;
-
         // Get the first byte
-        byte firstByte = data[position];
-        position++;
+        byte firstByte = data[0];
+        data = Arrays.copyOfRange(data, 1, data.length);
 
         int bytesToRead = 0;
 
@@ -39,20 +37,20 @@ public class VariableLengthInteger implements Buildable {
         if (firstByte == (byte) header16BitInteger) {
             // 16-bit
             bytesToRead = 2;
-            valueBytes = Arrays.copyOfRange(data, position, position + bytesToRead);
-            position += bytesToRead;
+            valueBytes = Arrays.copyOfRange(data, 0, bytesToRead);
+            data = Arrays.copyOfRange(data, bytesToRead, data.length);
             value = EndiannessHelper.BytesToShort(valueBytes);
         } else if (firstByte == (byte) header32BitInteger) {
             // 32-bit
             bytesToRead = 4;
-            valueBytes = Arrays.copyOfRange(data, position, position + bytesToRead);
-            position += bytesToRead;
+            valueBytes = Arrays.copyOfRange(data, 0, bytesToRead);
+            data = Arrays.copyOfRange(data, bytesToRead, data.length);
             value = EndiannessHelper.BytesToInt(valueBytes);
         } else if (firstByte == (byte) header64BitInteger) {
             // 64-bit
             bytesToRead = 8;
-            valueBytes = Arrays.copyOfRange(data, position, position + bytesToRead);
-            position += bytesToRead;
+            valueBytes = Arrays.copyOfRange(data, 0, bytesToRead);
+            data = Arrays.copyOfRange(data, bytesToRead, data.length);
             value = EndiannessHelper.BytesToLong(valueBytes);
         } else {
             // 8-bit (mask this so that we don't get negative values)
@@ -76,7 +74,7 @@ public class VariableLengthInteger implements Buildable {
         }
 
         // Return what is left
-        return Arrays.copyOfRange(data, position, data.length);
+        return data;
     }
 
     @Override
