@@ -9,6 +9,7 @@ import com.timmattison.cryptocurrency.interfaces.BlockChain;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.util.Date;
 
 /**
  * Created with IntelliJ IDEA.
@@ -35,7 +36,8 @@ public class BitcoinProcessBlockChain {
 
         while (block != null) {
             if((blockNumber % 1000) == 0) {
-                System.out.println("Block number: " + blockNumber);
+                long timestamp = new Date().getTime();
+                System.out.println(timestamp + ", " + blockNumber);
             }
 
             block = blockChain.next();
