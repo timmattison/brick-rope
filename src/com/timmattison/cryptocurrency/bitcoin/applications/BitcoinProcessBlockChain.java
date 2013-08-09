@@ -34,6 +34,7 @@ public class BitcoinProcessBlockChain {
         int blockNumber = 0;
 
         while (block != null) {
+            System.out.println("Block number: " + blockNumber);
             block = blockChain.next();
             blockNumber++;
         }
