@@ -30,18 +30,15 @@ public class BitcoinProcessBlockChain {
 
         blockChain.setInputStream(inputStream);
 
-        Block ninthBlock = null;
-        Block oneHundredAndSeventythBlock = null;
+        Block block = blockChain.next();
+        int blockNumber = 0;
 
-        for (int loop = 0; loop < 99999; loop++) {
-            Block block = blockChain.next();
-
-            if (loop == 9) {
-                ninthBlock = block;
-            } else if (loop == 170) {
-                oneHundredAndSeventythBlock = block;
-            }
+        while (block != null) {
+            block = blockChain.next();
+            blockNumber++;
         }
+
+        int a = 5;
 
         //    BlockHeader blockHeader = block.getBlockHeader();
         //    List<Transaction> transactions = block.getTransactions();
