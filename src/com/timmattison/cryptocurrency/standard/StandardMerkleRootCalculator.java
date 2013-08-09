@@ -61,19 +61,19 @@ public class StandardMerkleRootCalculator implements MerkleRootCalculator {
                     byte[] firstTransaction = tempTransactionBytes.get(loop * 2);
                     byte[] secondTransaction = tempTransactionBytes.get((loop * 2) + 1);
 
-                    String firstTransactionHex = ByteArrayHelper.toHex(firstTransaction);
-                    String secondTransactionHex = ByteArrayHelper.toHex(secondTransaction);
+                    //String firstTransactionHex = ByteArrayHelper.toHex(firstTransaction);
+                    //String secondTransactionHex = ByteArrayHelper.toHex(secondTransaction);
 
-                    logger.fine("First hash : " + firstTransactionHex);
-                    logger.fine("Second hash: " + secondTransactionHex);
+                    //logger.fine("First hash : " + firstTransactionHex);
+                    //logger.fine("Second hash: " + secondTransactionHex);
 
                     baos.write(firstTransaction);
                     baos.write(secondTransaction);
 
                     byte[] result = hasherFactory.createHasher(baos.toByteArray()).getOutput();
 
-                    String resultHex = ByteArrayHelper.toHex(result);
-                    logger.fine("Result hash:" + resultHex);
+                    //String resultHex = ByteArrayHelper.toHex(result);
+                    //logger.fine("Result hash:" + resultHex);
 
                     transactionBytes.add(result);
                 } catch (IOException e) {

@@ -154,25 +154,25 @@ public class BitcoinTransaction implements Transaction {
         try {
             ByteArrayOutputStream bytes = new ByteArrayOutputStream();
 
-            logger.fine("Version number bytes: " + ByteArrayHelper.toHex(versionNumberBytes));
+            //logger.fine("Version number bytes: " + ByteArrayHelper.toHex(versionNumberBytes));
             bytes.write(versionNumberBytes);
-            logger.fine("In counter bytes: " + ByteArrayHelper.toHex(inCounterBytes));
+            //logger.fine("In counter bytes: " + ByteArrayHelper.toHex(inCounterBytes));
             bytes.write(inCounterBytes);
 
             for (Input input : inputs) {
-                logger.fine("Input: " + ByteArrayHelper.toHex(input.dump()));
+                //logger.fine("Input: " + ByteArrayHelper.toHex(input.dump()));
                 bytes.write(input.dump());
             }
 
-            logger.fine("Out counter bytes: " + ByteArrayHelper.toHex(outCounterBytes));
+            //logger.fine("Out counter bytes: " + ByteArrayHelper.toHex(outCounterBytes));
             bytes.write(outCounterBytes);
 
             for (Output output : outputs) {
-                logger.fine("Output: " + ByteArrayHelper.toHex(output.dump()));
+                //logger.fine("Output: " + ByteArrayHelper.toHex(output.dump()));
                 bytes.write(output.dump());
             }
 
-            logger.fine("Lock time bytes: " + ByteArrayHelper.toHex(lockTimeBytes));
+            //logger.fine("Lock time bytes: " + ByteArrayHelper.toHex(lockTimeBytes));
             bytes.write(lockTimeBytes);
 
             return bytes.toByteArray();
