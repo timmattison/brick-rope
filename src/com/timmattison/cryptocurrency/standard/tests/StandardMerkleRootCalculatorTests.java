@@ -122,5 +122,7 @@ public class StandardMerkleRootCalculatorTests {
 
         byte[] result = calculator.calculateMerkleRoot(input);
         String resultHex = ByteArrayHelper.toHex(result);
+
+        Assert.assertTrue(Arrays.equals(result, expectedRoot));
     }
 }
