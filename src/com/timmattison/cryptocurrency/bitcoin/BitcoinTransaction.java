@@ -30,7 +30,7 @@ public class BitcoinTransaction implements Transaction {
 
     private static final int versionNumberLengthInBytes = 4;
     private static final int lockTimeLengthInBytes = 4;
-    private final long maxVersionNumber = 1;
+    private final long maxVersionNumber = 2;
     private final int transactionCounter;
     private final InputFactory inputFactory;
     private final OutputFactory outputFactory;
