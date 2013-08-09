@@ -21,9 +21,6 @@ import java.util.List;
  */
 public class StandardMerkleRootCalculatorTests {
     private final StandardMerkleRootCalculator calculator = new StandardMerkleRootCalculator(new DoubleSha256Factory());
-    private final byte[] merkleRootBlock0 = TestHelper.fromBigEndianHexString("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b");
-    private final byte[] merkleRootBlock1 = TestHelper.fromBigEndianHexString("0e3e2357e806b6cdb1f70b54c3a3a17b6714ee1f0e68bebb44a74b1efd512098");
-    private final byte[] merkleRootBlock170 = TestHelper.fromBigEndianHexString("7dac2c5666815c17a3b36427de37bb9d2e2c5ccec3f8633eb91a4205cb4c10ff");
 
     @BeforeClass
     public static void setUpClass() {
@@ -38,6 +35,8 @@ public class StandardMerkleRootCalculatorTests {
     @Test
     public void bitcoinBlock0Test() {
         final byte[] hashOfBlock0Transaction0 = TestHelper.fromBigEndianHexString("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b");
+        final byte[] merkleRootBlock0 = TestHelper.fromBigEndianHexString("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b");
+
         final List<byte[]> input = new ArrayList<byte[]>();
         input.add(hashOfBlock0Transaction0);
 
@@ -49,6 +48,8 @@ public class StandardMerkleRootCalculatorTests {
     @Test
     public void bitcoinBlock1Test() {
         final byte[] hashOfBlock1Transaction0 = TestHelper.fromBigEndianHexString("0e3e2357e806b6cdb1f70b54c3a3a17b6714ee1f0e68bebb44a74b1efd512098");
+        final byte[] merkleRootBlock1 = TestHelper.fromBigEndianHexString("0e3e2357e806b6cdb1f70b54c3a3a17b6714ee1f0e68bebb44a74b1efd512098");
+
         final List<byte[]> input = new ArrayList<byte[]>();
         input.add(hashOfBlock1Transaction0);
 
@@ -58,9 +59,11 @@ public class StandardMerkleRootCalculatorTests {
     }
 
     @Test
-    public void bitcoinBlock170Test() {
+    public void block170() {
         final byte[] hashOfBlock170Transaction0 = TestHelper.fromBigEndianHexString("b1fea52486ce0c62bb442b530a3f0132b826c74e473d1f2c220bfa78111c5082");
         final byte[] hashOfBlock170Transaction1 = TestHelper.fromBigEndianHexString("f4184fc596403b9d638783cf57adfe4c75c605f6356fbc91338530e9831e9e16");
+        final byte[] merkleRootBlock170 = TestHelper.fromBigEndianHexString("7dac2c5666815c17a3b36427de37bb9d2e2c5ccec3f8633eb91a4205cb4c10ff");
+
         final List<byte[]> input = new ArrayList<byte[]>();
         input.add(hashOfBlock170Transaction0);
         input.add(hashOfBlock170Transaction1);
