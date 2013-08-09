@@ -25,12 +25,10 @@ import java.util.logging.Logger;
 public class StandardMerkleRootCalculator implements MerkleRootCalculator {
     private final static Logger logger = Logger.getLogger(StandardMerkleRootCalculator.class.getName());
     private final HasherFactory hasherFactory;
-    private final Comparator<byte[]> comparator;
 
     @Inject
-    public StandardMerkleRootCalculator(HasherFactory hasherFactory, Comparator<byte[]> comparator) {
+    public StandardMerkleRootCalculator(HasherFactory hasherFactory) {
         this.hasherFactory = hasherFactory;
-        this.comparator = comparator;
     }
 
     @Override
@@ -40,8 +38,6 @@ public class StandardMerkleRootCalculator implements MerkleRootCalculator {
             // Yes, there is only one value.  Just return it.
             return transactionBytes.get(0);
         }
-
-        //Collections.sort(transactionBytes, comparator);
 
         // Keep looping and hashing until there is only one value
         do {

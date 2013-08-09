@@ -2,7 +2,6 @@ package com.timmattison.cryptocurrency.standard.tests;
 
 import com.timmattison.cryptocurrency.bitcoin.factories.DoubleSha256Factory;
 import com.timmattison.cryptocurrency.helpers.ByteArrayHelper;
-import com.timmattison.cryptocurrency.standard.HashComparator;
 import com.timmattison.cryptocurrency.standard.StandardMerkleRootCalculator;
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -21,7 +20,7 @@ import java.util.List;
  * To change this template use File | Settings | File Templates.
  */
 public class StandardMerkleRootCalculatorTests {
-    private final StandardMerkleRootCalculator calculator = new StandardMerkleRootCalculator(new DoubleSha256Factory(), new HashComparator());
+    private final StandardMerkleRootCalculator calculator = new StandardMerkleRootCalculator(new DoubleSha256Factory());
     private final byte[] merkleRootBlock0 = TestHelper.fromBigEndianHexString("4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b");
     private final byte[] merkleRootBlock1 = TestHelper.fromBigEndianHexString("0e3e2357e806b6cdb1f70b54c3a3a17b6714ee1f0e68bebb44a74b1efd512098");
     private final byte[] merkleRootBlock170 = TestHelper.fromBigEndianHexString("7dac2c5666815c17a3b36427de37bb9d2e2c5ccec3f8633eb91a4205cb4c10ff");
