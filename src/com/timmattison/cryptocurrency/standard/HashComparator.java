@@ -1,7 +1,8 @@
 package com.timmattison.cryptocurrency.standard;
 
+import com.timmattison.bitcoin.test.ByteArrayHelper;
+
 import java.math.BigInteger;
-import java.util.Arrays;
 import java.util.Comparator;
 
 /**
@@ -37,12 +38,16 @@ public class HashComparator implements Comparator<byte[]> {
         return left.length - right.length;
     }
 
+    private int compareBigIntegerReversed(byte[] left, byte[] right) {
+        return new BigInteger(ByteArrayHelper.reverseBytes(left)).compareTo(new BigInteger(ByteArrayHelper.reverseBytes(right)));
+    }
+
     private int compareBigInteger(byte[] left, byte[] right) {
         return new BigInteger(left).compareTo(new BigInteger(right));
     }
 
     @Override
     public int compare(byte[] left, byte[] right) {
-        return compareBigInteger(left, right);
+        return compareReverse(left, right);
     }
 }
