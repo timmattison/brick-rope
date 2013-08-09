@@ -5,6 +5,7 @@ import com.google.inject.TypeLiteral;
 import com.timmattison.cryptocurrency.bitcoin.factories.*;
 import com.timmattison.cryptocurrency.factories.*;
 import com.timmattison.cryptocurrency.interfaces.*;
+import com.timmattison.cryptocurrency.standard.ParallelMerkleRootCalculator;
 import com.timmattison.cryptocurrency.standard.StandardBlockChain;
 import com.timmattison.cryptocurrency.standard.StandardMerkleRootCalculator;
 
@@ -39,6 +40,7 @@ public class BitcoinModule extends AbstractModule {
 
         bind(HasherFactory.class).to(DoubleSha256Factory.class);
 
-        bind(MerkleRootCalculator.class).to(StandardMerkleRootCalculator.class);
+        //bind(MerkleRootCalculator.class).to(StandardMerkleRootCalculator.class);
+        bind(MerkleRootCalculator.class).to(ParallelMerkleRootCalculator.class);
     }
 }
