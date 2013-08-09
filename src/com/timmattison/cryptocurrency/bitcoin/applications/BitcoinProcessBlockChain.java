@@ -34,12 +34,13 @@ public class BitcoinProcessBlockChain {
         int blockNumber = 0;
 
         while (block != null) {
-            System.out.println("Block number: " + blockNumber);
+            if((blockNumber % 1000) == 0) {
+                System.out.println("Block number: " + blockNumber);
+            }
+
             block = blockChain.next();
             blockNumber++;
         }
-
-        int a = 5;
 
         //    BlockHeader blockHeader = block.getBlockHeader();
         //    List<Transaction> transactions = block.getTransactions();
