@@ -69,7 +69,6 @@ public class StandardMerkleRootCalculatorTests {
         input.add(hashOfBlock170Transaction1);
 
         byte[] result = calculator.calculateMerkleRoot(input);
-        String resultString = ByteArrayHelper.toHex(result);
 
         Assert.assertTrue(Arrays.equals(result, merkleRootBlock170));
     }
@@ -87,8 +86,6 @@ public class StandardMerkleRootCalculatorTests {
         final byte[] tx4 = TestHelper.fromBigEndianHexString("89aa32f6e1b047e740401ce4fd43a865631de5a959fde7451936c28c52249b56");
         final byte[] tx5 = TestHelper.fromBigEndianHexString("e3e69c802b7e36d220151e4ccdeace1d58ca2af97c5fd970314bbecd9767a514");
 
-        final String tx0String = ByteArrayHelper.toHex(tx0);
-
         final byte[] expectedRoot = TestHelper.fromBigEndianHexString("e81287dc0c00422aaf0db3e4586c48b01acd82b3108da6956cbd6baf19cfaf9a");
 
         final List<byte[]> input = new ArrayList<byte[]>();
@@ -100,7 +97,6 @@ public class StandardMerkleRootCalculatorTests {
         input.add(tx5);
 
         byte[] result = calculator.calculateMerkleRoot(input);
-        String resultHex = ByteArrayHelper.toHex(result);
 
         Assert.assertTrue(Arrays.equals(result, expectedRoot));
     }
@@ -114,8 +110,6 @@ public class StandardMerkleRootCalculatorTests {
         final byte[] tx0 = TestHelper.fromBigEndianHexString("b2e561eb278f5aba7a2c78d46422f496f4998003635cc65807e230407190a355");
         final byte[] tx1 = TestHelper.fromBigEndianHexString("12b5633bad1f9c167d523ad1aa1947b2732a865bf5414eab2f9e5ae5d5c191ba");
 
-        final String tx0String = ByteArrayHelper.toHex(tx0);
-
         final byte[] expectedRoot = TestHelper.fromBigEndianHexString("df25983b51d84d40b4efcb5556cdd6d524ac2d21bca49037494e413ae0712529");
 
         final List<byte[]> input = new ArrayList<byte[]>();
@@ -123,7 +117,6 @@ public class StandardMerkleRootCalculatorTests {
         input.add(tx1);
 
         byte[] result = calculator.calculateMerkleRoot(input);
-        String resultHex = ByteArrayHelper.toHex(result);
 
         Assert.assertTrue(Arrays.equals(result, expectedRoot));
     }
