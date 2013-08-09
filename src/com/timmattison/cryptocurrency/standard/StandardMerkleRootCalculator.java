@@ -41,7 +41,7 @@ public class StandardMerkleRootCalculator implements MerkleRootCalculator {
             return transactionBytes.get(0);
         }
 
-        Collections.sort(transactionBytes, comparator);
+        //Collections.sort(transactionBytes, comparator);
 
         // Keep looping and hashing until there is only one value
         do {
