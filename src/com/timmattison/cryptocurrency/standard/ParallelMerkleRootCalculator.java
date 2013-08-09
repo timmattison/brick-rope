@@ -22,6 +22,8 @@ import java.util.logging.Logger;
 public class ParallelMerkleRootCalculator implements MerkleRootCalculator {
     private final static Logger logger = Logger.getLogger(ParallelMerkleRootCalculator.class.getName());
     private final HasherFactory hasherFactory;
+    HashRunnable[] hashRunnables;
+    Thread[] threads;
 
     @Inject
     public ParallelMerkleRootCalculator(HasherFactory hasherFactory) {
@@ -52,23 +54,35 @@ public class ParallelMerkleRootCalculator implements MerkleRootCalculator {
 
             // Create an array of threads
             int nodes = tempTransactionBytes.size() / 2;
-            HashThread[] hashThreads = new HashThread[nodes];
+
+            // Do we need to allocate threads?
+            if ((hashRunnables == null) || (hashRunnables.length < nodes)) {
+                hashRunnables = new HashRunnable[nodes];
+                threads = new Thread[nodes];
+
+                for (int loop = 0; loop < nodes; loop++) {
+                    HashRunnable hashRunnable = new HashRunnable();
+                    hashRunnables[loop] = hashRunnable;
+                }
+            }
 
             // Combine the hashed values into the next level of the tree
             for (int loop = 0; loop < nodes; loop++) {
                 byte[] firstTransaction = tempTransactionBytes.get(loop * 2);
                 byte[] secondTransaction = tempTransactionBytes.get((loop * 2) + 1);
 
-                HashThread hashThread = new HashThread(firstTransaction, secondTransaction);
-                hashThreads[loop] = hashThread;
-                hashThreads[loop].start();
+                hashRunnables[loop].setFirst(firstTransaction);
+                hashRunnables[loop].setSecond(secondTransaction);
+
+                threads[loop] = new Thread(hashRunnables[loop]);
+                threads[loop].start();
             }
 
-            for (int loop = 0; loop < hashThreads.length; loop++) {
+            for (int loop = 0; loop < nodes; loop++) {
                 try {
-                    hashThreads[loop].join();
+                    threads[loop].join();
 
-                    transactionBytes.add(hashThreads[loop].getOutput());
+                    transactionBytes.add(hashRunnables[loop].getOutput());
                 } catch (InterruptedException e) {
                     throw new UnsupportedOperationException(e);
                 }
@@ -91,13 +105,19 @@ public class ParallelMerkleRootCalculator implements MerkleRootCalculator {
         return calculateMerkleRoot(transactionBytes);
     }
 
-    private class HashThread extends Thread {
-        final byte[] first;
-        final byte[] second;
+    private class HashRunnable implements Runnable {
+        private byte[] first;
+        private byte[] second;
         private byte[] result;
 
-        public HashThread(byte[] first, byte[] second) {
+        public HashRunnable() {
+        }
+
+        public void setFirst(byte[] first) {
             this.first = first;
+        }
+
+        public void setSecond(byte[] second) {
             this.second = second;
         }
 

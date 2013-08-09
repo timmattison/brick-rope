@@ -34,10 +34,12 @@ public class BitcoinProcessBlockChain {
         Block block = blockChain.next();
         int blockNumber = 0;
 
+        long start = new Date().getTime();
+
         while (block != null) {
             if((blockNumber % 1000) == 0) {
                 long timestamp = new Date().getTime();
-                System.out.println(timestamp + ", " + blockNumber);
+                System.out.println((timestamp - start) + ", " + blockNumber);
             }
 
             block = blockChain.next();
