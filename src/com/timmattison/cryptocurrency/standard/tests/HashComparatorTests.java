@@ -6,10 +6,7 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -44,6 +41,46 @@ public class HashComparatorTests {
 
         Assert.assertTrue(Arrays.equals(list.get(1), secondHash));
         Assert.assertTrue(Arrays.equals(list.get(0), firstHash));
+    }
+
+    final byte[] block183Level2a = TestHelper.fromBigEndianHexString("12b5633bad1f9c167d523ad1aa1947b2732a865bf5414eab2f9e5ae5d5c191ba");
+    final byte[] block183Level2b = TestHelper.fromBigEndianHexString("b2e561eb278f5aba7a2c78d46422f496f4998003635cc65807e230407190a355");
+
+    private List<byte[]> getBlock183SortedList() {
+        List<byte[]> block183List = new ArrayList<byte[]>();
+        block183List.add(block183Level2a);
+        block183List.add(block183Level2b);
+        return block183List;
+    }
+
+    private List<byte[]> getBlock183UnsortedList() {
+        List<byte[]> block183List = new ArrayList<byte[]>();
+        block183List.add(block183Level2b);
+        block183List.add(block183Level2a);
+        return block183List;
+    }
+
+    private void assertBlock183Order(List<byte[]> list) {
+        Assert.assertTrue(Arrays.equals(list.get(0), block183Level2a));
+        Assert.assertTrue(Arrays.equals(list.get(1), block183Level2b));
+    }
+
+    @Test
+    public void block183AlreadySorted() {
+        List<byte[]> list = getBlock183SortedList();
+
+        Collections.sort(list, hashComparator);
+
+        assertBlock183Order(list);
+    }
+
+    @Test
+    public void block183AlreadyUnsorted() {
+        List<byte[]> list = getBlock183UnsortedList();
+
+        Collections.sort(list, hashComparator);
+
+        assertBlock183Order(list);
     }
 
     final byte[] block72785Level3a = TestHelper.fromBigEndianHexString("2d7f4d1c25893dcaf538fdd1f34104687211ca7d8a1ba43c16b618d5fbc620c3");
@@ -86,8 +123,8 @@ public class HashComparatorTests {
     public void block72785CheckRandomized() {
         List<byte[]> list = getBlock72785List();
 
-        for(int loop = 0; loop < 16; loop++) {
-            Collections.shuffle(list);
+        for (int loop = 0; loop < 16; loop++) {
+            Collections.shuffle(list, new Random(loop));
 
             Collections.sort(list, hashComparator);
 
