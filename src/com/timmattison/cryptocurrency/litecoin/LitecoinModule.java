@@ -5,6 +5,7 @@ import com.timmattison.cryptocurrency.bitcoin.*;
 import com.timmattison.cryptocurrency.bitcoin.factories.*;
 import com.timmattison.cryptocurrency.factories.*;
 import com.timmattison.cryptocurrency.interfaces.*;
+import com.timmattison.cryptocurrency.standard.StandardBlockFactory;
 import com.timmattison.cryptocurrency.standard.StandardBlockChain;
 import com.timmattison.cryptocurrency.standard.StandardMerkleRootCalculator;
 
@@ -28,7 +29,7 @@ public class LitecoinModule extends AbstractModule {
         bind(BlockValidator.class).to(BitcoinBlockValidator.class);
 
         bind(TransactionFactory.class).to(BitcoinTransactionFactory.class);
-        bind(BlockFactory.class).to(BitcoinBlockFactory.class);
+        bind(BlockFactory.class).to(StandardBlockFactory.class);
         bind(BlockHeaderFactory.class).to(BitcoinBlockHeaderFactory.class);
         bind(InputFactory.class).to(BitcoinInputFactory.class);
         bind(OutputFactory.class).to(BitcoinOutputFactory.class);
