@@ -20,7 +20,6 @@ import java.util.Arrays;
 public class BitcoinBlockReader implements BlockReader {
     // XXX - Duplicated from other classes, this should be shared somehow!
     private static final byte[] requiredMagicNumberBytes = new byte[]{(byte) 0xf9, (byte) 0xbe, (byte) 0xb4, (byte) 0xd9};
-    private static final int requiredMagicNumber = EndiannessHelper.BytesToInt(requiredMagicNumberBytes);
     private static final int magicNumberLengthInBytes = 4;
     private static final int blockSizeLengthInBytes = 4;
     private static final int bytesRequired = magicNumberLengthInBytes + blockSizeLengthInBytes;
