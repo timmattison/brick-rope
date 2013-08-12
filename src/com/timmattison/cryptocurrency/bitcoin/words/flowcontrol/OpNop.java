@@ -15,7 +15,7 @@ public class OpNop extends FlowControlOp {
 
     @Override
     public void execute(StateMachine stateMachine) {
-        throw new UnsupportedOperationException();
+        // Do nothing
     }
 
     @Override
