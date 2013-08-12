@@ -104,4 +104,15 @@ public class ByteArrayHelper {
 
         return stringBuilder.toString();
     }
+
+    public static int get32BitWord(byte[] input, int offset) {
+        byte byte0 = input[(offset * 4) + 0];
+        byte byte1 = input[(offset * 4) + 1];
+        byte byte2 = input[(offset * 4) + 2];
+        byte byte3 = input[(offset * 4) + 3];
+
+        int output = ((byte3 << 24) & 0xFF000000) | ((byte2 << 16) & 0x00FF0000) | ((byte1 << 8) & 0x0000FF00) | (byte0 & 0x000000FF);
+
+        return output;
+    }
 }
