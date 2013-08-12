@@ -1,5 +1,7 @@
 package com.timmattison.cryptocurrency.interfaces;
 
+import java.math.BigInteger;
+
 /**
  * Created with IntelliJ IDEA.
  * User: Tim
@@ -11,4 +13,6 @@ public interface Hash {
     byte[] getInput();
 
     byte[] getOutput();
+
+    BigInteger getOutputBigInteger();
 }

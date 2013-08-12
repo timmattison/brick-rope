@@ -8,5 +8,5 @@ package com.timmattison.cryptocurrency.interfaces;
  * To change this template use File | Settings | File Templates.
  */
 public interface Target<T> {
-    boolean isBelowTarget(T value);
+    boolean isBelowHash(T value);
 }

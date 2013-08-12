@@ -1,14 +1,17 @@
 package com.timmattison.cryptocurrency.bitcoin;
 
 import com.timmattison.bitcoin.test.script.Constants;
+import com.timmattison.cryptocurrency.helpers.ByteArrayHelper;
 import com.timmattison.cryptocurrency.interfaces.Hash;
 
+import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 public class DoubleSha256Hash implements Hash {
     private final byte[] input;
     private byte[] output;
+    private BigInteger outputBigInteger;
 
     public DoubleSha256Hash(byte[] input) {
         this.input = input;
@@ -34,5 +37,14 @@ public class DoubleSha256Hash implements Hash {
         }
 
         return output;
+    }
+
+    @Override
+    public BigInteger getOutputBigInteger() {
+        if (outputBigInteger == null) {
+            outputBigInteger = new BigInteger(ByteArrayHelper.reverseBytes(getOutput()));
+        }
+
+        return outputBigInteger;
     }
 }

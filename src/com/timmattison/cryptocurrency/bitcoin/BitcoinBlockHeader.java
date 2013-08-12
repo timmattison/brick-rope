@@ -4,6 +4,7 @@ import com.timmattison.cryptocurrency.bitcoin.factories.HasherFactory;
 import com.timmattison.cryptocurrency.helpers.ByteArrayHelper;
 import com.timmattison.cryptocurrency.helpers.EndiannessHelper;
 import com.timmattison.cryptocurrency.interfaces.BlockHeader;
+import com.timmattison.cryptocurrency.interfaces.Hash;
 import com.timmattison.cryptocurrency.interfaces.Target;
 import com.timmattison.cryptocurrency.interfaces.TargetFactory;
 
@@ -33,13 +34,11 @@ public class BitcoinBlockHeader implements BlockHeader {
      * The target.  This is not in the block chain.  It is derived from the difficulty.
      */
     private BigInteger targetBigInteger;
-    private byte[] targetBytes;
     private Target target;
     /**
      * This is the hash of the header.  This is not in the block chain.  It is derived from the double SHA256 hash of the block header bytes.
      */
-    private byte[] hashBytes;
-    private BigInteger hashBigInteger;
+    private Hash hash;
     /**
      * The software version that created this block
      */
@@ -127,12 +126,12 @@ public class BitcoinBlockHeader implements BlockHeader {
     }
 
     @Override
-    public byte[] getHash() {
-        if (hashBytes == null) {
-            hashBytes = hasherFactory.createHasher(dump()).getOutput();
+    public Hash getHash() {
+        if (hash == null) {
+            hash = hasherFactory.createHasher(dump());
         }
 
-        return hashBytes;
+        return hash;
     }
 
     @Override
@@ -167,7 +166,7 @@ public class BitcoinBlockHeader implements BlockHeader {
 
     @Override
     public BigInteger getHashBigInteger() {
-        return new BigInteger(ByteArrayHelper.reverseBytes(getHash()));
+        return getHash().getOutputBigInteger();
     }
 
     public int getDifficulty() {

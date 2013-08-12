@@ -10,7 +10,7 @@ import java.math.BigInteger;
  * To change this template use File | Settings | File Templates.
  */
 public interface BlockHeader extends Buildable {
-    byte[] getHash();
+    Hash getHash();
 
     byte[] getPreviousBlockHash();
 
