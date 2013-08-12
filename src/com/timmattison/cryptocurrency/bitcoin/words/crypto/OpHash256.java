@@ -15,7 +15,11 @@ public class OpHash256 extends CryptoOp {
 
     @Override
     public void execute(StateMachine stateMachine) {
-        throw new UnsupportedOperationException();
+        OpSha256 opSha256 = new OpSha256();
+
+        // SHA-256 hash twice
+        opSha256.execute(stateMachine);
+        opSha256.execute(stateMachine);
     }
 
     @Override
