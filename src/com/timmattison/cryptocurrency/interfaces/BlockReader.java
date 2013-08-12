@@ -17,4 +17,6 @@ import java.util.Arrays;
  */
 public interface BlockReader {
     public byte[] getNextBlock(InputStream inputStream) throws IOException;
+
+    public void skipNextBlocks(InputStream inputStream, int count) throws IOException;
 }
