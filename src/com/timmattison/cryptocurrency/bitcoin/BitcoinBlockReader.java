@@ -82,6 +82,13 @@ public class BitcoinBlockReader implements BlockReader {
         return blockData;
     }
 
+    @Override
+    public void skipNextBlocks(InputStream inputStream, int count) throws IOException {
+        for(int loop = 0; loop < count; loop++) {
+            getNextBlock(inputStream);
+        }
+    }
+
     private void throwExceptionWhenIncorrectLengthRead(String name, int expected, int read) {
         throw new IllegalStateException("Needed to read " + expected + " byte(s), only read " + read + " byte(s) for " + name);
     }
