@@ -1,5 +1,7 @@
 package com.timmattison.cryptocurrency.interfaces;
 
+import java.math.BigInteger;
+
 /**
  * Created with IntelliJ IDEA.
  * User: Tim
@@ -13,4 +15,8 @@ public interface BlockHeader extends Buildable {
     byte[] getPreviousBlockHash();
 
     byte[] getMerkleRoot();
+
+    Target getTarget();
+
+    BigInteger getHashBigInteger();
 }

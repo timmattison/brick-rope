@@ -1,8 +1,11 @@
 package com.timmattison.cryptocurrency.bitcoin;
 
 import com.timmattison.cryptocurrency.bitcoin.factories.HasherFactory;
+import com.timmattison.cryptocurrency.helpers.ByteArrayHelper;
 import com.timmattison.cryptocurrency.helpers.EndiannessHelper;
 import com.timmattison.cryptocurrency.interfaces.BlockHeader;
+import com.timmattison.cryptocurrency.interfaces.Target;
+import com.timmattison.cryptocurrency.interfaces.TargetFactory;
 
 import javax.inject.Inject;
 import java.io.ByteArrayOutputStream;
@@ -25,11 +28,13 @@ public class BitcoinBlockHeader implements BlockHeader {
     private static final int bitsLengthInBytes = 4;
     private static final int nonceLengthInBytes = 4;
     private final HasherFactory hasherFactory;
+    private final TargetFactory targetFactory;
     /**
      * The target.  This is not in the block chain.  It is derived from the difficulty.
      */
     private BigInteger targetBigInteger;
     private byte[] targetBytes;
+    private Target target;
     /**
      * This is the hash of the header.  This is not in the block chain.  It is derived from the double SHA256 hash of the block header bytes.
      */
@@ -65,8 +70,9 @@ public class BitcoinBlockHeader implements BlockHeader {
     private byte[] nonceBytes;
 
     @Inject
-    public BitcoinBlockHeader(HasherFactory hasherFactory) {
+    public BitcoinBlockHeader(HasherFactory hasherFactory, TargetFactory targetFactory) {
         this.hasherFactory = hasherFactory;
+        this.targetFactory = targetFactory;
     }
 
     @Override
@@ -137,5 +143,34 @@ public class BitcoinBlockHeader implements BlockHeader {
     @Override
     public byte[] getMerkleRoot() {
         return merkleRoot;
+    }
+
+    public Target getTarget() {
+        if (targetBigInteger == null) {
+            // The formula for calculating target is:
+            // Difficulty: 0x1d00ffff
+            // Target: 0x00ffff * (2 ** (8 * (0x1d - 3)))
+            // Formula = (Last three bytes of difficulty) * (2 ** (8 * ((First byte of difficulty) - 3)))
+            BigInteger lastThreeBytesOfDifficulty = new BigInteger(String.valueOf((long) bits & 0x00FFFFFFL));
+            int firstByteOfDifficulty = (int) ((bits & 0xFF000000L) >>> 24);
+            BigInteger two = new BigInteger("2");
+
+            targetBigInteger = lastThreeBytesOfDifficulty.multiply(two.pow((8 * (firstByteOfDifficulty - 3))));
+        }
+
+        if (target == null) {
+            target = targetFactory.create(targetBigInteger);
+        }
+
+        return target;
+    }
+
+    @Override
+    public BigInteger getHashBigInteger() {
+        return new BigInteger(ByteArrayHelper.reverseBytes(getHash()));
+    }
+
+    public int getDifficulty() {
+        return bits;
     }
 }

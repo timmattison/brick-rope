@@ -11,6 +11,7 @@ import com.timmattison.cryptocurrency.interfaces.Transaction;
 import javax.inject.Inject;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -35,10 +36,19 @@ public class BitcoinBlockValidator implements BlockValidator {
 
     @Override
     public boolean isValid(Block block) {
-        byte[] merkleRoot = block.getBlockHeader().getMerkleRoot();
-        byte[] calculatedMerkleRoot = merkleRootCalculator.calculateMerkleRoot(block);
+        boolean merkleRootMatches = Arrays.equals(block.getBlockHeader().getMerkleRoot(), merkleRootCalculator.calculateMerkleRoot(block));
 
-        return Arrays.equals(block.getBlockHeader().getMerkleRoot(), merkleRootCalculator.calculateMerkleRoot(block));
+        if(!merkleRootMatches) {
+            return false;
+        }
+
+        boolean hashIsBelowTarget = block.getBlockHeader().getTarget().isBelowTarget(block.getBlockHeader().getHashBigInteger());
+
+        if(!hashIsBelowTarget) {
+            return false;
+        }
+
+        return true;
     }
 
     @Override
