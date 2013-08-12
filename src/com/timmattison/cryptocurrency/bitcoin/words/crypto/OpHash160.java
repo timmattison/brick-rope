@@ -15,7 +15,12 @@ public class OpHash160 extends CryptoOp {
 
     @Override
     public void execute(StateMachine stateMachine) {
-        throw new UnsupportedOperationException();
+        OpSha256 opSha256 = new OpSha256();
+        OpRipEmd160 opRipEmd160 = new OpRipEmd160();
+
+        // SHA-256 hash, then RIPEMD-160 hash
+        opSha256.execute(stateMachine);
+        opRipEmd160.execute(stateMachine);
     }
 
     @Override
