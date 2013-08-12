@@ -12,6 +12,13 @@ import com.timmattison.cryptocurrency.bitcoin.Word;
  */
 public abstract class StackOp implements Word {
     @Override
+    public byte[] build(byte[] data) {
+        // Most stack operations manipulate the stack but do not consume any bytes.  The ones that do
+        //   can override this method because it is not final.
+        return data;
+    }
+
+    @Override
     public final boolean isEnabled() {
         return true;
     }

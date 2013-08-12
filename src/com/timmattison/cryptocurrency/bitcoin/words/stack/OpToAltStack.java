@@ -27,10 +27,4 @@ public class OpToAltStack extends StackOp {
     public String getName() {
         return word;
     }
-
-    @Override
-    public byte[] build(byte[] data) {
-        //To change body of implemented methods use File | Settings | File Templates.
-        throw new UnsupportedOperationException();
-    }
 }

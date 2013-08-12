@@ -25,9 +25,4 @@ public class OpDup extends StackOp {
     public String getName() {
         return word;
     }
-
-    @Override
-    public byte[] build(byte[] data) {
-        return data;
-    }
 }
