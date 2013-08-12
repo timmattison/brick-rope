@@ -8,6 +8,10 @@ import com.timmattison.cryptocurrency.interfaces.*;
 import com.timmattison.cryptocurrency.standard.StandardBlockFactory;
 import com.timmattison.cryptocurrency.standard.StandardBlockChain;
 import com.timmattison.cryptocurrency.standard.StandardMerkleRootCalculator;
+import com.timmattison.cryptocurrency.standard.hashing.chunks.ChunkExtractor;
+import com.timmattison.cryptocurrency.standard.hashing.chunks.StandardChunkExtractor;
+import com.timmattison.cryptocurrency.standard.hashing.padding.MessagePadder;
+import com.timmattison.cryptocurrency.standard.hashing.padding.StandardMessagePadder;
 
 /**
  * Created with IntelliJ IDEA.
@@ -41,5 +45,9 @@ public class BitcoinModule extends AbstractModule {
 
         bind(MerkleRootCalculator.class).to(StandardMerkleRootCalculator.class);
         //bind(MerkleRootCalculator.class).to(ParallelMerkleRootCalculator.class);
+
+        // For hashing
+        bind(ChunkExtractor.class).to(StandardChunkExtractor.class);
+        bind(MessagePadder.class).to(StandardMessagePadder.class);
     }
 }

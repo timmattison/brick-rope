@@ -1,5 +1,7 @@
 package com.timmattison.cryptocurrency.helpers;
 
+import com.timmattison.cryptocurrency.standard.hashing.Endianness;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.logging.Logger;
@@ -114,5 +116,128 @@ public class ByteArrayHelper {
         int output = ((byte3 << 24) & 0xFF000000) | ((byte2 << 16) & 0x00FF0000) | ((byte1 << 8) & 0x0000FF00) | (byte0 & 0x000000FF);
 
         return output;
+    }
+
+    public static byte[] appendBit(byte[] input, int numberOfBits, boolean bit) {
+        // TODO - Optimize this!
+        byte[] localInput = input;
+
+        // Do we need to add a new byte?
+        if (((numberOfBits % 8) == 0) && ((numberOfBits / 8) >= input.length)) {
+            // Yes, add a byte to the input
+            byte[] tempInput = new byte[localInput.length + 1];
+
+            for (int loop = 0; loop < localInput.length; loop++) {
+                tempInput[loop] = localInput[loop];
+            }
+
+            // Make the last byte zero
+            tempInput[localInput.length] = 0;
+
+            localInput = tempInput;
+        }
+
+        localInput = setBit(localInput, numberOfBits, bit);
+
+        return localInput;
+    }
+
+    public static byte[] setBit(byte[] input, int bitToSet, boolean bit) {
+        byte[] localInput = input;
+
+        // Where do we add the new bit?
+        int position = bitToSet / 8;
+        bitToSet %= 8;
+        int bitMask = 1 << (7 - bitToSet);
+
+        if (bit == true) {
+            // Just OR in the bit
+            localInput[position] |= bitMask;
+        } else {
+            // Invert the bits
+            bitMask = ~bitMask;
+
+            // AND out the bit
+            localInput[position] &= bitMask;
+        }
+
+        return localInput;
+    }
+
+    public static byte[] padBits(byte[] input, int inputLength, int outputLength, boolean bit) {
+        byte[] localInput = input;
+
+        if (inputLength != outputLength) {
+            // TODO - Optimize this!  Super slow!
+            for (int loop = inputLength; loop < outputLength; loop++) {
+                localInput = appendBit(localInput, loop, bit);
+            }
+        }
+
+        return localInput;
+    }
+
+    public static byte[] append64Bits(Endianness endianness, byte[] input, int numberOfBits, long value) {
+        if (endianness == Endianness.BigEndian) {
+            return append64BitsBigEndian(input, numberOfBits, value);
+        } else {
+            return append64BitsLittleEndian(input, numberOfBits, value);
+        }
+    }
+
+    private static byte[] append64BitsBigEndian(byte[] input, int numberOfBits, long value) {
+        if ((numberOfBits % 8) != 0) {
+            throw new UnsupportedOperationException("I am lazy, not supported yet");
+        }
+
+        byte[] bytesToAppend = new byte[8];
+        bytesToAppend[7] = (byte) (value & 0x00FFL);
+        bytesToAppend[6] = (byte) ((value >>> 8) & 0x00FFL);
+        bytesToAppend[5] = (byte) ((value >>> 16) & 0x00FFL);
+        bytesToAppend[4] = (byte) ((value >>> 24) & 0x00FFL);
+        bytesToAppend[3] = (byte) ((value >>> 32) & 0x00FFL);
+        bytesToAppend[2] = (byte) ((value >>> 40) & 0x00FFL);
+        bytesToAppend[1] = (byte) ((value >>> 48) & 0x00FFL);
+        bytesToAppend[0] = (byte) ((value >>> 56) & 0x00FFL);
+
+        byte[] returnValue = new byte[input.length + 8];
+
+        for (int loop = 0; loop < input.length; loop++) {
+            returnValue[loop] = input[loop];
+        }
+
+        for (int loop = 0; loop < 8; loop++) {
+            returnValue[input.length + loop] = bytesToAppend[loop];
+        }
+
+        return returnValue;
+    }
+
+    private static byte[] append64BitsLittleEndian(byte[] input, int numberOfBits, long value) {
+        if ((numberOfBits % 8) != 0) {
+            throw new UnsupportedOperationException("I am lazy, not supported yet");
+        }
+
+        byte[] bytesToAppend = new byte[8];
+        bytesToAppend[0] = (byte) (value & 0x00FFL);
+        bytesToAppend[1] = (byte) ((value >>> 8) & 0x00FFL);
+        bytesToAppend[2] = (byte) ((value >>> 16) & 0x00FFL);
+        bytesToAppend[3] = (byte) ((value >>> 24) & 0x00FFL);
+        bytesToAppend[4] = (byte) ((value >>> 32) & 0x00FFL);
+        bytesToAppend[5] = (byte) ((value >>> 40) & 0x00FFL);
+        bytesToAppend[6] = (byte) ((value >>> 48) & 0x00FFL);
+        bytesToAppend[7] = (byte) ((value >>> 56) & 0x00FFL);
+
+        byte[] returnValue = new byte[input.length + 8];
+
+        for (int loop = 0; loop < input.length; loop++) {
+            returnValue[loop] = input[loop];
+        }
+
+        for (int loop = 0; loop < 8; loop++) {
+            returnValue[input.length + loop] = bytesToAppend[loop];
+        }
+
+        return returnValue;
     }
 }

@@ -1,7 +1,5 @@
 package com.timmattison.cryptocurrency.standard.hashing;
 
-import in.bitcha.main.client.hashing.tests.NamedValue;
-
 import java.util.List;
 
 /**

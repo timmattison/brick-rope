@@ -1,7 +1,7 @@
 package com.timmattison.cryptocurrency.standard.hashing.padding;
 
-import in.bitcha.main.client.hashing.tests.Endianness;
-import in.bitcha.main.client.helpers.ByteArrayHelper;
+import com.timmattison.cryptocurrency.helpers.ByteArrayHelper;
+import com.timmattison.cryptocurrency.standard.hashing.Endianness;
 
 /**
  * Created with IntelliJ IDEA.
