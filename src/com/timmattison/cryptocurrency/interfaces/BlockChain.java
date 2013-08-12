@@ -11,6 +11,5 @@ import java.util.Iterator;
  * To change this template use File | Settings | File Templates.
  */
 public interface BlockChain extends Iterator<Block> {
-    // XXX - This should be done in the constructor but I need to figure out how to do that cleanly with Guice
     public void setInputStream(InputStream inputStream);
 }
