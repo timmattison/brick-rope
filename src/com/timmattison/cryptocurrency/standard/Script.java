@@ -1,6 +1,9 @@
 package com.timmattison.cryptocurrency.standard;
 
+import com.timmattison.cryptocurrency.bitcoin.Word;
 import com.timmattison.cryptocurrency.interfaces.Buildable;
+
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -11,4 +14,6 @@ import com.timmattison.cryptocurrency.interfaces.Buildable;
  */
 public interface Script extends Buildable {
     boolean isExecutable();
+
+    List<Word> getWords();
 }

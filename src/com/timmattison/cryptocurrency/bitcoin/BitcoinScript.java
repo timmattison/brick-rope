@@ -3,7 +3,9 @@ package com.timmattison.cryptocurrency.bitcoin;
 import com.timmattison.cryptocurrency.factories.WordFactory;
 import com.timmattison.cryptocurrency.standard.Script;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -24,6 +26,8 @@ public abstract class BitcoinScript implements Script {
      * Script bytes
      */
     protected byte[] scriptBytes;
+
+    private List<Word> words;
 
     @Override
     public byte[] build(byte[] data) {
@@ -58,4 +62,19 @@ public abstract class BitcoinScript implements Script {
     }
 
     protected abstract void validateLength();
+
+    public List<Word> getWords() {
+        if (words == null) {
+            words = new ArrayList<Word>();
+            byte[] temp = Arrays.copyOf(scriptBytes, scriptBytes.length);
+
+            while ((temp != null) && (temp.length > 0)) {
+                Word word = wordFactory.createWord(temp[0]);
+                words.add(word);
+                temp = word.build(Arrays.copyOfRange(temp, 1, temp.length));
+            }
+        }
+
+        return words;
+    }
 }
