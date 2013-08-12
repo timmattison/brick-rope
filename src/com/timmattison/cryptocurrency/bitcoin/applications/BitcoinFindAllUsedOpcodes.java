@@ -43,43 +43,40 @@ public class BitcoinFindAllUsedOpcodes {
 
         long start = new Date().getTime();
 
-        while (block != null) {
-            if ((blockNumber % 1000) == 0) {
-                long timestamp = new Date().getTime();
-                System.out.println((timestamp - start) + ", " + blockNumber);
+        try {
+            while (block != null) {
+                if ((blockNumber % 1000) == 0) {
+                    long timestamp = new Date().getTime();
+                    System.out.println((timestamp - start) + ", " + blockNumber);
 
-                System.out.println("  Used so far: " + opcodes.size());
+                    System.out.println("  Used so far: " + opcodes.size());
 
-                for (String opcode : opcodes) {
-                    System.out.println("    " + opcode);
+                    for (String opcode : opcodes) {
+                        System.out.println("    " + opcode);
+                    }
+
+                    System.out.println();
                 }
 
-                System.out.println();
-            }
+                block = blockChain.next();
 
-            block = blockChain.next();
+                for (Transaction transaction : block.getTransactions()) {
+                    // Dump the inputs
+                    // XXX - Right now lets just dump the outputs
+                    //for(Input input : transaction.getInputs()) {
+                    //}
 
-            for (Transaction transaction : block.getTransactions()) {
-                // Dump the inputs
-                // XXX - Right now lets just dump the outputs
-                //for(Input input : transaction.getInputs()) {
-                //}
-
-                for (Output output : transaction.getOutputs()) {
-                    for (Word word : output.getScript().getWords()) {
-                        opcodes.add(word.getName());
+                    for (Output output : transaction.getOutputs()) {
+                        for (Word word : output.getScript().getWords()) {
+                            opcodes.add(word.getName());
+                        }
                     }
                 }
+
+                blockNumber++;
             }
-
-            blockNumber++;
+        } catch (Exception ex) {
+            System.out.println("Exception in block #" + blockNumber + ", [" + ex.getMessage());
         }
-
-        //    BlockHeader blockHeader = block.getBlockHeader();
-        //    List<Transaction> transactions = block.getTransactions();
-        //    Output firstOutput = transactions.get(0).getOutputs().get(0);
-
-        //    StateMachine stateMachine = injector.getInstance(StateMachine.class);
-        //    stateMachine.execute(firstOutput.getScript());
     }
 }
