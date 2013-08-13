@@ -2,6 +2,8 @@ package com.timmattison.cryptocurrency.factories;
 
 import com.timmattison.cryptocurrency.standard.InputScript;
 import com.timmattison.cryptocurrency.standard.OutputScript;
+import com.timmattison.cryptocurrency.standard.Script;
+import com.timmattison.cryptocurrency.standard.ValidationScript;
 
 import java.io.InputStream;
 
@@ -16,4 +18,6 @@ public interface ScriptFactory {
     InputScript createInputScript(int transactionVersionNumber, long scriptLength, boolean coinbase);
 
     OutputScript createOutputScript(int transactionVersionNumber, long scriptLength);
+
+    ValidationScript createValidationScript(Script inputScript, Script outputScript);
 }

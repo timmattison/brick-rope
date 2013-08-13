@@ -40,6 +40,7 @@ public class BitcoinModule extends AbstractModule {
         bind(ScriptFactory.class).to(BitcoinScriptFactory.class);
         bind(WordFactory.class).to(BitcoinWordFactory.class);
         bind(TargetFactory.class).to(BitcoinTargetFactory.class);
+        bind(StateMachineFactory.class).to(BitcoinStateMachineFactory.class);
 
         bind(HasherFactory.class).to(DoubleSha256Factory.class);
 

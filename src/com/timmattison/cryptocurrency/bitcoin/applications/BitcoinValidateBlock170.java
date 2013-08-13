@@ -4,9 +4,13 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.timmattison.bitcoin.test.ByteArrayHelper;
 import com.timmattison.cryptocurrency.bitcoin.BitcoinModule;
+import com.timmattison.cryptocurrency.bitcoin.StateMachine;
 import com.timmattison.cryptocurrency.bitcoin.Word;
+import com.timmattison.cryptocurrency.factories.ScriptFactory;
+import com.timmattison.cryptocurrency.factories.StateMachineFactory;
 import com.timmattison.cryptocurrency.interfaces.*;
 import com.timmattison.cryptocurrency.standard.Script;
+import com.timmattison.cryptocurrency.standard.ValidationScript;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -69,13 +73,25 @@ public class BitcoinValidateBlock170 {
 
                 long previousOutputIndex = input.getPreviousOutputIndex();
 
+                // Get the previous transaction
+                Transaction previousTransaction = transactionMap.get(previousTransactionHash);
+
+                // Get the output
+                Output previousOutput = previousTransaction.getOutputs().get((int) previousOutputIndex);
+
+                // Get the input script
                 Script inputScript = input.getScript();
                 List<Word> inputWordList = inputScript.getWords();
 
-                List<Output> outputs = secondTransactionBlock170.getOutputs();
-
-                Script outputScript = outputs.get(0).getScript();
+                // Get the output script
+                Script outputScript = previousOutput.getScript();
                 List<Word> outputWordList = outputScript.getWords();
+
+                ValidationScript validationScript = injector.getInstance(ScriptFactory.class).createValidationScript(inputScript, outputScript);
+
+                StateMachine stateMachine = injector.getInstance(StateMachineFactory.class).createStateMachine();
+
+                stateMachine.execute(validationScript);
 
                 return;
             }

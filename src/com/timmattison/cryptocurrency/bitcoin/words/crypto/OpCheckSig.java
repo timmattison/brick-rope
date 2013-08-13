@@ -18,7 +18,6 @@ public class OpCheckSig extends CryptoOp {
     private static final Byte opcode = (byte) 0xac;
     private byte[] publicKey;
     private byte[] signature;
-    private StateMachine stateMachine;
     private byte[] subscriptBytes;
     private Script subscript;
     private Transaction txCopy;
