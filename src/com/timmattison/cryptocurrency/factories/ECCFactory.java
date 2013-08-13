@@ -1,5 +1,7 @@
 package com.timmattison.cryptocurrency.factories;
 
+import com.timmattison.cryptocurrency.ecc.fp.X9ECParameters;
+
 /**
  * Created with IntelliJ IDEA.
  * User: Tim
@@ -7,5 +9,6 @@ package com.timmattison.cryptocurrency.factories;
  * Time: 6:55 PM
  * To change this template use File | Settings | File Templates.
  */
-public class ECCFactory {
+public interface ECCFactory {
+    public X9ECParameters create();
 }

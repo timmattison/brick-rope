@@ -2,8 +2,11 @@ package com.timmattison.cryptocurrency.bitcoin.words.crypto;
 
 import com.timmattison.bitcoin.test.Script;
 import com.timmattison.cryptocurrency.bitcoin.StateMachine;
+import com.timmattison.cryptocurrency.ecc.fp.X9ECParameters;
+import com.timmattison.cryptocurrency.factories.ECCFactory;
 import com.timmattison.cryptocurrency.interfaces.Transaction;
 
+import javax.inject.Inject;
 import java.util.Arrays;
 
 /**
@@ -16,11 +19,17 @@ import java.util.Arrays;
 public class OpCheckSig extends CryptoOp {
     private static final String word = "OP_CHECKSIG";
     private static final Byte opcode = (byte) 0xac;
+    private final ECCFactory eccFactory;
     private byte[] publicKey;
     private byte[] signature;
     private byte[] subscriptBytes;
     private Script subscript;
     private Transaction txCopy;
+
+    @Inject
+    public OpCheckSig(ECCFactory eccFactory) {
+        this.eccFactory = eccFactory;
+    }
 
     @Override
     public Byte getOpcode() {
@@ -44,6 +53,7 @@ public class OpCheckSig extends CryptoOp {
         // Remove the last byte from the signature
         signature = Arrays.copyOfRange(signature, 0, signature.length - 1);
 
+        X9ECParameters ecc = eccFactory.create();
         throw new UnsupportedOperationException("Not finished yet");
     }
 
