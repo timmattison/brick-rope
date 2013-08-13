@@ -3,6 +3,8 @@ package com.timmattison.cryptocurrency.standard.hashing.padding;
 import com.timmattison.cryptocurrency.helpers.ByteArrayHelper;
 import com.timmattison.cryptocurrency.standard.hashing.Endianness;
 
+import javax.inject.Inject;
+
 /**
  * Created with IntelliJ IDEA.
  * User: Tim
@@ -14,16 +16,14 @@ public class StandardMessagePadder implements MessagePadder {
     private final int target = 448;
     private final int modulus = 512;
     private final int sizeOfLengthInBits = 64;
-    private final Endianness endianness;
 
     private byte[] output = null;
     private int messageBitLengthWithPadding = -1;
 
-    public StandardMessagePadder(Endianness endianness) {
-        this.endianness = endianness;
+    public StandardMessagePadder() {
     }
 
-    public byte[] pad(byte[] input, int messageBitLength) {
+    public byte[] pad(Endianness endianness, byte[] input, int messageBitLength) {
         // Step 1: Append a 1 bit
         output = ByteArrayHelper.appendBit(input, messageBitLength, true);
 

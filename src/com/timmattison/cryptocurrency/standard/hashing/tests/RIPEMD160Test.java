@@ -17,7 +17,7 @@ import org.junit.Test;
 public class RIPEMD160Test implements HashTester {
     @Override
     public HashFunction getHashFunction() {
-        return new RIPEMD160(new StandardMessagePadder(Endianness.LittleEndian), new StandardChunkExtractor());
+        return new RIPEMD160(new StandardMessagePadder(), new StandardChunkExtractor());
     }
 
     // Test values from RIPEMD160 appendix B

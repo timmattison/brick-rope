@@ -153,7 +153,7 @@ public class RIPEMD160 implements HashFunction {
         ripemd160HashState.setInputERight(ripemd160HashState.getH4().getValue());
 
         // Pad the message
-        input = messagePadder.pad(input, messageBitLength);
+        input = messagePadder.pad(endianness, input, messageBitLength);
 
         // Create the list of chunks
         // Create the list of chunks

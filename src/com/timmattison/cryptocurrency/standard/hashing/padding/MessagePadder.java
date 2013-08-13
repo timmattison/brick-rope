@@ -1,5 +1,7 @@
 package com.timmattison.cryptocurrency.standard.hashing.padding;
 
+import com.timmattison.cryptocurrency.standard.hashing.Endianness;
+
 /**
  * Created with IntelliJ IDEA.
  * User: Tim
@@ -8,7 +10,7 @@ package com.timmattison.cryptocurrency.standard.hashing.padding;
  * To change this template use File | Settings | File Templates.
  */
 public interface MessagePadder {
-    byte[] pad(byte[] input, int messageBitLength);
+    byte[] pad(Endianness endianness, byte[] input, int messageBitLength);
 
     int getBitLengthWithPadding();
 
