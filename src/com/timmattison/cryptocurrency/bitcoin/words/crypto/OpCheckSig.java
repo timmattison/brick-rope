@@ -4,6 +4,8 @@ import com.timmattison.bitcoin.test.Script;
 import com.timmattison.cryptocurrency.bitcoin.StateMachine;
 import com.timmattison.cryptocurrency.interfaces.Transaction;
 
+import java.util.Arrays;
+
 /**
  * Created with IntelliJ IDEA.
  * User: timmattison
@@ -31,6 +33,21 @@ public class OpCheckSig extends CryptoOp {
         return word;
     }
 
+    @Override
+    public void execute(StateMachine stateMachine) {
+        // Pop the public key and the signature from the stack
+        byte[] publicKey = (byte[]) stateMachine.pop();
+        byte[] signature = (byte[]) stateMachine.pop();
+
+        // Get the last byte of the signature as the hash type
+        byte hashType = signature[signature.length - 1];
+
+        // Remove the last byte from the signature
+        signature = Arrays.copyOfRange(signature, 0, signature.length - 1);
+
+        throw new UnsupportedOperationException("Not finished yet");
+    }
+
     // From the wiki:
     // Firstly always this (the default) procedure is applied:
     // Signature verification process of the default procedure
@@ -55,11 +72,6 @@ public class OpCheckSig extends CryptoOp {
     // 8. The script for the current transaction input in txCopy is set to subScript (lead in by its length as a var-integer encoded!)
 
     // Step 5 appears to be a dupe
-
-    @Override
-    public void execute(StateMachine stateMachine) {
-        throw new UnsupportedOperationException("Not implemented yet");
-    }
 
     /*
         this.stateMachine = stateMachine;
