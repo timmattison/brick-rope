@@ -113,4 +113,14 @@ public class BitcoinInput implements Input {
     public Script getScript() {
         return inputScript;
     }
+
+    @Override
+    public byte[] getPreviousTransactionId() {
+        return previousTransactionHash;
+    }
+
+    @Override
+    public long getPreviousOutputIndex() {
+        return previousOutputIndex;
+    }
 }

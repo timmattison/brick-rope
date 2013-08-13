@@ -182,7 +182,7 @@ public class BitcoinTransaction implements Transaction {
     }
 
     @Override
-    public byte[] hash() {
+    public byte[] getHash() {
         if (hashBytes == null) {
             hashBytes = hasherFactory.createHasher(dump()).getOutput();
         }

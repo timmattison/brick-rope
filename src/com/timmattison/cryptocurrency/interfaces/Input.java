@@ -15,4 +15,8 @@ public interface Input extends Buildable {
     public boolean isCoinbase();
 
     public Script getScript();
+
+    byte[] getPreviousTransactionId();
+
+    long getPreviousOutputIndex();
 }
