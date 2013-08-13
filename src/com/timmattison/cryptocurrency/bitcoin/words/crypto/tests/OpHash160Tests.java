@@ -8,5 +8,5 @@ package com.timmattison.cryptocurrency.bitcoin.words.crypto.tests;
  * To change this template use File | Settings | File Templates.
  */
 public class OpHash160Tests {
-    WRITE SOME TESTS
+    // TODO XXX WRITE SOME TESTS
 }
