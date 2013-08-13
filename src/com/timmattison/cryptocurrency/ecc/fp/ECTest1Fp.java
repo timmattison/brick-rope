@@ -2,6 +2,7 @@ package com.timmattison.cryptocurrency.ecc.fp;
 
 import com.timmattison.bitcoin.test.BigIntegerHelper;
 import com.timmattison.bitcoin.test.ByteArrayHelper;
+import org.junit.Test;
 
 import java.math.BigInteger;
 import java.security.MessageDigest;
@@ -14,38 +15,30 @@ import java.security.MessageDigest;
  * To change this template use File | Settings | File Templates.
  */
 public class ECTest1Fp {
-
-    public static void main(String[] args) throws Exception {
-        try {
-            test1();
-        } catch (Exception ex) {
-            throw ex;
-        }
-    }
-
     // (Chosen) Instantiate the dU value
-    private static final BigInteger dU = new BigInteger("971761939728640320549601132085879836204587084162", 10);
+    private final BigInteger dU = new BigInteger("971761939728640320549601132085879836204587084162", 10);
 
     // Calculated in the first method
-    private static ECPointFp Qu;
+    private ECPointFp Qu;
 
     // The message
-    private static final String message = "abc";
-    private static final byte[] messageBytes = message.getBytes();
+    private final String message = "abc";
+    private final byte[] messageBytes = message.getBytes();
 
     // Derived from xR
-    private static ECPointFp R;
+    private ECPointFp R;
 
     // Message signature
-    private static BigInteger s;
+    private BigInteger s;
 
     // Derive an integer r from xR (mod n)
-    private static BigInteger r;
+    private BigInteger r;
 
     /**
      * From GEC 2: Test Vectors for SEC 1, 2.1.2
      */
-    private static void test1() throws Exception {
+    @Test
+    public void test1() throws Exception {
         step1KeyDeploymentForU();
 
         step2SigningOperationForU();
@@ -53,7 +46,7 @@ public class ECTest1Fp {
         step3ValidateSignatureForV();
     }
 
-    private static void step1KeyDeploymentForU() throws Exception {
+    private void step1KeyDeploymentForU() throws Exception {
         X9ECParameters secp160r1 = SECNamedCurves.getSecp160r1();
 
         // Convert to octet string
@@ -94,7 +87,7 @@ public class ECTest1Fp {
         // String expectedQuOctetString = "0251b4496fecc406ed0e75a24a3c03206251419dc0";
     }
 
-    private static void step2SigningOperationForU() throws Exception {
+    private void step2SigningOperationForU() throws Exception {
         X9ECParameters secp160r1 = SECNamedCurves.getSecp160r1();
 
         // Selected k value
@@ -236,7 +229,7 @@ public class ECTest1Fp {
         }
     }
 
-    private static void step3ValidateSignatureForV() throws Exception {
+    private void step3ValidateSignatureForV() throws Exception {
         X9ECParameters secp160r1 = SECNamedCurves.getSecp160r1();
 
         MessageDigest md = MessageDigest.getInstance("SHA1");

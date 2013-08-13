@@ -2,6 +2,7 @@ package com.timmattison.cryptocurrency.ecc.fp;
 
 import com.timmattison.bitcoin.test.BigIntegerHelper;
 import com.timmattison.bitcoin.test.ByteArrayHelper;
+import org.junit.Test;
 
 import java.math.BigInteger;
 import java.security.MessageDigest;
@@ -14,15 +15,15 @@ import java.security.MessageDigest;
  * To change this template use File | Settings | File Templates.
  */
 public class ECTest2Fp {
-
     // (Chosen) Instantiate the dU value
-    private static final BigInteger dU = new BigInteger("971761939728640320549601132085879836204587084162", 10);
+    private final BigInteger dU = new BigInteger("971761939728640320549601132085879836204587084162", 10);
 
     // The message
-    private static final String message = "abc";
-    private static final byte[] messageBytes = message.getBytes();
+    private final String message = "abc";
+    private final byte[] messageBytes = message.getBytes();
 
-    public static void main(String[] args) throws Exception {
+    @Test
+    public void test2() throws Exception {
         ECKeyPairFp keyPair = new ECKeyPairFp(SECNamedCurves.getSecp160k1(), dU);
 
         ECSignatureFp signature = signMessage(keyPair, messageBytes);
@@ -34,7 +35,7 @@ public class ECTest2Fp {
         }
     }
 
-    public static ECSignatureFp signMessage(ECKeyPairFp keyPair, byte[] messageBytes) throws Exception {
+    public ECSignatureFp signMessage(ECKeyPairFp keyPair, byte[] messageBytes) throws Exception {
         // Select a k value
         BigInteger k = new BigInteger("702232148019446860144825009548118511996283736794", 10);
 
@@ -76,7 +77,7 @@ public class ECTest2Fp {
         return signature;
     }
 
-    private static boolean validateSignature(byte[] messageBytes, ECSignatureFp signature) throws Exception {
+    private boolean validateSignature(byte[] messageBytes, ECSignatureFp signature) throws Exception {
         MessageDigest md = MessageDigest.getInstance("SHA1");
         md.update(messageBytes);
         byte[] hashBytes = md.digest();
