@@ -1,12 +1,17 @@
 package com.timmattison.cryptocurrency.bitcoin.words.crypto;
 
-import com.timmattison.bitcoin.test.Script;
+import com.timmattison.bitcoin.test.ByteArrayHelper;
 import com.timmattison.cryptocurrency.bitcoin.StateMachine;
+import com.timmattison.cryptocurrency.ecc.fp.ECSignatureFp;
 import com.timmattison.cryptocurrency.ecc.fp.X9ECParameters;
-import com.timmattison.cryptocurrency.factories.ECCFactory;
+import com.timmattison.cryptocurrency.factories.ECCKeyPairFactory;
+import com.timmattison.cryptocurrency.factories.ECCParamsFactory;
+import com.timmattison.cryptocurrency.factories.ECCSignatureFactory;
 import com.timmattison.cryptocurrency.interfaces.Transaction;
+import com.timmattison.cryptocurrency.standard.Script;
 
 import javax.inject.Inject;
+import java.math.BigInteger;
 import java.util.Arrays;
 
 /**
@@ -19,7 +24,9 @@ import java.util.Arrays;
 public class OpCheckSig extends CryptoOp {
     private static final String word = "OP_CHECKSIG";
     private static final Byte opcode = (byte) 0xac;
-    private final ECCFactory eccFactory;
+    private final ECCParamsFactory eccParamsFactory;
+    private final ECCKeyPairFactory keyFactory;
+    private final ECCSignatureFactory signatureFactory;
     private byte[] publicKey;
     private byte[] signature;
     private byte[] subscriptBytes;
@@ -27,8 +34,10 @@ public class OpCheckSig extends CryptoOp {
     private Transaction txCopy;
 
     @Inject
-    public OpCheckSig(ECCFactory eccFactory) {
-        this.eccFactory = eccFactory;
+    public OpCheckSig(ECCParamsFactory eccParamsFactory, ECCKeyPairFactory keyFactory, ECCSignatureFactory signatureFactory) {
+        this.eccParamsFactory = eccParamsFactory;
+        this.keyFactory = keyFactory;
+        this.signatureFactory = signatureFactory;
     }
 
     @Override
@@ -53,7 +62,12 @@ public class OpCheckSig extends CryptoOp {
         // Remove the last byte from the signature
         signature = Arrays.copyOfRange(signature, 0, signature.length - 1);
 
-        X9ECParameters ecc = eccFactory.create();
+        // Create the ECC instance
+        X9ECParameters ecc = eccParamsFactory.create();
+
+        // Create the signature instance
+        ECSignatureFp ecSignature = signatureFactory.create(ecc, x, x, new BigInteger(ByteArrayHelper.reverseBytes(publicKey)));
+
         throw new UnsupportedOperationException("Not finished yet");
     }
 

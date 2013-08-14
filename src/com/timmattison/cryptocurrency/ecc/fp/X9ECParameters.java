@@ -30,8 +30,7 @@ public class X9ECParameters {
         return this.g;
     }
 
-    public BigInteger getN()
-    {
+    public BigInteger getN() {
         return this.n;
     }
 

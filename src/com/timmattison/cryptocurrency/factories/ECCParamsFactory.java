@@ -9,6 +9,6 @@ import com.timmattison.cryptocurrency.ecc.fp.X9ECParameters;
  * Time: 6:55 PM
  * To change this template use File | Settings | File Templates.
  */
-public interface ECCFactory {
+public interface ECCParamsFactory {
     public X9ECParameters create();
 }

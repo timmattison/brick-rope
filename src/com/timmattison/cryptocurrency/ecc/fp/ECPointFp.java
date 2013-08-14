@@ -129,7 +129,7 @@ public class ECPointFp {
 
     // Simple NAF (Non-Adjacent Form) multiplication algorithm
     // TODO: modularize the multiplication algorithm
-    ECPointFp multiply(BigInteger k) {
+    public ECPointFp multiply(BigInteger k) {
         if (this.isInfinity()) return this;
         if (k.signum() == 0) return this.curve.getInfinity();
         BigInteger e = k;
