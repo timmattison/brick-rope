@@ -1,14 +1,13 @@
 package com.timmattison.cryptocurrency.bitcoin.words.crypto;
 
 import com.timmattison.bitcoin.test.ByteArrayHelper;
+import com.timmattison.cryptocurrency.bitcoin.BitcoinHashType;
 import com.timmattison.cryptocurrency.bitcoin.StateMachine;
 import com.timmattison.cryptocurrency.ecc.fp.ECSignatureFp;
 import com.timmattison.cryptocurrency.ecc.fp.X9ECParameters;
 import com.timmattison.cryptocurrency.factories.ECCKeyPairFactory;
 import com.timmattison.cryptocurrency.factories.ECCParamsFactory;
 import com.timmattison.cryptocurrency.factories.ECCSignatureFactory;
-import com.timmattison.cryptocurrency.interfaces.Transaction;
-import com.timmattison.cryptocurrency.standard.Script;
 
 import javax.inject.Inject;
 import java.math.BigInteger;
@@ -24,20 +23,15 @@ import java.util.Arrays;
 public class OpCheckSig extends CryptoOp {
     private static final String word = "OP_CHECKSIG";
     private static final Byte opcode = (byte) 0xac;
-    private final ECCParamsFactory eccParamsFactory;
-    private final ECCKeyPairFactory keyFactory;
-    private final ECCSignatureFactory signatureFactory;
-    private byte[] publicKey;
-    private byte[] signature;
-    private byte[] subscriptBytes;
-    private Script subscript;
-    private Transaction txCopy;
 
     @Inject
-    public OpCheckSig(ECCParamsFactory eccParamsFactory, ECCKeyPairFactory keyFactory, ECCSignatureFactory signatureFactory) {
-        this.eccParamsFactory = eccParamsFactory;
-        this.keyFactory = keyFactory;
-        this.signatureFactory = signatureFactory;
+    private ECCParamsFactory eccParamsFactory;
+    @Inject
+    private ECCKeyPairFactory keyFactory;
+    @Inject
+    private ECCSignatureFactory signatureFactory;
+
+    public OpCheckSig() {
     }
 
     @Override
@@ -56,8 +50,34 @@ public class OpCheckSig extends CryptoOp {
         byte[] publicKey = (byte[]) stateMachine.pop();
         byte[] signature = (byte[]) stateMachine.pop();
 
+        /*
+            Signature should be in this format (from http://www.bitcoinsecurity.org/2012/07/22/7/):
+             [sig] = [sigLength][0×30][rsLength][0×02][rLength][sig_r][0×02][sLength][sig_s][0×01]
+               where
+                 sigLength gives the number of bytes taken up the rest of the signature ([0×30]…[0×01])
+                 rsLength gives the number of bytes in [0×02][rLength][sig_r][0×02][sLength][sig_s]
+                 rLength gives the number of bytes in [sig_r] (approx 32 bytes)
+                 sLength gives the number of bytes in [sig_s] (approx 32 bytes)
+
+             [pubKeyHash] = [pubKeyHashLength][RIPEMD160(SHA256(public key))]
+               where
+                 pubKeyHashLength is always 0×14 (= 20) since the RIPEMD160 digest is 20 bytes.
+
+             [pubKey] (uncompressed) = [publicKeyLength][0×04][keyX][keyY]
+               where
+                 publicKeyLength is always 0×41 (= 65) since keyX and keyY are 32 bytes and 0×04 is 1 byte
+
+             [pubKey] (compressed) = [publicKeyLength][0×02 or 0×03][keyX]
+               where
+                 publicKeyLength is always 0×21 (= 33) since keyX is 32 bytes and 0×02/0×03 is 1 byte.
+        */
+
         // Get the last byte of the signature as the hash type
-        byte hashType = signature[signature.length - 1];
+        BitcoinHashType hashType = getHashType(signature[signature.length - 1]);
+
+        if (hashType != BitcoinHashType.SIGHASH_ALL) {
+            throw new UnsupportedOperationException("Only SIGHASH_ALL accepted currently");
+        }
 
         // Remove the last byte from the signature
         signature = Arrays.copyOfRange(signature, 0, signature.length - 1);
@@ -66,9 +86,25 @@ public class OpCheckSig extends CryptoOp {
         X9ECParameters ecc = eccParamsFactory.create();
 
         // Create the signature instance
-        ECSignatureFp ecSignature = signatureFactory.create(ecc, x, x, new BigInteger(ByteArrayHelper.reverseBytes(publicKey)));
+        ECSignatureFp ecSignature = signatureFactory.create(ecc, null, null, new BigInteger(ByteArrayHelper.reverseBytes(publicKey)));
 
         throw new UnsupportedOperationException("Not finished yet");
+    }
+
+    private BitcoinHashType getHashType(byte hashTypeByte) {
+        // No, determine which hash type we want
+        if (((hashTypeByte & 31) == BitcoinHashType.SIGHASH_ALL.getValue())) {
+            // TODO - Check the logic on this.  It is missing from the docs.
+            return BitcoinHashType.SIGHASH_ALL;
+        } else if ((hashTypeByte & 31) == BitcoinHashType.SIGHASH_NONE.getValue()) {
+            return BitcoinHashType.SIGHASH_NONE;
+        } else if ((hashTypeByte & 31) == BitcoinHashType.SIGHASH_SINGLE.getValue()) {
+            return BitcoinHashType.SIGHASH_SINGLE;
+        } else if ((hashTypeByte & BitcoinHashType.SIGHASH_ANYONECANPAY.getValue()) == BitcoinHashType.SIGHASH_ANYONECANPAY.getValue()) {
+            return BitcoinHashType.SIGHASH_SINGLE;
+        } else {
+            throw new UnsupportedOperationException("Unsupported hash type value found: " + hashTypeByte + " [" + ByteArrayHelper.toHex(hashTypeByte) + "]");
+        }
     }
 
     // From the wiki:
