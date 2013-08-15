@@ -91,22 +91,6 @@ public class OpCheckSig extends CryptoOp {
         throw new UnsupportedOperationException("Not finished yet");
     }
 
-    private BitcoinHashType getHashType(byte hashTypeByte) {
-        // No, determine which hash type we want
-        if (((hashTypeByte & 31) == BitcoinHashType.SIGHASH_ALL.getValue())) {
-            // TODO - Check the logic on this.  It is missing from the docs.
-            return BitcoinHashType.SIGHASH_ALL;
-        } else if ((hashTypeByte & 31) == BitcoinHashType.SIGHASH_NONE.getValue()) {
-            return BitcoinHashType.SIGHASH_NONE;
-        } else if ((hashTypeByte & 31) == BitcoinHashType.SIGHASH_SINGLE.getValue()) {
-            return BitcoinHashType.SIGHASH_SINGLE;
-        } else if ((hashTypeByte & BitcoinHashType.SIGHASH_ANYONECANPAY.getValue()) == BitcoinHashType.SIGHASH_ANYONECANPAY.getValue()) {
-            return BitcoinHashType.SIGHASH_SINGLE;
-        } else {
-            throw new UnsupportedOperationException("Unsupported hash type value found: " + hashTypeByte + " [" + ByteArrayHelper.toHex(hashTypeByte) + "]");
-        }
-    }
-
     // From the wiki:
     // Firstly always this (the default) procedure is applied:
     // Signature verification process of the default procedure

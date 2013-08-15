@@ -44,4 +44,20 @@ public enum BitcoinHashType {
     public long getValue() {
         return value;
     }
+
+    public static BitcoinHashType convert(long value) {
+        // Determine which hash type this is
+        if (((value & 31) == BitcoinHashType.SIGHASH_ALL.getValue())) {
+            // TODO - Check the logic on this.  It is missing from the docs.
+            return BitcoinHashType.SIGHASH_ALL;
+        } else if ((value & 31) == BitcoinHashType.SIGHASH_NONE.getValue()) {
+            return BitcoinHashType.SIGHASH_NONE;
+        } else if ((value & 31) == BitcoinHashType.SIGHASH_SINGLE.getValue()) {
+            return BitcoinHashType.SIGHASH_SINGLE;
+        } else if ((value & BitcoinHashType.SIGHASH_ANYONECANPAY.getValue()) == BitcoinHashType.SIGHASH_ANYONECANPAY.getValue()) {
+            return BitcoinHashType.SIGHASH_SINGLE;
+        } else {
+            return null;
+        }
+    }
 }
