@@ -1,16 +1,23 @@
 package com.timmattison.cryptocurrency.bitcoin.words.crypto;
 
-import com.timmattison.bitcoin.test.ByteArrayHelper;
+import com.google.inject.Guice;
+import com.google.inject.Injector;
+import com.timmattison.bitcoin.test.BigIntegerHelper;
 import com.timmattison.cryptocurrency.bitcoin.BitcoinHashType;
+import com.timmattison.cryptocurrency.bitcoin.BitcoinModule;
 import com.timmattison.cryptocurrency.bitcoin.StateMachine;
+import com.timmattison.cryptocurrency.bitcoin.applications.BitcoinValidateBlock170;
+import com.timmattison.cryptocurrency.ecc.fp.ECHelperFp;
+import com.timmattison.cryptocurrency.ecc.fp.ECPointFp;
 import com.timmattison.cryptocurrency.ecc.fp.ECSignatureFp;
-import com.timmattison.cryptocurrency.ecc.fp.X9ECParameters;
 import com.timmattison.cryptocurrency.factories.ECCKeyPairFactory;
-import com.timmattison.cryptocurrency.factories.ECCParamsFactory;
-import com.timmattison.cryptocurrency.factories.ECCSignatureFactory;
+import com.timmattison.cryptocurrency.factories.SignatureProcessorFactory;
+import com.timmattison.cryptocurrency.helpers.ByteArrayHelper;
+import com.timmattison.cryptocurrency.interfaces.SignatureProcessor;
 
 import javax.inject.Inject;
 import java.math.BigInteger;
+import java.security.MessageDigest;
 import java.util.Arrays;
 
 /**
@@ -25,11 +32,9 @@ public class OpCheckSig extends CryptoOp {
     private static final Byte opcode = (byte) 0xac;
 
     @Inject
-    private ECCParamsFactory eccParamsFactory;
+    public ECCKeyPairFactory keyFactory;
     @Inject
-    private ECCKeyPairFactory keyFactory;
-    @Inject
-    private ECCSignatureFactory signatureFactory;
+    public SignatureProcessorFactory signatureProcessorFactory;
 
     public OpCheckSig() {
     }
@@ -73,23 +78,63 @@ public class OpCheckSig extends CryptoOp {
         */
 
         // Get the last byte of the signature as the hash type
-        BitcoinHashType hashType = getHashType(signature[signature.length - 1]);
+        BitcoinHashType hashType = BitcoinHashType.convert(signature[signature.length - 1]);
 
         if (hashType != BitcoinHashType.SIGHASH_ALL) {
             throw new UnsupportedOperationException("Only SIGHASH_ALL accepted currently");
         }
 
-        // Remove the last byte from the signature
-        signature = Arrays.copyOfRange(signature, 0, signature.length - 1);
+        // Create the signature processor
+        // XXX UBER TEMP INSANITY XXX
+        Injector injector = Guice.createInjector(new BitcoinModule());
 
-        // Create the ECC instance
-        X9ECParameters ecc = eccParamsFactory.create();
+        SignatureProcessor signatureProcessor = injector.getInstance(SignatureProcessorFactory.class).create();
 
-        // Create the signature instance
-        ECSignatureFp ecSignature = signatureFactory.create(ecc, null, null, new BigInteger(ByteArrayHelper.reverseBytes(publicKey)));
+        ECSignatureFp ecSignature = (ECSignatureFp) signatureProcessor.getSignature(signature, publicKey);
+
+        try {
+            boolean valid = validateSignature(BitcoinValidateBlock170.validationScript.dump(), ecSignature);
+        } catch (Exception e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
 
         throw new UnsupportedOperationException("Not finished yet");
     }
+
+    private boolean validateSignature(byte[] messageBytes, ECSignatureFp signature) throws Exception {
+        MessageDigest md = MessageDigest.getInstance("SHA1");
+        md.update(messageBytes);
+        byte[] hashBytes = md.digest();
+        String H = ByteArrayHelper.toHex(hashBytes);
+
+        // Calculate e
+        BigInteger e = ECHelperFp.calculateE(signature.getX9ECParameters(), H, hashBytes);
+
+        // Compute u1
+        BigInteger u1 = e.multiply(signature.getS().modPow(BigInteger.ONE.negate(), signature.getN())).mod(signature.getN());
+
+        // Compute u2
+        BigInteger u2 = signature.getR().multiply(signature.getS().modPow(BigInteger.ONE.negate(), signature.getN())).mod(signature.getN());
+
+        // Compute R = (xR, yR) = u1G + u2Qu
+        ECPointFp u1G = signature.getG().multiply(u1);
+        ECPointFp u2Qu = signature.getQu().multiply(u2);
+
+        ECPointFp R = u1G.add(u2Qu);
+
+        // v = xR mod n
+        BigInteger v = R.getX().toBigInteger().mod(signature.getN());
+
+        // Validate that v == r, are they equal?
+        if(!BigIntegerHelper.equals(v, R.getX().toBigInteger())) {
+            // No, return failure
+            return false;
+        }
+
+        // The message is valid, return success
+        return true;
+    }
+}
 
     // From the wiki:
     // Firstly always this (the default) procedure is applied:
@@ -279,4 +324,3 @@ public class OpCheckSig extends CryptoOp {
         txCopy.getInput(stateMachine.getReferencedOutputIndex()).setScript(subscriptBytes);
     }
     */
-}

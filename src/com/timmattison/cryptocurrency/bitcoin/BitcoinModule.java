@@ -42,6 +42,8 @@ public class BitcoinModule extends AbstractModule {
         bind(TargetFactory.class).to(BitcoinTargetFactory.class);
         bind(StateMachineFactory.class).to(BitcoinStateMachineFactory.class);
         bind(ECCParamsFactory.class).to(BitcoinECCParamsFactory.class);
+        bind(ECCSignatureFactory.class).to(BitcoinECCSignatureFactory.class);
+        bind(SignatureProcessorFactory.class).to(BitcoinSignatureProcessorFactory.class);
 
         bind(HasherFactory.class).to(DoubleSha256Factory.class);
 

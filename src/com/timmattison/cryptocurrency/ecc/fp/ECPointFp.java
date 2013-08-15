@@ -33,7 +33,7 @@ public class ECPointFp {
         //TODO: compression flag
     }
 
-    ECFieldElementFp getX() {
+    public ECFieldElementFp getX() {
         if (this.zinv == null) {
             this.zinv = this.z.modInverse(this.curve.getP());
         }
@@ -69,7 +69,7 @@ public class ECPointFp {
         return new ECPointFp(this.curve, this.x, this.y.negate(), this.z);
     }
 
-    ECPointFp add(ECPointFp b) {
+    public ECPointFp add(ECPointFp b) {
         if (this.isInfinity()) return b;
         if (b.isInfinity()) return this;
         // u = Y2 * Z1 - Y1 * Z2

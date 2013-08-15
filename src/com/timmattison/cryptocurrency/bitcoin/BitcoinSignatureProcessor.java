@@ -1,6 +1,14 @@
 package com.timmattison.cryptocurrency.bitcoin;
 
+import com.timmattison.bitcoin.test.ByteArrayHelper;
+import com.timmattison.cryptocurrency.ecc.fp.ECSignatureFp;
+import com.timmattison.cryptocurrency.ecc.fp.X9ECParameters;
+import com.timmattison.cryptocurrency.factories.ECCParamsFactory;
+import com.timmattison.cryptocurrency.factories.ECCSignatureFactory;
 import com.timmattison.cryptocurrency.interfaces.SignatureProcessor;
+
+import java.math.BigInteger;
+import java.util.Arrays;
 
 /**
  * Created with IntelliJ IDEA.
@@ -9,11 +17,18 @@ import com.timmattison.cryptocurrency.interfaces.SignatureProcessor;
  * Time: 7:14 AM
  * To change this template use File | Settings | File Templates.
  */
-PARAMETERIZE THIS!
 
-public class BitcoinSignatureProcessor implements SignatureProcessor {
+public class BitcoinSignatureProcessor implements SignatureProcessor<ECSignatureFp> {
+    private final ECCParamsFactory eccParamsFactory;
+    private final ECCSignatureFactory signatureFactory;
+
+    public BitcoinSignatureProcessor(ECCParamsFactory eccParamsFactory, ECCSignatureFactory signatureFactory) {
+        this.eccParamsFactory = eccParamsFactory;
+        this.signatureFactory = signatureFactory;
+    }
+
     @Override
-    public Object getSignature(byte[] data) {
+    public ECSignatureFp getSignature(byte[] data, byte[] publicKey) {
         /*
         Signature should be in this format (from http://www.bitcoinsecurity.org/2012/07/22/7/):
           [sig] = [sigLength][0×30][rsLength][0×02][rLength][sig_r][0×02][sLength][sig_s][0×01]
@@ -48,13 +63,13 @@ public class BitcoinSignatureProcessor implements SignatureProcessor {
         }
 
         // First byte after sig_r must be 0x02
-        if (data[3 + 32] != 0x02) {
-            throw new UnsupportedOperationException("sig_s Signature type is not 0x02 [" + data[2] + "]");
+        if (data[4 + 32] != 0x02) {
+            throw new UnsupportedOperationException("sig_s Signature type is not 0x02 [" + data[3 + 32] + "]");
         }
 
         // sig_s length must be (XXX - docs say approx 32 bytes - XXX) 32 bytes
-        if (data[3 + 32 + 1] != 32) {
-            throw new UnsupportedOperationException("sLength is not 32 [" + data[3] + "]");
+        if (data[4 + 32 + 1] != 32) {
+            throw new UnsupportedOperationException("sLength is not 32 [" + data[3 + 32 + 1] + "]");
         }
 
         // Last byte must be a valid signature hash value
@@ -63,5 +78,17 @@ public class BitcoinSignatureProcessor implements SignatureProcessor {
         if (BitcoinHashType.convert(hashTypeByte) == null) {
             throw new UnsupportedOperationException("Unsupported hash type [" + hashTypeByte + "]");
         }
+
+        // Everything looks good.  Extract sig_r and sig_s.
+        byte[] sig_r = Arrays.copyOfRange(data, 4, 4 + 32);
+        byte[] sig_s = Arrays.copyOfRange(data, 4 + 32 + 2, 4 + 32 + 2 + 32);
+
+        // Create the ECC instance
+        X9ECParameters ecc = eccParamsFactory.create();
+
+        // Create the signature instance
+        ECSignatureFp ecSignature = signatureFactory.create(ecc, new BigInteger(ByteArrayHelper.reverseBytes(sig_r)), new BigInteger(ByteArrayHelper.reverseBytes(sig_s)), new BigInteger(ByteArrayHelper.reverseBytes(publicKey)));
+
+        return ecSignature;
     }
 }

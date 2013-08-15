@@ -25,6 +25,8 @@ import java.util.*;
  * To change this template use File | Settings | File Templates.
  */
 public class BitcoinValidateBlock170 {
+    public static ValidationScript validationScript;
+
     public static void main(String[] args) throws FileNotFoundException {
         List<Block> blocks = new ArrayList<Block>();
         Map<String, Transaction> transactionMap = new HashMap<String, Transaction>();
@@ -87,7 +89,7 @@ public class BitcoinValidateBlock170 {
                 Script outputScript = previousOutput.getScript();
                 List<Word> outputWordList = outputScript.getWords();
 
-                ValidationScript validationScript = injector.getInstance(ScriptFactory.class).createValidationScript(inputScript, outputScript);
+                validationScript = injector.getInstance(ScriptFactory.class).createValidationScript(inputScript, outputScript);
 
                 StateMachine stateMachine = injector.getInstance(StateMachineFactory.class).createStateMachine();
 
