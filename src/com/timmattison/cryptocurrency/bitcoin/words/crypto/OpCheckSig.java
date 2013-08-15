@@ -93,6 +93,8 @@ public class OpCheckSig extends CryptoOp {
         ECSignatureFp ecSignature = (ECSignatureFp) signatureProcessor.getSignature(signature, publicKey);
 
         try {
+            byte[] message = BitcoinValidateBlock170.validationScript.dump();
+            message[0] += 1;
             boolean valid = validateSignature(BitcoinValidateBlock170.validationScript.dump(), ecSignature);
         } catch (Exception e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
