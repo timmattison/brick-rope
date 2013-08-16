@@ -7,6 +7,7 @@ import junit.framework.Assert;
 import org.junit.Test;
 
 import java.math.BigInteger;
+import java.util.Random;
 
 /**
  * Created with IntelliJ IDEA.
@@ -100,6 +101,40 @@ public class SECp256k1Tests {
 
         Assert.assertTrue(result.getX().toBigInteger().equals(X5));
         Assert.assertTrue(result.getY().toBigInteger().equals(Y5));
+    }
+
+    @Test
+    public void testRandomPoints() {
+        Random random = new Random(1);
+
+        ECCParameters parameters = getSecp256k1();
+        ECCPoint g = parameters.getG();
+
+        BigInteger n = parameters.getN();
+
+        for(int loop = 0; loop < 64; loop++) {
+            BigInteger a = new BigInteger(n.bitLength(), random);
+            BigInteger b = new BigInteger(n.bitLength(), random);
+            BigInteger c = a.add(b);
+
+            ECCPoint p = g.multiply(a);
+            ECCPoint q = g.multiply(b);
+            ECCPoint r = g.multiply(c);
+
+            ECCPoint pPlusQ = p.add(q);
+            ECCPoint qPlusP = q.add(p);
+
+            BigInteger pPlusQx = pPlusQ.getX().toBigInteger();
+            BigInteger pPlusQy = pPlusQ.getY().toBigInteger();
+
+            BigInteger rX = r.getX().toBigInteger();
+            BigInteger rY = r.getY().toBigInteger();
+
+            Assert.assertTrue(pPlusQ.equals(r));
+            Assert.assertTrue(qPlusP.equals(r));
+        }
+
+        getSecp256k1().getN();
     }
 }
 
