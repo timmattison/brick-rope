@@ -1,7 +1,9 @@
 package com.timmattison.crypto.ecc;
 
 import com.google.inject.assistedinject.Assisted;
+import com.google.inject.internal.util.$Nullable;
 
+import javax.annotation.Nullable;
 import java.math.BigInteger;
 
 /**
@@ -12,5 +14,5 @@ import java.math.BigInteger;
  * To change this template use File | Settings | File Templates.
  */
 public interface ECCPointFactory {
-    ECCPoint create(@Assisted ECCCurve eccCurve, @Assisted("x") ECCFieldElement x, @Assisted("y") ECCFieldElement y, @Assisted BigInteger z);
+    ECCPoint create(@Assisted("curve") ECCCurve eccCurve, @Assisted("x") ECCFieldElement x, @Assisted("y") ECCFieldElement y, @Assisted("z") BigInteger z);
 }

@@ -14,5 +14,5 @@ import java.math.BigInteger;
  * To change this template use File | Settings | File Templates.
  */
 public interface ECCParametersFactory {
-    ECCParameters create(@Assisted ECCCurve curve, @Assisted ECCPoint g, @Assisted("n") BigInteger n, @Assisted("h") BigInteger h);
+    ECCParameters create(@Assisted("curve") ECCCurve curve, @Assisted("g") ECCPoint g, @Assisted("n") BigInteger n, @Assisted("h") BigInteger h);
 }

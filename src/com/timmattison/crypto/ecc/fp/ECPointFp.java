@@ -6,7 +6,9 @@ import com.timmattison.bitcoin.test.BigIntegerHelper;
 import com.timmattison.crypto.ecc.ECCCurve;
 import com.timmattison.crypto.ecc.ECCFieldElement;
 import com.timmattison.crypto.ecc.ECCPoint;
+import com.timmattison.crypto.ecc.ECCPointFactory;
 
+import javax.annotation.Nullable;
 import java.math.BigInteger;
 
 /**
@@ -22,12 +24,14 @@ public class ECPointFp implements ECCPoint {
     private ECCFieldElement y;
     private BigInteger z;
     private BigInteger zinv;
+    private ECCPointFactory eccPointFactory;
 
     public ECPointFp() {
     }
 
     @AssistedInject
-    public ECPointFp(@Assisted ECCCurve curve, @Assisted("x") ECCFieldElement x, @Assisted("y") ECCFieldElement y, @Assisted BigInteger z) {
+    public ECPointFp(ECCPointFactory eccPointFactory, @Assisted("curve") ECCCurve curve, @Nullable @Assisted("x") ECCFieldElement x, @Nullable @Assisted("y") ECCFieldElement y, @Nullable @Assisted("z") BigInteger z) {
+        this.eccPointFactory = eccPointFactory;
         this.curve = curve;
         this.x = x;
         this.y = y;
@@ -75,7 +79,7 @@ public class ECPointFp implements ECCPoint {
     }
 
     public ECCPoint negate() {
-        return new ECPointFp(this.curve, this.x, this.y.negate(), this.z);
+        return eccPointFactory.create(this.curve, this.x, this.y.negate(), this.z);
     }
 
     public ECCPoint add(ECCPoint b) {
@@ -108,7 +112,7 @@ public class ECPointFp implements ECCPoint {
         // z3 = v^3 * z1 * z2
         BigInteger z3 = v3.multiply(this.z).multiply(b.getZ()).mod(this.curve.getP());
 
-        return new ECPointFp(this.curve, this.curve.fromBigInteger(x3), this.curve.fromBigInteger(y3), z3);
+        return eccPointFactory.create(this.curve, this.curve.fromBigInteger(x3), this.curve.fromBigInteger(y3), z3);
     }
 
     public ECCPoint twice() {
@@ -133,7 +137,7 @@ public class ECPointFp implements ECCPoint {
         BigInteger y3 = w.multiply(THREE).multiply(x1).subtract(y1sqz1.shiftLeft(1)).shiftLeft(2).multiply(y1sqz1).subtract(BigIntegerHelper.squareBigInteger(w).multiply(w)).mod(this.curve.getP());
         // z3 = 8 * (y1 * z1)^3
         BigInteger z3 = BigIntegerHelper.squareBigInteger(y1z1).multiply(y1z1).shiftLeft(3).mod(this.curve.getP());
-        return new ECPointFp(this.curve, this.curve.fromBigInteger(x3), this.curve.fromBigInteger(y3), z3);
+        return eccPointFactory.create(this.curve, this.curve.fromBigInteger(x3), this.curve.fromBigInteger(y3), z3);
     }
 
     // Simple NAF (Non-Adjacent Form) multiplication algorithm
