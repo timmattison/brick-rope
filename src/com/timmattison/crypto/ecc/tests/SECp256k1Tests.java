@@ -2,10 +2,7 @@ package com.timmattison.crypto.ecc.tests;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import com.timmattison.crypto.ecc.ECCNamedCurve;
-import com.timmattison.crypto.ecc.ECCNamedCurveFactory;
-import com.timmattison.crypto.ecc.ECCParameters;
-import com.timmattison.crypto.ecc.ECCPoint;
+import com.timmattison.crypto.ecc.*;
 import junit.framework.Assert;
 import org.junit.Test;
 
@@ -19,6 +16,8 @@ import java.math.BigInteger;
  * To change this template use File | Settings | File Templates.
  */
 public class SECp256k1Tests {
+    Injector injector = Guice.createInjector(new ECCTestModule());
+
     /*
      * From http://crypto.stackexchange.com/questions/784/secp256k1-test-examples
      */
@@ -44,8 +43,15 @@ public class SECp256k1Tests {
     BigInteger Y5 = new BigInteger("F449A8376906482A84ED01479BD18882B919C140D638307F0C0934BA12590BDE", 16);
 
     private ECCParameters getSecp256k1() {
-        Injector injector = Guice.createInjector(new ECCTestModule());
         return injector.getInstance(ECCNamedCurveFactory.class).create().getSecp256k1();
+    }
+
+    private ECCPoint getPoint(BigInteger x, BigInteger y) {
+        ECCPointFactory eccPointFactory = injector.getInstance(ECCPointFactory.class);
+        ECCCurve curve = getSecp256k1().getCurve();
+        ECCFieldElement xFieldElement = curve.fromBigInteger(x);
+        ECCFieldElement yFieldElement = curve.fromBigInteger(y);
+        return eccPointFactory.create(curve, xFieldElement, yFieldElement, null);
     }
 
     @Test
@@ -54,6 +60,46 @@ public class SECp256k1Tests {
         ECCPoint result = secp256k1.getG().multiply(secp256k1.getN());
 
         Assert.assertTrue(result.isInfinity());
+    }
+
+    @Test
+    public void testVectorSet1() {
+        ECCPoint result = getSecp256k1().getG().multiply(m1);
+
+        Assert.assertTrue(result.getX().toBigInteger().equals(X1));
+        Assert.assertTrue(result.getY().toBigInteger().equals(Y1));
+    }
+
+    @Test
+    public void testVectorSet2() {
+        ECCPoint result = getSecp256k1().getG().multiply(m2);
+
+        Assert.assertTrue(result.getX().toBigInteger().equals(X2));
+        Assert.assertTrue(result.getY().toBigInteger().equals(Y2));
+    }
+
+    @Test
+    public void testVectorSet3() {
+        ECCPoint result = getSecp256k1().getG().multiply(m3);
+
+        Assert.assertTrue(result.getX().toBigInteger().equals(X3));
+        Assert.assertTrue(result.getY().toBigInteger().equals(Y3));
+    }
+
+    @Test
+    public void testVectorSet4() {
+        ECCPoint result = getSecp256k1().getG().multiply(m4);
+
+        Assert.assertTrue(result.getX().toBigInteger().equals(X4));
+        Assert.assertTrue(result.getY().toBigInteger().equals(Y4));
+    }
+
+    @Test
+    public void testVectorSet5() {
+        ECCPoint result = getSecp256k1().getG().multiply(m5);
+
+        Assert.assertTrue(result.getX().toBigInteger().equals(X5));
+        Assert.assertTrue(result.getY().toBigInteger().equals(Y5));
     }
 }
 
