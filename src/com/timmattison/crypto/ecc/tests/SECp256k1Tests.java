@@ -104,6 +104,18 @@ public class SECp256k1Tests {
     }
 
     @Test
+    public void testVectorSet5MustFail() {
+        ECCPoint result = getSecp256k1().getG().multiply(m5);
+
+        // Check it against the wrong points
+        Assert.assertFalse(result.getX().toBigInteger().equals(X1));
+        Assert.assertFalse(result.getY().toBigInteger().equals(Y1));
+    }
+
+    /**
+     * Recommended by: http://crypto.stackexchange.com/questions/784/secp256k1-test-examples
+     */
+    @Test
     public void testRandomPoints() {
         Random random = new Random(1);
 
@@ -112,7 +124,7 @@ public class SECp256k1Tests {
 
         BigInteger n = parameters.getN();
 
-        for(int loop = 0; loop < 64; loop++) {
+        for (int loop = 0; loop < 64; loop++) {
             BigInteger a = new BigInteger(n.bitLength(), random);
             BigInteger b = new BigInteger(n.bitLength(), random);
             BigInteger c = a.add(b);
