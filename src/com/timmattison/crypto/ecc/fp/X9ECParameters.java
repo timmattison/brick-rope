@@ -1,4 +1,6 @@
-package com.timmattison.cryptocurrency.ecc.fp;
+package com.timmattison.crypto.ecc.fp;
+
+import com.timmattison.crypto.ecc.ECCParameters;
 
 import java.math.BigInteger;
 
@@ -9,7 +11,7 @@ import java.math.BigInteger;
  * Time: 8:20 AM
  * To change this template use File | Settings | File Templates.
  */
-public class X9ECParameters {
+public class X9ECParameters implements ECCParameters {
     private final ECCurveFp curve;
     private final ECPointFp g;
     private final BigInteger n;

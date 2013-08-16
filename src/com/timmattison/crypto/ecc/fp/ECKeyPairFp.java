@@ -1,4 +1,7 @@
-package com.timmattison.cryptocurrency.ecc.fp;
+package com.timmattison.crypto.ecc.fp;
+
+import com.timmattison.crypto.ecc.ECCParameters;
+import com.timmattison.crypto.ecc.ECCPoint;
 
 import java.math.BigInteger;
 
@@ -11,20 +14,20 @@ import java.math.BigInteger;
  */
 public class ECKeyPairFp {
     private final BigInteger d;
-    private final ECPointFp q;
-    private final X9ECParameters x9ECParameters;
+    private final ECCPoint q;
+    private final ECCParameters eccParameters;
 
-    public ECKeyPairFp(X9ECParameters x9ECParameters, BigInteger d) throws Exception {
-        this.x9ECParameters = x9ECParameters;
+    public ECKeyPairFp(ECCParameters eccParameters, BigInteger d) throws Exception {
+        this.eccParameters = eccParameters;
         this.d = d;
 
         // Does d meet the criteria for a secret key?  It must be [1, n-1].
-        if ((d.compareTo(BigInteger.ONE) < 0) || (d.compareTo(x9ECParameters.getN().subtract(BigInteger.ONE)) > 0)) {
+        if ((d.compareTo(BigInteger.ONE) < 0) || (d.compareTo(this.eccParameters.getN().subtract(BigInteger.ONE)) > 0)) {
             throw new Exception("Private key d is not in [1, n-1]");
         }
 
         // Calculate q = (x, y) = d * G
-        this.q = this.x9ECParameters.getG().multiply(d);
+        this.q = this.eccParameters.getG().multiply(d);
 
         //validateQ();
     }
@@ -40,10 +43,10 @@ public class ECKeyPairFp {
         }
 
         BigInteger xQ3 = x.pow(3);
-        BigInteger a = x9ECParameters.getCurve().getA().toBigInteger();
+        BigInteger a = eccParameters.getCurve().getA().toBigInteger();
         BigInteger axQ = a.multiply(x);
-        BigInteger b = x9ECParameters.getCurve().getB().toBigInteger();
-        BigInteger p = x9ECParameters.getCurve().getP();
+        BigInteger b = eccParameters.getCurve().getB().toBigInteger();
+        BigInteger p = eccParameters.getCurve().getP();
 
         BigInteger yQ2 = y.pow(2);
 
@@ -60,7 +63,7 @@ public class ECKeyPairFp {
         // SEC 1: 3.2.2.1 step 3 - Only for F_2^m, not implemented here
 
         // SEC 1: 3.2.2.1 step 4 - Is nQ == 0?
-        ECPointFp checkPoint = q.multiply(x9ECParameters.getN());
+        ECCPoint checkPoint = q.multiply(eccParameters.getN());
 
         if ((checkPoint.getX().toBigInteger().compareTo(BigInteger.ZERO) != 0) || (checkPoint.getY().toBigInteger().compareTo(BigInteger.ZERO) != 0)) {
             // No, throw an exception
@@ -84,7 +87,7 @@ public class ECKeyPairFp {
      *
      * @return
      */
-    public ECPointFp getQ() {
+    public ECCPoint getQ() {
         return q;
     }
 
@@ -94,7 +97,7 @@ public class ECKeyPairFp {
      * @return
      */
     public BigInteger getN() {
-        return x9ECParameters.getN();
+        return eccParameters.getN();
     }
 
     /**
@@ -102,8 +105,8 @@ public class ECKeyPairFp {
      *
      * @return
      */
-    public ECPointFp getG() {
-        return x9ECParameters.getG();
+    public ECCPoint getG() {
+        return eccParameters.getG();
     }
 
     /**
@@ -111,7 +114,7 @@ public class ECKeyPairFp {
      *
      * @return
      */
-    public X9ECParameters getX9ECParameters() {
-        return x9ECParameters;
+    public ECCParameters getECCParameters() {
+        return eccParameters;
     }
 }

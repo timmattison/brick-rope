@@ -1,6 +1,6 @@
 package com.timmattison.cryptocurrency.factories;
 
-import com.timmattison.cryptocurrency.ecc.fp.X9ECParameters;
+import com.timmattison.crypto.ecc.fp.X9ECParameters;
 
 /**
  * Created with IntelliJ IDEA.

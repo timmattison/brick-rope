@@ -1,4 +1,4 @@
-package com.timmattison.cryptocurrency.ecc.fp;
+package com.timmattison.crypto.ecc.fp;
 
 import com.timmattison.bitcoin.test.BigIntegerHelper;
 import com.timmattison.bitcoin.test.ByteArrayHelper;
@@ -84,7 +84,7 @@ public class ECTest2Fp {
         String H = ByteArrayHelper.toHex(hashBytes);
 
         // Calculate e
-        BigInteger e = ECHelperFp.calculateE(signature.getX9ECParameters(), H, hashBytes);
+        BigInteger e = ECHelperFp.calculateE(signature.getEccParameters(), H, hashBytes);
 
         // Compute u1
         BigInteger u1 = e.multiply(signature.getS().modPow(BigInteger.ONE.negate(), signature.getN())).mod(signature.getN());

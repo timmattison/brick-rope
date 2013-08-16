@@ -1,8 +1,8 @@
 package com.timmattison.cryptocurrency.bitcoin;
 
 import com.timmattison.bitcoin.test.ByteArrayHelper;
-import com.timmattison.cryptocurrency.ecc.fp.ECSignatureFp;
-import com.timmattison.cryptocurrency.ecc.fp.X9ECParameters;
+import com.timmattison.crypto.ecc.fp.ECSignatureFp;
+import com.timmattison.crypto.ecc.fp.X9ECParameters;
 import com.timmattison.cryptocurrency.factories.ECCParamsFactory;
 import com.timmattison.cryptocurrency.factories.ECCSignatureFactory;
 import com.timmattison.cryptocurrency.interfaces.SignatureProcessor;

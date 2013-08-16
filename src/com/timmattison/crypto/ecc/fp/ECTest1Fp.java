@@ -1,4 +1,4 @@
-package com.timmattison.cryptocurrency.ecc.fp;
+package com.timmattison.crypto.ecc.fp;
 
 import com.timmattison.bitcoin.test.BigIntegerHelper;
 import com.timmattison.bitcoin.test.ByteArrayHelper;

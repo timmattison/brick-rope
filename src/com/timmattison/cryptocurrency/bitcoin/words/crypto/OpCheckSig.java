@@ -7,9 +7,8 @@ import com.timmattison.cryptocurrency.bitcoin.BitcoinHashType;
 import com.timmattison.cryptocurrency.bitcoin.BitcoinModule;
 import com.timmattison.cryptocurrency.bitcoin.StateMachine;
 import com.timmattison.cryptocurrency.bitcoin.applications.BitcoinValidateBlock170;
-import com.timmattison.cryptocurrency.ecc.fp.ECHelperFp;
-import com.timmattison.cryptocurrency.ecc.fp.ECPointFp;
-import com.timmattison.cryptocurrency.ecc.fp.ECSignatureFp;
+import com.timmattison.crypto.ecc.fp.ECPointFp;
+import com.timmattison.crypto.ecc.fp.ECSignatureFp;
 import com.timmattison.cryptocurrency.factories.ECCKeyPairFactory;
 import com.timmattison.cryptocurrency.factories.SignatureProcessorFactory;
 import com.timmattison.cryptocurrency.helpers.ByteArrayHelper;
@@ -18,7 +17,6 @@ import com.timmattison.cryptocurrency.interfaces.SignatureProcessor;
 import javax.inject.Inject;
 import java.math.BigInteger;
 import java.security.MessageDigest;
-import java.util.Arrays;
 
 /**
  * Created with IntelliJ IDEA.
@@ -110,7 +108,7 @@ public class OpCheckSig extends CryptoOp {
         String H = ByteArrayHelper.toHex(hashBytes);
 
         // Calculate e
-        BigInteger e = ECHelperFp.calculateE(signature.getX9ECParameters(), H, hashBytes);
+        BigInteger e = ECHelperFp.calculateE(signature.getEccParameters(), H, hashBytes);
 
         // Compute u1
         BigInteger u1 = e.multiply(signature.getS().modPow(BigInteger.ONE.negate(), signature.getN())).mod(signature.getN());

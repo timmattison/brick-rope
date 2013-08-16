@@ -1,7 +1,7 @@
 package com.timmattison.cryptocurrency.bitcoin;
 
-import com.timmattison.cryptocurrency.ecc.fp.SECNamedCurves;
-import com.timmattison.cryptocurrency.ecc.fp.X9ECParameters;
+import com.timmattison.crypto.ecc.fp.SECNamedCurves;
+import com.timmattison.crypto.ecc.fp.X9ECParameters;
 import com.timmattison.cryptocurrency.factories.ECCParamsFactory;
 
 /**

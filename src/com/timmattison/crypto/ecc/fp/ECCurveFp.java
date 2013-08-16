@@ -1,5 +1,9 @@
-package com.timmattison.cryptocurrency.ecc.fp;
+package com.timmattison.crypto.ecc.fp;
 
+import com.google.inject.assistedinject.Assisted;
+import com.timmattison.crypto.ecc.*;
+
+import javax.inject.Inject;
 import java.math.BigInteger;
 
 /**
@@ -9,46 +13,53 @@ import java.math.BigInteger;
  * Time: 7:08 AM
  * To change this template use File | Settings | File Templates.
  */
-public class ECCurveFp {
-    private final ECPointFp infinity;
-    private BigInteger p;
-    private ECFieldElementFp a;
-    private ECFieldElementFp b;
+public class ECCurveFp implements ECCCurve {
+    private final ECCPointFactory eccPointFactory;
+    private final ECCFieldElementFactory eccFieldElementFactory;
+    private final ECCPoint infinity;
+    private final BigInteger p;
+    private final ECCFieldElement a;
+    private final ECCFieldElement b;
 
-    public ECCurveFp(BigInteger p, BigInteger a, BigInteger b) {
+    @Inject
+    public ECCurveFp(ECCPointFactory eccPointFactory, ECCFieldElementFactory eccFieldElementFactory, @Assisted BigInteger p, @Assisted BigInteger a, @Assisted BigInteger b) {
+        this.eccPointFactory = eccPointFactory;
+        this.eccFieldElementFactory = eccFieldElementFactory;
+
         this.p = p;
         this.a = this.fromBigInteger(a);
         this.b = this.fromBigInteger(b);
-        this.infinity = new ECPointFp(this, null, null, null);
+
+        this.infinity = eccPointFactory.create(this, null, null, null);
     }
 
     public BigInteger getP() {
         return this.p;
     }
 
-    public ECFieldElementFp getA() {
+    public ECCFieldElement getA() {
         return this.a;
     }
 
-    public ECFieldElementFp getB() {
+    public ECCFieldElement getB() {
         return this.b;
     }
 
-    public boolean equals(ECCurveFp other) {
+    public boolean equals(ECCCurve other) {
         if (other == this) return true;
-        return (this.p.equals(other.p) && this.a.equals(other.a) && this.b.equals(other.b));
+        return (this.p.equals(other.getP()) && this.a.equals(other.getA()) && this.b.equals(other.getB()));
     }
 
-    public ECPointFp getInfinity() {
+    public ECCPoint getInfinity() {
         return this.infinity;
     }
 
-    public ECFieldElementFp fromBigInteger(BigInteger x) {
-        return new ECFieldElementFp(this.p, x);
+    public ECCFieldElement fromBigInteger(BigInteger x) {
+        return eccFieldElementFactory.create(this.p, x);
     }
 
     // for now, work with hex strings because they're easier in JS
-    public ECPointFp decodePointHex(String s) {
+    public ECCPoint decodePointHex(String s) {
         switch (Integer.parseInt(s.substring(0, 2), 16)) {
             // first byte
             case 0:
@@ -65,7 +76,7 @@ public class ECCurveFp {
                 int middle = (end - start) / 2;
                 String xHex = s.substring(start, middle + start);
                 String yHex = s.substring(middle + start, end);
-                return new ECPointFp(this,
+                return eccPointFactory.create(this,
                         this.fromBigInteger(new BigInteger(xHex, 16)),
                         this.fromBigInteger(new BigInteger(yHex, 16)), null);
             default:

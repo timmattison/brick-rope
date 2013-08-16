@@ -1,6 +1,9 @@
-package com.timmattison.cryptocurrency.ecc.fp;
+package com.timmattison.crypto.ecc.fp;
 
 import com.timmattison.bitcoin.test.BigIntegerHelper;
+import com.timmattison.crypto.ecc.ECCCurve;
+import com.timmattison.crypto.ecc.ECCFieldElement;
+import com.timmattison.crypto.ecc.ECCPoint;
 
 import java.math.BigInteger;
 
@@ -11,14 +14,14 @@ import java.math.BigInteger;
  * Time: 6:56 AM
  * To change this template use File | Settings | File Templates.
  */
-public class ECPointFp {
-    private final ECCurveFp curve;
-    private final ECFieldElementFp x;
-    private final ECFieldElementFp y;
+public class ECPointFp implements ECCPoint {
+    private final ECCCurve curve;
+    private final ECCFieldElement x;
+    private final ECCFieldElement y;
     private final BigInteger z;
     private BigInteger zinv;
 
-    public ECPointFp(ECCurveFp curve, ECFieldElementFp x, ECFieldElementFp y, BigInteger z) {
+    public ECPointFp(ECCCurve curve, ECCFieldElement x, ECCFieldElement y, BigInteger z) {
         this.curve = curve;
         this.x = x;
         this.y = y;
@@ -33,49 +36,49 @@ public class ECPointFp {
         //TODO: compression flag
     }
 
-    public ECFieldElementFp getX() {
+    public ECCFieldElement getX() {
         if (this.zinv == null) {
             this.zinv = this.z.modInverse(this.curve.getP());
         }
         return this.curve.fromBigInteger(this.x.toBigInteger().multiply(this.zinv).mod(this.curve.getP()));
     }
 
-    ECFieldElementFp getY() {
+    public ECCFieldElement getY() {
         if (this.zinv == null) {
             this.zinv = this.z.modInverse(this.curve.getP());
         }
         return this.curve.fromBigInteger(this.y.toBigInteger().multiply(this.zinv).mod(this.curve.getP()));
     }
 
-    boolean equals(ECPointFp other) {
+    public boolean equals(ECCPoint other) {
         if (other == this) return true;
         if (this.isInfinity()) return other.isInfinity();
         if (other.isInfinity()) return this.isInfinity();
         BigInteger u, v;
         // u = Y2 * Z1 - Y1 * Z2
-        u = other.y.toBigInteger().multiply(this.z).subtract(this.y.toBigInteger().multiply(other.z)).mod(this.curve.getP());
+        u = other.getY().toBigInteger().multiply(this.z).subtract(this.y.toBigInteger().multiply(other.getZ())).mod(this.curve.getP());
         if (!u.equals(BigInteger.ZERO)) return false;
         // v = X2 * Z1 - X1 * Z2
-        v = other.x.toBigInteger().multiply(this.z).subtract(this.x.toBigInteger().multiply(other.z)).mod(this.curve.getP());
+        v = other.getX().toBigInteger().multiply(this.z).subtract(this.x.toBigInteger().multiply(other.getZ())).mod(this.curve.getP());
         return v.equals(BigInteger.ZERO);
     }
 
-    boolean isInfinity() {
+    public boolean isInfinity() {
         if ((this.x == null) && (this.y == null)) return true;
         return this.z.equals(BigInteger.ZERO) && !this.y.toBigInteger().equals(BigInteger.ZERO);
     }
 
-    ECPointFp negate() {
+    public ECCPoint negate() {
         return new ECPointFp(this.curve, this.x, this.y.negate(), this.z);
     }
 
-    public ECPointFp add(ECPointFp b) {
+    public ECCPoint add(ECCPoint b) {
         if (this.isInfinity()) return b;
         if (b.isInfinity()) return this;
         // u = Y2 * Z1 - Y1 * Z2
-        BigInteger u = b.y.toBigInteger().multiply(this.z).subtract(this.y.toBigInteger().multiply(b.z)).mod(this.curve.getP());
+        BigInteger u = b.getY().toBigInteger().multiply(this.z).subtract(this.y.toBigInteger().multiply(b.getZ())).mod(this.curve.getP());
         // v = X2 * Z1 - X1 * Z2
-        BigInteger v = b.x.toBigInteger().multiply(this.z).subtract(this.x.toBigInteger().multiply(b.z)).mod(this.curve.getP());
+        BigInteger v = b.getX().toBigInteger().multiply(this.z).subtract(this.x.toBigInteger().multiply(b.getZ())).mod(this.curve.getP());
         if (BigInteger.ZERO.equals(v)) {
             if (BigInteger.ZERO.equals(u)) {
                 return this.twice(); // this == b, so double
@@ -85,24 +88,24 @@ public class ECPointFp {
         BigInteger THREE = new BigInteger("3");
         BigInteger x1 = this.x.toBigInteger();
         BigInteger y1 = this.y.toBigInteger();
-        BigInteger x2 = b.x.toBigInteger();
-        BigInteger y2 = b.y.toBigInteger();
+        BigInteger x2 = b.getX().toBigInteger();
+        BigInteger y2 = b.getY().toBigInteger();
         BigInteger v2 = BigIntegerHelper.squareBigInteger(v);
         BigInteger v3 = v2.multiply(v);
         BigInteger x1v2 = x1.multiply(v2);
         BigInteger zu2 = BigIntegerHelper.squareBigInteger(u).multiply(this.z);
 
         // x3 = v * (z2 * (z1 * u^2 - 2 * x1 * v^2) - v^3)
-        BigInteger x3 = zu2.subtract(x1v2.shiftLeft(1)).multiply(b.z).subtract(v3).multiply(v).mod(this.curve.getP());
+        BigInteger x3 = zu2.subtract(x1v2.shiftLeft(1)).multiply(b.getZ()).subtract(v3).multiply(v).mod(this.curve.getP());
         // y3 = z2 * (3 * x1 * u * v^2 - y1 * v^3 - z1 * u^3) + u * v^3
-        BigInteger y3 = x1v2.multiply(THREE).multiply(u).subtract(y1.multiply(v3)).subtract(zu2.multiply(u)).multiply(b.z).add(u.multiply(v3)).mod(this.curve.getP());
+        BigInteger y3 = x1v2.multiply(THREE).multiply(u).subtract(y1.multiply(v3)).subtract(zu2.multiply(u)).multiply(b.getZ()).add(u.multiply(v3)).mod(this.curve.getP());
         // z3 = v^3 * z1 * z2
-        BigInteger z3 = v3.multiply(this.z).multiply(b.z).mod(this.curve.getP());
+        BigInteger z3 = v3.multiply(this.z).multiply(b.getZ()).mod(this.curve.getP());
 
         return new ECPointFp(this.curve, this.curve.fromBigInteger(x3), this.curve.fromBigInteger(y3), z3);
     }
 
-    ECPointFp twice() {
+    public ECCPoint twice() {
         if (this.isInfinity()) return this;
         if (this.y.toBigInteger().signum() == 0) return this.curve.getInfinity();
         // TODO: optimized handling of constants
@@ -129,13 +132,13 @@ public class ECPointFp {
 
     // Simple NAF (Non-Adjacent Form) multiplication algorithm
     // TODO: modularize the multiplication algorithm
-    public ECPointFp multiply(BigInteger k) {
+    public ECCPoint multiply(BigInteger k) {
         if (this.isInfinity()) return this;
         if (k.signum() == 0) return this.curve.getInfinity();
         BigInteger e = k;
         BigInteger h = e.multiply(new BigInteger("3"));
-        ECPointFp neg = this.negate();
-        ECPointFp R = this;
+        ECCPoint neg = this.negate();
+        ECCPoint R = this;
         for (int i = h.bitLength() - 2; i > 0; --i) {
             R = R.twice();
             boolean hBit = h.testBit(i);
@@ -148,14 +151,14 @@ public class ECPointFp {
     }
 
     // Compute this*j + x*k (simultaneous multiplication)
-    ECPointFp multiplyTwo(BigInteger j, ECPointFp x, BigInteger k) {
+    public ECCPoint multiplyTwo(BigInteger j, ECCPoint x, BigInteger k) {
         int i;
         if (j.bitLength() > k.bitLength())
             i = j.bitLength() - 1;
         else
             i = k.bitLength() - 1;
-        ECPointFp R = this.curve.getInfinity();
-        ECPointFp both = this.add(x);
+        ECCPoint R = this.curve.getInfinity();
+        ECCPoint both = this.add(x);
         while (i >= 0) {
             R = R.twice();
             if (j.testBit(i)) {
@@ -172,5 +175,10 @@ public class ECPointFp {
             --i;
         }
         return R;
+    }
+
+    @Override
+    public BigInteger getZ() {
+        return z;
     }
 }

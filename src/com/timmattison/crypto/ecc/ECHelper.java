@@ -1,4 +1,7 @@
-package com.timmattison.cryptocurrency.ecc.fp;
+package com.timmattison.crypto.ecc;
+
+import com.timmattison.crypto.ecc.fp.ECKeyPairFp;
+import com.timmattison.crypto.ecc.fp.X9ECParameters;
 
 import java.math.BigInteger;
 
@@ -9,7 +12,7 @@ import java.math.BigInteger;
  * Time: 12:14 PM
  * To change this template use File | Settings | File Templates.
  */
-public class ECHelperFp {
+public class ECHelper {
     public static String toBitStringFromHexString(String input) {
         if ((input.length() % 2) != 0) {
             throw new UnsupportedOperationException("This doesn't appear to be a properly padding hex string.  The length (mod 2) isn't zero.");
