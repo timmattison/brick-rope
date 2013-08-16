@@ -1,5 +1,6 @@
 package com.timmattison.crypto.ecc.fp;
 
+import com.google.inject.assistedinject.AssistedInject;
 import com.timmattison.crypto.ecc.*;
 
 import javax.inject.Inject;
@@ -12,11 +13,14 @@ import java.math.BigInteger;
  * Time: 8:23 AM
  * To change this template use File | Settings | File Templates.
  */
-public class SECNamedCurve implements NamedCurve {
-    private final ECCCurveFactory eccCurveFactory;
-    private final ECCParametersFactory eccParametersFactory;
+public class SECNamedCurve implements ECCNamedCurve {
+    private ECCCurveFactory eccCurveFactory;
+    private ECCParametersFactory eccParametersFactory;
 
-    @Inject
+    public SECNamedCurve() {
+    }
+
+    @AssistedInject
     public SECNamedCurve(ECCCurveFactory eccCurveFactory, ECCParametersFactory eccParametersFactory) {
         this.eccCurveFactory = eccCurveFactory;
         this.eccParametersFactory = eccParametersFactory;

@@ -39,7 +39,7 @@ public class ECTest2Fp {
 
     private ECCParameters getSecp160k1() {
         Injector injector = Guice.createInjector(new ECCTestModule());
-        return injector.getInstance(NamedCurve.class).getSecp160k1();
+        return injector.getInstance(ECCNamedCurve.class).getSecp160k1();
     }
 
     private ECCKeyPair createECCKeyPair(ECCParameters eccParameters, BigInteger dU) {

@@ -1,7 +1,5 @@
 package com.timmattison.crypto.ecc;
 
-import com.google.inject.Inject;
-
 /**
  * Created with IntelliJ IDEA.
  * User: timmattison
@@ -10,5 +8,5 @@ import com.google.inject.Inject;
  * To change this template use File | Settings | File Templates.
  */
 public interface ECCNamedCurveFactory {
-    public NamedCurve create();
+    public ECCNamedCurve create();
 }

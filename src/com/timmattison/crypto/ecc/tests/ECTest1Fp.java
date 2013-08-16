@@ -4,10 +4,10 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.timmattison.bitcoin.test.BigIntegerHelper;
 import com.timmattison.bitcoin.test.ByteArrayHelper;
+import com.timmattison.crypto.ecc.ECCNamedCurve;
 import com.timmattison.crypto.ecc.ECCParameters;
 import com.timmattison.crypto.ecc.ECCPoint;
 import com.timmattison.crypto.ecc.ECHelper;
-import com.timmattison.crypto.ecc.NamedCurve;
 import org.junit.Test;
 
 import java.math.BigInteger;
@@ -54,7 +54,7 @@ public class ECTest1Fp {
 
     private ECCParameters getSecp160r1() {
         Injector injector = Guice.createInjector(new ECCTestModule());
-        return injector.getInstance(NamedCurve.class).getSecp160r1();
+        return injector.getInstance(ECCNamedCurve.class).getSecp160r1();
     }
 
     private void step1KeyDeploymentForU() throws Exception {

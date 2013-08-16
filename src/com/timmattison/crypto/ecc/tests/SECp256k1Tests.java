@@ -2,9 +2,10 @@ package com.timmattison.crypto.ecc.tests;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import com.timmattison.crypto.ecc.ECCNamedCurve;
+import com.timmattison.crypto.ecc.ECCNamedCurveFactory;
 import com.timmattison.crypto.ecc.ECCParameters;
 import com.timmattison.crypto.ecc.ECCPoint;
-import com.timmattison.crypto.ecc.NamedCurve;
 import junit.framework.Assert;
 import org.junit.Test;
 
@@ -44,7 +45,7 @@ public class SECp256k1Tests {
 
     private ECCParameters getSecp256k1() {
         Injector injector = Guice.createInjector(new ECCTestModule());
-        return injector.getInstance(NamedCurve.class).getSecp256k1();
+        return injector.getInstance(ECCNamedCurveFactory.class).create().getSecp256k1();
     }
 
     @Test
