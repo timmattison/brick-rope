@@ -19,11 +19,6 @@ import com.timmattison.cryptocurrency.factories.ECCSignatureFactory;
 public class ECCTestModule extends AbstractModule {
     @Override
     protected void configure() {
-        bind(ECCParamsFactory.class).to(BitcoinECCParamsFactory.class);
-        bind(ECCSignatureFactory.class).to(BitcoinECCSignatureFactory.class);
-
-        bind(ECCNamedCurve.class).to(SECNamedCurve.class);
-
         // XXX - Aren't these redundant?
         bind(ECCCurve.class).to(ECCurveFp.class);
         bind(ECCNamedCurve.class).to(SECNamedCurve.class);
