@@ -12,15 +12,16 @@ import java.math.BigInteger;
  * Time: 8:23 AM
  * To change this template use File | Settings | File Templates.
  */
-public class SECNamedCurves {
+public class SECNamedCurve implements NamedCurve {
     private final ECCCurveFactory eccCurveFactory;
     private final ECCParametersFactory eccParametersFactory;
 
     @Inject
-    public SECNamedCurves(ECCCurveFactory eccCurveFactory, ECCParametersFactory eccParametersFactory) {
+    public SECNamedCurve(ECCCurveFactory eccCurveFactory, ECCParametersFactory eccParametersFactory) {
         this.eccCurveFactory = eccCurveFactory;
         this.eccParametersFactory = eccParametersFactory;
     }
+
     public BigInteger fromHex(String s) {
         return new BigInteger(s, 16);
     }
@@ -108,11 +109,11 @@ public class SECNamedCurves {
         //byte[] S = Hex.decode("BD71344799D5C7FCDC45B59FA3B9AB8F6A948BC5");
         BigInteger n = fromHex("FFFFFFFFFFFFFFFFFFFFFFFFFFFF16A2E0B8F03E13DD29455C5C2A3D");
         BigInteger h = BigInteger.ONE;
-        ECCurveFp curve = new ECCurveFp(p, a, b);
-        ECPointFp G = curve.decodePointHex("04"
+        ECCCurve curve = eccCurveFactory.create(p, a, b);
+        ECCPoint G = curve.decodePointHex("04"
                 + "B70E0CBD6BB4BF7F321390B94A03C1D356C21122343280D6115C1D21"
                 + "BD376388B5F723FB4C22DFE6CD4375A05A07476444D5819985007E34");
-        return new X9ECParameters(curve, G, n, h);
+        return eccParametersFactory.create(curve, G, n, h);
     }
 
     public ECCParameters getSecp256r1() {
@@ -123,11 +124,11 @@ public class SECNamedCurves {
         //byte[] S = Hex.decode("C49D360886E704936A6678E1139D26B7819F7E90");
         BigInteger n = fromHex("FFFFFFFF00000000FFFFFFFFFFFFFFFFBCE6FAADA7179E84F3B9CAC2FC632551");
         BigInteger h = BigInteger.ONE;
-        ECCurveFp curve = new ECCurveFp(p, a, b);
-        ECPointFp G = curve.decodePointHex("04"
+        ECCCurve curve = eccCurveFactory.create(p, a, b);
+        ECCPoint G = curve.decodePointHex("04"
                 + "6B17D1F2E12C4247F8BCE6E563A440F277037D812DEB33A0F4A13945D898C296"
                 + "4FE342E2FE1A7F9B8EE7EB4A7C0F9E162BCE33576B315ECECBB6406837BF51F5");
-        return new X9ECParameters(curve, G, n, h);
+        return eccParametersFactory.create(curve, G, n, h);
     }
 
     public ECCParameters getSecp256k1() {
@@ -137,10 +138,10 @@ public class SECNamedCurves {
         BigInteger b = fromHex("0000000000000000000000000000000000000000000000000000000000000007");
         BigInteger n = fromHex("FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEBAAEDCE6AF48A03BBFD25E8CD0364141");
         BigInteger h = BigInteger.ONE;
-        ECCurveFp curve = new ECCurveFp(p, a, b);
-        ECPointFp G = curve.decodePointHex("04"
+        ECCCurve curve = eccCurveFactory.create(p, a, b);
+        ECCPoint G = curve.decodePointHex("04"
                 + "79BE667EF9DCBBAC55A06295CE870B07029BFCDB2DCE28D959F2815B16F81798"
                 + "483ADA7726A3C4655DA4FBFC0E1108A8FD17B448A68554199C47D08FFB10D4B8");
-        return new X9ECParameters(curve, G, n, h);
+        return eccParametersFactory.create(curve, G, n, h);
     }
 }

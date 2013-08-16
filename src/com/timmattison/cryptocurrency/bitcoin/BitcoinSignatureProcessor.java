@@ -1,8 +1,8 @@
 package com.timmattison.cryptocurrency.bitcoin;
 
 import com.timmattison.bitcoin.test.ByteArrayHelper;
-import com.timmattison.crypto.ecc.fp.ECSignatureFp;
-import com.timmattison.crypto.ecc.fp.X9ECParameters;
+import com.timmattison.crypto.ecc.ECCParameters;
+import com.timmattison.crypto.ecc.ECCSignature;
 import com.timmattison.cryptocurrency.factories.ECCParamsFactory;
 import com.timmattison.cryptocurrency.factories.ECCSignatureFactory;
 import com.timmattison.cryptocurrency.interfaces.SignatureProcessor;
@@ -18,7 +18,7 @@ import java.util.Arrays;
  * To change this template use File | Settings | File Templates.
  */
 
-public class BitcoinSignatureProcessor implements SignatureProcessor<ECSignatureFp> {
+public class BitcoinSignatureProcessor implements SignatureProcessor<ECCSignature> {
     private final ECCParamsFactory eccParamsFactory;
     private final ECCSignatureFactory signatureFactory;
 
@@ -28,7 +28,7 @@ public class BitcoinSignatureProcessor implements SignatureProcessor<ECSignature
     }
 
     @Override
-    public ECSignatureFp getSignature(byte[] data, byte[] publicKey) {
+    public ECCSignature getSignature(byte[] data, byte[] publicKey) {
         /*
         Signature should be in this format (from http://www.bitcoinsecurity.org/2012/07/22/7/):
           [sig] = [sigLength][0×30][rsLength][0×02][rLength][sig_r][0×02][sLength][sig_s][0×01]
@@ -84,10 +84,10 @@ public class BitcoinSignatureProcessor implements SignatureProcessor<ECSignature
         byte[] sig_s = Arrays.copyOfRange(data, 4 + 32 + 2, 4 + 32 + 2 + 32);
 
         // Create the ECC instance
-        X9ECParameters ecc = eccParamsFactory.create();
+        ECCParameters ecc = eccParamsFactory.create();
 
         // Create the signature instance
-        ECSignatureFp ecSignature = signatureFactory.create(ecc, new BigInteger(ByteArrayHelper.reverseBytes(sig_r)), new BigInteger(ByteArrayHelper.reverseBytes(sig_s)), new BigInteger(ByteArrayHelper.reverseBytes(publicKey)));
+        ECCSignature ecSignature = signatureFactory.create(ecc, new BigInteger(ByteArrayHelper.reverseBytes(sig_r)), new BigInteger(ByteArrayHelper.reverseBytes(sig_s)), new BigInteger(ByteArrayHelper.reverseBytes(publicKey)));
 
         return ecSignature;
     }

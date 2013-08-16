@@ -3,12 +3,14 @@ package com.timmattison.cryptocurrency.bitcoin.words.crypto;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.timmattison.bitcoin.test.BigIntegerHelper;
+import com.timmattison.crypto.ecc.ECCPoint;
+import com.timmattison.crypto.ecc.ECHelper;
+import com.timmattison.crypto.ecc.fp.ECPointFp;
+import com.timmattison.crypto.ecc.fp.ECSignatureFp;
 import com.timmattison.cryptocurrency.bitcoin.BitcoinHashType;
 import com.timmattison.cryptocurrency.bitcoin.BitcoinModule;
 import com.timmattison.cryptocurrency.bitcoin.StateMachine;
 import com.timmattison.cryptocurrency.bitcoin.applications.BitcoinValidateBlock170;
-import com.timmattison.crypto.ecc.fp.ECPointFp;
-import com.timmattison.crypto.ecc.fp.ECSignatureFp;
 import com.timmattison.cryptocurrency.factories.ECCKeyPairFactory;
 import com.timmattison.cryptocurrency.factories.SignatureProcessorFactory;
 import com.timmattison.cryptocurrency.helpers.ByteArrayHelper;
@@ -28,7 +30,6 @@ import java.security.MessageDigest;
 public class OpCheckSig extends CryptoOp {
     private static final String word = "OP_CHECKSIG";
     private static final Byte opcode = (byte) 0xac;
-
     @Inject
     public ECCKeyPairFactory keyFactory;
     @Inject
@@ -108,7 +109,7 @@ public class OpCheckSig extends CryptoOp {
         String H = ByteArrayHelper.toHex(hashBytes);
 
         // Calculate e
-        BigInteger e = ECHelperFp.calculateE(signature.getEccParameters(), H, hashBytes);
+        BigInteger e = ECHelper.calculateE(signature.getECCParameters(), H, hashBytes);
 
         // Compute u1
         BigInteger u1 = e.multiply(signature.getS().modPow(BigInteger.ONE.negate(), signature.getN())).mod(signature.getN());
@@ -117,16 +118,16 @@ public class OpCheckSig extends CryptoOp {
         BigInteger u2 = signature.getR().multiply(signature.getS().modPow(BigInteger.ONE.negate(), signature.getN())).mod(signature.getN());
 
         // Compute R = (xR, yR) = u1G + u2Qu
-        ECPointFp u1G = signature.getG().multiply(u1);
-        ECPointFp u2Qu = signature.getQu().multiply(u2);
+        ECCPoint u1G = signature.getG().multiply(u1);
+        ECCPoint u2Qu = signature.getQu().multiply(u2);
 
-        ECPointFp R = u1G.add(u2Qu);
+        ECCPoint R = u1G.add(u2Qu);
 
         // v = xR mod n
         BigInteger v = R.getX().toBigInteger().mod(signature.getN());
 
         // Validate that v == r, are they equal?
-        if(!BigIntegerHelper.equals(v, R.getX().toBigInteger())) {
+        if (!BigIntegerHelper.equals(v, R.getX().toBigInteger())) {
             // No, return failure
             return false;
         }
@@ -136,30 +137,30 @@ public class OpCheckSig extends CryptoOp {
     }
 }
 
-    // From the wiki:
-    // Firstly always this (the default) procedure is applied:
-    // Signature verification process of the default procedure
+// From the wiki:
+// Firstly always this (the default) procedure is applied:
+// Signature verification process of the default procedure
 
-    // 1. the public key and the signature are popped from the stack, in that order. If the hash-type value is 0, then
-    //      it is replaced by the last_byte of the signature. Then the last byte of the signature is always deleted.
-    //
-    // 2. A new subscript is created from the instruction from the most recently parsed OP_CODESEPARATOR (last one in
-    //      script) to the end of the script. If there is no OP_CODESEPARATOR the entire script becomes the subscript
-    //      (hereby referred to as subScript)
-    //
-    // 3. The sig is deleted from subScript.
-    //
-    // 4. All OP_CODESEPARATORS are removed from subScript
-    //
-    // 5. The hashtype is removed from the last byte of the sig and stored
-    //
-    // 6. A copy is made of the current transaction (hereby referred to txCopy)
-    //
-    // 7. The scripts for all transaction inputs in txCopy are set to empty scripts (exactly 1 byte 0x00)
-    //
-    // 8. The script for the current transaction input in txCopy is set to subScript (lead in by its length as a var-integer encoded!)
+// 1. the public key and the signature are popped from the stack, in that order. If the hash-type value is 0, then
+//      it is replaced by the last_byte of the signature. Then the last byte of the signature is always deleted.
+//
+// 2. A new subscript is created from the instruction from the most recently parsed OP_CODESEPARATOR (last one in
+//      script) to the end of the script. If there is no OP_CODESEPARATOR the entire script becomes the subscript
+//      (hereby referred to as subScript)
+//
+// 3. The sig is deleted from subScript.
+//
+// 4. All OP_CODESEPARATORS are removed from subScript
+//
+// 5. The hashtype is removed from the last byte of the sig and stored
+//
+// 6. A copy is made of the current transaction (hereby referred to txCopy)
+//
+// 7. The scripts for all transaction inputs in txCopy are set to empty scripts (exactly 1 byte 0x00)
+//
+// 8. The script for the current transaction input in txCopy is set to subScript (lead in by its length as a var-integer encoded!)
 
-    // Step 5 appears to be a dupe
+// Step 5 appears to be a dupe
 
     /*
         this.stateMachine = stateMachine;

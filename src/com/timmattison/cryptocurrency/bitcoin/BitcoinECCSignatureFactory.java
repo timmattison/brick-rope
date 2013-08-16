@@ -1,5 +1,9 @@
 package com.timmattison.cryptocurrency.bitcoin;
 
+import com.google.inject.Inject;
+import com.timmattison.crypto.ecc.ECCParameters;
+import com.timmattison.crypto.ecc.ECCPoint;
+import com.timmattison.crypto.ecc.ECCSignature;
 import com.timmattison.crypto.ecc.fp.ECPointFp;
 import com.timmattison.crypto.ecc.fp.ECSignatureFp;
 import com.timmattison.crypto.ecc.fp.X9ECParameters;
@@ -15,12 +19,24 @@ import java.math.BigInteger;
  * To change this template use File | Settings | File Templates.
  */
 public class BitcoinECCSignatureFactory implements ECCSignatureFactory {
-    @Override
-    public ECSignatureFp create(X9ECParameters parameters, BigInteger r, BigInteger s, BigInteger dU) {
-        // Calculate Qu = (xU, yU) = dU * G
-        ECPointFp Qu = parameters.getG().multiply(dU);
+    private final ECCSignatureFactory eccSignatureFactory;
 
-        ECSignatureFp signature = new ECSignatureFp(parameters, r, s, Qu);
+    @Inject
+    public BitcoinECCSignatureFactory(ECCSignatureFactory eccSignatureFactory) {
+        this.eccSignatureFactory = eccSignatureFactory;
+    }
+
+    @Override
+    public ECCSignature create(ECCParameters parameters, BigInteger r, BigInteger s, BigInteger dU) {
+        // Calculate Qu = (xU, yU) = dU * G
+        ECCPoint Qu = parameters.getG().multiply(dU);
+
+        return create(parameters, r, s, Qu);
+    }
+
+    @Override
+    public ECCSignature create(ECCParameters parameters, BigInteger r, BigInteger s, ECCPoint Qu) {
+        ECCSignature signature = eccSignatureFactory.create(parameters, r, s, Qu);
 
         return signature;
     }

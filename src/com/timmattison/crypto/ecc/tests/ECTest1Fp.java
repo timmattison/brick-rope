@@ -1,7 +1,13 @@
-package com.timmattison.crypto.ecc.fp;
+package com.timmattison.crypto.ecc.tests;
 
+import com.google.inject.Guice;
+import com.google.inject.Injector;
 import com.timmattison.bitcoin.test.BigIntegerHelper;
 import com.timmattison.bitcoin.test.ByteArrayHelper;
+import com.timmattison.crypto.ecc.ECCParameters;
+import com.timmattison.crypto.ecc.ECCPoint;
+import com.timmattison.crypto.ecc.ECHelper;
+import com.timmattison.crypto.ecc.NamedCurve;
 import org.junit.Test;
 
 import java.math.BigInteger;
@@ -19,14 +25,14 @@ public class ECTest1Fp {
     private final BigInteger dU = new BigInteger("971761939728640320549601132085879836204587084162", 10);
 
     // Calculated in the first method
-    private ECPointFp Qu;
+    private ECCPoint Qu;
 
     // The message
     private final String message = "abc";
     private final byte[] messageBytes = message.getBytes();
 
     // Derived from xR
-    private ECPointFp R;
+    private ECCPoint R;
 
     // Message signature
     private BigInteger s;
@@ -46,8 +52,13 @@ public class ECTest1Fp {
         step3ValidateSignatureForV();
     }
 
+    private ECCParameters getSecp160r1() {
+        Injector injector = Guice.createInjector(new ECCTestModule());
+        return injector.getInstance(NamedCurve.class).getSecp160r1();
+    }
+
     private void step1KeyDeploymentForU() throws Exception {
-        X9ECParameters secp160r1 = SECNamedCurves.getSecp160r1();
+        ECCParameters secp160r1 = getSecp160r1();
 
         // Convert to octet string
         String dUOctetString = dU.toString(16);
@@ -55,7 +66,7 @@ public class ECTest1Fp {
         // Does it match our expectation?
         String expectedOctetString = "AA374FFC3CE144E6B073307972CB6D57B2A4E982";
 
-        if (!ECHelperFp.compare(dUOctetString, expectedOctetString)) {
+        if (!ECHelper.compare(dUOctetString, expectedOctetString)) {
             // No, throw an exception
             throw new Exception("Failed at 2.1.2 1.2, expected " + expectedOctetString + ", got " + dUOctetString);
         }
@@ -88,7 +99,7 @@ public class ECTest1Fp {
     }
 
     private void step2SigningOperationForU() throws Exception {
-        X9ECParameters secp160r1 = SECNamedCurves.getSecp160r1();
+        ECCParameters secp160r1 = getSecp160r1();
 
         // Selected k value
         BigInteger k = new BigInteger("702232148019446860144825009548118511996283736794", 10);
@@ -130,7 +141,7 @@ public class ECTest1Fp {
         String rString = r.toString(16);
 
         // Is it correct?
-        if(!ECHelperFp.compare(rString, rOctetString)) {
+        if(!ECHelper.compare(rString, rOctetString)) {
             // No, throw an exception
             throw new Exception("Failed at 2.1.3 3.3.  Expected " + rOctetString + ", got " + rString);
         }
@@ -144,7 +155,7 @@ public class ECTest1Fp {
         String expectedMessageHash = "a9993e364706816aba3e25717850c26c9cd0d89d";
 
         // Is the hash what we expected?
-        if(!ECHelperFp.compare(H, expectedMessageHash)) {
+        if(!ECHelper.compare(H, expectedMessageHash)) {
             // No, throw an exception
             throw new Exception("Failed at 2.1.3 4.  Expected " + expectedMessageHash + ", got " + H);
         }
@@ -152,13 +163,13 @@ public class ECTest1Fp {
         // Derive e from H
 
         // Convert H to a bit string
-        String bitStringH = ECHelperFp.toBitStringFromHexString(H);
+        String bitStringH = ECHelper.toBitStringFromHexString(H);
 
         // Validate the bit string
         String expectedBitString = "10101001 10011001 00111110 00110110 01000111 00000110 10000001 01101010 10111010 00111110 00100101 01110001 01111000 01010000 11000010 01101100 10011100 11010000 11011000 10011101";
 
         // Are they equal?
-        if(!ECHelperFp.compare(bitStringH, expectedBitString)) {
+        if(!ECHelper.compare(bitStringH, expectedBitString)) {
             // No, throw an exception
             throw new Exception("Failed at 2.1.3 5.1.  Expected " + expectedBitString + ", got " + bitStringH);
         }
@@ -175,13 +186,13 @@ public class ECTest1Fp {
         String bitStringE = new String(bitStringH);
 
         // Convert from the bit string to a hex string
-        String hexStringE = ECHelperFp.toHexStringFromBitString(bitStringE);
+        String hexStringE = ECHelper.toHexStringFromBitString(bitStringE);
 
         // Validate the hex string
         String expectedHexString = "A9993E364706816ABA3E25717850C26C9CD0D89D";
 
         // Are they equal?
-        if(!ECHelperFp.compare(hexStringE, expectedHexString)) {
+        if(!ECHelper.compare(hexStringE, expectedHexString)) {
             // No, throw an exception
             throw new Exception("Failed at 2.1.3 5.3.  Expected " + expectedHexString + ", got " + hexStringE);
         }
@@ -223,24 +234,24 @@ public class ECTest1Fp {
         String expectedSOctetString = "3480EC371A091A464B31CE47DF0CB8AA2D98B54";
 
         // Are they equal?
-        if(ECHelperFp.compare(s.toString(16), expectedSOctetString)) {
+        if(ECHelper.compare(s.toString(16), expectedSOctetString)) {
             // No, throw an exception
             throw new Exception("Failed at 2.1.3 6.3.  Expected " + expectedSOctetString + ", got " + s);
         }
     }
 
     private void step3ValidateSignatureForV() throws Exception {
-        X9ECParameters secp160r1 = SECNamedCurves.getSecp160r1();
+        ECCParameters secp160r1 = getSecp160r1();
 
         MessageDigest md = MessageDigest.getInstance("SHA1");
         md.update(messageBytes);
         String H = ByteArrayHelper.toHex(md.digest());
 
         // Convert H to a bit string
-        String bitStringE = ECHelperFp.toBitStringFromHexString(H);
+        String bitStringE = ECHelper.toBitStringFromHexString(H);
 
         // Convert the bit string to a hex string
-        String hexStringE = ECHelperFp.toHexStringFromBitString(bitStringE);
+        String hexStringE = ECHelper.toHexStringFromBitString(bitStringE);
 
         BigInteger e = new BigInteger(hexStringE, 16);
 
@@ -267,10 +278,10 @@ public class ECTest1Fp {
         }
 
         // Compute R = (xR, yR) = u1G + u2Qu
-        ECPointFp u1G = secp160r1.getG().multiply(u1);
-        ECPointFp u2Qu = Qu.multiply(u2);
+        ECCPoint u1G = secp160r1.getG().multiply(u1);
+        ECCPoint u2Qu = Qu.multiply(u2);
 
-        ECPointFp R = u1G.add(u2Qu);
+        ECCPoint R = u1G.add(u2Qu);
 
         // Validate that R is what we expect
         BigInteger expectedXr = new BigInteger("1176954224688105769566774212902092897866168635793", 10);

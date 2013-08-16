@@ -1,5 +1,6 @@
 package com.timmattison.cryptocurrency.factories;
 
+import com.timmattison.crypto.ecc.ECCParameters;
 import com.timmattison.crypto.ecc.fp.X9ECParameters;
 
 /**
@@ -10,5 +11,5 @@ import com.timmattison.crypto.ecc.fp.X9ECParameters;
  * To change this template use File | Settings | File Templates.
  */
 public interface ECCParamsFactory {
-    public X9ECParameters create();
+    public ECCParameters create();
 }

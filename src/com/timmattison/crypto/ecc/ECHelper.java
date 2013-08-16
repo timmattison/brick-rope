@@ -1,8 +1,5 @@
 package com.timmattison.crypto.ecc;
 
-import com.timmattison.crypto.ecc.fp.ECKeyPairFp;
-import com.timmattison.crypto.ecc.fp.X9ECParameters;
-
 import java.math.BigInteger;
 
 /**
@@ -48,7 +45,7 @@ public class ECHelper {
         return first.equals(second);
     }
 
-    public static BigInteger calculateS(ECKeyPairFp keyPair, BigInteger k, BigInteger e, BigInteger r) {
+    public static BigInteger calculateS(ECCKeyPair keyPair, BigInteger k, BigInteger e, BigInteger r) {
         return calculateS(k, keyPair.getN(), e, keyPair.getD(), r);
     }
 
@@ -56,11 +53,11 @@ public class ECHelper {
         return k.modPow(BigInteger.ONE.negate(), n).multiply(e.add(dU.multiply(r))).mod(n);
     }
 
-    public static BigInteger calculateE(X9ECParameters x9ECParameters, String hashHexString, byte[] hashBytes) {
-        return calculateE(x9ECParameters.getN(), hashHexString, hashBytes);
+    public static BigInteger calculateE(ECCParameters eccParameters, String hashHexString, byte[] hashBytes) {
+        return calculateE(eccParameters.getN(), hashHexString, hashBytes);
     }
 
-    public static BigInteger calculateE(ECKeyPairFp keyPair, String hashHexString, byte[] hashBytes) {
+    public static BigInteger calculateE(ECCKeyPair keyPair, String hashHexString, byte[] hashBytes) {
         return calculateE(keyPair.getN(), hashHexString, hashBytes);
     }
 
