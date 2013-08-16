@@ -1,6 +1,7 @@
 package com.timmattison.crypto.ecc.fp;
 
 import com.google.inject.assistedinject.Assisted;
+import com.google.inject.assistedinject.AssistedInject;
 import com.timmattison.crypto.ecc.*;
 
 import javax.inject.Inject;
@@ -14,15 +15,19 @@ import java.math.BigInteger;
  * To change this template use File | Settings | File Templates.
  */
 public class ECCurveFp implements ECCCurve {
-    private final ECCPointFactory eccPointFactory;
-    private final ECCFieldElementFactory eccFieldElementFactory;
-    private final ECCPoint infinity;
-    private final BigInteger p;
-    private final ECCFieldElement a;
-    private final ECCFieldElement b;
+    private ECCPointFactory eccPointFactory;
+    private ECCFieldElementFactory eccFieldElementFactory;
+    private ECCPoint infinity;
+    private BigInteger p;
+    private ECCFieldElement a;
+    private ECCFieldElement b;
 
-    @Inject
-    public ECCurveFp(ECCPointFactory eccPointFactory, ECCFieldElementFactory eccFieldElementFactory, @Assisted BigInteger p, @Assisted BigInteger a, @Assisted BigInteger b) {
+    public ECCurveFp() {
+
+    }
+
+    @AssistedInject
+    public ECCurveFp(ECCPointFactory eccPointFactory, ECCFieldElementFactory eccFieldElementFactory, @Assisted("p") BigInteger p, @Assisted("a") BigInteger a, @Assisted("b") BigInteger b) {
         this.eccPointFactory = eccPointFactory;
         this.eccFieldElementFactory = eccFieldElementFactory;
 

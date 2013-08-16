@@ -1,17 +1,13 @@
 package com.timmattison.crypto.ecc.tests;
 
 import com.google.inject.AbstractModule;
-import com.timmattison.cryptocurrency.bitcoin.*;
-import com.timmattison.cryptocurrency.bitcoin.factories.*;
-import com.timmattison.cryptocurrency.factories.*;
-import com.timmattison.cryptocurrency.interfaces.*;
-import com.timmattison.cryptocurrency.standard.StandardBlockChain;
-import com.timmattison.cryptocurrency.standard.StandardBlockFactory;
-import com.timmattison.cryptocurrency.standard.StandardMerkleRootCalculator;
-import com.timmattison.cryptocurrency.standard.hashing.chunks.ChunkExtractor;
-import com.timmattison.cryptocurrency.standard.hashing.chunks.StandardChunkExtractor;
-import com.timmattison.cryptocurrency.standard.hashing.padding.MessagePadder;
-import com.timmattison.cryptocurrency.standard.hashing.padding.StandardMessagePadder;
+import com.google.inject.assistedinject.FactoryModuleBuilder;
+import com.timmattison.crypto.ecc.*;
+import com.timmattison.crypto.ecc.fp.*;
+import com.timmattison.cryptocurrency.bitcoin.BitcoinECCParamsFactory;
+import com.timmattison.cryptocurrency.bitcoin.BitcoinECCSignatureFactory;
+import com.timmattison.cryptocurrency.factories.ECCParamsFactory;
+import com.timmattison.cryptocurrency.factories.ECCSignatureFactory;
 
 /**
  * Created with IntelliJ IDEA.
@@ -25,5 +21,18 @@ public class ECCTestModule extends AbstractModule {
     protected void configure() {
         bind(ECCParamsFactory.class).to(BitcoinECCParamsFactory.class);
         bind(ECCSignatureFactory.class).to(BitcoinECCSignatureFactory.class);
+
+        bind(NamedCurve.class).to(SECNamedCurve.class);
+
+        bind(ECCCurve.class).to(ECCurveFp.class);
+        bind(ECCFieldElement.class).to(ECFieldElementFp.class);
+        bind(ECCKeyPair.class).to(ECKeyPairFp.class);
+        bind(ECCPoint.class).to(ECPointFp.class);
+        bind(ECCSignature.class).to(ECSignatureFp.class);
+
+        install(new FactoryModuleBuilder().implement(ECCCurve.class, ECCurveFp.class).build(ECCCurveFactory.class));
+        install(new FactoryModuleBuilder().implement(ECCParameters.class, X9ECParameters.class).build(ECCParametersFactory.class));
+        install(new FactoryModuleBuilder().implement(ECCFieldElement.class, ECFieldElementFp.class).build(ECCFieldElementFactory.class));
+        install(new FactoryModuleBuilder().implement(ECCPoint.class, ECPointFp.class).build(ECCPointFactory.class));
     }
 }

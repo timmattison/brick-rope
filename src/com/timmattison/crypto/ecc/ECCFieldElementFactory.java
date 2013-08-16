@@ -1,5 +1,7 @@
 package com.timmattison.crypto.ecc;
 
+import com.google.inject.assistedinject.Assisted;
+
 import java.math.BigInteger;
 
 /**
@@ -10,5 +12,5 @@ import java.math.BigInteger;
  * To change this template use File | Settings | File Templates.
  */
 public interface ECCFieldElementFactory {
-    ECCFieldElement create(BigInteger p, BigInteger x);
+    ECCFieldElement create(@Assisted("q") BigInteger q, @Assisted("x") BigInteger x);
 }

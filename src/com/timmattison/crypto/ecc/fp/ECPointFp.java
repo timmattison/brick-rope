@@ -1,5 +1,7 @@
 package com.timmattison.crypto.ecc.fp;
 
+import com.google.inject.assistedinject.Assisted;
+import com.google.inject.assistedinject.AssistedInject;
 import com.timmattison.bitcoin.test.BigIntegerHelper;
 import com.timmattison.crypto.ecc.ECCCurve;
 import com.timmattison.crypto.ecc.ECCFieldElement;
@@ -15,13 +17,17 @@ import java.math.BigInteger;
  * To change this template use File | Settings | File Templates.
  */
 public class ECPointFp implements ECCPoint {
-    private final ECCCurve curve;
-    private final ECCFieldElement x;
-    private final ECCFieldElement y;
-    private final BigInteger z;
+    private ECCCurve curve;
+    private ECCFieldElement x;
+    private ECCFieldElement y;
+    private BigInteger z;
     private BigInteger zinv;
 
-    public ECPointFp(ECCCurve curve, ECCFieldElement x, ECCFieldElement y, BigInteger z) {
+    public ECPointFp() {
+    }
+
+    @AssistedInject
+    public ECPointFp(@Assisted ECCCurve curve, @Assisted("x") ECCFieldElement x, @Assisted("y") ECCFieldElement y, @Assisted BigInteger z) {
         this.curve = curve;
         this.x = x;
         this.y = y;

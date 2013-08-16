@@ -14,6 +14,8 @@ public interface ECCPoint {
 
     public ECCFieldElement getY();
 
+    public BigInteger getZ();
+
     public boolean equals(ECCPoint other);
 
     boolean isInfinity();
@@ -27,6 +29,4 @@ public interface ECCPoint {
     public ECCPoint multiply(BigInteger k);
 
     public ECCPoint multiplyTwo(BigInteger j, ECCPoint x, BigInteger k);
-
-    public BigInteger getZ();
 }

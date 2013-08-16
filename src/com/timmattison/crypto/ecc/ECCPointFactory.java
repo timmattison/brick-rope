@@ -1,5 +1,9 @@
 package com.timmattison.crypto.ecc;
 
+import com.google.inject.assistedinject.Assisted;
+
+import java.math.BigInteger;
+
 /**
  * Created with IntelliJ IDEA.
  * User: Tim
@@ -8,5 +12,5 @@ package com.timmattison.crypto.ecc;
  * To change this template use File | Settings | File Templates.
  */
 public interface ECCPointFactory {
-    ECCPoint create(ECCCurve eccCurve, ECCFieldElement p, ECCFieldElement a, ECCFieldElement b);
+    ECCPoint create(@Assisted ECCCurve eccCurve, @Assisted("x") ECCFieldElement x, @Assisted("y") ECCFieldElement y, @Assisted BigInteger z);
 }

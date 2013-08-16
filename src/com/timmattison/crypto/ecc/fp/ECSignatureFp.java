@@ -1,5 +1,7 @@
 package com.timmattison.crypto.ecc.fp;
 
+import com.google.inject.assistedinject.Assisted;
+import com.google.inject.assistedinject.AssistedInject;
 import com.timmattison.crypto.ecc.ECCParameters;
 import com.timmattison.crypto.ecc.ECCPoint;
 import com.timmattison.crypto.ecc.ECCSignature;
@@ -14,12 +16,16 @@ import java.math.BigInteger;
  * To change this template use File | Settings | File Templates.
  */
 public class ECSignatureFp implements ECCSignature {
-    private final BigInteger r;
-    private final BigInteger s;
-    private final ECCPoint Qu;
-    private final ECCParameters eccParameters;
+    private BigInteger r;
+    private BigInteger s;
+    private ECCPoint Qu;
+    private ECCParameters eccParameters;
 
-    public ECSignatureFp(ECCParameters eccParameters, BigInteger r, BigInteger s, ECPointFp Qu) {
+    public ECSignatureFp() {
+    }
+
+    @AssistedInject
+    public ECSignatureFp(@Assisted ECCParameters eccParameters, @Assisted("r") BigInteger r, @Assisted("s") BigInteger s, @Assisted ECPointFp Qu) {
         this.eccParameters = eccParameters;
         this.r = r;
         this.s = s;

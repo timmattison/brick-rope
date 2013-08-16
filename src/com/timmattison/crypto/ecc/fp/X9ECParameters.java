@@ -1,5 +1,8 @@
 package com.timmattison.crypto.ecc.fp;
 
+import com.google.inject.Inject;
+import com.google.inject.assistedinject.Assisted;
+import com.google.inject.assistedinject.AssistedInject;
 import com.timmattison.crypto.ecc.ECCParameters;
 
 import java.math.BigInteger;
@@ -12,12 +15,16 @@ import java.math.BigInteger;
  * To change this template use File | Settings | File Templates.
  */
 public class X9ECParameters implements ECCParameters {
-    private final ECCurveFp curve;
-    private final ECPointFp g;
-    private final BigInteger n;
-    private final BigInteger h;
+    private ECCurveFp curve;
+    private ECPointFp g;
+    private BigInteger n;
+    private BigInteger h;
 
-    public X9ECParameters(ECCurveFp curve, ECPointFp g, BigInteger n, BigInteger h) {
+    public X9ECParameters() {
+    }
+
+    @AssistedInject
+    public X9ECParameters(@Assisted ECCurveFp curve, @Assisted ECPointFp g, @Assisted("n") BigInteger n, @Assisted("h") BigInteger h) {
         this.curve = curve;
         this.g = g;
         this.n = n;

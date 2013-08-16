@@ -1,11 +1,11 @@
 package com.timmattison.crypto.ecc.fp;
 
 import com.google.inject.assistedinject.Assisted;
+import com.google.inject.assistedinject.AssistedInject;
 import com.timmattison.bitcoin.test.BigIntegerHelper;
 import com.timmattison.crypto.ecc.ECCFieldElement;
 import com.timmattison.crypto.ecc.ECCFieldElementFactory;
 
-import javax.inject.Inject;
 import java.math.BigInteger;
 
 /**
@@ -16,13 +16,15 @@ import java.math.BigInteger;
  * To change this template use File | Settings | File Templates.
  */
 public class ECFieldElementFp implements ECCFieldElement {
-    private final ECCFieldElementFactory eccFieldElementFactory;
+    private ECCFieldElementFactory eccFieldElementFactory;
+    private BigInteger x;
+    private BigInteger q;
 
-    private final BigInteger x;
-    private final BigInteger q;
+    public ECFieldElementFp() {
+    }
 
-    @Inject
-    public ECFieldElementFp(ECCFieldElementFactory eccFieldElementFactory, @Assisted BigInteger q, @Assisted BigInteger x) {
+    @AssistedInject
+    public ECFieldElementFp(ECCFieldElementFactory eccFieldElementFactory, @Assisted("q") BigInteger q, @Assisted("x") BigInteger x) {
         this.eccFieldElementFactory = eccFieldElementFactory;
 
         this.x = x;
@@ -59,7 +61,7 @@ public class ECFieldElementFp implements ECCFieldElement {
         return eccFieldElementFactory.create(this.q, BigIntegerHelper.squareBigInteger(x).mod(this.q));
     }
 
-   public ECCFieldElement divide(ECCFieldElement b) {
+    public ECCFieldElement divide(ECCFieldElement b) {
         return eccFieldElementFactory.create(this.q, this.x.multiply(b.toBigInteger().modInverse(this.q)).mod(this.q));
     }
 

@@ -1,5 +1,9 @@
 package com.timmattison.crypto.ecc.fp;
 
+import com.google.inject.Inject;
+import com.google.inject.assistedinject.Assisted;
+import com.google.inject.assistedinject.AssistedInject;
+import com.timmattison.crypto.ecc.ECCKeyPair;
 import com.timmattison.crypto.ecc.ECCParameters;
 import com.timmattison.crypto.ecc.ECCPoint;
 
@@ -12,12 +16,16 @@ import java.math.BigInteger;
  * Time: 7:24 PM
  * To change this template use File | Settings | File Templates.
  */
-public class ECKeyPairFp {
-    private final BigInteger d;
-    private final ECCPoint q;
-    private final ECCParameters eccParameters;
+public class ECKeyPairFp implements ECCKeyPair {
+    private BigInteger d;
+    private ECCPoint q;
+    private ECCParameters eccParameters;
 
-    public ECKeyPairFp(ECCParameters eccParameters, BigInteger d) throws Exception {
+    public ECKeyPairFp() {
+    }
+
+    @AssistedInject
+    public ECKeyPairFp(ECCParameters eccParameters, @Assisted BigInteger d) throws Exception {
         this.eccParameters = eccParameters;
         this.d = d;
 

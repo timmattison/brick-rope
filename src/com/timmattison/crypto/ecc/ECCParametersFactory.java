@@ -1,5 +1,9 @@
 package com.timmattison.crypto.ecc;
 
+import com.google.inject.Inject;
+import com.google.inject.assistedinject.Assisted;
+import com.google.inject.assistedinject.AssistedInject;
+
 import java.math.BigInteger;
 
 /**
@@ -10,5 +14,5 @@ import java.math.BigInteger;
  * To change this template use File | Settings | File Templates.
  */
 public interface ECCParametersFactory {
-    ECCParameters create(ECCCurve curve, ECCPoint g, BigInteger n, BigInteger h);
+    ECCParameters create(@Assisted ECCCurve curve, @Assisted ECCPoint g, @Assisted("n") BigInteger n, @Assisted("h") BigInteger h);
 }
