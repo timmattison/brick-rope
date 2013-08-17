@@ -3,7 +3,7 @@ package com.timmattison.crypto.ecc.tests;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.timmattison.crypto.ecc.*;
-import junit.framework.Assert;
+import org.junit.Assert;
 import org.junit.Test;
 
 import java.math.BigInteger;
