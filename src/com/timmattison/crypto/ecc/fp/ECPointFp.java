@@ -3,10 +3,7 @@ package com.timmattison.crypto.ecc.fp;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
 import com.timmattison.bitcoin.test.BigIntegerHelper;
-import com.timmattison.crypto.ecc.ECCCurve;
-import com.timmattison.crypto.ecc.ECCFieldElement;
-import com.timmattison.crypto.ecc.ECCPoint;
-import com.timmattison.crypto.ecc.ECCPointFactory;
+import com.timmattison.crypto.ecc.*;
 
 import javax.annotation.Nullable;
 import java.math.BigInteger;
@@ -190,5 +187,10 @@ public class ECPointFp implements ECCPoint {
     @Override
     public BigInteger getZ() {
         return z;
+    }
+
+    @Override
+    public ECCFieldType getECCFieldType() {
+        return ECCFieldType.Fp;
     }
 }

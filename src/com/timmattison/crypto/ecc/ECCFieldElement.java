@@ -9,7 +9,7 @@ import java.math.BigInteger;
  * Time: 6:48 AM
  * To change this template use File | Settings | File Templates.
  */
-public interface ECCFieldElement {
+public interface ECCFieldElement extends ECCElement {
     public boolean equals(ECCFieldElement other);
 
     public BigInteger toBigInteger();
@@ -26,7 +26,7 @@ public interface ECCFieldElement {
 
     public ECCFieldElement divide(ECCFieldElement b);
 
-    BigInteger getQ();
+    public BigInteger getQ();
 
-    BigInteger getX();
+    public BigInteger getX();
 }

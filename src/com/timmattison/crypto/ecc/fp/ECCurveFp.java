@@ -89,4 +89,9 @@ public class ECCurveFp implements ECCCurve {
                 return null;
         }
     }
+
+    @Override
+    public ECCFieldType getECCFieldType() {
+        return ECCFieldType.Fp;
+    }
 }

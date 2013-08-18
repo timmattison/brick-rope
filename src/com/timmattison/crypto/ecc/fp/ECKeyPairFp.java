@@ -3,6 +3,7 @@ package com.timmattison.crypto.ecc.fp;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
+import com.timmattison.crypto.ecc.ECCFieldType;
 import com.timmattison.crypto.ecc.ECCKeyPair;
 import com.timmattison.crypto.ecc.ECCParameters;
 import com.timmattison.crypto.ecc.ECCPoint;
@@ -124,5 +125,10 @@ public class ECKeyPairFp implements ECCKeyPair {
      */
     public ECCParameters getECCParameters() {
         return eccParameters;
+    }
+
+    @Override
+    public ECCFieldType getECCFieldType() {
+        return ECCFieldType.Fp;
     }
 }

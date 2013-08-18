@@ -9,7 +9,7 @@ import java.math.BigInteger;
  * Time: 7:24 PM
  * To change this template use File | Settings | File Templates.
  */
-public interface ECCKeyPair {
+public interface ECCKeyPair extends ECCElement {
     /**
      * The private key.  Must be in the interval [1, n-1] (notation indicates inclusive of 1 and n-1)
      *

@@ -9,7 +9,7 @@ import java.math.BigInteger;
  * Time: 6:56 AM
  * To change this template use File | Settings | File Templates.
  */
-public interface ECCPoint {
+public interface ECCPoint extends ECCElement {
     public ECCFieldElement getX();
 
     public ECCFieldElement getY();

@@ -5,6 +5,7 @@ import com.google.inject.assistedinject.AssistedInject;
 import com.timmattison.bitcoin.test.BigIntegerHelper;
 import com.timmattison.crypto.ecc.ECCFieldElement;
 import com.timmattison.crypto.ecc.ECCFieldElementFactory;
+import com.timmattison.crypto.ecc.ECCFieldType;
 
 import java.math.BigInteger;
 
@@ -73,5 +74,10 @@ public class ECFieldElementFp implements ECCFieldElement {
     @Override
     public BigInteger getX() {
         return x;
+    }
+
+    @Override
+    public ECCFieldType getECCFieldType() {
+        return ECCFieldType.Fp;
     }
 }

@@ -3,6 +3,7 @@ package com.timmattison.crypto.ecc.fp;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
 import com.timmattison.crypto.ecc.ECCCurve;
+import com.timmattison.crypto.ecc.ECCFieldType;
 import com.timmattison.crypto.ecc.ECCParameters;
 import com.timmattison.crypto.ecc.ECCPoint;
 
@@ -46,5 +47,10 @@ public class X9ECParameters implements ECCParameters {
 
     public BigInteger getH() {
         return this.h;
+    }
+
+    @Override
+    public ECCFieldType getECCFieldType() {
+        return ECCFieldType.Fp;
     }
 }
