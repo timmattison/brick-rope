@@ -10,10 +10,26 @@ import java.math.BigInteger;
  * To change this template use File | Settings | File Templates.
  */
 public interface ECCCurve extends ECCElement {
+    // The formula used for ECC curves is:
+
+    // E : y^2 = x^3 + a*x + b (mod p)
+
+    /**
+     * The modulus ("mod p" value of the equation)
+     * @return
+     */
     public BigInteger getP();
 
+    /**
+     * X is multiplied by this
+     * @return
+     */
     public ECCFieldElement getA();
 
+    /**
+     * This is the last value added in the equation
+     * @return
+     */
     public ECCFieldElement getB();
 
     public boolean equals(ECCCurve other);

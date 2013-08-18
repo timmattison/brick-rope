@@ -113,6 +113,27 @@ public class ECPointFp implements ECCPoint {
     }
 
     public ECCPoint twice() {
+        if(this.isInfinity()) return this;
+        if(this.y.toBigInteger().signum() == 0) return this.curve.getInfinity();
+
+        // Calculate s = ((3 * x_1^2) + a) / (2 * y_1)
+        BigInteger bottom = new BigInteger("2").multiply(getY().toBigInteger());
+        BigInteger top = new BigInteger("3").multiply(getX().toBigInteger().pow(2)).add(curve.getA().toBigInteger()).mod(curve.getP());
+
+        // XXX - Suspicious.  This doesn't make any sense to me.
+        BigInteger s = top.pow(bottom.intValue());
+        s = s.mod(curve.getP());
+
+        // Calculate x3 = s^2 - x_1 - x_2
+        BigInteger x3 = s.pow(2).subtract(getX().toBigInteger()).subtract(getX().toBigInteger()).mod(curve.getP());
+
+        // Calculate y3 = s * (x_1 - x_3) - y_1
+        BigInteger y3 = getX().toBigInteger().subtract(x3).multiply(s).subtract(getY().toBigInteger()).mod(curve.getP());
+
+        return eccPointFactory.create(this.curve, this.curve.fromBigInteger(x3), this.curve.fromBigInteger(y3), null);
+    }
+
+    public ECCPoint twiceA() {
         if (this.isInfinity()) return this;
         if (this.y.toBigInteger().signum() == 0) return this.curve.getInfinity();
         // TODO: optimized handling of constants
