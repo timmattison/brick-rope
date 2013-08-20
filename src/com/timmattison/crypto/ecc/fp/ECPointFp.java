@@ -85,8 +85,13 @@ public class ECPointFp implements ECCPoint {
         BigInteger bottom = b.getX().toBigInteger().subtract(getX().toBigInteger());
         BigInteger top = b.getY().toBigInteger().subtract(getY().toBigInteger());
 
-        // Find the multiplicative inverse of the bottom
-        bottom = bottom.modInverse(curve.getP());
+        try {
+            // Find the multiplicative inverse of the bottom
+            bottom = bottom.modInverse(curve.getP());
+        } catch (ArithmeticException ex) {
+            // XXX - Big integer was not invertible.  Does this mean that it is infinity?
+            return eccPointFactory.create(curve, null, null);
+        }
 
         BigInteger s = top.multiply(bottom);
         s = s.mod(curve.getP());
@@ -95,15 +100,20 @@ public class ECPointFp implements ECCPoint {
     }
 
     public ECCPoint twice() {
-        if(this.isInfinity()) return this;
-        if(this.y.toBigInteger().signum() == 0) return this.curve.getInfinity();
+        if (this.isInfinity()) return this;
+        if (this.y.toBigInteger().signum() == 0) return this.curve.getInfinity();
 
         // Calculate s = ((3 * x_1^2) + a) / (2 * y_1)
         BigInteger bottom = new BigInteger("2").multiply(getY().toBigInteger());
         BigInteger top = new BigInteger("3").multiply(getX().toBigInteger().pow(2)).add(curve.getA().toBigInteger()).mod(curve.getP());
 
-        // Find the multiplicative inverse of the bottom
-        bottom = bottom.modInverse(curve.getP());
+        try {
+            // Find the multiplicative inverse of the bottom
+            bottom = bottom.modInverse(curve.getP());
+        } catch (ArithmeticException ex) {
+            // XXX - Big integer was not invertible.  Does this mean that it is infinity?
+            return eccPointFactory.create(curve, null, null);
+        }
 
         BigInteger s = top.multiply(bottom);
         s = s.mod(curve.getP());
