@@ -37,11 +37,19 @@ public class SmallCurveTests {
     }
 
     @Test
-    public void testInfinity() throws Exception {
+    public void testMultiplyInfinity() throws Exception {
         ECCParameters smallCurve = getSmallCurve1();
         ECCPoint result = smallCurve.getG().multiply(smallCurve.getN());
 
         Assert.assertTrue(result.isInfinity());
+    }
+
+    @Test
+    public void testMultiply1() {
+        ECCPoint firstPoint = getPoint(new BigInteger("5"),new BigInteger("1"));
+
+        ECCPoint thirteenthPoint = firstPoint.multiply(BigInteger.valueOf(13));
+        validatePoint(thirteenthPoint, 16, 4);
     }
 
     @Test
@@ -59,7 +67,7 @@ public class SmallCurveTests {
     }
 
     @Test
-    public void testCalculateFirstNineteenPoints() {
+    public void testCalculateUpTo18P() {
         ECCPoint firstPoint = getPoint(new BigInteger("5"),new BigInteger("1"));
         ECCPoint nextPoint = firstPoint.twice();
 
@@ -126,6 +134,20 @@ public class SmallCurveTests {
         // Test 18P: 5, 16
         nextPoint = nextPoint.add(firstPoint);
         validatePoint(nextPoint, 5, 16);
+    }
+
+    @Test
+    public void testCalculate19P() {
+        ECCPoint firstPoint = getPoint(new BigInteger("5"),new BigInteger("1"));
+        ECCPoint nextPoint = firstPoint.twice();
+
+        for(int loop = 3; loop < 19; loop++) {
+            nextPoint = nextPoint.add(firstPoint);
+        }
+
+        nextPoint = nextPoint.add(firstPoint);
+
+        Assert.assertTrue(nextPoint.isInfinity());
     }
 
     @Test

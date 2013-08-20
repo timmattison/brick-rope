@@ -69,7 +69,7 @@ public class ECPointFp implements ECCPoint {
     }
 
     public ECCPoint negate() {
-        return eccPointFactory.create(this.curve, this.x, this.y.negate());
+        return eccPointFactory.create(curve, x, y.negate());
     }
 
     public ECCPoint add(ECCPoint b) {
@@ -77,7 +77,7 @@ public class ECPointFp implements ECCPoint {
         if (b.isInfinity()) return this;
         // XXX - Do I need additional checks here like the signum check in "twice"
 
-        if(this.equals(b)) {
+        if (this.equals(b)) {
             return this.twice();
         }
 
@@ -131,9 +131,24 @@ public class ECPointFp implements ECCPoint {
         return eccPointFactory.create(this.curve, this.curve.fromBigInteger(x3), this.curve.fromBigInteger(y3));
     }
 
+    public ECCPoint multiply(BigInteger d) {
+        ECCPoint q = eccPointFactory.create(curve, curve.fromBigInteger(BigInteger.ZERO), curve.fromBigInteger(BigInteger.ZERO));
+
+        for(int loop = d.bitLength() - 1; loop >= 0; loop--) {
+            q = q.twice();
+
+            if(d.testBit(loop)) {
+                q = q.add(this);
+            }
+        }
+
+        // XXX - How do we test for infinity?
+        return q;
+    }
+
     // Simple NAF (Non-Adjacent Form) multiplication algorithm
     // TODO: modularize the multiplication algorithm
-    public ECCPoint multiply(BigInteger k) {
+    public ECCPoint multiplyA(BigInteger k) {
         if (this.isInfinity()) return this;
         if (k.signum() == 0) return this.curve.getInfinity();
         BigInteger e = k;
