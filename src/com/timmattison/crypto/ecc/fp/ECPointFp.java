@@ -2,13 +2,10 @@ package com.timmattison.crypto.ecc.fp;
 
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
-import com.timmattison.bitcoin.test.BigIntegerHelper;
 import com.timmattison.crypto.ecc.*;
 
 import javax.annotation.Nullable;
 import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -18,28 +15,38 @@ import java.util.List;
  * To change this template use File | Settings | File Templates.
  */
 public class ECPointFp implements ECCPoint {
+    private ECCPointFactory eccPointFactory;
+    private ECCFieldElementFactory eccFieldElementFactory;
     private ECCCurve curve;
     private ECCFieldElement x;
     private ECCFieldElement y;
-    private ECCPointFactory eccPointFactory;
 
     public ECPointFp() {
     }
 
     @AssistedInject
-    public ECPointFp(ECCPointFactory eccPointFactory, @Assisted("curve") ECCCurve curve, @Nullable @Assisted("x") ECCFieldElement x, @Nullable @Assisted("y") ECCFieldElement y) {
+    public ECPointFp(ECCPointFactory eccPointFactory, ECCFieldElementFactory eccFieldElementFactory, @Assisted("curve") ECCCurve curve, @Nullable @Assisted("x") ECCFieldElement x, @Nullable @Assisted("y") ECCFieldElement y) {
         this.eccPointFactory = eccPointFactory;
+        this.eccFieldElementFactory = eccFieldElementFactory;
         this.curve = curve;
         this.x = x;
         this.y = y;
     }
 
     public ECCFieldElement getX() {
-        return this.x;
+        if(x == null) {
+            x = eccFieldElementFactory.create(curve.getP(), BigInteger.ZERO);
+        }
+
+        return x;
     }
 
     public ECCFieldElement getY() {
-        return this.y;
+        if(y == null) {
+            y = eccFieldElementFactory.create(curve.getP(), BigInteger.ZERO);
+        }
+
+        return y;
     }
 
     public boolean equals(ECCPoint other) {
@@ -56,7 +63,7 @@ public class ECPointFp implements ECCPoint {
     }
 
     public boolean isInfinity() {
-        if ((this.x == null) && (this.y == null)) return true;
+        if ((getX().toBigInteger().equals(BigInteger.ZERO)) && (getY().toBigInteger().equals(BigInteger.ZERO))) return true;
         else return false;
         //return this.z.equals(BigInteger.ZERO) && !this.y.toBigInteger().equals(BigInteger.ZERO);
     }
