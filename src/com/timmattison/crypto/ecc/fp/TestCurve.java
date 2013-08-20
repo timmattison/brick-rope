@@ -48,7 +48,7 @@ public class TestCurve {
         ECCFieldElement fieldElementX = eccFieldElementFactory.create(curve.getP(), basePointX);
         ECCFieldElement fieldElementY = eccFieldElementFactory.create(curve.getP(), basePointY);
 
-        ECCPoint basePoint = eccPointFactory.create(curve, fieldElementX, fieldElementY, null);
+        ECCPoint basePoint = eccPointFactory.create(curve, fieldElementX, fieldElementY);
 
         BigInteger n = fromHex("19");
         BigInteger h = BigInteger.ONE;
@@ -70,7 +70,7 @@ public class TestCurve {
         ECCFieldElement fieldElementX = eccFieldElementFactory.create(curve.getP(), basePointX);
         ECCFieldElement fieldElementY = eccFieldElementFactory.create(curve.getP(), basePointY);
 
-        ECCPoint basePoint = eccPointFactory.create(curve, fieldElementX, fieldElementY, null);
+        ECCPoint basePoint = eccPointFactory.create(curve, fieldElementX, fieldElementY);
 
         BigInteger n = fromHex("9");
         BigInteger h = BigInteger.ONE;

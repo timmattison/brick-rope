@@ -52,7 +52,7 @@ public class SECp256k1Tests {
         ECCCurve curve = getSecp256k1().getCurve();
         ECCFieldElement xFieldElement = curve.fromBigInteger(x);
         ECCFieldElement yFieldElement = curve.fromBigInteger(y);
-        return eccPointFactory.create(curve, xFieldElement, yFieldElement, null);
+        return eccPointFactory.create(curve, xFieldElement, yFieldElement);
     }
 
     @Test

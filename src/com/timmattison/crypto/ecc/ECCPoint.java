@@ -14,8 +14,6 @@ public interface ECCPoint extends ECCElement {
 
     public ECCFieldElement getY();
 
-    public BigInteger getZ();
-
     public boolean equals(ECCPoint other);
 
     boolean isInfinity();

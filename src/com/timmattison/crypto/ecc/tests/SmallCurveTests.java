@@ -33,7 +33,7 @@ public class SmallCurveTests {
         ECCCurve curve = getSmallCurve1().getCurve();
         ECCFieldElement xFieldElement = curve.fromBigInteger(x);
         ECCFieldElement yFieldElement = curve.fromBigInteger(y);
-        return eccPointFactory.create(curve, xFieldElement, yFieldElement, null);
+        return eccPointFactory.create(curve, xFieldElement, yFieldElement);
     }
 
     @Test
@@ -45,7 +45,7 @@ public class SmallCurveTests {
     }
 
     @Test
-    public void testDoubleFirstPoint1() {
+    public void testDoubleFirstPoint() {
         ECCPoint firstPoint = getPoint(new BigInteger("5"),new BigInteger("1"));
         ECCPoint result = firstPoint.twice();
 
@@ -54,13 +54,24 @@ public class SmallCurveTests {
     }
 
     @Test
-    public void testDoubleSecondPoint1() {
+    public void testCalculateThirdPoint() {
         ECCPoint firstPoint = getPoint(new BigInteger("5"),new BigInteger("1"));
         ECCPoint secondPoint = firstPoint.twice();
-        ECCPoint result = secondPoint.twice();
+        ECCPoint thirdPoint = secondPoint.add(firstPoint);
 
-        Assert.assertTrue(result.getX().toBigInteger().equals(new BigInteger("10")));
-        Assert.assertTrue(result.getY().toBigInteger().equals(new BigInteger("6")));
+        Assert.assertTrue(thirdPoint.getX().toBigInteger().equals(new BigInteger("10")));
+        Assert.assertTrue(thirdPoint.getY().toBigInteger().equals(new BigInteger("6")));
+    }
+
+    @Test
+    public void testCalculateFourthPoint() {
+        ECCPoint firstPoint = getPoint(new BigInteger("5"),new BigInteger("1"));
+        ECCPoint secondPoint = firstPoint.twice();
+        ECCPoint thirdPoint = secondPoint.add(firstPoint);
+        ECCPoint fourthPoint = thirdPoint.add(firstPoint);
+
+        Assert.assertTrue(fourthPoint.getX().toBigInteger().equals(new BigInteger("3")));
+        Assert.assertTrue(fourthPoint.getY().toBigInteger().equals(new BigInteger("1")));
     }
 }
 

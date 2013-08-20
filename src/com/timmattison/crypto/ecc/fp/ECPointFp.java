@@ -21,42 +21,25 @@ public class ECPointFp implements ECCPoint {
     private ECCCurve curve;
     private ECCFieldElement x;
     private ECCFieldElement y;
-    private BigInteger z;
-    private BigInteger zinv;
     private ECCPointFactory eccPointFactory;
 
     public ECPointFp() {
     }
 
     @AssistedInject
-    public ECPointFp(ECCPointFactory eccPointFactory, @Assisted("curve") ECCCurve curve, @Nullable @Assisted("x") ECCFieldElement x, @Nullable @Assisted("y") ECCFieldElement y, @Nullable @Assisted("z") BigInteger z) {
+    public ECPointFp(ECCPointFactory eccPointFactory, @Assisted("curve") ECCCurve curve, @Nullable @Assisted("x") ECCFieldElement x, @Nullable @Assisted("y") ECCFieldElement y) {
         this.eccPointFactory = eccPointFactory;
         this.curve = curve;
         this.x = x;
         this.y = y;
-        // Projective coordinates: either zinv == null or z * zinv == 1
-        // z and zinv are just BigIntegers, not fieldElements
-        if (z == null) {
-            this.z = BigInteger.ONE;
-        } else {
-            this.z = z;
-        }
-        this.zinv = null;
-        //TODO: compression flag
     }
 
     public ECCFieldElement getX() {
-        if (this.zinv == null) {
-            this.zinv = this.z.modInverse(this.curve.getP());
-        }
-        return this.curve.fromBigInteger(this.x.toBigInteger().multiply(this.zinv).mod(this.curve.getP()));
+        return this.x;
     }
 
     public ECCFieldElement getY() {
-        if (this.zinv == null) {
-            this.zinv = this.z.modInverse(this.curve.getP());
-        }
-        return this.curve.fromBigInteger(this.y.toBigInteger().multiply(this.zinv).mod(this.curve.getP()));
+        return this.y;
     }
 
     public boolean equals(ECCPoint other) {
@@ -65,53 +48,43 @@ public class ECPointFp implements ECCPoint {
         if (other.isInfinity()) return this.isInfinity();
         BigInteger u, v;
         // u = Y2 * Z1 - Y1 * Z2
-        u = other.getY().toBigInteger().multiply(this.z).subtract(this.y.toBigInteger().multiply(other.getZ())).mod(this.curve.getP());
+        u = other.getY().toBigInteger().subtract(this.y.toBigInteger()).mod(this.curve.getP());
         if (!u.equals(BigInteger.ZERO)) return false;
         // v = X2 * Z1 - X1 * Z2
-        v = other.getX().toBigInteger().multiply(this.z).subtract(this.x.toBigInteger().multiply(other.getZ())).mod(this.curve.getP());
+        v = other.getX().toBigInteger().subtract(this.x.toBigInteger()).mod(this.curve.getP());
         return v.equals(BigInteger.ZERO);
     }
 
     public boolean isInfinity() {
         if ((this.x == null) && (this.y == null)) return true;
-        return this.z.equals(BigInteger.ZERO) && !this.y.toBigInteger().equals(BigInteger.ZERO);
+        else return false;
+        //return this.z.equals(BigInteger.ZERO) && !this.y.toBigInteger().equals(BigInteger.ZERO);
     }
 
     public ECCPoint negate() {
-        return eccPointFactory.create(this.curve, this.x, this.y.negate(), this.z);
+        return eccPointFactory.create(this.curve, this.x, this.y.negate());
     }
 
     public ECCPoint add(ECCPoint b) {
         if (this.isInfinity()) return b;
         if (b.isInfinity()) return this;
-        // u = Y2 * Z1 - Y1 * Z2
-        BigInteger u = b.getY().toBigInteger().multiply(this.z).subtract(this.y.toBigInteger().multiply(b.getZ())).mod(this.curve.getP());
-        // v = X2 * Z1 - X1 * Z2
-        BigInteger v = b.getX().toBigInteger().multiply(this.z).subtract(this.x.toBigInteger().multiply(b.getZ())).mod(this.curve.getP());
-        if (BigInteger.ZERO.equals(v)) {
-            if (BigInteger.ZERO.equals(u)) {
-                return this.twice(); // this == b, so double
-            }
-            return this.curve.getInfinity(); // this = -b, so infinity
+        // XXX - Do I need additional checks here like the signum check in "twice"
+
+        if(this.equals(b)) {
+            return this.twice();
         }
-        BigInteger THREE = new BigInteger("3");
-        BigInteger x1 = this.x.toBigInteger();
-        BigInteger y1 = this.y.toBigInteger();
-        BigInteger x2 = b.getX().toBigInteger();
-        BigInteger y2 = b.getY().toBigInteger();
-        BigInteger v2 = BigIntegerHelper.squareBigInteger(v);
-        BigInteger v3 = v2.multiply(v);
-        BigInteger x1v2 = x1.multiply(v2);
-        BigInteger zu2 = BigIntegerHelper.squareBigInteger(u).multiply(this.z);
 
-        // x3 = v * (z2 * (z1 * u^2 - 2 * x1 * v^2) - v^3)
-        BigInteger x3 = zu2.subtract(x1v2.shiftLeft(1)).multiply(b.getZ()).subtract(v3).multiply(v).mod(this.curve.getP());
-        // y3 = z2 * (3 * x1 * u * v^2 - y1 * v^3 - z1 * u^3) + u * v^3
-        BigInteger y3 = x1v2.multiply(THREE).multiply(u).subtract(y1.multiply(v3)).subtract(zu2.multiply(u)).multiply(b.getZ()).add(u.multiply(v3)).mod(this.curve.getP());
-        // z3 = v^3 * z1 * z2
-        BigInteger z3 = v3.multiply(this.z).multiply(b.getZ()).mod(this.curve.getP());
+        // Calculate s = (y_2 - y_1) / (x_2 - x_1)
+        BigInteger bottom = b.getX().toBigInteger().subtract(getX().toBigInteger());
+        BigInteger top = b.getY().toBigInteger().subtract(getY().toBigInteger());
 
-        return eccPointFactory.create(this.curve, this.curve.fromBigInteger(x3), this.curve.fromBigInteger(y3), z3);
+        // Find the multiplicative inverse of the bottom
+        bottom = bottom.modInverse(curve.getP());
+
+        BigInteger s = top.multiply(bottom);
+        s = s.mod(curve.getP());
+
+        return getPointFromS(s, b.getX().toBigInteger());
     }
 
     public ECCPoint twice() {
@@ -128,13 +101,17 @@ public class ECPointFp implements ECCPoint {
         BigInteger s = top.multiply(bottom);
         s = s.mod(curve.getP());
 
+        return getPointFromS(s, getX().toBigInteger());
+    }
+
+    private ECCPoint getPointFromS(BigInteger s, BigInteger x_2) {
         // Calculate x3 = s^2 - x_1 - x_2
-        BigInteger x3 = s.pow(2).subtract(getX().toBigInteger()).subtract(getX().toBigInteger()).mod(curve.getP());
+        BigInteger x3 = s.pow(2).subtract(getX().toBigInteger()).subtract(x_2).mod(curve.getP());
 
         // Calculate y3 = s * (x_1 - x_3) - y_1
         BigInteger y3 = getX().toBigInteger().subtract(x3).multiply(s).subtract(getY().toBigInteger()).mod(curve.getP());
 
-        return eccPointFactory.create(this.curve, this.curve.fromBigInteger(x3), this.curve.fromBigInteger(y3), null);
+        return eccPointFactory.create(this.curve, this.curve.fromBigInteger(x3), this.curve.fromBigInteger(y3));
     }
 
     // Simple NAF (Non-Adjacent Form) multiplication algorithm
@@ -182,11 +159,6 @@ public class ECPointFp implements ECCPoint {
             --i;
         }
         return R;
-    }
-
-    @Override
-    public BigInteger getZ() {
-        return z;
     }
 
     @Override

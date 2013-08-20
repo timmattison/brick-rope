@@ -35,7 +35,7 @@ public class ECCurveFp implements ECCCurve {
         this.a = this.fromBigInteger(a);
         this.b = this.fromBigInteger(b);
 
-        this.infinity = eccPointFactory.create(this, null, null, null);
+        this.infinity = eccPointFactory.create(this, null, null);
     }
 
     public BigInteger getP() {
@@ -83,7 +83,7 @@ public class ECCurveFp implements ECCCurve {
                 String yHex = s.substring(middle + start, end);
                 return eccPointFactory.create(this,
                         this.fromBigInteger(new BigInteger(xHex, 16)),
-                        this.fromBigInteger(new BigInteger(yHex, 16)), null);
+                        this.fromBigInteger(new BigInteger(yHex, 16)));
             default:
                 // unsupported
                 return null;
