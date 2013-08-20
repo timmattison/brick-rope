@@ -53,14 +53,79 @@ public class SmallCurveTests {
         Assert.assertTrue(result.getY().toBigInteger().equals(new BigInteger("3")));
     }
 
-    @Test
-    public void testCalculateThirdPoint() {
-        ECCPoint firstPoint = getPoint(new BigInteger("5"),new BigInteger("1"));
-        ECCPoint secondPoint = firstPoint.twice();
-        ECCPoint thirdPoint = secondPoint.add(firstPoint);
+    private void validatePoint(ECCPoint point, int x, int y) {
+        Assert.assertTrue(point.getX().toBigInteger().equals(BigInteger.valueOf(x)));
+        Assert.assertTrue(point.getY().toBigInteger().equals(BigInteger.valueOf(y)));
+    }
 
-        Assert.assertTrue(thirdPoint.getX().toBigInteger().equals(new BigInteger("10")));
-        Assert.assertTrue(thirdPoint.getY().toBigInteger().equals(new BigInteger("6")));
+    @Test
+    public void testCalculateFirstNineteenPoints() {
+        ECCPoint firstPoint = getPoint(new BigInteger("5"),new BigInteger("1"));
+        ECCPoint nextPoint = firstPoint.twice();
+
+        // Test 3P: 10, 6
+        nextPoint = nextPoint.add(firstPoint);
+        validatePoint(nextPoint, 10, 6);
+
+        // Test 4P: 3, 1
+        nextPoint = nextPoint.add(firstPoint);
+        validatePoint(nextPoint, 3, 1);
+
+        // Test 5P: 9, 16
+        nextPoint = nextPoint.add(firstPoint);
+        validatePoint(nextPoint, 9, 16);
+
+        // Test 6P: 16, 13
+        nextPoint = nextPoint.add(firstPoint);
+        validatePoint(nextPoint, 16, 13);
+
+        // Test 7P: 0, 6
+        nextPoint = nextPoint.add(firstPoint);
+        validatePoint(nextPoint, 0, 6);
+
+        // Test 8P: 13, 7
+        nextPoint = nextPoint.add(firstPoint);
+        validatePoint(nextPoint, 13, 7);
+
+        // Test 9P: 7, 6
+        nextPoint = nextPoint.add(firstPoint);
+        validatePoint(nextPoint, 7, 6);
+
+        // Test 10P: 7, 11
+        nextPoint = nextPoint.add(firstPoint);
+        validatePoint(nextPoint, 7, 11);
+
+        // Test 11P: 13, 10
+        nextPoint = nextPoint.add(firstPoint);
+        validatePoint(nextPoint, 13, 10);
+
+        // Test 12P: 0, 11
+        nextPoint = nextPoint.add(firstPoint);
+        validatePoint(nextPoint, 0, 11);
+
+        // Test 13P: 16, 4
+        nextPoint = nextPoint.add(firstPoint);
+        validatePoint(nextPoint, 16, 4);
+
+        // Test 14P: 9, 1
+        nextPoint = nextPoint.add(firstPoint);
+        validatePoint(nextPoint, 9, 1);
+
+        // Test 15P: 3, 16
+        nextPoint = nextPoint.add(firstPoint);
+        validatePoint(nextPoint, 3, 16);
+
+        // Test 16P: 10, 11
+        nextPoint = nextPoint.add(firstPoint);
+        validatePoint(nextPoint, 10, 11);
+
+        // Test 17P: 6, 14
+        nextPoint = nextPoint.add(firstPoint);
+        validatePoint(nextPoint, 6, 14);
+
+        // Test 17P: 5, 16
+        nextPoint = nextPoint.add(firstPoint);
+        validatePoint(nextPoint, 5, 16);
     }
 
     @Test
