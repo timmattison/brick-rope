@@ -25,6 +25,4 @@ public interface ECCPoint extends ECCElement {
     public ECCPoint twice();
 
     public ECCPoint multiply(BigInteger k);
-
-    public ECCPoint multiplyTwo(BigInteger j, ECCPoint x, BigInteger k);
 }

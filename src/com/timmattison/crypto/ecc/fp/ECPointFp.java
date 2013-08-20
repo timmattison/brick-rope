@@ -146,33 +146,6 @@ public class ECPointFp implements ECCPoint {
         return q;
     }
 
-    // Compute this*j + x*k (simultaneous multiplication)
-    public ECCPoint multiplyTwo(BigInteger j, ECCPoint x, BigInteger k) {
-        int i;
-        if (j.bitLength() > k.bitLength())
-            i = j.bitLength() - 1;
-        else
-            i = k.bitLength() - 1;
-        ECCPoint R = this.curve.getInfinity();
-        ECCPoint both = this.add(x);
-        while (i >= 0) {
-            R = R.twice();
-            if (j.testBit(i)) {
-                if (k.testBit(i)) {
-                    R = R.add(both);
-                } else {
-                    R = R.add(this);
-                }
-            } else {
-                if (k.testBit(i)) {
-                    R = R.add(x);
-                }
-            }
-            --i;
-        }
-        return R;
-    }
-
     @Override
     public ECCFieldType getECCFieldType() {
         return ECCFieldType.Fp;
