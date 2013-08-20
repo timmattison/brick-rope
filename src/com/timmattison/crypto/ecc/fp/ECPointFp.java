@@ -34,7 +34,7 @@ public class ECPointFp implements ECCPoint {
     }
 
     public ECCFieldElement getX() {
-        if(x == null) {
+        if (x == null) {
             x = eccFieldElementFactory.create(curve.getP(), BigInteger.ZERO);
         }
 
@@ -42,7 +42,7 @@ public class ECPointFp implements ECCPoint {
     }
 
     public ECCFieldElement getY() {
-        if(y == null) {
+        if (y == null) {
             y = eccFieldElementFactory.create(curve.getP(), BigInteger.ZERO);
         }
 
@@ -63,7 +63,8 @@ public class ECPointFp implements ECCPoint {
     }
 
     public boolean isInfinity() {
-        if ((getX().toBigInteger().equals(BigInteger.ZERO)) && (getY().toBigInteger().equals(BigInteger.ZERO))) return true;
+        if ((getX().toBigInteger().equals(BigInteger.ZERO)) && (getY().toBigInteger().equals(BigInteger.ZERO)))
+            return true;
         else return false;
         //return this.z.equals(BigInteger.ZERO) && !this.y.toBigInteger().equals(BigInteger.ZERO);
     }
@@ -134,36 +135,15 @@ public class ECPointFp implements ECCPoint {
     public ECCPoint multiply(BigInteger d) {
         ECCPoint q = eccPointFactory.create(curve, curve.fromBigInteger(BigInteger.ZERO), curve.fromBigInteger(BigInteger.ZERO));
 
-        for(int loop = d.bitLength() - 1; loop >= 0; loop--) {
+        for (int loop = d.bitLength() - 1; loop >= 0; loop--) {
             q = q.twice();
 
-            if(d.testBit(loop)) {
+            if (d.testBit(loop)) {
                 q = q.add(this);
             }
         }
 
-        // XXX - How do we test for infinity?
         return q;
-    }
-
-    // Simple NAF (Non-Adjacent Form) multiplication algorithm
-    // TODO: modularize the multiplication algorithm
-    public ECCPoint multiplyA(BigInteger k) {
-        if (this.isInfinity()) return this;
-        if (k.signum() == 0) return this.curve.getInfinity();
-        BigInteger e = k;
-        BigInteger h = e.multiply(new BigInteger("3"));
-        ECCPoint neg = this.negate();
-        ECCPoint R = this;
-        for (int i = h.bitLength() - 2; i > 0; --i) {
-            R = R.twice();
-            boolean hBit = h.testBit(i);
-            boolean eBit = e.testBit(i);
-            if (hBit != eBit) {
-                R = R.add(hBit ? this : neg);
-            }
-        }
-        return R;
     }
 
     // Compute this*j + x*k (simultaneous multiplication)
