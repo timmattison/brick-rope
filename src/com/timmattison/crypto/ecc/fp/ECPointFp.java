@@ -137,31 +137,6 @@ public class ECPointFp implements ECCPoint {
         return eccPointFactory.create(this.curve, this.curve.fromBigInteger(x3), this.curve.fromBigInteger(y3), null);
     }
 
-    public ECCPoint twiceA() {
-        if (this.isInfinity()) return this;
-        if (this.y.toBigInteger().signum() == 0) return this.curve.getInfinity();
-        // TODO: optimized handling of constants
-        BigInteger THREE = new BigInteger("3");
-        BigInteger x1 = this.x.toBigInteger();
-        BigInteger y1 = this.y.toBigInteger();
-        BigInteger y1z1 = y1.multiply(this.z);
-        BigInteger y1sqz1 = y1z1.multiply(y1).mod(this.curve.getP());
-        BigInteger a = this.curve.getA().toBigInteger();
-        // w = 3 * x1^2 + a * z1^2
-        BigInteger w = BigIntegerHelper.squareBigInteger(x1).multiply(THREE);
-        if (!BigInteger.ZERO.equals(a)) {
-            w = w.add(BigIntegerHelper.squareBigInteger(this.z).multiply(a));
-        }
-        w = w.mod(this.curve.getP());
-        // x3 = 2 * y1 * z1 * (w^2 - 8 * x1 * y1^2 * z1)
-        BigInteger x3 = BigIntegerHelper.squareBigInteger(w).subtract(x1.shiftLeft(3).multiply(y1sqz1)).shiftLeft(1).multiply(y1z1).mod(this.curve.getP());
-        // y3 = 4 * y1^2 * z1 * (3 * w * x1 - 2 * y1^2 * z1) - w^3
-        BigInteger y3 = w.multiply(THREE).multiply(x1).subtract(y1sqz1.shiftLeft(1)).shiftLeft(2).multiply(y1sqz1).subtract(BigIntegerHelper.squareBigInteger(w).multiply(w)).mod(this.curve.getP());
-        // z3 = 8 * (y1 * z1)^3
-        BigInteger z3 = BigIntegerHelper.squareBigInteger(y1z1).multiply(y1z1).shiftLeft(3).mod(this.curve.getP());
-        return eccPointFactory.create(this.curve, this.curve.fromBigInteger(x3), this.curve.fromBigInteger(y3), z3);
-    }
-
     // Simple NAF (Non-Adjacent Form) multiplication algorithm
     // TODO: modularize the multiplication algorithm
     public ECCPoint multiply(BigInteger k) {
