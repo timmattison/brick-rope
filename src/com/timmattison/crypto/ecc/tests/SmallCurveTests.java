@@ -123,7 +123,7 @@ public class SmallCurveTests {
         nextPoint = nextPoint.add(firstPoint);
         validatePoint(nextPoint, 6, 14);
 
-        // Test 17P: 5, 16
+        // Test 18P: 5, 16
         nextPoint = nextPoint.add(firstPoint);
         validatePoint(nextPoint, 5, 16);
     }
