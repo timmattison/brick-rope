@@ -7,6 +7,8 @@ import com.timmattison.crypto.ecc.*;
 
 import javax.annotation.Nullable;
 import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -120,8 +122,10 @@ public class ECPointFp implements ECCPoint {
         BigInteger bottom = new BigInteger("2").multiply(getY().toBigInteger());
         BigInteger top = new BigInteger("3").multiply(getX().toBigInteger().pow(2)).add(curve.getA().toBigInteger()).mod(curve.getP());
 
-        // XXX - Suspicious.  This doesn't make any sense to me.
-        BigInteger s = top.pow(bottom.intValue());
+        // Find the multiplicative inverse of the bottom
+        bottom = bottom.modInverse(curve.getP());
+
+        BigInteger s = top.multiply(bottom);
         s = s.mod(curve.getP());
 
         // Calculate x3 = s^2 - x_1 - x_2
