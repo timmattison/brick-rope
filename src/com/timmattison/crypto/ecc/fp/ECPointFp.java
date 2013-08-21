@@ -35,6 +35,36 @@ public class ECPointFp implements ECCPoint {
         this.y = y;
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        // Is this an ECC point?
+        if(!(obj instanceof ECCPoint)) {
+            // No, then we are not equal
+            return false;
+        }
+
+        ECCPoint other = (ECCPoint) obj;
+
+        if(other.getCurve().equals(this.curve) && other.getX().equals(this.getX()) && other.getY().equals(this.getY())) {
+            // Both the curve and the coordinates match.  They are equal.
+            return true;
+        }
+        else {
+            // Something doesn't match.  They are not equal.
+            return false;
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "[" + getCurve().toString() + " -> (" + getX().toString() + ", " + getY().toString() + ")]";
+    }
+
+    @Override
+    public ECCCurve getCurve() {
+        return curve;
+    }
+
     public ECCFieldElement getX() {
         if (x == null) {
             x = eccFieldElementFactory.create(curve.getP(), BigInteger.ZERO);
