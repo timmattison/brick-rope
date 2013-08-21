@@ -33,30 +33,6 @@ public class ECFieldElementFp implements ECCFieldElement {
         this.q = q;
     }
 
-    @Override
-    public boolean equals(Object obj) {
-        // Is the other object an ECCFieldElement?
-        if (!(obj instanceof ECCFieldElement)) {
-            // No, they cannot be equal
-            return false;
-        }
-
-        ECCFieldElement other = (ECCFieldElement) obj;
-
-        if (other.getX().equals(getX()) && other.getQ().equals(getQ())) {
-            // X and Q are equal.  The objects are equal.
-            return true;
-        } else {
-            // Something didn't match.  They are not equal.
-            return false;
-        }
-    }
-
-    @Override
-    public String toString() {
-        return "[" + getX() + ", " + getQ() + "]";
-    }
-
     public boolean equals(ECCFieldElement other) {
         if (other == this) return true;
         return (this.q.equals(other.getQ()) && this.x.equals(other.getX()));

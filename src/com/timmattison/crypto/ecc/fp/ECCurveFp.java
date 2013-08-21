@@ -4,6 +4,7 @@ import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
 import com.timmattison.crypto.ecc.*;
 
+import javax.inject.Inject;
 import java.math.BigInteger;
 
 /**
@@ -22,29 +23,7 @@ public class ECCurveFp implements ECCCurve {
     private ECCFieldElement b;
 
     public ECCurveFp() {
-    }
 
-    @Override
-    public boolean equals(Object obj) {
-        // Is the other object an ECCCurve?
-        if (!(obj instanceof ECCCurve)) {
-            return false;
-        }
-
-        ECCCurve other = (ECCCurve) obj;
-
-        if (getP().equals(other.getP()) && getA().equals(other.getA()) && getB().equals(other.getB())) {
-            // All of the parameters are equal.  They are equal.
-            return true;
-        } else {
-            // Something didn't match.  They are not equal.
-            return false;
-        }
-    }
-
-    @Override
-    public String toString() {
-        return "[" + getP().toString() + ", " + getA().toString() + ", " + getB().toString() + "]";
     }
 
     @AssistedInject
@@ -55,6 +34,8 @@ public class ECCurveFp implements ECCCurve {
         this.p = p;
         this.a = this.fromBigInteger(a);
         this.b = this.fromBigInteger(b);
+
+        this.infinity = eccPointFactory.create(this, null, null);
     }
 
     public BigInteger getP() {
@@ -75,11 +56,7 @@ public class ECCurveFp implements ECCCurve {
     }
 
     public ECCPoint getInfinity() {
-        if (infinity == null) {
-            eccPointFactory.create(this, null, null);
-        }
-
-        return infinity;
+        return this.infinity;
     }
 
     public ECCFieldElement fromBigInteger(BigInteger x) {
@@ -91,7 +68,7 @@ public class ECCurveFp implements ECCCurve {
         switch (Integer.parseInt(s.substring(0, 2), 16)) {
             // first byte
             case 0:
-                return getInfinity();
+                return this.infinity;
             case 2:
             case 3:
                 // point compression not supported yet

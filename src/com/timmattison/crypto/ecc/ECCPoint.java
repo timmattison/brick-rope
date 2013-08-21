@@ -10,8 +10,6 @@ import java.math.BigInteger;
  * To change this template use File | Settings | File Templates.
  */
 public interface ECCPoint extends ECCElement {
-    public ECCCurve getCurve();
-
     public ECCFieldElement getX();
 
     public ECCFieldElement getY();

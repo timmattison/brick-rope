@@ -8,9 +8,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.math.BigInteger;
-import java.util.HashSet;
 import java.util.Random;
-import java.util.Set;
 
 /**
  * Created with IntelliJ IDEA.
@@ -186,7 +184,7 @@ public class SmallCurveTests {
         Random random = new Random(1);
         ECCParameters eccParameters = getSmallCurve1();
 
-        Set<ECCPoint> points = new HashSet<ECCPoint>();
+        //ECCPoint eccPoint = getPoint(BigInteger.valueOf(random.nextInt(eccParameters.getCurve().getP().intValue())), BigInteger.valueOf(random.nextInt(eccParameters.getCurve().getP().intValue())));
 
         for (int loop = 0; loop < 256; loop++) {
             boolean found = false;
@@ -223,13 +221,7 @@ public class SmallCurveTests {
                     // No good.  Curve did not have order small factor * large prime.
                     Assert.fail("Curve did not have order " + smallFactor + " * " + largePrime);
                 }
-
-                points.add(eccPoint);
             }
-        }
-
-        for (ECCPoint eccPoint : points) {
-            System.out.println(eccPoint);
         }
     }
 }
