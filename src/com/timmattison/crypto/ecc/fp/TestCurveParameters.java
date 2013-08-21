@@ -12,18 +12,18 @@ import java.math.BigInteger;
  * Time: 8:23 AM
  * To change this template use File | Settings | File Templates.
  */
-public class TestCurve {
+public class TestCurveParameters {
     private ECCCurveFactory eccCurveFactory;
     private ECCParametersFactory eccParametersFactory;
     private ECCFieldElementFactory eccFieldElementFactory;
     private ECCPointFactory eccPointFactory;
     private ECCParameters smallCurve2;
 
-    public TestCurve() {
+    public TestCurveParameters() {
     }
 
     @Inject
-    public TestCurve(ECCCurveFactory eccCurveFactory, ECCParametersFactory eccParametersFactory, ECCFieldElementFactory eccFieldElementFactory, ECCPointFactory eccPointFactory) {
+    public TestCurveParameters(ECCCurveFactory eccCurveFactory, ECCParametersFactory eccParametersFactory, ECCFieldElementFactory eccFieldElementFactory, ECCPointFactory eccPointFactory) {
         this.eccCurveFactory = eccCurveFactory;
         this.eccParametersFactory = eccParametersFactory;
         this.eccFieldElementFactory = eccFieldElementFactory;
@@ -34,7 +34,7 @@ public class TestCurve {
         return new BigInteger(s, 16);
     }
 
-    public ECCParameters getSmallCurve1() {
+    public ECCParameters getSmallCurve1Parameters() {
         // E : y^2 = x^3 + 2*x + 2 mod 17
         BigInteger p = new BigInteger("17");
         BigInteger a = new BigInteger("2");
@@ -56,7 +56,7 @@ public class TestCurve {
         return eccParametersFactory.create(curve, basePoint, n, h);
     }
 
-    public ECCParameters getSmallCurve2() {
+    public ECCParameters getSmallCurve2Parameters() {
         // E : y^2 = x^3 + 1*x + 1 mod 5
         BigInteger p = new BigInteger("5");
         BigInteger a = new BigInteger("1");

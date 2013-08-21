@@ -36,20 +36,24 @@ public class ECPointFp implements ECCPoint {
     }
 
     @Override
+    public int hashCode() {
+        return getX().toBigInteger().add(getY().toBigInteger()).add(getCurve().getA().toBigInteger()).add(getCurve().getB().toBigInteger()).add(getCurve().getP()).intValue();
+    }
+
+    @Override
     public boolean equals(Object obj) {
         // Is this an ECC point?
-        if(!(obj instanceof ECCPoint)) {
+        if (!(obj instanceof ECCPoint)) {
             // No, then we are not equal
             return false;
         }
 
         ECCPoint other = (ECCPoint) obj;
 
-        if(other.getCurve().equals(this.curve) && other.getX().equals(this.getX()) && other.getY().equals(this.getY())) {
+        if (other.getCurve().equals(this.curve) && other.getX().equals(this.getX()) && other.getY().equals(this.getY())) {
             // Both the curve and the coordinates match.  They are equal.
             return true;
-        }
-        else {
+        } else {
             // Something doesn't match.  They are not equal.
             return false;
         }
@@ -70,7 +74,7 @@ public class ECPointFp implements ECCPoint {
             x = eccFieldElementFactory.create(curve.getP(), BigInteger.ZERO);
         }
 
-        if(trueX == null) {
+        if (trueX == null) {
             trueX = eccFieldElementFactory.create(curve.getP(), x.toBigInteger().mod(curve.getP()));
         }
 
@@ -82,7 +86,7 @@ public class ECPointFp implements ECCPoint {
             y = eccFieldElementFactory.create(curve.getP(), BigInteger.ZERO);
         }
 
-        if(trueY == null) {
+        if (trueY == null) {
             trueY = eccFieldElementFactory.create(curve.getP(), y.toBigInteger().mod(curve.getP()));
         }
 

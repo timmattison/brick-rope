@@ -76,7 +76,7 @@ public class ECCurveFp implements ECCCurve {
 
     public ECCPoint getInfinity() {
         if (infinity == null) {
-            eccPointFactory.create(this, null, null);
+            infinity = eccPointFactory.create(this, null, null);
         }
 
         return infinity;

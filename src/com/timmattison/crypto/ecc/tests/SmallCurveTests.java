@@ -3,7 +3,7 @@ package com.timmattison.crypto.ecc.tests;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.timmattison.crypto.ecc.*;
-import com.timmattison.crypto.ecc.fp.TestCurve;
+import com.timmattison.crypto.ecc.fp.TestCurveParameters;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -22,29 +22,21 @@ import java.util.Set;
 public class SmallCurveTests {
     Injector injector = Guice.createInjector(new ECCTestModule());
 
-    private ECCParameters getSmallCurve1() {
-        return injector.getInstance(TestCurve.class).getSmallCurve1();
+    private ECCParameters getSmallCurve1Parameters() {
+        return injector.getInstance(TestCurveParameters.class).getSmallCurve1Parameters();
     }
 
     //private ECCParameters getSmallCurve2() {
-    //    return injector.getInstance(TestCurve.class).getSmallCurve2();
+    //    return injector.getInstance(TestCurveParameters.class).getSmallCurve2();
     //}
 
-    private ECCPoint getPoint(BigInteger x, BigInteger y) {
-        ECCPointFactory eccPointFactory = injector.getInstance(ECCPointFactory.class);
-        ECCCurve curve = getSmallCurve1().getCurve();
-        ECCFieldElement xFieldElement = curve.fromBigInteger(x);
-        ECCFieldElement yFieldElement = curve.fromBigInteger(y);
-        return eccPointFactory.create(curve, xFieldElement, yFieldElement);
-    }
-
     private ECCPoint getBasePoint() {
-        return getPoint(new BigInteger("5"), new BigInteger("1"));
+        return ECCTestHelper.getPoint(injector, getSmallCurve1Parameters(), new BigInteger("5"), new BigInteger("1"));
     }
 
     @Test
     public void testMultiplyInfinity() throws Exception {
-        ECCParameters smallCurve = getSmallCurve1();
+        ECCParameters smallCurve = getSmallCurve1Parameters();
         ECCPoint result = smallCurve.getG().multiply(smallCurve.getN());
 
         Assert.assertTrue(result.isInfinity());
@@ -157,7 +149,7 @@ public class SmallCurveTests {
 
     @Test
     public void testCalculate19P() {
-        ECCPoint firstPoint = getPoint(new BigInteger("5"), new BigInteger("1"));
+        ECCPoint firstPoint = ECCTestHelper.getPoint(injector, getSmallCurve1Parameters(), new BigInteger("5"), new BigInteger("1"));
         ECCPoint nextPoint = firstPoint.twice();
 
         for (int loop = 3; loop < 19; loop++) {
@@ -171,7 +163,7 @@ public class SmallCurveTests {
 
     @Test
     public void testCalculateFourthPoint() {
-        ECCPoint firstPoint = getPoint(new BigInteger("5"), new BigInteger("1"));
+        ECCPoint firstPoint = ECCTestHelper.getPoint(injector, getSmallCurve1Parameters(), new BigInteger("5"), new BigInteger("1"));
         ECCPoint secondPoint = firstPoint.twice();
         ECCPoint thirdPoint = secondPoint.add(firstPoint);
         ECCPoint fourthPoint = thirdPoint.add(firstPoint);
@@ -184,7 +176,7 @@ public class SmallCurveTests {
     public void testGenerateBasePoint() {
         // http://stackoverflow.com/questions/11156779/generate-base-point-g-of-elliptic-curve-for-elliptic-curve-cryptography
         Random random = new Random(1);
-        ECCParameters eccParameters = getSmallCurve1();
+        ECCParameters eccParameters = getSmallCurve1Parameters();
 
         Set<ECCPoint> points = new HashSet<ECCPoint>();
 
@@ -192,7 +184,7 @@ public class SmallCurveTests {
             boolean found = false;
 
             while (!found) {
-                ECCPoint eccPoint = getPoint(BigInteger.valueOf(random.nextInt(0xFFFFFF)), BigInteger.valueOf(random.nextInt(0xFFFFFF)));
+                ECCPoint eccPoint = ECCTestHelper.getPoint(injector, getSmallCurve1Parameters(), BigInteger.valueOf(random.nextInt(0xFFFFFF)), BigInteger.valueOf(random.nextInt(0xFFFFFF)));
 
                 BigInteger largePrime = BigInteger.probablePrime(256, random);
 
