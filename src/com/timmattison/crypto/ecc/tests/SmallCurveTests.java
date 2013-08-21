@@ -8,6 +8,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.math.BigInteger;
+import java.util.Random;
 
 /**
  * Created with IntelliJ IDEA.
@@ -23,9 +24,9 @@ public class SmallCurveTests {
         return injector.getInstance(TestCurve.class).getSmallCurve1();
     }
 
-    private ECCParameters getSmallCurve2() {
-        return injector.getInstance(TestCurve.class).getSmallCurve2();
-    }
+    //private ECCParameters getSmallCurve2() {
+    //    return injector.getInstance(TestCurve.class).getSmallCurve2();
+    //}
 
     private ECCPoint getPoint(BigInteger x, BigInteger y) {
         ECCPointFactory eccPointFactory = injector.getInstance(ECCPointFactory.class);
@@ -33,7 +34,7 @@ public class SmallCurveTests {
         ECCFieldElement xFieldElement = curve.fromBigInteger(x);
         ECCFieldElement yFieldElement = curve.fromBigInteger(y);
         return eccPointFactory.create(curve, xFieldElement, yFieldElement);
-    }
+}
 
     private ECCPoint getBasePoint() {
         return getPoint(new BigInteger("5"), new BigInteger("1"));
@@ -176,5 +177,36 @@ public class SmallCurveTests {
         Assert.assertTrue(fourthPoint.getX().toBigInteger().equals(new BigInteger("3")));
         Assert.assertTrue(fourthPoint.getY().toBigInteger().equals(new BigInteger("1")));
     }
-}
 
+    @Test
+    public void testGenerateBasePoint() {
+        // http://stackoverflow.com/questions/11156779/generate-base-point-g-of-elliptic-curve-for-elliptic-curve-cryptography
+        Random random = new Random(1);
+        ECCParameters eccParameters = getSmallCurve1();
+
+        //ECCPoint eccPoint = getPoint(BigInteger.valueOf(random.nextInt(eccParameters.getCurve().getP().intValue())), BigInteger.valueOf(random.nextInt(eccParameters.getCurve().getP().intValue())));
+
+        ECCPoint eccPoint = getPoint(BigInteger.valueOf(random.nextInt(0xFFFFFF)), BigInteger.valueOf(random.nextInt(0xFFFFFF)));
+
+        BigInteger largePrime = BigInteger.valueOf(97);
+
+        // large prime * small factor must equal curve order
+        // So small factor = curve order * (large prime ^ -1)
+        BigInteger smallFactor = eccParameters.getN().multiply(largePrime.modInverse(eccParameters.getCurve().getP()));
+
+        ECCPoint testPoint1 = eccPoint.multiply(smallFactor);
+        ECCPoint junkPoint = testPoint1.twice();
+
+        if (testPoint1.getX().toBigInteger().equals(BigInteger.ZERO) && (testPoint1.getY().toBigInteger().equals(BigInteger.ZERO))) {
+            // No good.  Try again.
+            Assert.fail("Try again");
+        } else {
+            ECCPoint testPoint2 = testPoint1.multiply(largePrime);
+
+            if (testPoint2.getX().toBigInteger().equals(BigInteger.ZERO) && (testPoint2.getY().toBigInteger().equals(BigInteger.ZERO))) {
+                // No good.  Curve did not have order small factor * large prime.
+                Assert.fail("Curve did not have order " + smallFactor + " * " + largePrime);
+            }
+        }
+    }
+}

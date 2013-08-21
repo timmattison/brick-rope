@@ -20,6 +20,8 @@ public class ECPointFp implements ECCPoint {
     private ECCCurve curve;
     private ECCFieldElement x;
     private ECCFieldElement y;
+    private ECCFieldElement trueX;
+    private ECCFieldElement trueY;
 
     public ECPointFp() {
     }
@@ -38,7 +40,11 @@ public class ECPointFp implements ECCPoint {
             x = eccFieldElementFactory.create(curve.getP(), BigInteger.ZERO);
         }
 
-        return x;
+        if(trueX == null) {
+            trueX = eccFieldElementFactory.create(curve.getP(), x.toBigInteger().mod(curve.getP()));
+        }
+
+        return trueX;
     }
 
     public ECCFieldElement getY() {
@@ -46,7 +52,11 @@ public class ECPointFp implements ECCPoint {
             y = eccFieldElementFactory.create(curve.getP(), BigInteger.ZERO);
         }
 
-        return y;
+        if(trueY == null) {
+            trueY = eccFieldElementFactory.create(curve.getP(), y.toBigInteger().mod(curve.getP()));
+        }
+
+        return trueY;
     }
 
     public boolean equals(ECCPoint other) {
@@ -55,10 +65,10 @@ public class ECPointFp implements ECCPoint {
         if (other.isInfinity()) return this.isInfinity();
         BigInteger u, v;
         // u = Y2 * Z1 - Y1 * Z2
-        u = other.getY().toBigInteger().subtract(this.y.toBigInteger()).mod(this.curve.getP());
+        u = other.getY().toBigInteger().subtract(this.getY().toBigInteger()).mod(this.curve.getP());
         if (!u.equals(BigInteger.ZERO)) return false;
         // v = X2 * Z1 - X1 * Z2
-        v = other.getX().toBigInteger().subtract(this.x.toBigInteger()).mod(this.curve.getP());
+        v = other.getX().toBigInteger().subtract(this.getX().toBigInteger()).mod(this.curve.getP());
         return v.equals(BigInteger.ZERO);
     }
 
@@ -70,7 +80,7 @@ public class ECPointFp implements ECCPoint {
     }
 
     public ECCPoint negate() {
-        return eccPointFactory.create(curve, x, y.negate());
+        return eccPointFactory.create(curve, getX(), getY().negate());
     }
 
     public ECCPoint add(ECCPoint b) {
