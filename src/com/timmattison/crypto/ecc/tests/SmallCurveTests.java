@@ -34,7 +34,7 @@ public class SmallCurveTests {
         ECCFieldElement xFieldElement = curve.fromBigInteger(x);
         ECCFieldElement yFieldElement = curve.fromBigInteger(y);
         return eccPointFactory.create(curve, xFieldElement, yFieldElement);
-}
+    }
 
     private ECCPoint getBasePoint() {
         return getPoint(new BigInteger("5"), new BigInteger("1"));
@@ -186,26 +186,41 @@ public class SmallCurveTests {
 
         //ECCPoint eccPoint = getPoint(BigInteger.valueOf(random.nextInt(eccParameters.getCurve().getP().intValue())), BigInteger.valueOf(random.nextInt(eccParameters.getCurve().getP().intValue())));
 
-        ECCPoint eccPoint = getPoint(BigInteger.valueOf(random.nextInt(0xFFFFFF)), BigInteger.valueOf(random.nextInt(0xFFFFFF)));
+        for (int loop = 0; loop < 256; loop++) {
+            boolean found = false;
 
-        BigInteger largePrime = BigInteger.valueOf(97);
+            while (!found) {
+                ECCPoint eccPoint = getPoint(BigInteger.valueOf(random.nextInt(0xFFFFFF)), BigInteger.valueOf(random.nextInt(0xFFFFFF)));
 
-        // large prime * small factor must equal curve order
-        // So small factor = curve order * (large prime ^ -1)
-        BigInteger smallFactor = eccParameters.getN().multiply(largePrime.modInverse(eccParameters.getCurve().getP()));
+                BigInteger largePrime = BigInteger.probablePrime(256, random);
 
-        ECCPoint testPoint1 = eccPoint.multiply(smallFactor);
-        ECCPoint junkPoint = testPoint1.twice();
+                // large prime * small factor must equal curve order
+                // So small factor = curve order * (large prime ^ -1)
+                BigInteger smallFactor = eccParameters.getN().multiply(largePrime.modInverse(eccParameters.getCurve().getP()));
 
-        if (testPoint1.getX().toBigInteger().equals(BigInteger.ZERO) && (testPoint1.getY().toBigInteger().equals(BigInteger.ZERO))) {
-            // No good.  Try again.
-            Assert.fail("Try again");
-        } else {
-            ECCPoint testPoint2 = testPoint1.multiply(largePrime);
+                // testPoint1 * smallFactor
+                ECCPoint testPoint1 = eccPoint.multiply(smallFactor);
 
-            if (testPoint2.getX().toBigInteger().equals(BigInteger.ZERO) && (testPoint2.getY().toBigInteger().equals(BigInteger.ZERO))) {
-                // No good.  Curve did not have order small factor * large prime.
-                Assert.fail("Curve did not have order " + smallFactor + " * " + largePrime);
+                // XXX - In the first iteration we get testPoint1 == (6, 0) and junkPoint == (0, 0).  Is junkPoint infinity?
+                ECCPoint junkPoint = testPoint1.twice();
+
+                // If testPoint1 == 0 then try again
+                if (testPoint1.getX().toBigInteger().equals(BigInteger.ZERO) && (testPoint1.getY().toBigInteger().equals(BigInteger.ZERO))) {
+                    // This particular point won't work.  Try again.
+                    continue;
+                }
+
+                // testPoint1 is good
+                found = true;
+
+                // testPoint1 * largePrime
+                ECCPoint testPoint2 = testPoint1.multiply(largePrime);
+
+                // If testPoint2 == 0 then the curve does not have order small factor * large prime
+                if (testPoint2.getX().toBigInteger().equals(BigInteger.ZERO) && (testPoint2.getY().toBigInteger().equals(BigInteger.ZERO))) {
+                    // No good.  Curve did not have order small factor * large prime.
+                    Assert.fail("Curve did not have order " + smallFactor + " * " + largePrime);
+                }
             }
         }
     }
