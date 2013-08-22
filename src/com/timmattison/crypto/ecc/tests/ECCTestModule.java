@@ -4,10 +4,6 @@ import com.google.inject.AbstractModule;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 import com.timmattison.crypto.ecc.*;
 import com.timmattison.crypto.ecc.fp.*;
-import com.timmattison.cryptocurrency.bitcoin.BitcoinECCParamsFactory;
-import com.timmattison.cryptocurrency.bitcoin.BitcoinECCSignatureFactory;
-import com.timmattison.cryptocurrency.factories.ECCParamsFactory;
-import com.timmattison.cryptocurrency.factories.ECCSignatureFactory;
 
 /**
  * Created with IntelliJ IDEA.
@@ -34,5 +30,7 @@ public class ECCTestModule extends AbstractModule {
         install(new FactoryModuleBuilder().implement(ECCParameters.class, X9ECParameters.class).build(ECCParametersFactory.class));
         install(new FactoryModuleBuilder().implement(ECCFieldElement.class, ECFieldElementFp.class).build(ECCFieldElementFactory.class));
         install(new FactoryModuleBuilder().implement(ECCPoint.class, ECPointFp.class).build(ECCPointFactory.class));
+        install(new FactoryModuleBuilder().implement(ECCKeyPair.class, ECKeyPairFp.class).build(ECCKeyPairFactory.class));
+        install(new FactoryModuleBuilder().implement(ECCSignature.class, ECSignatureFp.class).build(ECCSignatureFactory.class));
     }
 }

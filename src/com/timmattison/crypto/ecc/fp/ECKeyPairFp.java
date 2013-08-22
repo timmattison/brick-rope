@@ -26,7 +26,7 @@ public class ECKeyPairFp implements ECCKeyPair {
     }
 
     @AssistedInject
-    public ECKeyPairFp(ECCParameters eccParameters, @Assisted BigInteger d) throws Exception {
+    public ECKeyPairFp(@Assisted ECCParameters eccParameters, @Assisted BigInteger d) throws Exception {
         this.eccParameters = eccParameters;
         this.d = d;
 

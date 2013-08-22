@@ -25,7 +25,7 @@ public class ECSignatureFp implements ECCSignature {
     }
 
     @AssistedInject
-    public ECSignatureFp(@Assisted ECCParameters eccParameters, @Assisted("r") BigInteger r, @Assisted("s") BigInteger s, @Assisted ECPointFp Qu) {
+    public ECSignatureFp(@Assisted("eccParameters") ECCParameters eccParameters, @Assisted("r") BigInteger r, @Assisted("s") BigInteger s, @Assisted("Qu") ECCPoint Qu) {
         this.eccParameters = eccParameters;
         this.r = r;
         this.s = s;

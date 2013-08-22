@@ -44,12 +44,12 @@ public class ECTest2Fp {
 
     private ECCKeyPair createECCKeyPair(ECCParameters eccParameters, BigInteger dU) {
         Injector injector = Guice.createInjector(new ECCTestModule());
-        return injector.getInstance(ECCKeyPair.class);
+        return injector.getInstance(ECCKeyPairFactory.class).create(eccParameters, dU);
     }
 
     private ECCSignature createECCSignature(ECCParameters eccParameters, BigInteger r, BigInteger dU, ECCPoint q) {
         Injector injector = Guice.createInjector(new ECCTestModule());
-        return injector.getInstance(ECCSignature.class);
+        return injector.getInstance(ECCSignatureFactory.class).create(eccParameters, r, dU, q);
     }
 
     public ECCSignature signMessage(ECCKeyPair keyPair, byte[] messageBytes) throws Exception {
