@@ -63,7 +63,7 @@ public class ECCurveFp implements ECCCurve {
     }
 
     @Override
-    public ECCPoint getBasePoint(Random random) {
+    public ECCPoint generateBasePoint(Random random) {
         // http://stackoverflow.com/questions/11156779/generate-base-point-g-of-elliptic-curve-for-elliptic-curve-cryptography
         boolean found = false;
 

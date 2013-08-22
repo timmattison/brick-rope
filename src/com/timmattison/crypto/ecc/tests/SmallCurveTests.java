@@ -180,7 +180,7 @@ public class SmallCurveTests {
         Set<ECCPoint> points = new HashSet<ECCPoint>();
 
         for (int loop = 0; loop < 256; loop++) {
-            ECCPoint basePoint = eccParameters.getCurve().getBasePoint(random);
+            ECCPoint basePoint = eccParameters.getCurve().generateBasePoint(random);
 
             if (basePoint != null) {
                 points.add(basePoint);

@@ -47,7 +47,7 @@ public interface ECCCurve extends ECCElement {
 
     public ECCPoint getInfinity();
 
-    public ECCPoint getBasePoint(Random random);
+    public ECCPoint generateBasePoint(Random random);
 
     public ECCFieldElement fromBigInteger(BigInteger x);
 
