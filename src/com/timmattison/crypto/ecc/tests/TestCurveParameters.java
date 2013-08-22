@@ -1,4 +1,4 @@
-package com.timmattison.crypto.ecc.fp;
+package com.timmattison.crypto.ecc.tests;
 
 import com.timmattison.crypto.ecc.*;
 

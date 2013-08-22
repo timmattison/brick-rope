@@ -4,7 +4,6 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.timmattison.crypto.ecc.ECCParameters;
 import com.timmattison.crypto.ecc.ECCPoint;
-import com.timmattison.crypto.ecc.fp.TestCurveParameters;
 import org.junit.Assert;
 import org.junit.Test;
 
