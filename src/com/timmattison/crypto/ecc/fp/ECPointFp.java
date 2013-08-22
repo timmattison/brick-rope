@@ -97,13 +97,12 @@ public class ECPointFp implements ECCPoint {
         if (other == this) return true;
         if (this.isInfinity()) return other.isInfinity();
         if (other.isInfinity()) return this.isInfinity();
-        BigInteger u, v;
-        // u = Y2 * Z1 - Y1 * Z2
-        u = other.getY().toBigInteger().subtract(this.getY().toBigInteger()).mod(this.curve.getP());
-        if (!u.equals(BigInteger.ZERO)) return false;
-        // v = X2 * Z1 - X1 * Z2
-        v = other.getX().toBigInteger().subtract(this.getX().toBigInteger()).mod(this.curve.getP());
-        return v.equals(BigInteger.ZERO);
+
+        if (other.getX().equals(this.getX()) && other.getY().equals(this.getY())) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public boolean isInfinity() {
