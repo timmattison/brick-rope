@@ -175,7 +175,6 @@ public class SmallCurveTests {
 
     @Test
     public void testGenerateBasePoint() {
-        // http://stackoverflow.com/questions/11156779/generate-base-point-g-of-elliptic-curve-for-elliptic-curve-cryptography
         Random random = new Random(1);
         ECCParameters eccParameters = getSmallCurve1Parameters();
 
