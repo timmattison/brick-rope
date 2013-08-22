@@ -20,6 +20,7 @@ public class ECFieldElementFp implements ECCFieldElement {
     private ECCFieldElementFactory eccFieldElementFactory;
     private BigInteger x;
     private BigInteger q;
+    private BigInteger trueX;
 
     public ECFieldElementFp() {
     }
@@ -59,35 +60,35 @@ public class ECFieldElementFp implements ECCFieldElement {
 
     public boolean equals(ECCFieldElement other) {
         if (other == this) return true;
-        return (this.q.equals(other.getQ()) && this.x.equals(other.getX()));
+        return (this.getQ().equals(other.getQ()) && this.getX().equals(other.getX()));
     }
 
     public BigInteger toBigInteger() {
-        return this.x;
+        return this.getX();
     }
 
     public ECCFieldElement negate() {
-        return eccFieldElementFactory.create(this.q, this.x.negate().mod(this.q));
+        return eccFieldElementFactory.create(this.getQ(), this.getX().negate().mod(this.getQ()));
     }
 
     public ECCFieldElement add(ECCFieldElement b) {
-        return eccFieldElementFactory.create(this.q, this.x.add(b.toBigInteger()).mod(this.q));
+        return eccFieldElementFactory.create(this.getQ(), this.getX().add(b.toBigInteger()).mod(this.getQ()));
     }
 
     public ECCFieldElement subtract(ECCFieldElement b) {
-        return eccFieldElementFactory.create(this.q, this.x.subtract(b.toBigInteger()).mod(this.q));
+        return eccFieldElementFactory.create(this.getQ(), this.getX().subtract(b.toBigInteger()).mod(this.getQ()));
     }
 
     public ECCFieldElement multiply(ECCFieldElement b) {
-        return eccFieldElementFactory.create(this.q, this.x.multiply(b.toBigInteger()).mod(this.q));
+        return eccFieldElementFactory.create(this.getQ(), this.getX().multiply(b.toBigInteger()).mod(this.getQ()));
     }
 
     public ECCFieldElement square() {
-        return eccFieldElementFactory.create(this.q, BigIntegerHelper.squareBigInteger(x).mod(this.q));
+        return eccFieldElementFactory.create(this.getQ(), BigIntegerHelper.squareBigInteger(x).mod(this.getQ()));
     }
 
     public ECCFieldElement divide(ECCFieldElement b) {
-        return eccFieldElementFactory.create(this.q, this.x.multiply(b.toBigInteger().modInverse(this.q)).mod(this.q));
+        return eccFieldElementFactory.create(this.getQ(), this.getX().multiply(b.toBigInteger().modInverse(this.getQ())).mod(this.getQ()));
     }
 
     @Override
@@ -97,7 +98,15 @@ public class ECFieldElementFp implements ECCFieldElement {
 
     @Override
     public BigInteger getX() {
-        return x;
+        if (x == null) {
+            return null;
+        }
+
+        if (trueX == null) {
+            trueX = x.mod(getQ());
+        }
+
+        return trueX;
     }
 
     @Override
