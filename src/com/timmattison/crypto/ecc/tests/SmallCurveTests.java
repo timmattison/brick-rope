@@ -2,7 +2,8 @@ package com.timmattison.crypto.ecc.tests;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import com.timmattison.crypto.ecc.*;
+import com.timmattison.crypto.ecc.ECCParameters;
+import com.timmattison.crypto.ecc.ECCPoint;
 import com.timmattison.crypto.ecc.fp.TestCurveParameters;
 import org.junit.Assert;
 import org.junit.Test;
@@ -181,42 +182,10 @@ public class SmallCurveTests {
         Set<ECCPoint> points = new HashSet<ECCPoint>();
 
         for (int loop = 0; loop < 256; loop++) {
-            boolean found = false;
+            ECCPoint basePoint = eccParameters.getCurve().getBasePoint(random);
 
-            while (!found) {
-                ECCPoint eccPoint = ECCTestHelper.getPoint(injector, getSmallCurve1Parameters(), BigInteger.valueOf(random.nextInt(0xFFFFFF)), BigInteger.valueOf(random.nextInt(0xFFFFFF)));
-
-                BigInteger largePrime = BigInteger.probablePrime(256, random);
-
-                // large prime * small factor must equal curve order
-                // So small factor = curve order * (large prime ^ -1)
-                BigInteger smallFactor = eccParameters.getN().multiply(largePrime.modInverse(eccParameters.getCurve().getP()));
-
-                // testPoint1 * smallFactor
-                ECCPoint testPoint1 = eccPoint.multiply(smallFactor);
-
-                // XXX - In the first iteration we get testPoint1 == (6, 0) and junkPoint == (0, 0).  Is junkPoint infinity?
-                ECCPoint junkPoint = testPoint1.twice();
-
-                // If testPoint1 == 0 then try again
-                if (testPoint1.getX().toBigInteger().equals(BigInteger.ZERO) && (testPoint1.getY().toBigInteger().equals(BigInteger.ZERO))) {
-                    // This particular point won't work.  Try again.
-                    continue;
-                }
-
-                // testPoint1 is good
-                found = true;
-
-                // testPoint1 * largePrime
-                ECCPoint testPoint2 = testPoint1.multiply(largePrime);
-
-                // If testPoint2 == 0 then the curve does not have order small factor * large prime
-                if (testPoint2.getX().toBigInteger().equals(BigInteger.ZERO) && (testPoint2.getY().toBigInteger().equals(BigInteger.ZERO))) {
-                    // No good.  Curve did not have order small factor * large prime.
-                    Assert.fail("Curve did not have order " + smallFactor + " * " + largePrime);
-                }
-
-                points.add(eccPoint);
+            if (basePoint != null) {
+                points.add(basePoint);
             }
         }
 

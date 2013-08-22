@@ -5,6 +5,7 @@ import com.google.inject.assistedinject.AssistedInject;
 import com.timmattison.crypto.ecc.*;
 
 import java.math.BigInteger;
+import java.util.Random;
 
 /**
  * Created with IntelliJ IDEA.
@@ -18,41 +19,20 @@ public class ECCurveFp implements ECCCurve {
     private ECCFieldElementFactory eccFieldElementFactory;
     private ECCPoint infinity;
     private BigInteger p;
+    private BigInteger order;
     private ECCFieldElement a;
     private ECCFieldElement b;
 
     public ECCurveFp() {
     }
 
-    @Override
-    public boolean equals(Object obj) {
-        // Is the other object an ECCCurve?
-        if (!(obj instanceof ECCCurve)) {
-            return false;
-        }
-
-        ECCCurve other = (ECCCurve) obj;
-
-        if (getP().equals(other.getP()) && getA().equals(other.getA()) && getB().equals(other.getB())) {
-            // All of the parameters are equal.  They are equal.
-            return true;
-        } else {
-            // Something didn't match.  They are not equal.
-            return false;
-        }
-    }
-
-    @Override
-    public String toString() {
-        return "[" + getP().toString() + ", " + getA().toString() + ", " + getB().toString() + "]";
-    }
-
     @AssistedInject
-    public ECCurveFp(ECCPointFactory eccPointFactory, ECCFieldElementFactory eccFieldElementFactory, @Assisted("p") BigInteger p, @Assisted("a") BigInteger a, @Assisted("b") BigInteger b) {
+    public ECCurveFp(ECCPointFactory eccPointFactory, ECCFieldElementFactory eccFieldElementFactory, @Assisted("p") BigInteger p, @Assisted("order") BigInteger order, @Assisted("a") BigInteger a, @Assisted("b") BigInteger b) {
         this.eccPointFactory = eccPointFactory;
         this.eccFieldElementFactory = eccFieldElementFactory;
 
         this.p = p;
+        this.order = order;
         this.a = this.fromBigInteger(a);
         this.b = this.fromBigInteger(b);
     }
@@ -80,6 +60,57 @@ public class ECCurveFp implements ECCCurve {
         }
 
         return infinity;
+    }
+
+    @Override
+    public ECCPoint getBasePoint(Random random) {
+        boolean found = false;
+
+        ECCPoint basePoint = null;
+
+        while (!found) {
+            // Figure out how many bits are in our modulus so we generate values that are of the same scale
+            double bitsInP = Math.log(getP().doubleValue()) / Math.log(2);
+
+            ECCFieldElement x = fromBigInteger(new BigInteger((int) bitsInP, random));
+            ECCFieldElement y = fromBigInteger(new BigInteger((int) bitsInP, random));
+
+            // Create a random base point
+            basePoint = eccPointFactory.create(this, x, y);
+
+            // Find a large prime
+            BigInteger largePrime = BigInteger.probablePrime((int) bitsInP, random);
+
+            // large prime * small factor must equal curve order
+            // So small factor = curve order * (large prime ^ -1)
+            BigInteger smallFactor = getOrder().multiply(largePrime.modInverse(getP()));
+
+            // testPoint1 * smallFactor
+            ECCPoint testPoint1 = basePoint.multiply(smallFactor);
+
+            // XXX - In the first iteration we get testPoint1 == (6, 0) and junkPoint == (0, 0).  Is junkPoint infinity?
+            ECCPoint junkPoint = testPoint1.twice();
+
+            // If testPoint1 == 0 then try again
+            if (testPoint1.getX().toBigInteger().equals(BigInteger.ZERO) && (testPoint1.getY().toBigInteger().equals(BigInteger.ZERO))) {
+                // This particular point won't work.  Try again.
+                continue;
+            }
+
+            // testPoint1 is good
+            found = true;
+
+            // testPoint1 * largePrime
+            ECCPoint testPoint2 = testPoint1.multiply(largePrime);
+
+            // If testPoint2 == 0 then the curve does not have a point of the order of small factor * large prime
+            if (testPoint2.getX().toBigInteger().equals(BigInteger.ZERO) && (testPoint2.getY().toBigInteger().equals(BigInteger.ZERO))) {
+                // No good.  Curve did not have order small factor * large prime.
+                return null;
+            }
+        }
+
+        return basePoint;
     }
 
     public ECCFieldElement fromBigInteger(BigInteger x) {
@@ -116,5 +147,33 @@ public class ECCurveFp implements ECCCurve {
     @Override
     public ECCFieldType getECCFieldType() {
         return ECCFieldType.Fp;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        // Is the other object an ECCCurve?
+        if (!(obj instanceof ECCCurve)) {
+            return false;
+        }
+
+        ECCCurve other = (ECCCurve) obj;
+
+        if (getP().equals(other.getP()) && getA().equals(other.getA()) && getB().equals(other.getB())) {
+            // All of the parameters are equal.  They are equal.
+            return true;
+        } else {
+            // Something didn't match.  They are not equal.
+            return false;
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "[" + getP().toString() + ", " + getA().toString() + ", " + getB().toString() + "]";
+    }
+
+    @Override
+    public BigInteger getOrder() {
+        return order;
     }
 }

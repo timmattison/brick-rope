@@ -12,5 +12,5 @@ import java.math.BigInteger;
  * To change this template use File | Settings | File Templates.
  */
 public interface ECCCurveFactory {
-    ECCCurve create(@Assisted("p") BigInteger p, @Assisted("a") BigInteger a, @Assisted("b") BigInteger b);
+    ECCCurve create(@Assisted("p") BigInteger p, @Assisted("order") BigInteger order, @Assisted("a") BigInteger a, @Assisted("b") BigInteger b);
 }

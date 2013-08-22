@@ -40,7 +40,10 @@ public class TestCurveParameters {
         BigInteger a = new BigInteger("2");
         BigInteger b = new BigInteger("2");
 
-        ECCCurve curve = eccCurveFactory.create(p, a, b);
+        // n is the order of the curve
+        BigInteger n = fromHex("19");
+
+        ECCCurve curve = eccCurveFactory.create(p, n, a, b);
 
         BigInteger basePointX = new BigInteger("0");
         BigInteger basePointY = new BigInteger("0");
@@ -50,7 +53,6 @@ public class TestCurveParameters {
 
         ECCPoint basePoint = eccPointFactory.create(curve, fieldElementX, fieldElementY);
 
-        BigInteger n = fromHex("19");
         BigInteger h = BigInteger.ONE;
 
         return eccParametersFactory.create(curve, basePoint, n, h);
@@ -62,7 +64,7 @@ public class TestCurveParameters {
         BigInteger a = new BigInteger("1");
         BigInteger b = new BigInteger("1");
 
-        ECCCurve curve = eccCurveFactory.create(p, a, b);
+        ECCCurve curve = eccCurveFactory.create(p, p, a, b);
 
         BigInteger basePointX = new BigInteger("0");
         BigInteger basePointY = new BigInteger("0");
