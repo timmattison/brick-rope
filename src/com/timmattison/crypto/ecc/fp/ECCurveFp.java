@@ -51,7 +51,7 @@ public class ECCurveFp implements ECCCurve {
 
     public boolean equals(ECCCurve other) {
         if (other == this) return true;
-        return (this.p.equals(other.getP()) && this.a.equals(other.getA()) && this.b.equals(other.getB()));
+        return (this.getP().equals(other.getP()) && this.getA().equals(other.getA()) && this.getB().equals(other.getB()));
     }
 
     public ECCPoint getInfinity() {
@@ -115,7 +115,7 @@ public class ECCurveFp implements ECCCurve {
     }
 
     public ECCFieldElement fromBigInteger(BigInteger x) {
-        return eccFieldElementFactory.create(this.p, x);
+        return eccFieldElementFactory.create(getP(), x);
     }
 
     // for now, work with hex strings because they're easier in JS
