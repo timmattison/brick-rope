@@ -2,10 +2,8 @@ package com.timmattison.cryptocurrency.bitcoin.words.crypto;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import com.timmattison.bitcoin.test.BigIntegerHelper;
 import com.timmattison.crypto.ecc.ECCPoint;
 import com.timmattison.crypto.ecc.ECHelper;
-import com.timmattison.crypto.ecc.fp.ECPointFp;
 import com.timmattison.crypto.ecc.fp.ECSignatureFp;
 import com.timmattison.cryptocurrency.bitcoin.BitcoinHashType;
 import com.timmattison.cryptocurrency.bitcoin.BitcoinModule;
@@ -127,7 +125,7 @@ public class OpCheckSig extends CryptoOp {
         BigInteger v = R.getX().toBigInteger().mod(signature.getN());
 
         // Validate that v == r, are they equal?
-        if (!BigIntegerHelper.equals(v, R.getX().toBigInteger())) {
+        if (!v.equals(R.getX().toBigInteger())) {
             // No, return failure
             return false;
         }

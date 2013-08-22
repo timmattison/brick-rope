@@ -2,7 +2,6 @@ package com.timmattison.crypto.ecc.tests;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import com.timmattison.bitcoin.test.BigIntegerHelper;
 import com.timmattison.bitcoin.test.ByteArrayHelper;
 import com.timmattison.crypto.ecc.ECCNamedCurve;
 import com.timmattison.crypto.ecc.ECCParameters;
@@ -81,7 +80,7 @@ public class ECTest1Fp {
         // Does xU match?
         BigInteger QuX = Qu.getX().toBigInteger();
 
-        if(!BigIntegerHelper.equals(QuX, xU)) {
+        if (!QuX.equals(xU)) {
             // No, throw an exception
             throw new Exception("Failed at 2, Qu doesn't match xU.  Expected " + xU.toString(16) + ", got " + QuX.toString(16));
         }
@@ -89,7 +88,7 @@ public class ECTest1Fp {
         // Does yU match?
         BigInteger QuY = Qu.getY().toBigInteger();
 
-        if(!BigIntegerHelper.equals(QuY, yU)) {
+        if (!QuY.equals(yU)) {
             // No, throw an exception
             throw new Exception("Failed at 2, Qu doesn't match yU.  Expected " + yU.toString(16) + ", got " + QuY.toString(16));
         }
@@ -114,7 +113,7 @@ public class ECTest1Fp {
         // Does xR match?
         BigInteger RX = R.getX().toBigInteger();
 
-        if(!BigIntegerHelper.equals(RX, xR)) {
+        if (!RX.equals(xR)) {
             // No, throw an exception
             throw new Exception("Failed at 2.1.3 1.2, R doesn't match xR.  Expected " + xR.toString(16) + ", got " + RX.toString(16));
         }
@@ -122,7 +121,7 @@ public class ECTest1Fp {
         // Does yR match?
         BigInteger RY = R.getY().toBigInteger();
 
-        if(!BigIntegerHelper.equals(RY, yR)) {
+        if (!RY.equals(yR)) {
             // No, throw an exception
             throw new Exception("Failed at 2.1.3 1.2, R doesn't match yR.  Expected " + yR.toString(16) + ", got " + RY.toString(16));
         }
@@ -131,7 +130,7 @@ public class ECTest1Fp {
         r = new BigInteger("1176954224688105769566774212902092897866168635793", 10).mod(secp160r1.getN());
 
         // Is r zero?
-        if(BigIntegerHelper.equals(r, BigInteger.ZERO)) {
+        if (r.equals(BigInteger.ZERO)) {
             // Yes, r cannot be zero
             throw new Exception("Failed at 2.1.3 3.2.  r cannot be zero.");
         }
@@ -141,7 +140,7 @@ public class ECTest1Fp {
         String rString = r.toString(16);
 
         // Is it correct?
-        if(!ECHelper.compare(rString, rOctetString)) {
+        if (!ECHelper.compare(rString, rOctetString)) {
             // No, throw an exception
             throw new Exception("Failed at 2.1.3 3.3.  Expected " + rOctetString + ", got " + rString);
         }
@@ -155,7 +154,7 @@ public class ECTest1Fp {
         String expectedMessageHash = "a9993e364706816aba3e25717850c26c9cd0d89d";
 
         // Is the hash what we expected?
-        if(!ECHelper.compare(H, expectedMessageHash)) {
+        if (!ECHelper.compare(H, expectedMessageHash)) {
             // No, throw an exception
             throw new Exception("Failed at 2.1.3 4.  Expected " + expectedMessageHash + ", got " + H);
         }
@@ -169,7 +168,7 @@ public class ECTest1Fp {
         String expectedBitString = "10101001 10011001 00111110 00110110 01000111 00000110 10000001 01101010 10111010 00111110 00100101 01110001 01111000 01010000 11000010 01101100 10011100 11010000 11011000 10011101";
 
         // Are they equal?
-        if(!ECHelper.compare(bitStringH, expectedBitString)) {
+        if (!ECHelper.compare(bitStringH, expectedBitString)) {
             // No, throw an exception
             throw new Exception("Failed at 2.1.3 5.1.  Expected " + expectedBitString + ", got " + bitStringH);
         }
@@ -177,7 +176,7 @@ public class ECTest1Fp {
         int lengthCheckValue = bitStringH.length() % 8;
 
         // TODO - Validate that this is what we should be checking.  The notation is a bit unclear to me in the docs.
-        if(lengthCheckValue != 0) {
+        if (lengthCheckValue != 0) {
             // No, throw an exception
             throw new Exception("Failed at 2.1.3 5.2.  Length of bit string for H must be 0 (mod 8).");
         }
@@ -192,7 +191,7 @@ public class ECTest1Fp {
         String expectedHexString = "A9993E364706816ABA3E25717850C26C9CD0D89D";
 
         // Are they equal?
-        if(!ECHelper.compare(hexStringE, expectedHexString)) {
+        if (!ECHelper.compare(hexStringE, expectedHexString)) {
             // No, throw an exception
             throw new Exception("Failed at 2.1.3 5.3.  Expected " + expectedHexString + ", got " + hexStringE);
         }
@@ -203,7 +202,7 @@ public class ECTest1Fp {
         BigInteger expectedE = new BigInteger("968236873715988614170569073515315707566766479517", 10);
 
         // Are they equal?
-        if(!BigIntegerHelper.equals(expectedE, E)) {
+        if (!expectedE.equals(E)) {
             // No, throw an exception
             throw new Exception("Failed at 2.1.3 5.4.  Expected " + expectedE + ", got " + E);
         }
@@ -216,7 +215,7 @@ public class ECTest1Fp {
         // Validate that s is not zero (mod n)
 
         // Is it zero (mod n)?
-        if(s.equals(BigInteger.ZERO)) {
+        if (s.equals(BigInteger.ZERO)) {
             // Yes, throw an exception
             throw new Exception("s cannot be zero (mod n)");
         }
@@ -225,7 +224,7 @@ public class ECTest1Fp {
         BigInteger expectedS = new BigInteger("299742580584132926933316745664091704165278518100", 10);
 
         // Is it equal to the value we expect?
-        if(!BigIntegerHelper.equals(s, expectedS)) {
+        if (!s.equals(expectedS)) {
             // No, throw an exception
             throw new Exception("Failed at 2.1.3 6.1.  Expected " + expectedS + ", got " + s);
         }
@@ -234,7 +233,7 @@ public class ECTest1Fp {
         String expectedSOctetString = "3480EC371A091A464B31CE47DF0CB8AA2D98B54";
 
         // Are they equal?
-        if(ECHelper.compare(s.toString(16), expectedSOctetString)) {
+        if (ECHelper.compare(s.toString(16), expectedSOctetString)) {
             // No, throw an exception
             throw new Exception("Failed at 2.1.3 6.3.  Expected " + expectedSOctetString + ", got " + s);
         }
@@ -261,7 +260,7 @@ public class ECTest1Fp {
         // Does u1 match our expectation?
         BigInteger expectedU1 = new BigInteger("126492345237556041805390442445971246551226394866", 10);
 
-        if(!BigIntegerHelper.equals(u1, expectedU1)) {
+        if (!u1.equals(expectedU1)) {
             // No, throw an exception
             throw new Exception("Failed at 2.1.4 4.  u1 didn't match.");
         }
@@ -272,7 +271,7 @@ public class ECTest1Fp {
         // Does u2 match our expectation?
         BigInteger expectedU2 = new BigInteger("642136937233451268764953375477669732399252982122", 10);
 
-        if(!BigIntegerHelper.equals(u2, expectedU2)) {
+        if (!u2.equals(expectedU2)) {
             // No, throw an exception
             throw new Exception("Failed at 2.1.4 4.  u2 didn't match.");
         }
@@ -288,12 +287,12 @@ public class ECTest1Fp {
         BigInteger expectedYr = new BigInteger("1130322298812061698910820170565981471918861336822", 10);
 
         // Are the points equal?
-        if(!BigIntegerHelper.equals(R.getX().toBigInteger(), expectedXr)) {
+        if (!R.getX().toBigInteger().equals(expectedXr)) {
             // No, throw an exception
             throw new Exception("Failed at 2.1.4 5.3.  xR didn't match.");
         }
 
-        if(!BigIntegerHelper.equals(R.getY().toBigInteger(), expectedYr)) {
+        if (!R.getY().toBigInteger().equals(expectedYr)) {
             // No, throw an exception
             throw new Exception("Failed at 2.1.4 5.3.  yR didn't match.");
         }
@@ -304,13 +303,13 @@ public class ECTest1Fp {
         // Validate that v is what we expect
         BigInteger expectedV = new BigInteger("1176954224688105769566774212902092897866168635793", 10);
 
-        if(!BigIntegerHelper.equals(v, expectedV)) {
+        if (!v.equals(expectedV)) {
             // No, throw an exception
             throw new Exception("Failed at 2.1.4 7.  v didn't match");
         }
 
         // Validate that v == r, are they equal?
-        if(!BigIntegerHelper.equals(v, R.getX().toBigInteger())) {
+        if (!v.equals(R.getX().toBigInteger())) {
             // No, throw an exception
             throw new Exception("Failed at 2.1.4 8.  v != r");
         }

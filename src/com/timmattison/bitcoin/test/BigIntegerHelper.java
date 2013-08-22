@@ -13,14 +13,4 @@ public class BigIntegerHelper {
     public static BigInteger squareBigInteger(BigInteger input) {
         return input.multiply(input);
     }
-
-   public static boolean equals(BigInteger first, BigInteger second) {
-        if ((first == null) || (second == null)) {
-            throw new UnsupportedOperationException("BigInteger values cannot be NULL");
-        }
-
-        int result = first.compareTo(second);
-
-        return (result == 0);
-    }
 }

@@ -1,6 +1,5 @@
 package com.timmattison.bitcoin.test.ecc.fp;
 
-import com.timmattison.bitcoin.test.BigIntegerHelper;
 import com.timmattison.bitcoin.test.ByteArrayHelper;
 
 import java.math.BigInteger;
@@ -29,7 +28,7 @@ public class ECTest2Fp {
 
         boolean valid = validateSignature(messageBytes, signature);
 
-        if(!valid) {
+        if (!valid) {
             throw new Exception("FAILED!");
         }
     }
@@ -48,8 +47,8 @@ public class ECTest2Fp {
         BigInteger r = R.getX().toBigInteger().mod(keyPair.getN());
 
         // Is r zero?
-        if(BigIntegerHelper.equals(r, BigInteger.ZERO)) {
-            // No, throw an exception
+        if (r.equals(BigInteger.ZERO)) {
+            // Yes, throw an exception
             throw new Exception("r cannot be zero");
         }
 
@@ -66,7 +65,7 @@ public class ECTest2Fp {
         BigInteger s = ECHelperFp.calculateS(keyPair, k, e, r);
 
         // Is it zero (mod n)?
-        if(s.equals(BigInteger.ZERO)) {
+        if (s.equals(BigInteger.ZERO)) {
             // Yes, throw an exception
             throw new Exception("s cannot be zero (mod n)");
         }
@@ -101,7 +100,7 @@ public class ECTest2Fp {
         BigInteger v = R.getX().toBigInteger().mod(signature.getN());
 
         // Validate that v == r, are they equal?
-        if(!BigIntegerHelper.equals(v, R.getX().toBigInteger())) {
+        if (!v.equals(R.getX().toBigInteger())) {
             // No, return failure
             return false;
         }

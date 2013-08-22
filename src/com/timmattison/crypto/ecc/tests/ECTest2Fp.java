@@ -66,7 +66,7 @@ public class ECTest2Fp {
         BigInteger r = R.getX().toBigInteger().mod(keyPair.getN());
 
         // Is r zero?
-        if (BigIntegerHelper.equals(r, BigInteger.ZERO)) {
+        if (r.equals(BigInteger.ZERO)) {
             // No, throw an exception
             throw new Exception("r cannot be zero");
         }
@@ -119,7 +119,7 @@ public class ECTest2Fp {
         BigInteger v = R.getX().toBigInteger().mod(signature.getN());
 
         // Validate that v == r, are they equal?
-        if (!BigIntegerHelper.equals(v, R.getX().toBigInteger())) {
+        if (!v.equals(R.getX().toBigInteger())) {
             // No, return failure
             return false;
         }
