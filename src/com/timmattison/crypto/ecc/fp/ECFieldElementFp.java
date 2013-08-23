@@ -5,7 +5,7 @@ import com.google.inject.assistedinject.AssistedInject;
 import com.timmattison.bitcoin.test.BigIntegerHelper;
 import com.timmattison.crypto.ecc.interfaces.ECCFieldElement;
 import com.timmattison.crypto.ecc.interfaces.ECCFieldElementFactory;
-import com.timmattison.crypto.ecc.interfaces.ECCFieldType;
+import com.timmattison.crypto.ecc.enums.ECCFieldType;
 
 import java.math.BigInteger;
 

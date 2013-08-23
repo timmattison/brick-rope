@@ -1,5 +1,7 @@
 package com.timmattison.crypto.ecc.interfaces;
 
+import com.timmattison.crypto.ecc.enums.ECCFieldType;
+
 /**
  * Created with IntelliJ IDEA.
  * User: Tim
