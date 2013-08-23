@@ -2,7 +2,6 @@ package com.timmattison.crypto.ecc.tests;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import com.timmattison.bitcoin.test.BigIntegerHelper;
 import com.timmattison.bitcoin.test.ByteArrayHelper;
 import com.timmattison.crypto.ecc.*;
 import org.junit.Test;
@@ -17,7 +16,7 @@ import java.security.MessageDigest;
  * Time: 7:23 AM
  * To change this template use File | Settings | File Templates.
  */
-public class ECTest2Fp {
+public class ECSigningTest {
     // (Chosen) Instantiate the dU value
     private final BigInteger dU = new BigInteger("971761939728640320549601132085879836204587084162", 10);
     // The message

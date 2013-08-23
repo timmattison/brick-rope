@@ -19,7 +19,7 @@ import java.security.MessageDigest;
  * Time: 7:23 AM
  * To change this template use File | Settings | File Templates.
  */
-public class ECTest1Fp {
+public class ECKeyDeploymentAndSigningTest {
     // (Chosen) Instantiate the dU value
     private final BigInteger dU = new BigInteger("971761939728640320549601132085879836204587084162", 10);
 
