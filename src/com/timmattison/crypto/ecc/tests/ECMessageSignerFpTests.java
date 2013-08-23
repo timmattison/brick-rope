@@ -3,6 +3,9 @@ package com.timmattison.crypto.ecc.tests;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.timmattison.crypto.ecc.interfaces.*;
+import com.timmattison.crypto.ecc.random.impl.BigIntegerRandomForTesting;
+import com.timmattison.crypto.ecc.random.impl.RealBigIntegerRandom;
+import com.timmattison.crypto.ecc.random.interfaces.BigIntegerRandom;
 import org.junit.Test;
 
 import java.math.BigInteger;
@@ -41,8 +44,10 @@ public class ECMessageSignerFpTests {
         return injector.getInstance(ECCKeyPairFactory.class).create(eccParameters, dU);
     }
 
-    private ECCMessageSigner getSigner(ECCKeyPair eccKeyPair, Random random) {
-        return injector.getInstance(ECCMessageSignerFactory.class).create(eccKeyPair, random);
+    private ECCMessageSigner getSigner(BigInteger valueToReturn, ECCKeyPair eccKeyPair) {
+        BigIntegerRandomForTesting bigIntegerRandom = injector.getInstance(BigIntegerRandomForTesting.class);
+        bigIntegerRandom.setValueToReturn(valueToReturn);
+        return injector.getInstance(ECCMessageSignerFactory.class).create(bigIntegerRandom, eccKeyPair);
     }
 
     /**
@@ -51,10 +56,12 @@ public class ECMessageSignerFpTests {
     @Test
     public void testGec2_2_1() {
         BigInteger dU = new BigInteger("971761939728640320549601132085879836204587084162");
-        ECCKeyPair eccKeyPair = getKeyPair(getSecp256k1(), dU);
+        ECCKeyPair eccKeyPair = getKeyPair(getSecp160r1(), dU);
 
         // XXX - How do I test a specific k here?  Maybe need to make a BigIntegerRandom interface first.
-        ECCMessageSigner signer = getSigner(eccKeyPair, new Random());
-                ECCSignature test = signer.signMessage("abc".getBytes());
+        ECCMessageSigner signer = getSigner(new BigInteger("702232148019446860144825009548118511996283736794"), eccKeyPair);
+        ECCSignature test = signer.signMessage("abc".getBytes());
+
+        int a = 5;
     }
 }

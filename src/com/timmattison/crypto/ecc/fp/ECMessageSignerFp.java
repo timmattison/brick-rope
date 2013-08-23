@@ -4,11 +4,11 @@ import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
 import com.timmattison.crypto.ecc.ECHelper;
 import com.timmattison.crypto.ecc.interfaces.*;
+import com.timmattison.crypto.ecc.random.interfaces.BigIntegerRandom;
 import com.timmattison.cryptocurrency.helpers.ByteArrayHelper;
 
 import java.math.BigInteger;
 import java.security.MessageDigest;
-import java.util.Random;
 
 /**
  * Created with IntelliJ IDEA.
@@ -18,29 +18,35 @@ import java.util.Random;
  * To change this template use File | Settings | File Templates.
  */
 public class ECMessageSignerFp implements ECCMessageSigner {
-    private final ECCSignatureFactory eccSignatureFactory;
-    private final ECCMessageSignerDigestFactory ECCMessageSignerDigestFactory;
-    private final Random random;
-    private final ECCKeyPair eccKeyPair;
+    private ECCSignatureFactory eccSignatureFactory;
+    private ECCMessageSignerDigestFactory eccMessageSignerDigestFactory;
+    private BigIntegerRandom bigIntegerRandom;
+    private ECCKeyPair eccKeyPair;
+
+    public ECMessageSignerFp() {
+
+    }
 
     @AssistedInject
-    public ECMessageSignerFp(ECCSignatureFactory eccSignatureFactory, ECCMessageSignerDigestFactory ECCMessageSignerDigestFactory, @Assisted("keyPair") ECCKeyPair eccKeyPair, @Assisted("random") Random random) {
+    public ECMessageSignerFp(ECCSignatureFactory eccSignatureFactory, ECCMessageSignerDigestFactory eccMessageSignerDigestFactory, @Assisted("bigIntegerRandom") BigIntegerRandom bigIntegerRandom, @Assisted("eccKeyPair") ECCKeyPair eccKeyPair) {
         this.eccSignatureFactory = eccSignatureFactory;
-        this.ECCMessageSignerDigestFactory = ECCMessageSignerDigestFactory;
-        this.random = random;
+        this.eccMessageSignerDigestFactory = eccMessageSignerDigestFactory;
+        this.bigIntegerRandom = bigIntegerRandom;
         this.eccKeyPair = eccKeyPair;
     }
 
     @Override
     public ECCSignature signMessage(byte[] messageBytes) {
         // Select a random k value that has the same number of bits as P
-        BigInteger k = new BigInteger((int) (Math.log(eccKeyPair.getECCParameters().getCurve().getP().doubleValue()) / Math.log(2)), random);
+        BigInteger k = bigIntegerRandom.getNext(eccKeyPair.getECCParameters().getCurve().getP());
 
         // Get the mod n value of k
         k = k.mod(eccKeyPair.getN());
 
+        ECCPoint G = eccKeyPair.getG();
+
         // Compute R = (xR, yR) = k * G
-        ECCPoint R = eccKeyPair.getG().multiply(k);
+        ECCPoint R = G.multiply(k);
 
         // Derive an integer r from xR (mod n)
         BigInteger r = R.getX().toBigInteger().mod(eccKeyPair.getN());
@@ -52,12 +58,13 @@ public class ECMessageSignerFp implements ECCMessageSigner {
         }
 
         // Hash the message with SHA-1
-        MessageDigest md = ECCMessageSignerDigestFactory.create();
+        MessageDigest md = eccMessageSignerDigestFactory.create();
         md.update(messageBytes);
         byte[] hashBytes = md.digest();
         String H = ByteArrayHelper.toHex(md.digest());
 
         // Calculate e
+        XXX This is broken!
         BigInteger e = ECHelper.calculateE(eccKeyPair, H, hashBytes);
 
         // Compute s -  s = k^-1(e + dU * r) (mod n)
