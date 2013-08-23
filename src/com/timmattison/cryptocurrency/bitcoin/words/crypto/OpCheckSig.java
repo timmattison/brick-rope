@@ -2,7 +2,7 @@ package com.timmattison.cryptocurrency.bitcoin.words.crypto;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import com.timmattison.crypto.ecc.ECCPoint;
+import com.timmattison.crypto.ecc.interfaces.ECCPoint;
 import com.timmattison.crypto.ecc.ECHelper;
 import com.timmattison.crypto.ecc.fp.ECSignatureFp;
 import com.timmattison.cryptocurrency.bitcoin.BitcoinHashType;

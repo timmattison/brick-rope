@@ -2,10 +2,10 @@ package com.timmattison.crypto.ecc.tests;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import com.timmattison.crypto.ecc.ECCCurveFactory;
-import com.timmattison.crypto.ecc.ECCParameters;
-import com.timmattison.crypto.ecc.ECCPoint;
-import com.timmattison.crypto.ecc.ECCPointFactory;
+import com.timmattison.crypto.ecc.interfaces.ECCCurveFactory;
+import com.timmattison.crypto.ecc.interfaces.ECCParameters;
+import com.timmattison.crypto.ecc.interfaces.ECCPoint;
+import com.timmattison.crypto.ecc.interfaces.ECCPointFactory;
 import org.junit.Assert;
 import org.junit.Test;
 

@@ -4,6 +4,7 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.timmattison.bitcoin.test.ByteArrayHelper;
 import com.timmattison.crypto.ecc.*;
+import com.timmattison.crypto.ecc.interfaces.*;
 import org.junit.Test;
 
 import java.math.BigInteger;

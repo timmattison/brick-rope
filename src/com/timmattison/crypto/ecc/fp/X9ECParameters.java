@@ -2,10 +2,10 @@ package com.timmattison.crypto.ecc.fp;
 
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
-import com.timmattison.crypto.ecc.ECCCurve;
-import com.timmattison.crypto.ecc.ECCFieldType;
-import com.timmattison.crypto.ecc.ECCParameters;
-import com.timmattison.crypto.ecc.ECCPoint;
+import com.timmattison.crypto.ecc.interfaces.ECCCurve;
+import com.timmattison.crypto.ecc.interfaces.ECCFieldType;
+import com.timmattison.crypto.ecc.interfaces.ECCParameters;
+import com.timmattison.crypto.ecc.interfaces.ECCPoint;
 
 import java.math.BigInteger;
 

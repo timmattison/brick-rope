@@ -1,8 +1,8 @@
 package com.timmattison.cryptocurrency.bitcoin;
 
 import com.google.inject.Inject;
-import com.timmattison.crypto.ecc.ECCNamedCurve;
-import com.timmattison.crypto.ecc.ECCParameters;
+import com.timmattison.crypto.ecc.interfaces.ECCNamedCurve;
+import com.timmattison.crypto.ecc.interfaces.ECCParameters;
 import com.timmattison.cryptocurrency.factories.ECCParamsFactory;
 
 /**

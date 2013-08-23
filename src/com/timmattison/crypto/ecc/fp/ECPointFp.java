@@ -2,7 +2,7 @@ package com.timmattison.crypto.ecc.fp;
 
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
-import com.timmattison.crypto.ecc.*;
+import com.timmattison.crypto.ecc.interfaces.*;
 
 import javax.annotation.Nullable;
 import java.math.BigInteger;

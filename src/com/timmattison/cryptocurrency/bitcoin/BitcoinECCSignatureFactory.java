@@ -1,12 +1,9 @@
 package com.timmattison.cryptocurrency.bitcoin;
 
 import com.google.inject.Inject;
-import com.timmattison.crypto.ecc.ECCParameters;
-import com.timmattison.crypto.ecc.ECCPoint;
-import com.timmattison.crypto.ecc.ECCSignature;
-import com.timmattison.crypto.ecc.fp.ECPointFp;
-import com.timmattison.crypto.ecc.fp.ECSignatureFp;
-import com.timmattison.crypto.ecc.fp.X9ECParameters;
+import com.timmattison.crypto.ecc.interfaces.ECCParameters;
+import com.timmattison.crypto.ecc.interfaces.ECCPoint;
+import com.timmattison.crypto.ecc.interfaces.ECCSignature;
 import com.timmattison.cryptocurrency.factories.ECCSignatureFactory;
 
 import java.math.BigInteger;

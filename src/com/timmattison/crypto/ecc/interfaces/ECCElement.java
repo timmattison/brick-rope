@@ -1,4 +1,4 @@
-package com.timmattison.crypto.ecc;
+package com.timmattison.crypto.ecc.interfaces;
 
 /**
  * Created with IntelliJ IDEA.

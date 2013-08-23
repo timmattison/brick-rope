@@ -1,7 +1,6 @@
 package com.timmattison.crypto.ecc.fp;
 
-import com.google.inject.assistedinject.AssistedInject;
-import com.timmattison.crypto.ecc.*;
+import com.timmattison.crypto.ecc.interfaces.*;
 
 import javax.inject.Inject;
 import java.math.BigInteger;

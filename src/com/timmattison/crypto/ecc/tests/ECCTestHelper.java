@@ -1,7 +1,7 @@
 package com.timmattison.crypto.ecc.tests;
 
 import com.google.inject.Injector;
-import com.timmattison.crypto.ecc.*;
+import com.timmattison.crypto.ecc.interfaces.*;
 
 import java.math.BigInteger;
 

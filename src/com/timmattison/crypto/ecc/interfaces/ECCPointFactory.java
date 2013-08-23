@@ -1,10 +1,6 @@
-package com.timmattison.crypto.ecc;
+package com.timmattison.crypto.ecc.interfaces;
 
 import com.google.inject.assistedinject.Assisted;
-import com.google.inject.internal.util.$Nullable;
-
-import javax.annotation.Nullable;
-import java.math.BigInteger;
 
 /**
  * Created with IntelliJ IDEA.

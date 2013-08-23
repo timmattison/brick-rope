@@ -3,9 +3,9 @@ package com.timmattison.crypto.ecc.fp;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
 import com.timmattison.bitcoin.test.BigIntegerHelper;
-import com.timmattison.crypto.ecc.ECCFieldElement;
-import com.timmattison.crypto.ecc.ECCFieldElementFactory;
-import com.timmattison.crypto.ecc.ECCFieldType;
+import com.timmattison.crypto.ecc.interfaces.ECCFieldElement;
+import com.timmattison.crypto.ecc.interfaces.ECCFieldElementFactory;
+import com.timmattison.crypto.ecc.interfaces.ECCFieldType;
 
 import java.math.BigInteger;
 

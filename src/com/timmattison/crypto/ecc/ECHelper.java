@@ -1,5 +1,8 @@
 package com.timmattison.crypto.ecc;
 
+import com.timmattison.crypto.ecc.interfaces.ECCKeyPair;
+import com.timmattison.crypto.ecc.interfaces.ECCParameters;
+
 import java.math.BigInteger;
 
 /**

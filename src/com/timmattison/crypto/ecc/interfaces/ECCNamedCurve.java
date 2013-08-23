@@ -1,7 +1,4 @@
-package com.timmattison.crypto.ecc;
-
-import javax.inject.Inject;
-import java.math.BigInteger;
+package com.timmattison.crypto.ecc.interfaces;
 
 /**
  * Created with IntelliJ IDEA.

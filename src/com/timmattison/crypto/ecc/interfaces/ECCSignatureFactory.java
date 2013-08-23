@@ -1,4 +1,4 @@
-package com.timmattison.crypto.ecc;
+package com.timmattison.crypto.ecc.interfaces;
 
 import com.google.inject.assistedinject.Assisted;
 

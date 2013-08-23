@@ -1,7 +1,4 @@
-package com.timmattison.crypto.ecc;
-
-import com.timmattison.crypto.ecc.fp.ECPointFp;
-import com.timmattison.crypto.ecc.fp.X9ECParameters;
+package com.timmattison.crypto.ecc.interfaces;
 
 import java.math.BigInteger;
 

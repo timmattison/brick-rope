@@ -2,8 +2,8 @@ package com.timmattison.crypto.ecc.tests;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
-import com.timmattison.crypto.ecc.*;
 import com.timmattison.crypto.ecc.fp.*;
+import com.timmattison.crypto.ecc.interfaces.*;
 
 /**
  * Created with IntelliJ IDEA.

@@ -1,10 +1,8 @@
 package com.timmattison.cryptocurrency.factories;
 
-import com.timmattison.crypto.ecc.ECCParameters;
-import com.timmattison.crypto.ecc.ECCPoint;
-import com.timmattison.crypto.ecc.ECCSignature;
-import com.timmattison.crypto.ecc.fp.ECSignatureFp;
-import com.timmattison.crypto.ecc.fp.X9ECParameters;
+import com.timmattison.crypto.ecc.interfaces.ECCParameters;
+import com.timmattison.crypto.ecc.interfaces.ECCPoint;
+import com.timmattison.crypto.ecc.interfaces.ECCSignature;
 
 import java.math.BigInteger;
 
