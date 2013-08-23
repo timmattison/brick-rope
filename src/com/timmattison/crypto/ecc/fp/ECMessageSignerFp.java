@@ -2,7 +2,7 @@ package com.timmattison.crypto.ecc.fp;
 
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
-import com.timmattison.crypto.ecc.*;
+import com.timmattison.crypto.ecc.ECHelper;
 import com.timmattison.crypto.ecc.interfaces.*;
 import com.timmattison.cryptocurrency.helpers.ByteArrayHelper;
 
@@ -31,7 +31,8 @@ public class ECMessageSignerFp implements ECCMessageSigner {
         this.eccKeyPair = eccKeyPair;
     }
 
-    public ECCSignature signMessage(byte[] messageBytes) throws Exception {
+    @Override
+    public ECCSignature signMessage(byte[] messageBytes) {
         // Select a random k value that has the same number of bits as P
         BigInteger k = new BigInteger((int) (Math.log(eccKeyPair.getECCParameters().getCurve().getP().doubleValue()) / Math.log(2)), random);
 
@@ -47,7 +48,7 @@ public class ECMessageSignerFp implements ECCMessageSigner {
         // Is r zero?
         if (r.equals(BigInteger.ZERO)) {
             // No, throw an exception
-            throw new Exception("r cannot be zero");
+            throw new UnsupportedOperationException("r cannot be zero");
         }
 
         // Hash the message with SHA-1
@@ -65,7 +66,7 @@ public class ECMessageSignerFp implements ECCMessageSigner {
         // Is it zero (mod n)?
         if (s.equals(BigInteger.ZERO)) {
             // Yes, throw an exception
-            throw new Exception("s cannot be zero (mod n)");
+            throw new UnsupportedOperationException("s cannot be zero (mod n)");
         }
 
         return eccSignatureFactory.create(eccKeyPair.getECCParameters(), r, s, eccKeyPair.getQ());

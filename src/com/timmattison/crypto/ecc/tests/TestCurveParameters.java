@@ -17,7 +17,6 @@ public class TestCurveParameters {
     private ECCParametersFactory eccParametersFactory;
     private ECCFieldElementFactory eccFieldElementFactory;
     private ECCPointFactory eccPointFactory;
-    private ECCParameters smallCurve2;
 
     public TestCurveParameters() {
     }

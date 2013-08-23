@@ -8,4 +8,5 @@ package com.timmattison.crypto.ecc.interfaces;
  * To change this template use File | Settings | File Templates.
  */
 public interface ECCMessageSigner {
+    ECCSignature signMessage(byte[] messageBytes);
 }
