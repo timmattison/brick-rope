@@ -2,6 +2,7 @@ package com.timmattison.crypto.ecc.tests;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
+import com.timmattison.crypto.ecc.factories.SHA1MessageSignerDigestFactory;
 import com.timmattison.crypto.ecc.fp.*;
 import com.timmattison.crypto.ecc.interfaces.*;
 
@@ -32,5 +33,10 @@ public class ECCTestModule extends AbstractModule {
         install(new FactoryModuleBuilder().implement(ECCPoint.class, ECPointFp.class).build(ECCPointFactory.class));
         install(new FactoryModuleBuilder().implement(ECCKeyPair.class, ECKeyPairFp.class).build(ECCKeyPairFactory.class));
         install(new FactoryModuleBuilder().implement(ECCSignature.class, ECSignatureFp.class).build(ECCSignatureFactory.class));
+
+        // Message signing
+        bind(ECCMessageSigner.class).to(ECMessageSignerFp.class);
+        install(new FactoryModuleBuilder().implement(ECCMessageSigner.class, ECMessageSignerFp.class).build(ECCMessageSignerFactory.class));
+        install(new FactoryModuleBuilder().implement(ECCMessageSignerDigestFactory.class, SHA1MessageSignerDigestFactory.class).build(ECCMessageSignerDigestFactory.class));
     }
 }

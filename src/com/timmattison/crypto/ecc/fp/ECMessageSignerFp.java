@@ -19,14 +19,14 @@ import java.util.Random;
  */
 public class ECMessageSignerFp implements ECCMessageSigner {
     private final ECCSignatureFactory eccSignatureFactory;
-    private final MessageDigestFactory messageDigestFactory;
+    private final ECCMessageSignerDigestFactory ECCMessageSignerDigestFactory;
     private final Random random;
     private final ECCKeyPair eccKeyPair;
 
     @AssistedInject
-    public ECMessageSignerFp(ECCSignatureFactory eccSignatureFactory, MessageDigestFactory messageDigestFactory, Random random, @Assisted("keyPair") ECCKeyPair eccKeyPair) {
+    public ECMessageSignerFp(ECCSignatureFactory eccSignatureFactory, ECCMessageSignerDigestFactory ECCMessageSignerDigestFactory, @Assisted("keyPair") ECCKeyPair eccKeyPair, @Assisted("random") Random random) {
         this.eccSignatureFactory = eccSignatureFactory;
-        this.messageDigestFactory = messageDigestFactory;
+        this.ECCMessageSignerDigestFactory = ECCMessageSignerDigestFactory;
         this.random = random;
         this.eccKeyPair = eccKeyPair;
     }
@@ -51,7 +51,7 @@ public class ECMessageSignerFp implements ECCMessageSigner {
         }
 
         // Hash the message with SHA-1
-        MessageDigest md = messageDigestFactory.create();
+        MessageDigest md = ECCMessageSignerDigestFactory.create();
         md.update(messageBytes);
         byte[] hashBytes = md.digest();
         String H = ByteArrayHelper.toHex(md.digest());

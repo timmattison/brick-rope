@@ -9,6 +9,6 @@ import java.security.MessageDigest;
  * Time: 6:58 PM
  * To change this template use File | Settings | File Templates.
  */
-public interface MessageDigestFactory {
+public interface ECCMessageSignerDigestFactory {
     MessageDigest create();
 }
