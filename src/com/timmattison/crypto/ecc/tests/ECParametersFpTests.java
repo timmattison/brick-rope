@@ -50,7 +50,7 @@ public class ECParametersFpTests {
         ECCParameters eccParameters1 = getSecp160r1();
         ECCParameters eccParameters2 = getSecp160r1();
 
-        Assert.assertNotEquals(eccParameters1, eccParameters2);
+        Assert.assertEquals(eccParameters1, eccParameters2);
     }
 
     @Test
