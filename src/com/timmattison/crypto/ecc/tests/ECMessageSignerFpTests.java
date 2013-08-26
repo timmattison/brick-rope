@@ -18,20 +18,9 @@ import java.math.BigInteger;
  */
 public class ECMessageSignerFpTests {
     static Injector injector = Guice.createInjector(new ECCTestModule());
-    ECCCurveFactory eccCurveFactory = injector.getInstance(ECCCurveFactory.class);
-    ECCPointFactory eccPointFactory = injector.getInstance(ECCPointFactory.class);
-    ECCParametersFactory eccParametersFactory = injector.getInstance(ECCParametersFactory.class);
 
     private static ECCParameters getSecp160r1() {
         return injector.getInstance(ECCNamedCurveFactory.class).create().getSecp160r1();
-    }
-
-    private ECCPoint getPoint(ECCParameters eccParameters, BigInteger x, BigInteger y) {
-        ECCPointFactory eccPointFactory = injector.getInstance(ECCPointFactory.class);
-        ECCCurve curve = eccParameters.getCurve();
-        ECCFieldElement xFieldElement = curve.fromBigInteger(x);
-        ECCFieldElement yFieldElement = curve.fromBigInteger(y);
-        return eccPointFactory.create(curve, xFieldElement, yFieldElement);
     }
 
     private static ECCKeyPair getKeyPair(ECCParameters eccParameters, BigInteger dU) {
@@ -75,13 +64,6 @@ public class ECMessageSignerFpTests {
      */
     @Test
     public void testGec2_1_4() {
-        BigInteger n = getSecp160r1().getN();
-
-        // r and s must be integers in the interval [1, n - 1]
-        BigInteger two = BigInteger.valueOf(2);
-
-        ECCMessageSignatureVerifier signatureVerifier = getSignatureVerifier();
-
-        Assert.assertTrue(signatureVerifier.signatureValid(getSecp160r1(), gec2_2_1_3_messageBytes, gec2_2_1_4_Qu, gec2_2_1_3_r, gec2_2_1_3_s));
+        Assert.assertTrue(getSignatureVerifier().signatureValid(getSecp160r1(), gec2_2_1_3_messageBytes, gec2_2_1_4_Qu, gec2_2_1_3_r, gec2_2_1_3_s));
     }
 }

@@ -20,8 +20,6 @@ import java.math.BigInteger;
  */
 public class ECPointFpTests {
     Injector injector = Guice.createInjector(new ECCTestModule());
-    ECCCurveFactory eccCurveFactory = injector.getInstance(ECCCurveFactory.class);
-    ECCPointFactory eccPointFactory = injector.getInstance(ECCPointFactory.class);
 
     private ECCParameters getSmallCurve1Parameters() {
         return injector.getInstance(TestCurveParameters.class).getSmallCurve1Parameters();
