@@ -24,6 +24,7 @@ public class ECCurveFp implements ECCCurve {
     private ECCFieldElement a;
     private ECCFieldElement b;
 
+    // Required or Guice throws exceptions
     public ECCurveFp() {
     }
 
