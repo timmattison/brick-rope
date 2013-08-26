@@ -61,10 +61,9 @@ public class ECMessageSignerFp implements ECCMessageSigner {
         MessageDigest md = eccMessageSignerDigestFactory.create();
         md.update(messageBytes);
         byte[] hashBytes = md.digest();
-        String H = ByteArrayHelper.toHex(md.digest());
+        String H = ByteArrayHelper.toHex(hashBytes);
 
         // Calculate e
-        XXX This is broken!
         BigInteger e = ECHelper.calculateE(eccKeyPair, H, hashBytes);
 
         // Compute s -  s = k^-1(e + dU * r) (mod n)
