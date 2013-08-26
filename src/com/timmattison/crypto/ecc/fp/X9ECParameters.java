@@ -2,8 +2,8 @@ package com.timmattison.crypto.ecc.fp;
 
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
-import com.timmattison.crypto.ecc.interfaces.ECCCurve;
 import com.timmattison.crypto.ecc.enums.ECCFieldType;
+import com.timmattison.crypto.ecc.interfaces.ECCCurve;
 import com.timmattison.crypto.ecc.interfaces.ECCParameters;
 import com.timmattison.crypto.ecc.interfaces.ECCPoint;
 
@@ -23,6 +23,17 @@ public class X9ECParameters implements ECCParameters {
     private BigInteger h;
 
     public X9ECParameters() {
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof ECCParameters)) {
+            return false;
+        }
+
+        ECCParameters other = (ECCParameters) obj;
+
+        return other.getCurve().equals(this.getCurve()) && other.getN().equals(this.getN()) && other.getG().equals(this.getG()) && other.getH().equals(this.getH());
     }
 
     @AssistedInject
