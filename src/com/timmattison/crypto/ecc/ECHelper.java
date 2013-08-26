@@ -64,6 +64,13 @@ public class ECHelper {
         return calculateE(keyPair.getN(), hashHexString, hashBytes);
     }
 
+    /**
+     * Implements section 2.3.8 of SEC 1
+     * @param n
+     * @param hashHexString
+     * @param hashBytes
+     * @return
+     */
     private static BigInteger calculateE(BigInteger n, String hashHexString, byte[] hashBytes) {
         // If the ceiling of log_2 n >= (hashlen * 8) then e = H
         // Otherwise set e = leftmost log_2 n bits of H

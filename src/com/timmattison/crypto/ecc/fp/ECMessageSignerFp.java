@@ -57,7 +57,7 @@ public class ECMessageSignerFp implements ECCMessageSigner {
             throw new UnsupportedOperationException("r cannot be zero");
         }
 
-        // Hash the message with SHA-1
+        // Hash the message
         MessageDigest md = eccMessageSignerDigestFactory.create();
         md.update(messageBytes);
         byte[] hashBytes = md.digest();
