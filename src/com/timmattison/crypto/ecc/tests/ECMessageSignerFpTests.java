@@ -63,7 +63,7 @@ public class ECMessageSignerFpTests {
      * GEC2 2.1.4 - Verifying operation for V
      */
     @Test
-    public void testGec2_1_4() {
+    public void testGec2_2_1_4() {
         Assert.assertTrue(getSignatureVerifier().signatureValid(getSecp160r1(), gec2_2_1_3_messageBytes, gec2_2_1_4_Qu, gec2_2_1_3_r, gec2_2_1_3_s));
     }
 }
