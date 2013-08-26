@@ -21,6 +21,8 @@ import java.security.MessageDigest;
 public class ECMessageSignatureVerifierFp implements ECCMessageSignatureVerifier {
     private final ECCMessageSignerDigestFactory eccMessageSignerDigestFactory;
 
+    private final static BigInteger two = BigInteger.valueOf(2);
+
     @Inject
     public ECMessageSignatureVerifierFp(ECCMessageSignerDigestFactory eccMessageSignerDigestFactory) {
         this.eccMessageSignerDigestFactory = eccMessageSignerDigestFactory;
@@ -33,6 +35,24 @@ public class ECMessageSignatureVerifierFp implements ECCMessageSignatureVerifier
         md.update(messageBytes);
         byte[] hashBytes = md.digest();
         String H = ByteArrayHelper.toHex(hashBytes);
+
+        // r and s must be >= 2
+        if (r.compareTo(two) < 0) {
+            return false;
+        }
+
+        if (s.compareTo(two) < 0) {
+            return false;
+        }
+
+        // r and s must be < n
+        if (r.compareTo(eccParameters.getN()) >= 0) {
+            return false;
+        }
+
+        if (s.compareTo(eccParameters.getN()) >= 0) {
+            return false;
+        }
 
         BigInteger e = ECHelper.calculateE(eccParameters, H, hashBytes);
 

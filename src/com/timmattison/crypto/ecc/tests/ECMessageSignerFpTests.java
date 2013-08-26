@@ -48,27 +48,26 @@ public class ECMessageSignerFpTests {
         return injector.getInstance(ECCMessageSignerFactory.class).create(bigIntegerRandom, eccKeyPair);
     }
 
-    private static final BigInteger gec2_1_3_r = new BigInteger("1176954224688105769566774212902092897866168635793");
-    private static final BigInteger gec2_1_3_s = new BigInteger("299742580584132926933316745664091704165278518100");
-    private static final BigInteger gec2_1_3_chosenK = new BigInteger("702232148019446860144825009548118511996283736794");
-    private static final BigInteger gec2_1_3_dU = new BigInteger("971761939728640320549601132085879836204587084162");
-    private static final ECCKeyPair eccKeyPair = getKeyPair(getSecp160r1(), gec2_1_3_dU);
-    private static final ECCPoint gec2_1_4_Qu = eccKeyPair.getQ();
-    private static final byte[] gec2_1_3_messageBytes = "abc".getBytes();
+    private static final BigInteger gec2_2_1_3_r = new BigInteger("1176954224688105769566774212902092897866168635793");
+    private static final BigInteger gec2_2_1_3_s = new BigInteger("299742580584132926933316745664091704165278518100");
+    private static final BigInteger gec2_2_1_3_chosenK = new BigInteger("702232148019446860144825009548118511996283736794");
+    private static final BigInteger gec2_2_1_3_dU = new BigInteger("971761939728640320549601132085879836204587084162");
+    private static final byte[] gec2_2_1_3_messageBytes = "abc".getBytes();
+    private static final ECCKeyPair gec2_eccKeyPair = getKeyPair(getSecp160r1(), gec2_2_1_3_dU);
+    private static final ECCPoint gec2_2_1_4_Qu = gec2_eccKeyPair.getQ();
 
     /**
      * GEC2 2.1.3 - Signing operation for U
      */
     @Test
-    public void testGec2_1_3() {
-
+    public void testGec2_2_1_3() {
         // Specific k value set
-        ECCMessageSigner signer = getSigner(gec2_1_3_chosenK, eccKeyPair);
-        ECCSignature test = signer.signMessage(gec2_1_3_messageBytes);
+        ECCMessageSigner signer = getSigner(gec2_2_1_3_chosenK, gec2_eccKeyPair);
+        ECCSignature test = signer.signMessage(gec2_2_1_3_messageBytes);
 
         // Validate the signature
-        Assert.assertEquals(gec2_1_3_r, test.getR());
-        Assert.assertEquals(gec2_1_3_s, test.getS());
+        Assert.assertEquals(gec2_2_1_3_r, test.getR());
+        Assert.assertEquals(gec2_2_1_3_s, test.getS());
     }
 
     /**
@@ -76,24 +75,13 @@ public class ECMessageSignerFpTests {
      */
     @Test
     public void testGec2_1_4() {
-        BigInteger r = gec2_1_3_r;
-        BigInteger s = gec2_1_3_r;
-
         BigInteger n = getSecp160r1().getN();
 
         // r and s must be integers in the interval [1, n - 1]
         BigInteger two = BigInteger.valueOf(2);
 
-        // r and s must be >= 2
-        Assert.assertTrue(r.compareTo(two) >= 0);
-        Assert.assertTrue(s.compareTo(two) >= 0);
-
-        // r and s must be < n
-        Assert.assertTrue(r.compareTo(n) < 0);
-        Assert.assertTrue(s.compareTo(n) < 0);
-
         ECCMessageSignatureVerifier signatureVerifier = getSignatureVerifier();
 
-        Assert.assertTrue(signatureVerifier.signatureValid(getSecp160r1(), gec2_1_3_messageBytes, gec2_1_4_Qu, gec2_1_3_r, gec2_1_3_s));
+        Assert.assertTrue(signatureVerifier.signatureValid(getSecp160r1(), gec2_2_1_3_messageBytes, gec2_2_1_4_Qu, gec2_2_1_3_r, gec2_2_1_3_s));
     }
 }
