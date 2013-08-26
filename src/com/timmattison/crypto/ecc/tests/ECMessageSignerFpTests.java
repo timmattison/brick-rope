@@ -6,6 +6,7 @@ import com.timmattison.crypto.ecc.interfaces.*;
 import com.timmattison.crypto.ecc.random.impl.BigIntegerRandomForTesting;
 import com.timmattison.crypto.ecc.random.impl.RealBigIntegerRandom;
 import com.timmattison.crypto.ecc.random.interfaces.BigIntegerRandom;
+import junit.framework.Assert;
 import org.junit.Test;
 
 import java.math.BigInteger;
@@ -55,13 +56,19 @@ public class ECMessageSignerFpTests {
      */
     @Test
     public void testGec2_2_1() {
+        BigInteger chosenK = new BigInteger("702232148019446860144825009548118511996283736794");
         BigInteger dU = new BigInteger("971761939728640320549601132085879836204587084162");
         ECCKeyPair eccKeyPair = getKeyPair(getSecp160r1(), dU);
 
-        // XXX - How do I test a specific k here?  Maybe need to make a BigIntegerRandom interface first.
-        ECCMessageSigner signer = getSigner(new BigInteger("702232148019446860144825009548118511996283736794"), eccKeyPair);
+        // Specific k value set
+        ECCMessageSigner signer = getSigner(chosenK, eccKeyPair);
         ECCSignature test = signer.signMessage("abc".getBytes());
 
-        int a = 5;
+        // Validate the signature
+        BigInteger r = new BigInteger("1176954224688105769566774212902092897866168635793");
+        BigInteger s = new BigInteger("299742580584132926933316745664091704165278518100");
+
+        Assert.assertEquals(r, test.getR());
+        Assert.assertEquals(s, test.getS());
     }
 }
