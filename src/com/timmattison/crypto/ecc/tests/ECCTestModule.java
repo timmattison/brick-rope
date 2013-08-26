@@ -22,7 +22,6 @@ import java.util.Random;
 public class ECCTestModule extends AbstractModule {
     @Override
     protected void configure() {
-        // XXX - Aren't these redundant?
         bind(ECCCurve.class).to(ECCurveFp.class);
         bind(ECCNamedCurve.class).to(SECNamedCurve.class);
         bind(ECCParameters.class).to(X9ECParameters.class);
@@ -46,5 +45,6 @@ public class ECCTestModule extends AbstractModule {
         bind(ECCMessageSignerDigestFactory.class).to(SHA1MessageSignerDigestFactory.class);
         bind(BigIntegerRandom.class).to(RealBigIntegerRandom.class);
         install(new FactoryModuleBuilder().implement(Random.class, Random.class).build(RandomFactory.class));
+        install(new FactoryModuleBuilder().implement(ECCMessageSignatureVerifier.class, ECMessageSignatureVerifierFp.class).build(ECCMessageSignatureVerifierFactory.class));
     }
 }

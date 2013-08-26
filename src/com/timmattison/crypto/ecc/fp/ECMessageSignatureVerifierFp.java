@@ -27,7 +27,7 @@ public class ECMessageSignatureVerifierFp implements ECCMessageSignatureVerifier
     }
 
     @Override
-    public boolean signatureValid(ECCParameters eccParameters, byte[] messageBytes, ECPointFp qU, BigInteger r, BigInteger s) {
+    public boolean signatureValid(ECCParameters eccParameters, byte[] messageBytes, ECCPoint qU, BigInteger r, BigInteger s) {
         // Hash the message
         MessageDigest md = eccMessageSignerDigestFactory.create();
         md.update(messageBytes);
