@@ -2,6 +2,9 @@ package com.timmattison.crypto.ecc.tests;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import com.timmattison.crypto.ecc.enums.ECCFieldType;
+import com.timmattison.crypto.ecc.interfaces.ECCCurve;
+import com.timmattison.crypto.ecc.interfaces.ECCParameters;
 import com.timmattison.crypto.ecc.interfaces.ECCPoint;
 import org.junit.Assert;
 import org.junit.Test;
@@ -40,5 +43,20 @@ public class ECPointFpTests {
         ECCPoint eccPoint2 = ECCTestHelper.getPoint(injector, ECCTestHelper.getSmallCurve1Parameters(injector), BigInteger.valueOf(5), BigInteger.valueOf(4));
 
         Assert.assertNotEquals(eccPoint1, eccPoint2);
+    }
+
+    @Test
+    public void testShouldReturnFp() {
+        ECCPoint eccPoint = ECCTestHelper.getPoint(injector, ECCTestHelper.getSmallCurve1Parameters(injector), BigInteger.valueOf(5), BigInteger.valueOf(5));
+
+        Assert.assertEquals(ECCFieldType.Fp, eccPoint.getECCFieldType());
+    }
+
+    @Test
+    public void testShouldNotEqual() {
+        ECCParameters eccParameters = ECCTestHelper.getSmallCurve1Parameters(injector);
+        ECCPoint eccPoint = ECCTestHelper.getPoint(injector, ECCTestHelper.getSmallCurve1Parameters(injector), BigInteger.valueOf(5), BigInteger.valueOf(5));
+
+        Assert.assertFalse(eccPoint.equals(eccParameters));
     }
 }
