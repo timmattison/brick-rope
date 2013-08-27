@@ -60,4 +60,29 @@ public class ECMessageSignerFpTests {
     public void testSIsZeroReturnsFalse() {
         Assert.assertFalse(ECCTestHelper.getSignatureVerifier(injector).signatureValid(ECCTestHelper.getSecp160r1(injector), gec2_2_1_3_messageBytes, gec2_2_1_4_Qu, gec2_2_1_3_r, BigInteger.ZERO));
     }
+
+    @Test
+    public void testRIsEqualToNReturnsFalse() {
+        Assert.assertFalse(ECCTestHelper.getSignatureVerifier(injector).signatureValid(ECCTestHelper.getSecp160r1(injector), gec2_2_1_3_messageBytes, gec2_2_1_4_Qu, ECCTestHelper.getSecp160r1(injector).getN(), gec2_2_1_3_s));
+    }
+
+    @Test
+    public void testSIsEqualToNReturnsFalse() {
+        Assert.assertFalse(ECCTestHelper.getSignatureVerifier(injector).signatureValid(ECCTestHelper.getSecp160r1(injector), gec2_2_1_3_messageBytes, gec2_2_1_4_Qu, gec2_2_1_3_r, ECCTestHelper.getSecp160r1(injector).getN()));
+    }
+
+    @Test
+    public void testRIsGreaterThanNReturnsFalse() {
+        Assert.assertFalse(ECCTestHelper.getSignatureVerifier(injector).signatureValid(ECCTestHelper.getSecp160r1(injector), gec2_2_1_3_messageBytes, gec2_2_1_4_Qu, ECCTestHelper.getSecp160r1(injector).getN().add(BigInteger.ONE), gec2_2_1_3_s));
+    }
+
+    @Test
+    public void testSIsGreaterThanNReturnsFalse() {
+        Assert.assertFalse(ECCTestHelper.getSignatureVerifier(injector).signatureValid(ECCTestHelper.getSecp160r1(injector), gec2_2_1_3_messageBytes, gec2_2_1_4_Qu, gec2_2_1_3_r, ECCTestHelper.getSecp160r1(injector).getN().add(BigInteger.ONE)));
+    }
+
+    @Test
+    public void testFailsWithInvalidSignature() {
+        Assert.assertFalse(ECCTestHelper.getSignatureVerifier(injector).signatureValid(ECCTestHelper.getSecp160r1(injector), gec2_2_1_3_messageBytes, gec2_2_1_4_Qu.twice(), gec2_2_1_3_r, gec2_2_1_3_s));
+    }
 }
