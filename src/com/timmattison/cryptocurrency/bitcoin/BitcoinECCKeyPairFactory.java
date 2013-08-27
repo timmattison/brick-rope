@@ -1,7 +1,7 @@
 package com.timmattison.cryptocurrency.bitcoin;
 
 import com.timmattison.crypto.ecc.fp.ECKeyPairFp;
-import com.timmattison.crypto.ecc.fp.X9ECParameters;
+import com.timmattison.crypto.ecc.fp.ECParametersFp;
 import com.timmattison.cryptocurrency.factories.ECCKeyPairFactory;
 
 import java.math.BigInteger;
@@ -15,7 +15,7 @@ import java.math.BigInteger;
  */
 public class BitcoinECCKeyPairFactory implements ECCKeyPairFactory {
     @Override
-    public ECKeyPairFp create(X9ECParameters parameters, BigInteger d) {
+    public ECKeyPairFp create(ECParametersFp parameters, BigInteger d) {
         //To change body of implemented methods use File | Settings | File Templates.
         throw new UnsupportedOperationException();
     }

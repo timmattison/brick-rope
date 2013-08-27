@@ -5,7 +5,6 @@ import com.google.inject.assistedinject.FactoryModuleBuilder;
 import com.timmattison.crypto.ecc.factories.SHA1MessageSignerDigestFactory;
 import com.timmattison.crypto.ecc.fp.*;
 import com.timmattison.crypto.ecc.interfaces.*;
-import com.timmattison.crypto.ecc.random.impl.BigIntegerRandomForTesting;
 import com.timmattison.crypto.ecc.random.impl.RealBigIntegerRandom;
 import com.timmattison.crypto.ecc.random.interfaces.BigIntegerRandom;
 import com.timmattison.crypto.ecc.random.interfaces.RandomFactory;
@@ -24,7 +23,7 @@ public class ECCTestModule extends AbstractModule {
     protected void configure() {
         bind(ECCCurve.class).to(ECCurveFp.class);
         bind(ECCNamedCurve.class).to(SECNamedCurve.class);
-        bind(ECCParameters.class).to(X9ECParameters.class);
+        bind(ECCParameters.class).to(ECParametersFp.class);
         bind(ECCFieldElement.class).to(ECFieldElementFp.class);
         bind(ECCPoint.class).to(ECPointFp.class);
 
@@ -33,7 +32,7 @@ public class ECCTestModule extends AbstractModule {
 
         install(new FactoryModuleBuilder().implement(ECCCurve.class, ECCurveFp.class).build(ECCCurveFactory.class));
         install(new FactoryModuleBuilder().implement(ECCNamedCurve.class, SECNamedCurve.class).build(ECCNamedCurveFactory.class));
-        install(new FactoryModuleBuilder().implement(ECCParameters.class, X9ECParameters.class).build(ECCParametersFactory.class));
+        install(new FactoryModuleBuilder().implement(ECCParameters.class, ECParametersFp.class).build(ECCParametersFactory.class));
         install(new FactoryModuleBuilder().implement(ECCFieldElement.class, ECFieldElementFp.class).build(ECCFieldElementFactory.class));
         install(new FactoryModuleBuilder().implement(ECCPoint.class, ECPointFp.class).build(ECCPointFactory.class));
         install(new FactoryModuleBuilder().implement(ECCKeyPair.class, ECKeyPairFp.class).build(ECCKeyPairFactory.class));

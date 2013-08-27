@@ -16,13 +16,13 @@ import java.math.BigInteger;
  * Time: 8:20 AM
  * To change this template use File | Settings | File Templates.
  */
-public class X9ECParameters implements ECCParameters {
+public class ECParametersFp implements ECCParameters {
     private ECCCurve curve;
     private ECCPoint g;
     private BigInteger n;
     private BigInteger h;
 
-    public X9ECParameters() {
+    public ECParametersFp() {
     }
 
     @Override
@@ -37,7 +37,7 @@ public class X9ECParameters implements ECCParameters {
     }
 
     @AssistedInject
-    public X9ECParameters(@Assisted("curve") ECCCurve curve, @Assisted("g") ECCPoint g, @Assisted("n") BigInteger n, @Assisted("h") BigInteger h) {
+    public ECParametersFp(@Assisted("curve") ECCCurve curve, @Assisted("g") ECCPoint g, @Assisted("n") BigInteger n, @Assisted("h") BigInteger h) {
         this.curve = curve;
         this.g = g;
         this.n = n;

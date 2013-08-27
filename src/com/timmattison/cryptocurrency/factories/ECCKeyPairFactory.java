@@ -1,7 +1,7 @@
 package com.timmattison.cryptocurrency.factories;
 
 import com.timmattison.crypto.ecc.fp.ECKeyPairFp;
-import com.timmattison.crypto.ecc.fp.X9ECParameters;
+import com.timmattison.crypto.ecc.fp.ECParametersFp;
 
 import java.math.BigInteger;
 
@@ -13,5 +13,5 @@ import java.math.BigInteger;
  * To change this template use File | Settings | File Templates.
  */
 public interface ECCKeyPairFactory {
-    ECKeyPairFp create(X9ECParameters parameters, BigInteger d);
+    ECKeyPairFp create(ECParametersFp parameters, BigInteger d);
 }

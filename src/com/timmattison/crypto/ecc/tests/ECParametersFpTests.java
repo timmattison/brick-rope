@@ -2,6 +2,7 @@ package com.timmattison.crypto.ecc.tests;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import com.timmattison.crypto.ecc.interfaces.ECCCurve;
 import com.timmattison.crypto.ecc.interfaces.ECCParameters;
 import org.junit.Assert;
 import org.junit.Test;
@@ -46,5 +47,13 @@ public class ECParametersFpTests {
         ECCParameters eccParameters2 = ECCTestHelper.getSecp256k1(injector);
 
         Assert.assertNotEquals(eccParameters1, eccParameters2);
+    }
+
+    @Test
+    public void testShouldNotBeEqual3() {
+        ECCParameters eccParameters = ECCTestHelper.getSecp160r1(injector);
+        ECCCurve eccCurve = eccParameters.getCurve();
+
+        Assert.assertNotEquals(eccParameters, eccCurve);
     }
 }
