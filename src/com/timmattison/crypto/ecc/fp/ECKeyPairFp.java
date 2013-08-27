@@ -30,7 +30,7 @@ public class ECKeyPairFp implements ECCKeyPair {
         this.d = d;
 
         // Does d meet the criteria for a secret key?  It must be [1, n-1].
-        if ((d.compareTo(BigInteger.ONE) < 0) || (d.compareTo(this.eccParameters.getN().subtract(BigInteger.ONE)) > 0)) {
+        if ((d.compareTo(BigInteger.ONE) < 0) || (d.compareTo(this.eccParameters.getN()) >= 0)) {
             throw new Exception("Private key d is not in [1, n-1]");
         }
 

@@ -2,7 +2,7 @@ package com.timmattison.crypto.ecc.tests;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import com.timmattison.crypto.ecc.interfaces.*;
+import com.timmattison.crypto.ecc.interfaces.ECCKeyPair;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -33,5 +33,35 @@ public class ECKeyPairFpTests {
         Assert.assertEquals(gec2_2_1_2_eccKeyPair.getD(), gec2_2_1_2_dU);
         Assert.assertEquals(gec2_2_1_2_eccKeyPair.getQ().getX().toBigInteger(), gec2_2_1_2_QuX);
         Assert.assertEquals(gec2_2_1_2_eccKeyPair.getQ().getY().toBigInteger(), gec2_2_1_2_QuY);
+    }
+
+    @Test
+    public void testKeyIsZeroShouldThrowException() {
+        try {
+            ECCKeyPair gec2_2_1_2_eccKeyPair = ECCTestHelper.getKeyPair(injector, ECCTestHelper.getSecp160r1(injector), BigInteger.ZERO);
+            Assert.fail("Key was zero but the key pair was still created");
+        } catch (Exception ex) {
+            // Success
+        }
+    }
+
+    @Test
+    public void testKeyIsNShouldThrowException() {
+        try {
+            ECCKeyPair gec2_2_1_2_eccKeyPair = ECCTestHelper.getKeyPair(injector, ECCTestHelper.getSecp160r1(injector), ECCTestHelper.getSecp160r1(injector).getN());
+            Assert.fail("Key was N but the key pair was still created");
+        } catch (Exception ex) {
+            // Success
+        }
+    }
+
+    @Test
+    public void testKeyIsOneShouldNotThrowException() {
+        ECCKeyPair gec2_2_1_2_eccKeyPair = ECCTestHelper.getKeyPair(injector, ECCTestHelper.getSecp160r1(injector), BigInteger.ONE);
+    }
+
+    @Test
+    public void testKeyIsNMinus1ShouldNotThrowException() {
+        ECCKeyPair gec2_2_1_2_eccKeyPair = ECCTestHelper.getKeyPair(injector, ECCTestHelper.getSecp160r1(injector), ECCTestHelper.getSecp160r1(injector).getN().subtract(BigInteger.ONE));
     }
 }
