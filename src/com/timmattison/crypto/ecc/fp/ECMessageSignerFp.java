@@ -24,7 +24,6 @@ public class ECMessageSignerFp implements ECCMessageSigner {
     private ECCKeyPair eccKeyPair;
 
     public ECMessageSignerFp() {
-
     }
 
     @AssistedInject
