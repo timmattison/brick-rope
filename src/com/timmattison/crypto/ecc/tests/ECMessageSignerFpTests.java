@@ -50,4 +50,14 @@ public class ECMessageSignerFpTests {
     public void testGec2_2_1_4() {
         Assert.assertTrue(ECCTestHelper.getSignatureVerifier(injector).signatureValid(ECCTestHelper.getSecp160r1(injector), gec2_2_1_3_messageBytes, gec2_2_1_4_Qu, gec2_2_1_3_r, gec2_2_1_3_s));
     }
+
+    @Test
+    public void testRIsZeroReturnsFalse() {
+        Assert.assertFalse(ECCTestHelper.getSignatureVerifier(injector).signatureValid(ECCTestHelper.getSecp160r1(injector), gec2_2_1_3_messageBytes, gec2_2_1_4_Qu, BigInteger.ZERO, gec2_2_1_3_s));
+    }
+
+    @Test
+    public void testSIsZeroReturnsFalse() {
+        Assert.assertFalse(ECCTestHelper.getSignatureVerifier(injector).signatureValid(ECCTestHelper.getSecp160r1(injector), gec2_2_1_3_messageBytes, gec2_2_1_4_Qu, gec2_2_1_3_r, BigInteger.ZERO));
+    }
 }
