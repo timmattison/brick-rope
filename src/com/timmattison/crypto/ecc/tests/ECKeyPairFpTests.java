@@ -2,6 +2,7 @@ package com.timmattison.crypto.ecc.tests;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import com.timmattison.crypto.ecc.enums.ECCFieldType;
 import com.timmattison.crypto.ecc.interfaces.ECCKeyPair;
 import org.junit.Assert;
 import org.junit.Test;
@@ -63,5 +64,12 @@ public class ECKeyPairFpTests {
     @Test
     public void testKeyIsNMinus1ShouldNotThrowException() {
         ECCKeyPair gec2_2_1_2_eccKeyPair = ECCTestHelper.getKeyPair(injector, ECCTestHelper.getSecp160r1(injector), ECCTestHelper.getSecp160r1(injector).getN().subtract(BigInteger.ONE));
+    }
+
+    @Test
+    public void testShouldReturnFp() {
+        ECCKeyPair gec2_2_1_2_eccKeyPair = ECCTestHelper.getKeyPair(injector, ECCTestHelper.getSecp160r1(injector), ECCTestHelper.getSecp160r1(injector).getN().subtract(BigInteger.ONE));
+
+        Assert.assertEquals(ECCFieldType.Fp, gec2_2_1_2_eccKeyPair.getECCFieldType());
     }
 }
