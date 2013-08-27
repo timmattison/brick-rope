@@ -37,7 +37,7 @@ public class ECKeyPairFp implements ECCKeyPair {
         // Calculate q = (x, y) = d * G
         this.q = this.eccParameters.getG().multiply(d);
 
-        //validateQ();
+        validateQ();
     }
 
     private void validateQ() throws Exception {
@@ -56,7 +56,7 @@ public class ECKeyPairFp implements ECCKeyPair {
         BigInteger b = eccParameters.getCurve().getB().toBigInteger();
         BigInteger p = eccParameters.getCurve().getP();
 
-        BigInteger yQ2 = y.pow(2);
+        BigInteger yQ2 = y.pow(2).mod(p);
 
         BigInteger xQ3PlusAxQ = xQ3.add(axQ);
         BigInteger xQ3PlusAxQPlusB = xQ3PlusAxQ.add(b);
