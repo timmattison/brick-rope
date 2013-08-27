@@ -20,6 +20,8 @@ import java.security.MessageDigest;
  * To change this template use File | Settings | File Templates.
  */
 public class ECKeyDeploymentAndSigningTest {
+    Injector injector = Guice.createInjector(new ECCTestModule());
+
     // (Chosen) Instantiate the dU value
     private final BigInteger dU = new BigInteger("971761939728640320549601132085879836204587084162", 10);
 
@@ -51,13 +53,8 @@ public class ECKeyDeploymentAndSigningTest {
         step3ValidateSignatureForV();
     }
 
-    private ECCParameters getSecp160r1() {
-        Injector injector = Guice.createInjector(new ECCTestModule());
-        return injector.getInstance(ECCNamedCurve.class).getSecp160r1();
-    }
-
-    private void step1KeyDeploymentForU() throws Exception {
-        ECCParameters secp160r1 = getSecp160r1();
+   private void step1KeyDeploymentForU() throws Exception {
+        ECCParameters secp160r1 = ECCTestHelper.getSecp160r1(injector);
 
         // Convert to octet string
         String dUOctetString = dU.toString(16);
@@ -98,7 +95,7 @@ public class ECKeyDeploymentAndSigningTest {
     }
 
     private void step2SigningOperationForU() throws Exception {
-        ECCParameters secp160r1 = getSecp160r1();
+        ECCParameters secp160r1 = ECCTestHelper.getSecp160r1(injector);
 
         // Selected k value
         BigInteger k = new BigInteger("702232148019446860144825009548118511996283736794", 10);
@@ -240,7 +237,7 @@ public class ECKeyDeploymentAndSigningTest {
     }
 
     private void step3ValidateSignatureForV() throws Exception {
-        ECCParameters secp160r1 = getSecp160r1();
+        ECCParameters secp160r1 = ECCTestHelper.getSecp160r1(injector);
 
         MessageDigest md = MessageDigest.getInstance("SHA1");
         md.update(messageBytes);

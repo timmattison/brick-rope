@@ -18,16 +18,32 @@ import org.junit.Test;
 public class ECCurveFpTests {
     Injector injector = Guice.createInjector(new ECCTestModule());
 
-    private ECCParameters getSmallCurve1Parameters() {
-        return injector.getInstance(TestCurveParameters.class).getSmallCurve1Parameters();
-    }
-
-    @Test
+   @Test
     public void testInfinityIsInfinity() {
-        ECCParameters eccParameters = getSmallCurve1Parameters();
+        ECCParameters eccParameters = ECCTestHelper.getSmallCurve1Parameters(injector);
         ECCCurve eccCurve = eccParameters.getCurve();
         ECCPoint infinity = eccCurve.getInfinity();
 
         Assert.assertTrue(infinity.isInfinity());
+    }
+
+    @Test
+    public void testShouldEqual1() {
+        ECCParameters eccParameters1 = ECCTestHelper.getSmallCurve1Parameters(injector);
+        ECCParameters eccParameters2 = ECCTestHelper.getSmallCurve1Parameters(injector);
+        ECCCurve eccCurve1 = eccParameters1.getCurve();
+        ECCCurve eccCurve2 = eccParameters2.getCurve();
+
+        Assert.assertEquals(eccCurve1, eccCurve2);
+    }
+
+    @Test
+    public void testShouldNotEqual() {
+        ECCParameters eccParameters1 = ECCTestHelper.getSmallCurve1Parameters(injector);
+        ECCParameters eccParameters2 = ECCTestHelper.getSmallCurve2Parameters(injector);
+        ECCCurve eccCurve1 = eccParameters1.getCurve();
+        ECCCurve eccCurve2 = eccParameters2.getCurve();
+
+        Assert.assertNotEquals(eccCurve1, eccCurve2);
     }
 }

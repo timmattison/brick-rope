@@ -17,17 +17,6 @@ import java.math.BigInteger;
  */
 public class ECKeyPairFpTests {
     static Injector injector = Guice.createInjector(new ECCTestModule());
-    ECCCurveFactory eccCurveFactory = injector.getInstance(ECCCurveFactory.class);
-    ECCPointFactory eccPointFactory = injector.getInstance(ECCPointFactory.class);
-    ECCParametersFactory eccParametersFactory = injector.getInstance(ECCParametersFactory.class);
-
-    private static ECCParameters getSecp160r1() {
-        return injector.getInstance(ECCNamedCurveFactory.class).create().getSecp160r1();
-    }
-
-    private static ECCKeyPair getKeyPair(ECCParameters eccParameters, BigInteger dU) {
-        return injector.getInstance(ECCKeyPairFactory.class).create(eccParameters, dU);
-    }
 
     private static final BigInteger gec2_2_1_2_dU = new BigInteger("971761939728640320549601132085879836204587084162");
     private static final BigInteger gec2_2_1_2_QuX = new BigInteger("466448783855397898016055842232266600516272889280");
@@ -39,7 +28,7 @@ public class ECKeyPairFpTests {
     @Test
     public void testGec2_2_1_2() {
         // Validate the key pair
-        ECCKeyPair gec2_2_1_2_eccKeyPair = getKeyPair(getSecp160r1(), gec2_2_1_2_dU);
+        ECCKeyPair gec2_2_1_2_eccKeyPair = ECCTestHelper.getKeyPair(injector, ECCTestHelper.getSecp160r1(injector), gec2_2_1_2_dU);
 
         Assert.assertEquals(gec2_2_1_2_eccKeyPair.getD(), gec2_2_1_2_dU);
         Assert.assertEquals(gec2_2_1_2_eccKeyPair.getQ().getX().toBigInteger(), gec2_2_1_2_QuX);

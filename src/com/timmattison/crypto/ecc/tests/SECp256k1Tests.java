@@ -2,7 +2,8 @@ package com.timmattison.crypto.ecc.tests;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import com.timmattison.crypto.ecc.interfaces.*;
+import com.timmattison.crypto.ecc.interfaces.ECCParameters;
+import com.timmattison.crypto.ecc.interfaces.ECCPoint;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -43,21 +44,9 @@ public class SECp256k1Tests {
     BigInteger X5 = new BigInteger("F73C65EAD01C5126F28F442D087689BFA08E12763E0CEC1D35B01751FD735ED3", 16);
     BigInteger Y5 = new BigInteger("F449A8376906482A84ED01479BD18882B919C140D638307F0C0934BA12590BDE", 16);
 
-    private ECCParameters getSecp256k1() {
-        return injector.getInstance(ECCNamedCurveFactory.class).create().getSecp256k1();
-    }
-
-    private ECCPoint getPoint(BigInteger x, BigInteger y) {
-        ECCPointFactory eccPointFactory = injector.getInstance(ECCPointFactory.class);
-        ECCCurve curve = getSecp256k1().getCurve();
-        ECCFieldElement xFieldElement = curve.fromBigInteger(x);
-        ECCFieldElement yFieldElement = curve.fromBigInteger(y);
-        return eccPointFactory.create(curve, xFieldElement, yFieldElement);
-    }
-
     @Test
     public void testInfinity() throws Exception {
-        ECCParameters secp256k1 = getSecp256k1();
+        ECCParameters secp256k1 = ECCTestHelper.getSecp256k1(injector);
         ECCPoint result = secp256k1.getG().multiply(secp256k1.getN());
 
         Assert.assertTrue(result.isInfinity());
@@ -65,7 +54,7 @@ public class SECp256k1Tests {
 
     @Test
     public void testVectorSet1() {
-        ECCPoint result = getSecp256k1().getG().multiply(m1);
+        ECCPoint result = ECCTestHelper.getSecp256k1(injector).getG().multiply(m1);
 
         Assert.assertTrue(result.getX().toBigInteger().equals(X1));
         Assert.assertTrue(result.getY().toBigInteger().equals(Y1));
@@ -73,7 +62,7 @@ public class SECp256k1Tests {
 
     @Test
     public void testVectorSet2() {
-        ECCPoint result = getSecp256k1().getG().multiply(m2);
+        ECCPoint result = ECCTestHelper.getSecp256k1(injector).getG().multiply(m2);
 
         Assert.assertTrue(result.getX().toBigInteger().equals(X2));
         Assert.assertTrue(result.getY().toBigInteger().equals(Y2));
@@ -81,7 +70,7 @@ public class SECp256k1Tests {
 
     @Test
     public void testVectorSet3() {
-        ECCPoint result = getSecp256k1().getG().multiply(m3);
+        ECCPoint result = ECCTestHelper.getSecp256k1(injector).getG().multiply(m3);
 
         Assert.assertTrue(result.getX().toBigInteger().equals(X3));
         Assert.assertTrue(result.getY().toBigInteger().equals(Y3));
@@ -89,7 +78,7 @@ public class SECp256k1Tests {
 
     @Test
     public void testVectorSet4() {
-        ECCPoint result = getSecp256k1().getG().multiply(m4);
+        ECCPoint result = ECCTestHelper.getSecp256k1(injector).getG().multiply(m4);
 
         Assert.assertTrue(result.getX().toBigInteger().equals(X4));
         Assert.assertTrue(result.getY().toBigInteger().equals(Y4));
@@ -97,7 +86,7 @@ public class SECp256k1Tests {
 
     @Test
     public void testVectorSet5() {
-        ECCPoint result = getSecp256k1().getG().multiply(m5);
+        ECCPoint result = ECCTestHelper.getSecp256k1(injector).getG().multiply(m5);
 
         Assert.assertTrue(result.getX().toBigInteger().equals(X5));
         Assert.assertTrue(result.getY().toBigInteger().equals(Y5));
@@ -105,7 +94,7 @@ public class SECp256k1Tests {
 
     @Test
     public void testVectorSet5MustFail() {
-        ECCPoint result = getSecp256k1().getG().multiply(m5);
+        ECCPoint result = ECCTestHelper.getSecp256k1(injector).getG().multiply(m5);
 
         // Check it against the wrong points
         Assert.assertFalse(result.getX().toBigInteger().equals(X1));
@@ -119,7 +108,7 @@ public class SECp256k1Tests {
     public void testRandomPoints() {
         Random random = new Random(1);
 
-        ECCParameters parameters = getSecp256k1();
+        ECCParameters parameters = ECCTestHelper.getSecp256k1(injector);
         ECCPoint g = parameters.getG();
 
         BigInteger n = parameters.getN();
@@ -145,8 +134,6 @@ public class SECp256k1Tests {
             Assert.assertTrue(pPlusQ.equals(r));
             Assert.assertTrue(qPlusP.equals(r));
         }
-
-        getSecp256k1().getN();
     }
 }
 

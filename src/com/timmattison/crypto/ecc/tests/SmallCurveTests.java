@@ -22,21 +22,9 @@ import java.util.Set;
 public class SmallCurveTests {
     Injector injector = Guice.createInjector(new ECCTestModule());
 
-    private ECCParameters getSmallCurve1Parameters() {
-        return injector.getInstance(TestCurveParameters.class).getSmallCurve1Parameters();
-    }
-
-    //private ECCParameters getSmallCurve2() {
-    //    return injector.getInstance(TestCurveParameters.class).getSmallCurve2();
-    //}
-
-    private ECCPoint getBasePoint() {
-        return ECCTestHelper.getPoint(injector, getSmallCurve1Parameters(), new BigInteger("5"), new BigInteger("1"));
-    }
-
     @Test
     public void testMultiplyInfinity() throws Exception {
-        ECCParameters smallCurve = getSmallCurve1Parameters();
+        ECCParameters smallCurve = ECCTestHelper.getSmallCurve1Parameters(injector);
         ECCPoint result = smallCurve.getG().multiply(smallCurve.getN());
 
         Assert.assertTrue(result.isInfinity());
@@ -44,7 +32,7 @@ public class SmallCurveTests {
 
     @Test
     public void testECDH1() {
-        ECCPoint basePoint = getBasePoint();
+        ECCPoint basePoint = ECCTestHelper.getBasePoint(injector);
 
         BigInteger alicePrivateKey = BigInteger.valueOf(3);
         ECCPoint alicePublicKey = basePoint.multiply(alicePrivateKey);
@@ -60,13 +48,13 @@ public class SmallCurveTests {
 
     @Test
     public void testMultiply13P() {
-        ECCPoint thirteenthPoint = getBasePoint().multiply(BigInteger.valueOf(13));
+        ECCPoint thirteenthPoint = ECCTestHelper.getBasePoint(injector).multiply(BigInteger.valueOf(13));
         validatePoint(thirteenthPoint, 16, 4);
     }
 
     @Test
     public void testDoubleBasePoint() {
-        ECCPoint result = getBasePoint().twice();
+        ECCPoint result = ECCTestHelper.getBasePoint(injector).twice();
 
         Assert.assertTrue(result.getX().toBigInteger().equals(new BigInteger("6")));
         Assert.assertTrue(result.getY().toBigInteger().equals(new BigInteger("3")));
@@ -79,8 +67,8 @@ public class SmallCurveTests {
 
     @Test
     public void testCalculateUpTo18P() {
-        ECCPoint basePoint = getBasePoint();
-        ECCPoint nextPoint = getBasePoint().twice();
+        ECCPoint basePoint = ECCTestHelper.getBasePoint(injector);
+        ECCPoint nextPoint = ECCTestHelper.getBasePoint(injector).twice();
 
         // Test 3P: 10, 6
         nextPoint = nextPoint.add(basePoint);
@@ -149,7 +137,7 @@ public class SmallCurveTests {
 
     @Test
     public void testCalculate19P() {
-        ECCPoint firstPoint = ECCTestHelper.getPoint(injector, getSmallCurve1Parameters(), new BigInteger("5"), new BigInteger("1"));
+        ECCPoint firstPoint = ECCTestHelper.getPoint(injector, ECCTestHelper.getSmallCurve1Parameters(injector), new BigInteger("5"), new BigInteger("1"));
         ECCPoint nextPoint = firstPoint.twice();
 
         for (int loop = 3; loop < 19; loop++) {
@@ -163,7 +151,7 @@ public class SmallCurveTests {
 
     @Test
     public void testCalculateFourthPoint() {
-        ECCPoint firstPoint = ECCTestHelper.getPoint(injector, getSmallCurve1Parameters(), new BigInteger("5"), new BigInteger("1"));
+        ECCPoint firstPoint = ECCTestHelper.getPoint(injector, ECCTestHelper.getSmallCurve1Parameters(injector), new BigInteger("5"), new BigInteger("1"));
         ECCPoint secondPoint = firstPoint.twice();
         ECCPoint thirdPoint = secondPoint.add(firstPoint);
         ECCPoint fourthPoint = thirdPoint.add(firstPoint);
@@ -175,7 +163,7 @@ public class SmallCurveTests {
     @Test
     public void testGenerateBasePoint() {
         Random random = new Random(1);
-        ECCParameters eccParameters = getSmallCurve1Parameters();
+        ECCParameters eccParameters = ECCTestHelper.getSmallCurve1Parameters(injector);
 
         Set<ECCPoint> points = new HashSet<ECCPoint>();
 
