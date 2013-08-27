@@ -2,6 +2,7 @@ package com.timmattison.crypto.ecc.tests;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import com.timmattison.crypto.ecc.enums.ECCFieldType;
 import com.timmattison.crypto.ecc.interfaces.ECCCurve;
 import com.timmattison.crypto.ecc.interfaces.ECCParameters;
 import com.timmattison.crypto.ecc.interfaces.ECCPoint;
@@ -93,5 +94,13 @@ public class ECCurveFpTests {
         ECCCurve eccCurve1 = eccParameters1.getCurve();
 
         Assert.assertNull(eccCurve1.decodePointHex("08"));
+    }
+
+    @Test
+    public void testShouldReturnFp() {
+        ECCParameters eccParameters1 = ECCTestHelper.getSmallCurve1Parameters(injector);
+        ECCCurve eccCurve1 = eccParameters1.getCurve();
+
+        Assert.assertEquals(ECCFieldType.Fp, eccCurve1.getECCFieldType());
     }
 }
