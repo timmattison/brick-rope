@@ -99,6 +99,10 @@ public class OpCheckSig extends CryptoOp {
             byte[] message = BitcoinValidateBlock170.validationScript.dump();
             //message[0] += 1;
             boolean valid = eccMessageSignatureVerifier.signatureValid(message, eccSignature);
+
+            if(!valid) {
+                throw new UnsupportedOperationException("Signature isn't valid!");
+            }
         } catch (Exception e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
