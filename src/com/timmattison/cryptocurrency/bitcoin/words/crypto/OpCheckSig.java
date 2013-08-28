@@ -105,41 +105,6 @@ public class OpCheckSig extends CryptoOp {
 
         throw new UnsupportedOperationException("Not finished yet");
     }
-
-    private boolean validateSignature(byte[] messageBytes, ECSignatureFp signature) throws Exception {
-        MessageDigest md = MessageDigest.getInstance("SHA1");
-        md.update(messageBytes);
-        byte[] hashBytes = md.digest();
-        String H = ByteArrayHelper.toHex(hashBytes);
-
-        // Calculate e
-        BigInteger e = ECHelper.calculateE(signature.getECCParameters(), H, hashBytes);
-
-        // Compute u1
-        BigInteger u1 = e.multiply(signature.getS().modPow(BigInteger.ONE.negate(), signature.getN())).mod(signature.getN());
-
-        // Compute u2
-        BigInteger u2 = signature.getR().multiply(signature.getS().modPow(BigInteger.ONE.negate(), signature.getN())).mod(signature.getN());
-
-        // Compute R = (xR, yR) = u1G + u2Qu
-        ECCPoint u1G = signature.getG().multiply(u1);
-        ECCPoint u2Qu = signature.getQu().multiply(u2);
-
-        ECCPoint R = u1G.add(u2Qu);
-
-        // v = xR mod n
-        BigInteger v = R.getX().toBigInteger().mod(signature.getN());
-
-        // Validate that v == r, are they equal?
-        if (!v.equals(R.getX().toBigInteger())) {
-            // No, return failure
-            return false;
-        }
-
-        throw new UnsupportedOperationException("THIS IS NOT IMPLEMENTED PROPERLY!");
-        // The message is valid, return success
-        //return true;
-    }
 }
 
 // From the wiki:
