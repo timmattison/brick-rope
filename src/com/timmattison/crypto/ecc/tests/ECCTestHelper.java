@@ -47,6 +47,10 @@ public class ECCTestHelper {
         return injector.getInstance(ECCMessageSignatureVerifierFactory.class).create();
     }
 
+    public static ECCSignature getSignature(Injector injector, ECCParameters eccParameters, BigInteger r, BigInteger s, ECCPoint Qu) {
+        return injector.getInstance(ECCSignatureFactory.class).create(eccParameters, r, s, Qu);
+    }
+
     public static ECCMessageSigner getSigner(Injector injector, BigInteger valueToReturn, ECCKeyPair eccKeyPair) {
         BigIntegerRandomForTesting bigIntegerRandom = injector.getInstance(BigIntegerRandomForTesting.class);
         bigIntegerRandom.setValueToReturn(valueToReturn);

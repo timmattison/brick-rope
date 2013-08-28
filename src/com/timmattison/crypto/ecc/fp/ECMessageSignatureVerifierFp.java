@@ -2,10 +2,7 @@ package com.timmattison.crypto.ecc.fp;
 
 import com.google.inject.Inject;
 import com.timmattison.crypto.ecc.ECHelper;
-import com.timmattison.crypto.ecc.interfaces.ECCMessageSignatureVerifier;
-import com.timmattison.crypto.ecc.interfaces.ECCMessageSignerDigestFactory;
-import com.timmattison.crypto.ecc.interfaces.ECCParameters;
-import com.timmattison.crypto.ecc.interfaces.ECCPoint;
+import com.timmattison.crypto.ecc.interfaces.*;
 import com.timmattison.cryptocurrency.helpers.ByteArrayHelper;
 
 import java.math.BigInteger;
@@ -29,7 +26,11 @@ public class ECMessageSignatureVerifierFp implements ECCMessageSignatureVerifier
     }
 
     @Override
-    public boolean signatureValid(ECCParameters eccParameters, byte[] messageBytes, ECCPoint qU, BigInteger r, BigInteger s) {
+    public boolean signatureValid(ECCParameters eccParameters, byte[] messageBytes, ECCSignature eccSignature) {
+        BigInteger r = eccSignature.getR();
+        BigInteger s = eccSignature.getS();
+        ECCPoint Qu = eccSignature.getQu();
+
         // Hash the message
         MessageDigest md = eccMessageSignerDigestFactory.create();
         md.update(messageBytes);
@@ -64,7 +65,7 @@ public class ECMessageSignatureVerifierFp implements ECCMessageSignatureVerifier
 
         // Compute R = (xR, yR) = u1G + u2Qu
         ECCPoint u1G = eccParameters.getG().multiply(u1);
-        ECCPoint u2Qu = qU.multiply(u2);
+        ECCPoint u2Qu = Qu.multiply(u2);
 
         ECCPoint R = u1G.add(u2Qu);
 

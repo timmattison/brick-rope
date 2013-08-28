@@ -88,7 +88,7 @@ public class OpCheckSig extends CryptoOp {
 
         try {
             byte[] message = BitcoinValidateBlock170.validationScript.dump();
-            message[0] += 1;
+            //message[0] += 1;
             boolean valid = validateSignature(BitcoinValidateBlock170.validationScript.dump(), ecSignature);
         } catch (Exception e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
@@ -127,8 +127,9 @@ public class OpCheckSig extends CryptoOp {
             return false;
         }
 
+        throw new UnsupportedOperationException("THIS IS NOT IMPLEMENTED PROPERLY!");
         // The message is valid, return success
-        return true;
+        //return true;
     }
 }
 
