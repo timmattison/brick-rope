@@ -53,6 +53,9 @@ public class BitcoinModule extends AbstractModule {
         bind(SignatureProcessorFactory.class).to(BitcoinSignatureProcessorFactory.class);
 
         // ECC bindings
+        bind(ECCParamsFactory.class).to(BitcoinECCParamsFactory.class);
+        bind(ECCParamsFactory.class).to(BitcoinECCParamsFactory.class);
+
         bind(ECCCurve.class).to(ECCurveFp.class);
         bind(ECCNamedCurve.class).to(SECNamedCurve.class);
         bind(ECCParameters.class).to(ECParametersFp.class);

@@ -1,10 +1,8 @@
 package com.timmattison.cryptocurrency.bitcoin;
 
 import com.timmattison.bitcoin.test.ByteArrayHelper;
-import com.timmattison.crypto.ecc.interfaces.ECCParameters;
-import com.timmattison.crypto.ecc.interfaces.ECCSignature;
+import com.timmattison.crypto.ecc.interfaces.*;
 import com.timmattison.cryptocurrency.factories.ECCParamsFactory;
-import com.timmattison.cryptocurrency.factories.ECCSignatureFactory;
 import com.timmattison.cryptocurrency.interfaces.SignatureProcessor;
 
 import java.math.BigInteger;
@@ -83,11 +81,15 @@ public class BitcoinSignatureProcessor implements SignatureProcessor<ECCSignatur
         byte[] sig_r = Arrays.copyOfRange(data, 4, 4 + 32);
         byte[] sig_s = Arrays.copyOfRange(data, 4 + 32 + 2, 4 + 32 + 2 + 32);
 
-        // Create the ECC instance
+        // Get the curve from the ECC parameters
         ECCParameters ecc = eccParamsFactory.create();
+        ECCCurve curve = ecc.getCurve();
+
+        // Decode the point from the binary public key
+        ECCPoint Qu = curve.decodePointBinary(publicKey);
 
         // Create the signature instance
-        ECCSignature ecSignature = signatureFactory.create(ecc, new BigInteger(ByteArrayHelper.reverseBytes(sig_r)), new BigInteger(ByteArrayHelper.reverseBytes(sig_s)), new BigInteger(ByteArrayHelper.reverseBytes(publicKey)));
+        ECCSignature ecSignature = signatureFactory.create(ecc, new BigInteger(ByteArrayHelper.reverseBytes(sig_r)), new BigInteger(ByteArrayHelper.reverseBytes(sig_s)), Qu);
 
         return ecSignature;
     }

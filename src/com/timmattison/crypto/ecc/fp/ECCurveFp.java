@@ -4,6 +4,7 @@ import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
 import com.timmattison.crypto.ecc.enums.ECCFieldType;
 import com.timmattison.crypto.ecc.interfaces.*;
+import com.timmattison.cryptocurrency.helpers.ByteArrayHelper;
 
 import java.math.BigInteger;
 import java.util.Random;
@@ -121,6 +122,7 @@ public class ECCurveFp implements ECCCurve {
     }
 
     // for now, work with hex strings because they're easier in JS
+    @Override
     public ECCPoint decodePointHex(String s) {
         switch (Integer.parseInt(s.substring(0, 2), 16)) {
             // first byte
@@ -145,6 +147,11 @@ public class ECCurveFp implements ECCCurve {
                 // unsupported
                 return null;
         }
+    }
+
+    @Override
+    public ECCPoint decodePointBinary(byte[] point) {
+        return decodePointHex(ByteArrayHelper.toHex(point));
     }
 
     @Override

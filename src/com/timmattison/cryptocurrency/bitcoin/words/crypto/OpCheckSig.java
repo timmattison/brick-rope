@@ -9,7 +9,6 @@ import com.timmattison.cryptocurrency.bitcoin.BitcoinHashType;
 import com.timmattison.cryptocurrency.bitcoin.BitcoinModule;
 import com.timmattison.cryptocurrency.bitcoin.StateMachine;
 import com.timmattison.cryptocurrency.bitcoin.applications.BitcoinValidateBlock170;
-import com.timmattison.cryptocurrency.factories.ECCKeyPairFactory;
 import com.timmattison.cryptocurrency.factories.SignatureProcessorFactory;
 import com.timmattison.cryptocurrency.helpers.ByteArrayHelper;
 import com.timmattison.cryptocurrency.interfaces.SignatureProcessor;
@@ -28,8 +27,6 @@ import java.security.MessageDigest;
 public class OpCheckSig extends CryptoOp {
     private static final String word = "OP_CHECKSIG";
     private static final Byte opcode = (byte) 0xac;
-    @Inject
-    public ECCKeyPairFactory keyFactory;
     @Inject
     public SignatureProcessorFactory signatureProcessorFactory;
 

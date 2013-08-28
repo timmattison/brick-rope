@@ -1,8 +1,8 @@
 package com.timmattison.cryptocurrency.bitcoin.factories;
 
+import com.timmattison.crypto.ecc.interfaces.ECCSignatureFactory;
 import com.timmattison.cryptocurrency.bitcoin.BitcoinSignatureProcessor;
 import com.timmattison.cryptocurrency.factories.ECCParamsFactory;
-import com.timmattison.cryptocurrency.factories.ECCSignatureFactory;
 import com.timmattison.cryptocurrency.factories.SignatureProcessorFactory;
 import com.timmattison.cryptocurrency.interfaces.SignatureProcessor;
 

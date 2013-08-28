@@ -1,5 +1,7 @@
 package com.timmattison.bitcoin.test.ecc.fp;
 
+import com.timmattison.cryptocurrency.helpers.ByteArrayHelper;
+
 import java.math.BigInteger;
 
 /**
@@ -72,5 +74,9 @@ public class ECCurveFp {
                 // unsupported
                 return null;
         }
+    }
+
+    public ECPointFp decodePointBinary(byte[] point) {
+        return decodePointHex(ByteArrayHelper.toHex(point));
     }
 }

@@ -4,7 +4,7 @@ import com.google.inject.Inject;
 import com.timmattison.crypto.ecc.interfaces.ECCParameters;
 import com.timmattison.crypto.ecc.interfaces.ECCPoint;
 import com.timmattison.crypto.ecc.interfaces.ECCSignature;
-import com.timmattison.cryptocurrency.factories.ECCSignatureFactory;
+import com.timmattison.crypto.ecc.interfaces.ECCSignatureFactory;
 
 import java.math.BigInteger;
 
@@ -21,14 +21,6 @@ public class BitcoinECCSignatureFactory implements ECCSignatureFactory {
     @Inject
     public BitcoinECCSignatureFactory(ECCSignatureFactory eccSignatureFactory) {
         this.eccSignatureFactory = eccSignatureFactory;
-    }
-
-    @Override
-    public ECCSignature create(ECCParameters parameters, BigInteger r, BigInteger s, BigInteger dU) {
-        // Calculate Qu = (xU, yU) = dU * G
-        ECCPoint Qu = parameters.getG().multiply(dU);
-
-        return create(parameters, r, s, Qu);
     }
 
     @Override

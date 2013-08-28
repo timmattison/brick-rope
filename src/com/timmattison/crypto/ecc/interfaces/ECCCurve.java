@@ -53,4 +53,6 @@ public interface ECCCurve extends ECCElement {
 
     // for now, work with hex strings because they're easier in JS
     public ECCPoint decodePointHex(String s);
+
+    public ECCPoint decodePointBinary(byte[] point);
 }
