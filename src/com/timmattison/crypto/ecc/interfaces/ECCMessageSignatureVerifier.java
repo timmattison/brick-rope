@@ -12,5 +12,5 @@ import java.math.BigInteger;
  * To change this template use File | Settings | File Templates.
  */
 public interface ECCMessageSignatureVerifier {
-    boolean signatureValid(ECCParameters eccParameters, byte[] messageBytes, ECCSignature eccSignature);
+    boolean signatureValid(byte[] messageBytes, ECCSignature eccSignature);
 }

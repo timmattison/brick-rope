@@ -40,41 +40,41 @@ public class ECMessageSignatureVerifierFpTests {
      */
     @Test
     public void testGec2_2_1_4() {
-        Assert.assertTrue(ECCTestHelper.getSignatureVerifier(injector).signatureValid(ECCTestHelper.getSecp160r1(injector), gec2_2_1_3_messageBytes, gec2_2_1_4_validSignature));
+        Assert.assertTrue(ECCTestHelper.getSignatureVerifier(injector).signatureValid(gec2_2_1_3_messageBytes, gec2_2_1_4_validSignature));
     }
 
     @Test
     public void testRIsZeroReturnsFalse() {
-        Assert.assertFalse(ECCTestHelper.getSignatureVerifier(injector).signatureValid(ECCTestHelper.getSecp160r1(injector), gec2_2_1_3_messageBytes, gec2_2_1_4_signatureRIsZero));
+        Assert.assertFalse(ECCTestHelper.getSignatureVerifier(injector).signatureValid(gec2_2_1_3_messageBytes, gec2_2_1_4_signatureRIsZero));
     }
 
     @Test
     public void testSIsZeroReturnsFalse() {
-        Assert.assertFalse(ECCTestHelper.getSignatureVerifier(injector).signatureValid(ECCTestHelper.getSecp160r1(injector), gec2_2_1_3_messageBytes, gec2_2_1_4_signatureSIsZero));
+        Assert.assertFalse(ECCTestHelper.getSignatureVerifier(injector).signatureValid(gec2_2_1_3_messageBytes, gec2_2_1_4_signatureSIsZero));
     }
 
     @Test
     public void testRIsEqualToNReturnsFalse() {
-        Assert.assertFalse(ECCTestHelper.getSignatureVerifier(injector).signatureValid(ECCTestHelper.getSecp160r1(injector), gec2_2_1_3_messageBytes, gec2_2_1_4_signatureRIsEqualToN));
+        Assert.assertFalse(ECCTestHelper.getSignatureVerifier(injector).signatureValid(gec2_2_1_3_messageBytes, gec2_2_1_4_signatureRIsEqualToN));
     }
 
     @Test
     public void testSIsEqualToNReturnsFalse() {
-        Assert.assertFalse(ECCTestHelper.getSignatureVerifier(injector).signatureValid(ECCTestHelper.getSecp160r1(injector), gec2_2_1_3_messageBytes, gec2_2_1_4_signatureSIsEqualToN));
+        Assert.assertFalse(ECCTestHelper.getSignatureVerifier(injector).signatureValid(gec2_2_1_3_messageBytes, gec2_2_1_4_signatureSIsEqualToN));
     }
 
     @Test
     public void testRIsGreaterThanNReturnsFalse() {
-        Assert.assertFalse(ECCTestHelper.getSignatureVerifier(injector).signatureValid(ECCTestHelper.getSecp160r1(injector), gec2_2_1_3_messageBytes, gec2_2_1_4_signatureRIsGreaterThanN));
+        Assert.assertFalse(ECCTestHelper.getSignatureVerifier(injector).signatureValid(gec2_2_1_3_messageBytes, gec2_2_1_4_signatureRIsGreaterThanN));
     }
 
     @Test
     public void testSIsGreaterThanNReturnsFalse() {
-        Assert.assertFalse(ECCTestHelper.getSignatureVerifier(injector).signatureValid(ECCTestHelper.getSecp160r1(injector), gec2_2_1_3_messageBytes, gec2_2_1_4_signatureSIsGreaterThanN));
+        Assert.assertFalse(ECCTestHelper.getSignatureVerifier(injector).signatureValid(gec2_2_1_3_messageBytes, gec2_2_1_4_signatureSIsGreaterThanN));
     }
 
     @Test
     public void testFailsWithInvalidSignature() {
-        Assert.assertFalse(ECCTestHelper.getSignatureVerifier(injector).signatureValid(ECCTestHelper.getSecp160r1(injector), gec2_2_1_3_messageBytes, gec2_2_1_4_invalidSignature));
+        Assert.assertFalse(ECCTestHelper.getSignatureVerifier(injector).signatureValid(gec2_2_1_3_messageBytes, gec2_2_1_4_invalidSignature));
     }
 }

@@ -2,9 +2,12 @@ package com.timmattison.cryptocurrency.bitcoin.words.crypto;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import com.timmattison.crypto.ecc.interfaces.ECCMessageSignatureVerifier;
+import com.timmattison.crypto.ecc.interfaces.ECCMessageSignatureVerifierFactory;
 import com.timmattison.crypto.ecc.interfaces.ECCPoint;
 import com.timmattison.crypto.ecc.ECHelper;
 import com.timmattison.crypto.ecc.fp.ECSignatureFp;
+import com.timmattison.crypto.ecc.interfaces.ECCSignature;
 import com.timmattison.cryptocurrency.bitcoin.BitcoinHashType;
 import com.timmattison.cryptocurrency.bitcoin.BitcoinModule;
 import com.timmattison.cryptocurrency.bitcoin.StateMachine;
@@ -29,6 +32,8 @@ public class OpCheckSig extends CryptoOp {
     private static final Byte opcode = (byte) 0xac;
     @Inject
     public SignatureProcessorFactory signatureProcessorFactory;
+    @Inject
+    public ECCMessageSignatureVerifierFactory eccMessageSignatureVerifierFactory;
 
     public OpCheckSig() {
     }
@@ -82,14 +87,18 @@ public class OpCheckSig extends CryptoOp {
         // XXX UBER TEMP INSANITY XXX
         Injector injector = Guice.createInjector(new BitcoinModule());
 
-        SignatureProcessor signatureProcessor = injector.getInstance(SignatureProcessorFactory.class).create();
+        signatureProcessorFactory = injector.getInstance(SignatureProcessorFactory.class);
+        SignatureProcessor signatureProcessor = signatureProcessorFactory.create();
 
-        ECSignatureFp ecSignature = (ECSignatureFp) signatureProcessor.getSignature(signature, publicKey);
+        eccMessageSignatureVerifierFactory = injector.getInstance(ECCMessageSignatureVerifierFactory.class);
+        ECCMessageSignatureVerifier eccMessageSignatureVerifier = eccMessageSignatureVerifierFactory.create();
+
+        ECCSignature eccSignature = (ECCSignature) signatureProcessor.getSignature(signature, publicKey);
 
         try {
             byte[] message = BitcoinValidateBlock170.validationScript.dump();
             //message[0] += 1;
-            boolean valid = validateSignature(BitcoinValidateBlock170.validationScript.dump(), ecSignature);
+            boolean valid = eccMessageSignatureVerifier.signatureValid(message, eccSignature);
         } catch (Exception e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
