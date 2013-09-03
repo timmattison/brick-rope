@@ -1,5 +1,6 @@
 package com.timmattison.cryptocurrency.bitcoin.words.stack;
 
+import com.timmattison.bitcoin.test.ByteArrayHelper;
 import com.timmattison.cryptocurrency.bitcoin.StateMachine;
 import com.timmattison.cryptocurrency.bitcoin.Word;
 
@@ -50,10 +51,11 @@ public abstract class StackOp implements Word {
         }
 
         stringBuilder.append("Opcode value: ");
-        stringBuilder.append(getOpcode());
-        stringBuilder.append("[opcode name: ");
+        stringBuilder.append((int) getOpcode() & 0xFF);
+        stringBuilder.append(String.format(", 0x%02x", getOpcode()));
+        stringBuilder.append(" [opcode name: ");
         stringBuilder.append(getName());
-        stringBuilder.append("]\n");
+        stringBuilder.append("]");
 
         return stringBuilder.toString();
     }

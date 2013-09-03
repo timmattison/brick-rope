@@ -122,7 +122,7 @@ public class BitcoinInput implements Input {
 
         stringBuilder.append(indentation);
         stringBuilder.append("Previous output index: ");
-        stringBuilder.append(ByteArrayHelper.toHex(previousTransactionHash));
+        stringBuilder.append(ByteArrayHelper.toHex(previousOutputIndexBytes));
         stringBuilder.append("\n");
 
         stringBuilder.append(indentation);

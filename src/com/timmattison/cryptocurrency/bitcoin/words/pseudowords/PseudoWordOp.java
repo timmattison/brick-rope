@@ -49,10 +49,11 @@ public abstract class PseudoWordOp implements Word {
         }
 
         stringBuilder.append("Opcode value: ");
-        stringBuilder.append(getOpcode());
-        stringBuilder.append("[opcode name: ");
+        stringBuilder.append((int) getOpcode() & 0xFF);
+        stringBuilder.append(String.format(", 0x%02x", getOpcode()));
+        stringBuilder.append(" [opcode name: ");
         stringBuilder.append(getName());
-        stringBuilder.append("]\n");
+        stringBuilder.append("]");
 
         return stringBuilder.toString();
     }

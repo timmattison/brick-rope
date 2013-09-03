@@ -4,6 +4,10 @@ import com.timmattison.bitcoin.test.ByteArrayHelper;
 import com.timmattison.cryptocurrency.bitcoin.factories.BitcoinWordFactory;
 import com.timmattison.cryptocurrency.standard.OutputScript;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * Created with IntelliJ IDEA.
  * User: timmattison
@@ -55,8 +59,29 @@ public class BitcoinOutputScript extends BitcoinScript implements OutputScript {
         stringBuilder.append(indentation);
         stringBuilder.append("Script bytes: ");
         stringBuilder.append(ByteArrayHelper.toHex(scriptBytes));
-        stringBuilder.append("\n");
+
+        for (Word word : dumpWords()) {
+            stringBuilder.append(word.prettyDump(indentationLevel + 1));
+        }
 
         return stringBuilder.toString();
+    }
+
+    private List<Word> dumpWords() {
+        List<Word> words = new ArrayList<Word>();
+
+        byte[] scriptBytesCopy = scriptBytes;
+
+        while ((scriptBytesCopy != null) && (scriptBytesCopy.length > 0)) {
+            // Build the next word
+            byte currentByte = scriptBytesCopy[0];
+
+            // Get the word that the next byte corresponds to
+            Word currentWord = wordFactory.createWord(currentByte);
+            scriptBytesCopy = currentWord.build(Arrays.copyOfRange(scriptBytesCopy, 1, scriptBytesCopy.length));
+            words.add(currentWord);
+        }
+
+        return words;
     }
 }

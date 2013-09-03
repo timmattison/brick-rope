@@ -1,5 +1,6 @@
 package com.timmattison.cryptocurrency.bitcoin.words.stack;
 
+import com.timmattison.bitcoin.test.ByteArrayHelper;
 import com.timmattison.cryptocurrency.bitcoin.StateMachine;
 
 import java.util.Arrays;
@@ -47,5 +48,26 @@ public class VirtualOpPush extends StackOp {
     @Override
     public void execute(StateMachine stateMachine) {
         stateMachine.push(valueToPush);
+    }
+
+    @Override
+    public String prettyDump(int indentationLevel) {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("\n");
+
+        for (int loop = 0; loop < indentationLevel; loop++) {
+            stringBuilder.append("\t");
+        }
+
+        stringBuilder.append("Opcode value: ");
+        stringBuilder.append((int) getOpcode() & 0xFF);
+        stringBuilder.append(String.format(", 0x%02x", getOpcode()));
+        stringBuilder.append(" [opcode name: ");
+        stringBuilder.append(getName());
+        stringBuilder.append(", value to push: ");
+        stringBuilder.append(ByteArrayHelper.toHex(valueToPush));
+        stringBuilder.append("]");
+
+        return stringBuilder.toString();
     }
 }
