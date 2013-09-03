@@ -10,13 +10,23 @@ package com.timmattison.cryptocurrency.interfaces;
 public interface Buildable {
     /**
      * Builds the object and returns a byte array containing any bytes that were left over from its input
+     *
      * @return
      */
     byte[] build(byte[] data);
 
     /**
      * Dumps an object back to the byte stream that created it
+     *
      * @return
      */
     byte[] dump();
+
+    /**
+     * Dumps an object in a human-readable format
+     *
+     * @param indentationLevel
+     * @return
+     */
+    String prettyDump(int indentationLevel);
 }

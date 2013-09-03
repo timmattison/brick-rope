@@ -1,17 +1,8 @@
 package com.timmattison.cryptocurrency.bitcoin;
 
-import com.timmattison.cryptocurrency.bitcoin.exceptions.ScriptExecutionException;
+import com.timmattison.bitcoin.test.ByteArrayHelper;
 import com.timmattison.cryptocurrency.bitcoin.factories.BitcoinWordFactory;
-import com.timmattison.cryptocurrency.factories.WordFactory;
-import com.timmattison.cryptocurrency.helpers.EndiannessHelper;
-import com.timmattison.cryptocurrency.interfaces.Transaction;
 import com.timmattison.cryptocurrency.standard.InputScript;
-import com.timmattison.cryptocurrency.standard.Script;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -66,6 +57,22 @@ public class BitcoinInputScript extends BitcoinScript implements InputScript {
     @Override
     public byte[] dump() {
         return scriptBytes;
+    }
+
+    @Override
+    public String prettyDump(int indentationLevel) {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("\n");
+
+        for (int loop = 0; loop < indentationLevel; loop++) {
+            stringBuilder.append("\t");
+        }
+
+        stringBuilder.append("Script bytes: ");
+        stringBuilder.append(ByteArrayHelper.toHex(scriptBytes));
+        stringBuilder.append("\n");
+
+        return stringBuilder.toString();
     }
 
     /*

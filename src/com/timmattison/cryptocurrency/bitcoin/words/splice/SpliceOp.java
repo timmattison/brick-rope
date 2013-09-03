@@ -32,4 +32,22 @@ public abstract class SpliceOp implements Word {
         dump[0] = getOpcode();
         return dump;
     }
+
+    @Override
+    public String prettyDump(int indentationLevel) {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("\n");
+
+        for (int loop = 0; loop < indentationLevel; loop++) {
+            stringBuilder.append("\t");
+        }
+
+        stringBuilder.append("Opcode value: ");
+        stringBuilder.append(getOpcode());
+        stringBuilder.append("[opcode name: ");
+        stringBuilder.append(getName());
+        stringBuilder.append("]\n");
+
+        return stringBuilder.toString();
+    }
 }

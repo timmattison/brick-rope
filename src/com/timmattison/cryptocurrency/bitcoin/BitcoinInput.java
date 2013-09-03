@@ -1,8 +1,8 @@
 package com.timmattison.cryptocurrency.bitcoin;
 
+import com.timmattison.bitcoin.test.ByteArrayHelper;
 import com.timmattison.cryptocurrency.factories.ScriptFactory;
 import com.timmattison.cryptocurrency.helpers.EndiannessHelper;
-import com.timmattison.cryptocurrency.interfaces.Buildable;
 import com.timmattison.cryptocurrency.interfaces.Input;
 import com.timmattison.cryptocurrency.standard.InputScript;
 import com.timmattison.cryptocurrency.standard.Script;
@@ -102,6 +102,38 @@ public class BitcoinInput implements Input {
         } catch (IOException e) {
             throw new UnsupportedOperationException(e);
         }
+    }
+
+    @Override
+    public String prettyDump(int indentationLevel) {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("\n");
+
+        for (int loop = 0; loop < indentationLevel; loop++) {
+            stringBuilder.append("\t");
+        }
+
+        stringBuilder.append("Previous transaction hash: ");
+        stringBuilder.append(ByteArrayHelper.toHex(previousTransactionHash));
+        stringBuilder.append("\n");
+
+        stringBuilder.append("Previous output index: ");
+        stringBuilder.append(ByteArrayHelper.toHex(previousTransactionHash));
+        stringBuilder.append("\n");
+
+        stringBuilder.append("Input script length: ");
+        stringBuilder.append(ByteArrayHelper.toHex(inputScriptLengthBytes));
+        stringBuilder.append("\n");
+
+        stringBuilder.append("Input script: ");
+        stringBuilder.append(inputScript.prettyDump(indentationLevel + 1));
+        stringBuilder.append("\n");
+
+        stringBuilder.append("Sequence number: ");
+        stringBuilder.append(ByteArrayHelper.toHex(sequenceNumberBytes));
+        stringBuilder.append("\n");
+
+        return stringBuilder.toString();
     }
 
     @Override

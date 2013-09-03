@@ -1,5 +1,6 @@
 package com.timmattison.cryptocurrency.bitcoin;
 
+import com.timmattison.bitcoin.test.ByteArrayHelper;
 import com.timmattison.cryptocurrency.bitcoin.factories.BitcoinWordFactory;
 import com.timmattison.cryptocurrency.standard.OutputScript;
 import com.timmattison.cryptocurrency.standard.ValidationScript;
@@ -38,5 +39,21 @@ public class BitcoinValidationScript extends BitcoinScript implements Validation
     @Override
     public byte[] dump() {
         return scriptBytes;
+    }
+
+    @Override
+    public String prettyDump(int indentationLevel) {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("\n");
+
+        for (int loop = 0; loop < indentationLevel; loop++) {
+            stringBuilder.append("\t");
+        }
+
+        stringBuilder.append("Script bytes: ");
+        stringBuilder.append(ByteArrayHelper.toHex(scriptBytes));
+        stringBuilder.append("\n");
+
+        return stringBuilder.toString();
     }
 }

@@ -1,5 +1,6 @@
 package com.timmattison.cryptocurrency.standard;
 
+import com.timmattison.bitcoin.test.ByteArrayHelper;
 import com.timmattison.cryptocurrency.factories.BlockHeaderFactory;
 import com.timmattison.cryptocurrency.factories.TransactionFactory;
 import com.timmattison.cryptocurrency.interfaces.Block;
@@ -95,5 +96,25 @@ public abstract class StandardBlock implements Block {
         } catch (IOException e) {
             throw new UnsupportedOperationException(e);
         }
+    }
+
+    @Override
+    public String prettyDump(int indentationLevel) {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("\n");
+
+        for (int loop = 0; loop < indentationLevel; loop++) {
+            stringBuilder.append("\t");
+        }
+
+        stringBuilder.append("Block header: ");
+        stringBuilder.append(blockHeader.prettyDump(indentationLevel + 1));
+        stringBuilder.append("\n");
+
+        stringBuilder.append("Transaction count: ");
+        stringBuilder.append(ByteArrayHelper.toHex(transactionCountBytes));
+        stringBuilder.append("\n");
+
+        return stringBuilder.toString();
     }
 }

@@ -1,5 +1,6 @@
 package com.timmattison.cryptocurrency.standard;
 
+import com.timmattison.bitcoin.test.ByteArrayHelper;
 import com.timmattison.bitcoin.test.EndiannessHelper;
 import com.timmattison.cryptocurrency.interfaces.Buildable;
 
@@ -80,6 +81,22 @@ public class VariableLengthInteger implements Buildable {
     @Override
     public byte[] dump() {
         return valueBytes;
+    }
+
+    @Override
+    public String prettyDump(int indentationLevel) {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("\n");
+
+        for (int loop = 0; loop < indentationLevel; loop++) {
+            stringBuilder.append("\t");
+        }
+
+        stringBuilder.append("Value bytes: ");
+        stringBuilder.append(ByteArrayHelper.toHex(valueBytes));
+        stringBuilder.append("\n");
+
+        return stringBuilder.toString();
     }
 
     public long getValue() {

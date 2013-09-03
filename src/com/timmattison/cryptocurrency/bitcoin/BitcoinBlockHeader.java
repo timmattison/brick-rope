@@ -126,6 +126,42 @@ public class BitcoinBlockHeader implements BlockHeader {
     }
 
     @Override
+    public String prettyDump(int indentationLevel) {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("\n");
+
+        for (int loop = 0; loop < indentationLevel; loop++) {
+            stringBuilder.append("\t");
+        }
+
+        stringBuilder.append("Version: ");
+        stringBuilder.append(ByteArrayHelper.toHex(versionBytes));
+        stringBuilder.append("\n");
+
+        stringBuilder.append("Previous block hash: ");
+        stringBuilder.append(ByteArrayHelper.toHex(prevBlock));
+        stringBuilder.append("\n");
+
+        stringBuilder.append("Merkle root: ");
+        stringBuilder.append(ByteArrayHelper.toHex(merkleRoot));
+        stringBuilder.append("\n");
+
+        stringBuilder.append("Timestamp: ");
+        stringBuilder.append(ByteArrayHelper.toHex(timestampBytes));
+        stringBuilder.append("\n");
+
+        stringBuilder.append("Bits: ");
+        stringBuilder.append(ByteArrayHelper.toHex(bitsBytes));
+        stringBuilder.append("\n");
+
+        stringBuilder.append("Nonce: ");
+        stringBuilder.append(ByteArrayHelper.toHex(nonceBytes));
+        stringBuilder.append("\n");
+
+        return stringBuilder.toString();
+    }
+
+    @Override
     public Hash getHash() {
         if (hash == null) {
             hash = hasherFactory.createHasher(dump());

@@ -182,6 +182,50 @@ public class BitcoinTransaction implements Transaction {
     }
 
     @Override
+    public String prettyDump(int indentationLevel) {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("\n");
+
+        for (int loop = 0; loop < indentationLevel; loop++) {
+            stringBuilder.append("\t");
+        }
+
+        stringBuilder.append("Version number: ");
+        stringBuilder.append(ByteArrayHelper.toHex(versionNumberBytes));
+        stringBuilder.append("\n");
+
+        stringBuilder.append("Input counter: ");
+        stringBuilder.append(ByteArrayHelper.toHex(inCounterBytes));
+        stringBuilder.append("\n");
+
+        for (int loop = 0; loop < inputs.size(); loop++) {
+            stringBuilder.append("Input script #");
+            stringBuilder.append(loop);
+            stringBuilder.append(": ");
+            stringBuilder.append(inputs.get(loop).prettyDump(indentationLevel + 1));
+            stringBuilder.append("\n");
+        }
+
+        stringBuilder.append("Output counter: ");
+        stringBuilder.append(ByteArrayHelper.toHex(outCounterBytes));
+        stringBuilder.append("\n");
+
+        for (int loop = 0; loop < outputs.size(); loop++) {
+            stringBuilder.append("Output script #");
+            stringBuilder.append(loop);
+            stringBuilder.append(": ");
+            stringBuilder.append(outputs.get(loop).prettyDump(indentationLevel + 1));
+            stringBuilder.append("\n");
+        }
+
+        stringBuilder.append("Lock time: ");
+        stringBuilder.append(ByteArrayHelper.toHex(lockTimeBytes));
+        stringBuilder.append("\n");
+
+        return stringBuilder.toString();
+    }
+
+    @Override
     public byte[] getHash() {
         if (hashBytes == null) {
             hashBytes = hasherFactory.createHasher(dump()).getOutput();
