@@ -56,8 +56,7 @@ public class BitcoinValidateBlock170 {
             }
 
             if (blockNumber == 170) {
-                System.out.println("Block header:");
-                System.out.println(ByteArrayHelper.toHex(block.getBlockHeader().dump()));
+                System.out.println(block.prettyDump(0));
 
                 // This is the first block that has more than one transaction.
 

@@ -46,10 +46,13 @@ public class BitcoinOutputScript extends BitcoinScript implements OutputScript {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("\n");
 
+        StringBuilder indentation = new StringBuilder();
+
         for (int loop = 0; loop < indentationLevel; loop++) {
-            stringBuilder.append("\t");
+            indentation.append("\t");
         }
 
+        stringBuilder.append(indentation);
         stringBuilder.append("Script bytes: ");
         stringBuilder.append(ByteArrayHelper.toHex(scriptBytes));
         stringBuilder.append("\n");

@@ -186,19 +186,24 @@ public class BitcoinTransaction implements Transaction {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("\n");
 
+        StringBuilder indentation = new StringBuilder();
+
         for (int loop = 0; loop < indentationLevel; loop++) {
-            stringBuilder.append("\t");
+            indentation.append("\t");
         }
 
+        stringBuilder.append(indentation);
         stringBuilder.append("Version number: ");
         stringBuilder.append(ByteArrayHelper.toHex(versionNumberBytes));
         stringBuilder.append("\n");
 
+        stringBuilder.append(indentation);
         stringBuilder.append("Input counter: ");
         stringBuilder.append(ByteArrayHelper.toHex(inCounterBytes));
         stringBuilder.append("\n");
 
         for (int loop = 0; loop < inputs.size(); loop++) {
+            stringBuilder.append(indentation);
             stringBuilder.append("Input script #");
             stringBuilder.append(loop);
             stringBuilder.append(": ");
@@ -206,11 +211,13 @@ public class BitcoinTransaction implements Transaction {
             stringBuilder.append("\n");
         }
 
+        stringBuilder.append(indentation);
         stringBuilder.append("Output counter: ");
         stringBuilder.append(ByteArrayHelper.toHex(outCounterBytes));
         stringBuilder.append("\n");
 
         for (int loop = 0; loop < outputs.size(); loop++) {
+            stringBuilder.append(indentation);
             stringBuilder.append("Output script #");
             stringBuilder.append(loop);
             stringBuilder.append(": ");
@@ -218,6 +225,7 @@ public class BitcoinTransaction implements Transaction {
             stringBuilder.append("\n");
         }
 
+        stringBuilder.append(indentation);
         stringBuilder.append("Lock time: ");
         stringBuilder.append(ByteArrayHelper.toHex(lockTimeBytes));
         stringBuilder.append("\n");

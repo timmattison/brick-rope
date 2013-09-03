@@ -87,18 +87,23 @@ public class BitcoinOutput implements Output {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("\n");
 
+        StringBuilder indentation = new StringBuilder();
+
         for (int loop = 0; loop < indentationLevel; loop++) {
-            stringBuilder.append("\t");
+            indentation.append("\t");
         }
 
+        stringBuilder.append(indentation);
         stringBuilder.append("Value bytes: ");
         stringBuilder.append(ByteArrayHelper.toHex(valueBytes));
         stringBuilder.append("\n");
 
+        stringBuilder.append(indentation);
         stringBuilder.append("Output script length bytes: ");
         stringBuilder.append(ByteArrayHelper.toHex(outputScriptLengthBytes));
         stringBuilder.append("\n");
 
+        stringBuilder.append(indentation);
         stringBuilder.append("Output script: ");
         stringBuilder.append(outputScript.prettyDump(indentationLevel + 1));
 

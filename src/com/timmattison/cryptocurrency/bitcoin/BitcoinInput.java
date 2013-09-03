@@ -109,26 +109,33 @@ public class BitcoinInput implements Input {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("\n");
 
+        StringBuilder indentation = new StringBuilder();
+
         for (int loop = 0; loop < indentationLevel; loop++) {
-            stringBuilder.append("\t");
+            indentation.append("\t");
         }
 
+        stringBuilder.append(indentation);
         stringBuilder.append("Previous transaction hash: ");
         stringBuilder.append(ByteArrayHelper.toHex(previousTransactionHash));
         stringBuilder.append("\n");
 
+        stringBuilder.append(indentation);
         stringBuilder.append("Previous output index: ");
         stringBuilder.append(ByteArrayHelper.toHex(previousTransactionHash));
         stringBuilder.append("\n");
 
+        stringBuilder.append(indentation);
         stringBuilder.append("Input script length: ");
         stringBuilder.append(ByteArrayHelper.toHex(inputScriptLengthBytes));
         stringBuilder.append("\n");
 
+        stringBuilder.append(indentation);
         stringBuilder.append("Input script: ");
         stringBuilder.append(inputScript.prettyDump(indentationLevel + 1));
         stringBuilder.append("\n");
 
+        stringBuilder.append(indentation);
         stringBuilder.append("Sequence number: ");
         stringBuilder.append(ByteArrayHelper.toHex(sequenceNumberBytes));
         stringBuilder.append("\n");

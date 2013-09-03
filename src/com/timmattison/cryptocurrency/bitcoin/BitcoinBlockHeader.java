@@ -130,30 +130,38 @@ public class BitcoinBlockHeader implements BlockHeader {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("\n");
 
+        StringBuilder indentation = new StringBuilder();
+
         for (int loop = 0; loop < indentationLevel; loop++) {
-            stringBuilder.append("\t");
+            indentation.append("\t");
         }
 
+        stringBuilder.append(indentation);
         stringBuilder.append("Version: ");
         stringBuilder.append(ByteArrayHelper.toHex(versionBytes));
         stringBuilder.append("\n");
 
+        stringBuilder.append(indentation);
         stringBuilder.append("Previous block hash: ");
         stringBuilder.append(ByteArrayHelper.toHex(prevBlock));
         stringBuilder.append("\n");
 
+        stringBuilder.append(indentation);
         stringBuilder.append("Merkle root: ");
         stringBuilder.append(ByteArrayHelper.toHex(merkleRoot));
         stringBuilder.append("\n");
 
+        stringBuilder.append(indentation);
         stringBuilder.append("Timestamp: ");
         stringBuilder.append(ByteArrayHelper.toHex(timestampBytes));
         stringBuilder.append("\n");
 
+        stringBuilder.append(indentation);
         stringBuilder.append("Bits: ");
         stringBuilder.append(ByteArrayHelper.toHex(bitsBytes));
         stringBuilder.append("\n");
 
+        stringBuilder.append(indentation);
         stringBuilder.append("Nonce: ");
         stringBuilder.append(ByteArrayHelper.toHex(nonceBytes));
         stringBuilder.append("\n");

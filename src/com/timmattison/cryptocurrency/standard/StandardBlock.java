@@ -103,17 +103,28 @@ public abstract class StandardBlock implements Block {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("\n");
 
+        StringBuilder indentation = new StringBuilder();
+
         for (int loop = 0; loop < indentationLevel; loop++) {
-            stringBuilder.append("\t");
+            indentation.append("\t");
         }
 
+        stringBuilder.append(indentation);
         stringBuilder.append("Block header: ");
         stringBuilder.append(blockHeader.prettyDump(indentationLevel + 1));
         stringBuilder.append("\n");
 
+        stringBuilder.append(indentation);
         stringBuilder.append("Transaction count: ");
         stringBuilder.append(ByteArrayHelper.toHex(transactionCountBytes));
         stringBuilder.append("\n");
+
+        for (int loop = 0; loop < transactions.size(); loop++) {
+            stringBuilder.append(indentation);
+            stringBuilder.append("Transaction #");
+            stringBuilder.append(loop);
+            stringBuilder.append(transactions.get(loop).prettyDump(indentationLevel + 1));
+        }
 
         return stringBuilder.toString();
     }
