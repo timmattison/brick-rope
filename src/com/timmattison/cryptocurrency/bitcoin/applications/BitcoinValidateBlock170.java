@@ -55,9 +55,12 @@ public class BitcoinValidateBlock170 {
                 transactionMap.put(hash, transaction);
             }
 
-            if (blockNumber == 170) {
+            if (blockNumber == 9) {
                 System.out.println(block.prettyDump(0));
+                System.out.println(ByteArrayHelper.toHex(block.dump()));
 
+                System.out.println("Output bytes:");
+                System.out.println(ByteArrayHelper.toHex(block.getTransactions().get(0).getOutputs().get(0).dump()));
                 // This is the first block that has more than one transaction.
 
                 // Get the second transaction
