@@ -68,42 +68,17 @@ public class BitcoinBlock170Test {
 
     @Test
     public void testBlock170Transaction() {
-        BigInteger block9FullTransaction = new BigInteger("01000000c60ddef1b7618ca2348a46e868afc26e3efc68226c78aa47f8488c4000000000c997a5e56e104102fa209c6a852dd90660a20b2d9c352423edce25857fcd37047fca6649ffff001d28404f530101000000010000000000000000000000000000000000000000000000000000000000000000ffffffff0704ffff001d0134ffffffff0100f2052a0100000043410411db93e1dcdb8a016b49840f8c53bc1eb68a382e97b1482ecad7b148a6909a5cb2e0eaddfb84ccf9744464f82e160bfa9b8b64f9d4c03f999b8643f656b412a3ac00000000", 16);
-        byte[] block9FullTransactionBytes = Arrays.copyOfRange(block9FullTransaction.toByteArray(), 1, block9FullTransaction.toByteArray().length);
-
-        BigInteger block9Output1 = new BigInteger("00f2052a0100000043410411db93e1dcdb8a016b49840f8c53bc1eb68a382e97b1482ecad7b148a6909a5cb2e0eaddfb84ccf9744464f82e160bfa9b8b64f9d4c03f999b8643f656b412a3ac", 16);
-        byte[] block9Output1Bytes = Arrays.copyOfRange(block9Output1.toByteArray(), 0, block9Output1.toByteArray().length);
-
         ECCParameters parameters = ECCTestHelper.getSecp256k1(injector);
         ECCPoint block9PublicKey = ECCTestHelper.getPoint(injector, parameters, getBlock9Transaction1Output1XValue, getBlock9Transaction1Output1YValue);
         ECCSignature signature = ECCTestHelper.getSignature(injector, parameters, block170Transaction1Input1RValue, block170Transaction1Input1SValue, block9PublicKey);
         ECCMessageSignatureVerifier verifier = ECCTestHelper.getSignatureVerifier(injector);
-        byte[] messageBytesToCheck;
-        boolean valid;
 
-        messageBytesToCheck = Arrays.copyOfRange(block9Transaction1Output1.toByteArray(), 1, block9Transaction1Output1.toByteArray().length);
+        // Not applicable here:
+        //   Step 1: Execute txIn (block 170 input) to get sig and key onto the stack.  Execute txOut (block 9 output) up to OP_CHECKSIG
+        //   Step 2: Pop public key and signature off of the stack
+
+        // Steps we perform:
+        //   Step 2a: Copy txPrev (block 9 complete transaction) into a temp script
         valid = verifier.signatureValid(messageBytesToCheck, signature);
-
-        messageBytesToCheck = Arrays.copyOfRange(block9Transaction1Output1.toByteArray(), 1, block9Transaction1Output1.toByteArray().length - 1);
-        valid = verifier.signatureValid(messageBytesToCheck, signature);
-
-        messageBytesToCheck = Arrays.copyOfRange(block9Transaction1Output1.toByteArray(), 2, block9Transaction1Output1.toByteArray().length - 1);
-        valid = verifier.signatureValid(messageBytesToCheck, signature);
-
-        messageBytesToCheck = Arrays.copyOfRange(block9Transaction1Output1.toByteArray(), 1, block9Transaction1Output1.toByteArray().length - 2);
-        valid = verifier.signatureValid(messageBytesToCheck, signature);
-
-        messageBytesToCheck = block9FullTransactionBytes;
-        valid = verifier.signatureValid(messageBytesToCheck, signature);
-
-        messageBytesToCheck = block9Output1Bytes;
-        valid = verifier.signatureValid(messageBytesToCheck, signature);
-
-        messageBytesToCheck = Arrays.copyOfRange(block9Output1Bytes, 1, block9Output1Bytes.length);
-        valid = verifier.signatureValid(messageBytesToCheck, signature);
-
-        if(!valid) {
-            // Oops!
-        }
     }
 }
