@@ -2,13 +2,11 @@ package com.timmattison.cryptocurrency.bitcoin.applications;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import com.timmattison.cryptocurrency.bitcoin.BitcoinModule;
+import com.timmattison.cryptocurrency.factories.BlockChainFactory;
 import com.timmattison.cryptocurrency.interfaces.Block;
 import com.timmattison.cryptocurrency.interfaces.BlockChain;
 import com.timmattison.cryptocurrency.litecoin.LitecoinModule;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.Date;
 
@@ -25,12 +23,7 @@ public class LitecoinProcessBlockChain {
 
         Injector injector = Guice.createInjector(new LitecoinModule());
 
-        BlockChain blockChain = injector.getInstance(BlockChain.class);
-
-        File inputFile = new File("litecoin-blockchain.dat");
-        FileInputStream inputStream = new FileInputStream(inputFile);
-
-        blockChain.setInputStream(inputStream);
+        BlockChain blockChain = injector.getInstance(BlockChainFactory.class).getBlockChain();
 
         Block block = blockChain.next();
         int blockNumber = 0;
@@ -38,7 +31,7 @@ public class LitecoinProcessBlockChain {
         long start = new Date().getTime();
 
         while (block != null) {
-            if((blockNumber % 1000) == 0) {
+            if ((blockNumber % 1000) == 0) {
                 long timestamp = new Date().getTime();
                 System.out.println((timestamp - start) + ", " + blockNumber);
             }

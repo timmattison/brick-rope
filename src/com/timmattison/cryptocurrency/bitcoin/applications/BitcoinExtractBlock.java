@@ -3,6 +3,7 @@ package com.timmattison.cryptocurrency.bitcoin.applications;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.timmattison.cryptocurrency.bitcoin.BitcoinModule;
+import com.timmattison.cryptocurrency.factories.BlockChainFactory;
 import com.timmattison.cryptocurrency.interfaces.Block;
 import com.timmattison.cryptocurrency.interfaces.BlockChain;
 
@@ -19,12 +20,7 @@ public class BitcoinExtractBlock {
     public static void main(String[] args) throws IOException {
         Injector injector = Guice.createInjector(new BitcoinModule());
 
-        BlockChain blockChain = injector.getInstance(BlockChain.class);
-
-        File inputFile = new File("bitcoin-blockchain.dat");
-        FileInputStream inputStream = new FileInputStream(inputFile);
-
-        blockChain.setInputStream(inputStream);
+        BlockChain blockChain = injector.getInstance(BlockChainFactory.class).getBlockChain();
 
         int blockNumber = 0;
         Block block = blockChain.next();

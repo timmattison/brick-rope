@@ -4,6 +4,7 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.timmattison.cryptocurrency.bitcoin.BitcoinModule;
 import com.timmattison.cryptocurrency.bitcoin.Word;
+import com.timmattison.cryptocurrency.factories.BlockChainFactory;
 import com.timmattison.cryptocurrency.interfaces.Block;
 import com.timmattison.cryptocurrency.interfaces.BlockChain;
 import com.timmattison.cryptocurrency.interfaces.Output;
@@ -31,12 +32,7 @@ public class BitcoinFindAllUsedOpcodes {
 
         Injector injector = Guice.createInjector(new BitcoinModule());
 
-        BlockChain blockChain = injector.getInstance(BlockChain.class);
-
-        File inputFile = new File("bitcoin-blockchain.dat");
-        FileInputStream inputStream = new FileInputStream(inputFile);
-
-        blockChain.setInputStream(inputStream);
+        BlockChain blockChain = injector.getInstance(BlockChainFactory.class).getBlockChain();
 
         Block block = blockChain.next();
         int blockNumber = 0;
