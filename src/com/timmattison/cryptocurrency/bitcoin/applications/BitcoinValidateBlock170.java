@@ -6,14 +6,13 @@ import com.timmattison.bitcoin.test.ByteArrayHelper;
 import com.timmattison.cryptocurrency.bitcoin.BitcoinModule;
 import com.timmattison.cryptocurrency.bitcoin.StateMachine;
 import com.timmattison.cryptocurrency.bitcoin.Word;
+import com.timmattison.cryptocurrency.factories.BlockChainFactory;
 import com.timmattison.cryptocurrency.factories.ScriptFactory;
 import com.timmattison.cryptocurrency.factories.StateMachineFactory;
 import com.timmattison.cryptocurrency.interfaces.*;
 import com.timmattison.cryptocurrency.standard.Script;
 import com.timmattison.cryptocurrency.standard.ValidationScript;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.*;
 
@@ -35,12 +34,7 @@ public class BitcoinValidateBlock170 {
 
         Injector injector = Guice.createInjector(new BitcoinModule());
 
-        BlockChain blockChain = injector.getInstance(BlockChain.class);
-
-        File inputFile = new File("bitcoin-blockchain.dat");
-        FileInputStream inputStream = new FileInputStream(inputFile);
-
-        blockChain.setInputStream(inputStream);
+        BlockChain blockChain = injector.getInstance(BlockChainFactory.class).getBlockChain();
 
         Block block = blockChain.next();
         int blockNumber = 0;
@@ -50,12 +44,12 @@ public class BitcoinValidateBlock170 {
         while (block != null) {
             blocks.add(block);
 
-            for(Transaction transaction : block.getTransactions()) {
+            for (Transaction transaction : block.getTransactions()) {
                 String hash = ByteArrayHelper.toHex(transaction.getHash());
                 transactionMap.put(hash, transaction);
             }
 
-            if (blockNumber == 9) {
+            if (blockNumber == 170) {
                 System.out.println(block.prettyDump(0));
                 System.out.println(ByteArrayHelper.toHex(block.dump()));
 
@@ -75,7 +69,7 @@ public class BitcoinValidateBlock170 {
                 String previousTransactionHash = ByteArrayHelper.toHex(input.getPreviousTransactionId());
 
                 // Does this transaction exist?
-                if(!transactionMap.containsKey(previousTransactionHash)) {
+                if (!transactionMap.containsKey(previousTransactionHash)) {
                     // No, this is bad
                     throw new UnsupportedOperationException("Couldn't find transaction");
                 }
