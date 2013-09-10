@@ -154,6 +154,16 @@ public class BitcoinInput implements Input {
     }
 
     @Override
+    public void setInputScript(InputScript script) {
+        inputScript = script;
+        inputScriptLength = script.dump().length;
+
+        VariableLengthInteger temp = new VariableLengthInteger();
+        temp.setValue(inputScriptLength);
+        inputScriptLengthBytes = temp.getValueBytes();
+    }
+
+    @Override
     public byte[] getPreviousTransactionId() {
         return previousTransactionHash;
     }

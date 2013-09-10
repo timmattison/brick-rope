@@ -241,4 +241,11 @@ public class BitcoinTransaction implements Transaction {
 
         return hashBytes;
     }
+
+    @Override
+    public void clearInputScripts() {
+        for(Input input : getInputs()) {
+            input.setInputScript(null);
+        }
+    }
 }

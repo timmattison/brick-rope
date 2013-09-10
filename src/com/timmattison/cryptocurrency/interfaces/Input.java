@@ -1,8 +1,7 @@
 package com.timmattison.cryptocurrency.interfaces;
 
+import com.timmattison.cryptocurrency.standard.InputScript;
 import com.timmattison.cryptocurrency.standard.Script;
-
-import java.util.Iterator;
 
 /**
  * Created with IntelliJ IDEA.
@@ -19,4 +18,6 @@ public interface Input extends Buildable {
     byte[] getPreviousTransactionId();
 
     long getPreviousOutputIndex();
+
+    void setInputScript(InputScript script);
 }
