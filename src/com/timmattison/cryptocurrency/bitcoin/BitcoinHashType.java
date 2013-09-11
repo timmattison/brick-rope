@@ -36,13 +36,21 @@ public enum BitcoinHashType {
     SIGHASH_ANYONECANPAY(0x00000080L);
 
     private final long value;
+    private Long littleEndianValue;
 
     private BitcoinHashType(long value) {
         this.value = value;
     }
 
     public long getValue() {
-        return value;
+        if (littleEndianValue == null) {
+            littleEndianValue = ((value >> 24) & 0xFF) |
+                    (((value >> 16) & 0xFF) << 8) |
+                    (((value >> 8) & 0xFF) << 16) |
+                    ((value & 0xFF) << 24);
+        }
+
+        return littleEndianValue;
     }
 
     public static BitcoinHashType convert(long value) {
