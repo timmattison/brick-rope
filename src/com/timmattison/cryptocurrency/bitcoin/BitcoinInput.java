@@ -156,7 +156,12 @@ public class BitcoinInput implements Input {
     @Override
     public void setInputScript(InputScript script) {
         inputScript = script;
-        inputScriptLength = script.dump().length;
+
+        if (script != null) {
+            inputScriptLength = script.dump().length;
+        } else {
+            inputScriptLength = 0;
+        }
 
         VariableLengthInteger temp = new VariableLengthInteger();
         temp.setValue(inputScriptLength);

@@ -25,6 +25,8 @@ import java.util.*;
  */
 public class BitcoinValidateBlock170 {
     public static ValidationScript validationScript;
+    public static Transaction transaction1In170;
+    public static Transaction transaction0In9;
 
     public static void main(String[] args) throws FileNotFoundException {
         List<Block> blocks = new ArrayList<Block>();
@@ -49,6 +51,10 @@ public class BitcoinValidateBlock170 {
                 transactionMap.put(hash, transaction);
             }
 
+            if (blockNumber == 9) {
+                transaction0In9 = block.getTransactions().get(0);
+            }
+
             if (blockNumber == 170) {
                 System.out.println(block.prettyDump(0));
                 System.out.println(ByteArrayHelper.toHex(block.dump()));
@@ -60,10 +66,10 @@ public class BitcoinValidateBlock170 {
                 // This is the first block that has more than one transaction.
 
                 // Get the second transaction
-                Transaction secondTransactionBlock170 = block.getTransactions().get(1);
+                transaction1In170 = block.getTransactions().get(1);
 
                 // Get its inputs
-                List<Input> inputs = secondTransactionBlock170.getInputs();
+                List<Input> inputs = transaction1In170.getInputs();
 
                 Input input = inputs.get(0);
                 String previousTransactionHash = ByteArrayHelper.toHex(input.getPreviousTransactionId());

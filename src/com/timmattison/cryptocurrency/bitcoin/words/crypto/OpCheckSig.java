@@ -4,21 +4,19 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.timmattison.crypto.ecc.interfaces.ECCMessageSignatureVerifier;
 import com.timmattison.crypto.ecc.interfaces.ECCMessageSignatureVerifierFactory;
-import com.timmattison.crypto.ecc.interfaces.ECCPoint;
-import com.timmattison.crypto.ecc.ECHelper;
-import com.timmattison.crypto.ecc.fp.ECSignatureFp;
 import com.timmattison.crypto.ecc.interfaces.ECCSignature;
 import com.timmattison.cryptocurrency.bitcoin.BitcoinHashType;
 import com.timmattison.cryptocurrency.bitcoin.BitcoinModule;
 import com.timmattison.cryptocurrency.bitcoin.StateMachine;
 import com.timmattison.cryptocurrency.bitcoin.applications.BitcoinValidateBlock170;
 import com.timmattison.cryptocurrency.factories.SignatureProcessorFactory;
-import com.timmattison.cryptocurrency.helpers.ByteArrayHelper;
+import com.timmattison.cryptocurrency.interfaces.Input;
 import com.timmattison.cryptocurrency.interfaces.SignatureProcessor;
+import com.timmattison.cryptocurrency.interfaces.Transaction;
+import com.timmattison.cryptocurrency.interfaces.TransactionLocator;
 
 import javax.inject.Inject;
-import java.math.BigInteger;
-import java.security.MessageDigest;
+import java.util.Arrays;
 
 /**
  * Created with IntelliJ IDEA.
@@ -54,6 +52,11 @@ public class OpCheckSig extends CryptoOp {
         byte[] publicKey = (byte[]) stateMachine.pop();
         byte[] signature = (byte[]) stateMachine.pop();
 
+        // Get the last byte of the signature as the hash type
+        BitcoinHashType hashType = BitcoinHashType.convert(signature[signature.length - 1]);
+
+        signature = Arrays.copyOfRange(signature, 0, signature.length - 1);
+
         /*
             Signature should be in this format (from http://www.bitcoinsecurity.org/2012/07/22/7/):
              [sig] = [sigLength][0×30][rsLength][0×02][rLength][sig_r][0×02][sLength][sig_s][0×01]
@@ -76,16 +79,27 @@ public class OpCheckSig extends CryptoOp {
                  publicKeyLength is always 0×21 (= 33) since keyX is 32 bytes and 0×02/0×03 is 1 byte.
         */
 
-        // Get the last byte of the signature as the hash type
-        BitcoinHashType hashType = BitcoinHashType.convert(signature[signature.length - 1]);
-
         if (hashType != BitcoinHashType.SIGHASH_ALL) {
             throw new UnsupportedOperationException("Only SIGHASH_ALL accepted currently");
         }
 
+        // Copy txNew to txCopy, XXX I KNOW THIS ISN'T REALLY A COPY XXX
+        Transaction transaction1In170 = BitcoinValidateBlock170.transaction1In170;
+        Transaction txCopy = transaction1In170;
+
+        // Clear all txIn scripts
+        for(Input input : txCopy.getInputs()) {
+            input.setInputScript(null);
+        }
+
+        // Copy the subscript into the txIn we're chceking
+
         // Create the signature processor
         // XXX UBER TEMP INSANITY XXX
         Injector injector = Guice.createInjector(new BitcoinModule());
+
+        TransactionLocator transactionLocator = injector.getInstance(TransactionLocator.class);
+        // XXX USE THE TRANSACTION LOCATOR!
 
         signatureProcessorFactory = injector.getInstance(SignatureProcessorFactory.class);
         SignatureProcessor signatureProcessor = signatureProcessorFactory.create();
@@ -96,11 +110,14 @@ public class OpCheckSig extends CryptoOp {
         ECCSignature eccSignature = (ECCSignature) signatureProcessor.getSignature(signature, publicKey);
 
         try {
-            byte[] message = BitcoinValidateBlock170.validationScript.dump();
-            //message[0] += 1;
-            boolean valid = eccMessageSignatureVerifier.signatureValid(message, eccSignature);
+            boolean valid = false;
 
-            if(!valid) {
+            Transaction transaction0In9 = BitcoinValidateBlock170.transaction0In9;
+
+            //message[0] += 1;
+            //boolean valid = eccMessageSignatureVerifier.signatureValid(message, eccSignature);
+
+            if (!valid) {
                 throw new UnsupportedOperationException("Signature isn't valid!");
             }
         } catch (Exception e) {
