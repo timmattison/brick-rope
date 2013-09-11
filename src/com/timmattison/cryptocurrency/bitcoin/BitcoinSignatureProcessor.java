@@ -94,8 +94,7 @@ public class BitcoinSignatureProcessor implements SignatureProcessor<ECCSignatur
         ECCPoint Qu = curve.decodePointBinary(publicKey);
 
         // Create the signature instance
-        ECCSignature ecSignature = signatureFactory.create(ecc, new BigInteger(sig_r), new BigInteger(sig_s), Qu);
-        //ECCSignature ecSignature = signatureFactory.create(ecc, new BigInteger(ByteArrayHelper.reverseBytes(sig_r)), new BigInteger(ByteArrayHelper.reverseBytes(sig_s)), Qu);
+        ECCSignature ecSignature = signatureFactory.create(ecc, new BigInteger(ByteArrayHelper.reverseBytes(sig_r)), new BigInteger(ByteArrayHelper.reverseBytes(sig_s)), Qu);
 
         return ecSignature;
     }
