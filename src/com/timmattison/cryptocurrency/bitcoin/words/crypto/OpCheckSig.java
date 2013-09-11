@@ -92,7 +92,7 @@ public class OpCheckSig extends CryptoOp {
 
         // Clear all txIn scripts
         for(Input input : txCopy.getInputs()) {
-            input.setInputScript(null);
+            input.setScript(null);
         }
 
         // Get the subscript XXX NEED TO CHECK FOR OP_CODESEPARATORS! XXX
@@ -100,19 +100,19 @@ public class OpCheckSig extends CryptoOp {
         Script subscript = transaction0In9.getOutputs().get(0).getScript();
 
         // Copy the subscript into the txIn we're checking XXX NEED TO CHECK FOR OP_CODESEPARATORS! XXX
-        txCopy.getInputs().get(0).setInputScript((InputScript) subscript);
+        txCopy.getInputs().get(0).setScript(subscript);
 
         // Serialize txCopy
         byte[] txCopyBytes = txCopy.dump();
 
         // Add on four byte hash type code
-        ByteArrayHelper.concatenate(txCopyBytes, hashType.getValue());
+        ByteArrayHelper.concatenate(txCopyBytes, hashType.getLittleEndianValue());
 
         // Create the signature processor
         // XXX UBER TEMP INSANITY XXX
         Injector injector = Guice.createInjector(new BitcoinModule());
 
-        TransactionLocator transactionLocator = injector.getInstance(TransactionLocator.class);
+        //TransactionLocator transactionLocator = injector.getInstance(TransactionLocator.class);
         // XXX USE THE TRANSACTION LOCATOR!
 
         signatureProcessorFactory = injector.getInstance(SignatureProcessorFactory.class);

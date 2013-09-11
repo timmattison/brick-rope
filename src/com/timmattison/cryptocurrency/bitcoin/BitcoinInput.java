@@ -45,7 +45,7 @@ public class BitcoinInput implements Input {
     /**
      * Input script
      */
-    private InputScript inputScript;
+    private Script inputScript;
     /**
      * Sequence number
      */
@@ -154,7 +154,7 @@ public class BitcoinInput implements Input {
     }
 
     @Override
-    public void setInputScript(InputScript script) {
+    public void setScript(Script script) {
         inputScript = script;
 
         if (script != null) {

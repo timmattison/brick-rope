@@ -19,5 +19,5 @@ public interface Input extends Buildable {
 
     long getPreviousOutputIndex();
 
-    void setInputScript(InputScript script);
+    void setScript(Script script);
 }
