@@ -168,7 +168,7 @@ public class OpCheckSig extends CryptoOp {
         byte[] txCopyBytes = txCopy.dump();
 
         // Add on four byte hash type code
-        ByteArrayHelper.concatenate(txCopyBytes, hashType.getLittleEndianValue());
+        txCopyBytes = ByteArrayHelper.concatenate(txCopyBytes, hashType.getLittleEndianValue());
 
         // Create the signature processor
         // XXX UBER TEMP INSANITY XXX
@@ -183,7 +183,7 @@ public class OpCheckSig extends CryptoOp {
         eccMessageSignatureVerifierFactory = injector.getInstance(ECCMessageSignatureVerifierFactory.class);
         ECCMessageSignatureVerifier eccMessageSignatureVerifier = eccMessageSignatureVerifierFactory.create();
 
-        ECCSignature eccSignature = (ECCSignature) signatureProcessor.getSignature(signature, publicKey);
+        ECCSignature eccSignature = (ECCSignature) signatureProcessor.getSignature(r, s, publicKey);
 
         try {
             boolean valid = false;
