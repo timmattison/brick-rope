@@ -53,6 +53,8 @@ public class OpCheckSig extends CryptoOp {
         byte[] publicKey = (byte[]) stateMachine.pop();
         byte[] signature = (byte[]) stateMachine.pop();
 
+        System.out.println("Public key bytes: " + ByteArrayHelper.toHex(publicKey));
+
         // Sanity check: Public key must start with 0x04
         if (publicKey[0] != 0x04) {
             throw new UnsupportedOperationException("Public key does not start with 0x04");
@@ -60,12 +62,15 @@ public class OpCheckSig extends CryptoOp {
 
         // Extract X and Y
         int xStart = 1;
-        int xEnd = 32 + 1;
+        int xEnd = xStart + 32;
         int yStart = xEnd;
         int yEnd = yStart + 32;
 
         byte[] x = Arrays.copyOfRange(publicKey, xStart, xEnd);
         byte[] y = Arrays.copyOfRange(publicKey, yStart, yEnd);
+
+        System.out.println("X bytes: " + ByteArrayHelper.toHex(x));
+        System.out.println("Y bytes: " + ByteArrayHelper.toHex(y));
 
         // Sanity check: x and y are both 32 bytes
         if (x.length != 32) {
@@ -75,6 +80,8 @@ public class OpCheckSig extends CryptoOp {
         if (y.length != 32) {
             throw new UnsupportedOperationException("y is not 32 bytes");
         }
+
+        System.out.println("Signature bytes: " + ByteArrayHelper.toHex(signature));
 
         // Sanity check: Signature starts with 0x30
         if (signature[0] != 0x30) {
@@ -108,6 +115,9 @@ public class OpCheckSig extends CryptoOp {
         int sStart = rEnd + 2;
         int sEnd = sStart + sLength;
         byte[] s = Arrays.copyOfRange(signature, sStart, sEnd);
+
+        System.out.println("R bytes: " + ByteArrayHelper.toHex(r));
+        System.out.println("S bytes: " + ByteArrayHelper.toHex(s));
 
         // Get the last byte of the signature as the hash type
         BitcoinHashType hashType = BitcoinHashType.convert(signature[signature.length - 1]);
