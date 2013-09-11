@@ -14,8 +14,6 @@ import com.timmattison.cryptocurrency.factories.SignatureProcessorFactory;
 import com.timmattison.cryptocurrency.interfaces.Input;
 import com.timmattison.cryptocurrency.interfaces.SignatureProcessor;
 import com.timmattison.cryptocurrency.interfaces.Transaction;
-import com.timmattison.cryptocurrency.interfaces.TransactionLocator;
-import com.timmattison.cryptocurrency.standard.InputScript;
 import com.timmattison.cryptocurrency.standard.Script;
 
 import javax.inject.Inject;
@@ -55,6 +53,48 @@ public class OpCheckSig extends CryptoOp {
         byte[] publicKey = (byte[]) stateMachine.pop();
         byte[] signature = (byte[]) stateMachine.pop();
 
+        // Sanity check: Public key must start with 0x04
+        if (publicKey[0] != 0x04) {
+            throw new UnsupportedOperationException("Public key does not start with 0x04");
+        }
+
+        // Extract X and Y
+        byte[] x = Arrays.copyOfRange(publicKey, 1, 32 + 1);
+        byte[] y = Arrays.copyOfRange(publicKey, 32 + 1, 32 + 32 + 1);
+
+        // Sanity check: x and y are both 32 bytes
+        if (x.length != 32) {
+            throw new UnsupportedOperationException("x is not 32 bytes");
+        }
+
+        if (y.length != 32) {
+            throw new UnsupportedOperationException("y is not 32 bytes");
+        }
+
+        // Sanity check: Signature starts with 0x30
+        if (signature[0] != 0x30) {
+            throw new UnsupportedOperationException("Signature does not start with 0x30");
+        }
+
+        // Sanity check rsLength makes sense
+        int rsLength = signature[1];
+
+        if (signature.length - 1 != rsLength) {
+            throw new UnsupportedOperationException("rsLength is incorrect");
+        }
+
+        // Sanity check: r starts with 0x02
+        if (signature[2] != 0x02) {
+            throw new UnsupportedOperationException("r does not start with 0x02");
+        }
+
+        // TODO Sanity check: rLength makes sense
+        // TODO Extract r
+        // TODO Sanity check: sLength makes sense
+        // TODO Extract s
+
+        // Extract r and s
+        byte[] r = Arrays.copyOfRange(signature, )
         // Get the last byte of the signature as the hash type
         BitcoinHashType hashType = BitcoinHashType.convert(signature[signature.length - 1]);
 
@@ -91,7 +131,7 @@ public class OpCheckSig extends CryptoOp {
         Transaction txCopy = transaction1In170;
 
         // Clear all txIn scripts
-        for(Input input : txCopy.getInputs()) {
+        for (Input input : txCopy.getInputs()) {
             input.setScript(null);
         }
 
