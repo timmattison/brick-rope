@@ -4,7 +4,6 @@ import com.timmattison.bitcoin.test.ByteArrayHelper;
 import com.timmattison.cryptocurrency.factories.ScriptFactory;
 import com.timmattison.cryptocurrency.helpers.EndiannessHelper;
 import com.timmattison.cryptocurrency.interfaces.Input;
-import com.timmattison.cryptocurrency.standard.InputScript;
 import com.timmattison.cryptocurrency.standard.Script;
 import com.timmattison.cryptocurrency.standard.VariableLengthInteger;
 
@@ -95,7 +94,11 @@ public class BitcoinInput implements Input {
             bytes.write(previousTransactionHash);
             bytes.write(previousOutputIndexBytes);
             bytes.write(inputScriptLengthBytes);
-            bytes.write(inputScript.dump());
+
+            if (inputScript != null) {
+                bytes.write(inputScript.dump());
+            }
+
             bytes.write(sequenceNumberBytes);
 
             return bytes.toByteArray();
