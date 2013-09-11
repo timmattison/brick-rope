@@ -59,8 +59,13 @@ public class OpCheckSig extends CryptoOp {
         }
 
         // Extract X and Y
-        byte[] x = Arrays.copyOfRange(publicKey, 1, 32 + 1);
-        byte[] y = Arrays.copyOfRange(publicKey, 32 + 1, 32 + 32 + 1);
+        int xStart = 1;
+        int xEnd = 32 + 1;
+        int yStart = xEnd;
+        int yEnd = yStart + 32;
+
+        byte[] x = Arrays.copyOfRange(publicKey, xStart, xEnd);
+        byte[] y = Arrays.copyOfRange(publicKey, yStart, yEnd);
 
         // Sanity check: x and y are both 32 bytes
         if (x.length != 32) {
@@ -79,7 +84,7 @@ public class OpCheckSig extends CryptoOp {
         // Sanity check rsLength makes sense
         int rsLength = signature[1];
 
-        if (signature.length - 1 != rsLength) {
+        if (signature.length - 3 != rsLength) {
             throw new UnsupportedOperationException("rsLength is incorrect");
         }
 
@@ -89,16 +94,23 @@ public class OpCheckSig extends CryptoOp {
         }
 
         // TODO Sanity check: rLength makes sense
-        // TODO Extract r
-        // TODO Sanity check: sLength makes sense
-        // TODO Extract s
+        int rLength = signature[3];
 
-        // Extract r and s
-        byte[] r = Arrays.copyOfRange(signature, )
+        // Extract r
+        int rStart = 3 + 1;
+        int rEnd = rStart + rLength;
+        byte[] r = Arrays.copyOfRange(signature, rStart, rEnd);
+
+        // TODO Sanity check: sLength makes sense
+        int sLength = signature[rEnd + 1];
+
+        // Extract s
+        int sStart = rEnd + 2;
+        int sEnd = sStart + sLength;
+        byte[] s = Arrays.copyOfRange(signature, sStart, sEnd);
+
         // Get the last byte of the signature as the hash type
         BitcoinHashType hashType = BitcoinHashType.convert(signature[signature.length - 1]);
-
-        signature = Arrays.copyOfRange(signature, 0, signature.length - 1);
 
         /*
             Signature should be in this format (from http://www.bitcoinsecurity.org/2012/07/22/7/):
@@ -168,7 +180,7 @@ public class OpCheckSig extends CryptoOp {
 
 
             //message[0] += 1;
-            //boolean valid = eccMessageSignatureVerifier.signatureValid(message, eccSignature);
+            valid = eccMessageSignatureVerifier.signatureValid(txCopyBytes, eccSignature);
 
             if (!valid) {
                 throw new UnsupportedOperationException("Signature isn't valid!");
