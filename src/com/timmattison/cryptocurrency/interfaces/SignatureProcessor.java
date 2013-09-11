@@ -1,7 +1,5 @@
 package com.timmattison.cryptocurrency.interfaces;
 
-import java.math.BigInteger;
-
 /**
  * Created with IntelliJ IDEA.
  * User: Tim
@@ -11,5 +9,6 @@ import java.math.BigInteger;
  */
 public interface SignatureProcessor<T> {
     T getSignature(byte[] signature, byte[] publicKey);
+
     T getSignature(byte[] sig_r, byte[] sig_s, byte[] publicKey);
 }
