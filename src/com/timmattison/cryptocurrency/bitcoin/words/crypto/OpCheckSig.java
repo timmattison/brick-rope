@@ -2,6 +2,7 @@ package com.timmattison.cryptocurrency.bitcoin.words.crypto;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import com.timmattison.bitcoin.test.ByteArrayHelper;
 import com.timmattison.crypto.ecc.interfaces.ECCMessageSignatureVerifier;
 import com.timmattison.crypto.ecc.interfaces.ECCMessageSignatureVerifierFactory;
 import com.timmattison.crypto.ecc.interfaces.ECCSignature;
@@ -14,6 +15,8 @@ import com.timmattison.cryptocurrency.interfaces.Input;
 import com.timmattison.cryptocurrency.interfaces.SignatureProcessor;
 import com.timmattison.cryptocurrency.interfaces.Transaction;
 import com.timmattison.cryptocurrency.interfaces.TransactionLocator;
+import com.timmattison.cryptocurrency.standard.InputScript;
+import com.timmattison.cryptocurrency.standard.Script;
 
 import javax.inject.Inject;
 import java.util.Arrays;
@@ -92,7 +95,18 @@ public class OpCheckSig extends CryptoOp {
             input.setInputScript(null);
         }
 
-        // Copy the subscript into the txIn we're chceking
+        // Get the subscript XXX NEED TO CHECK FOR OP_CODESEPARATORS! XXX
+        Transaction transaction0In9 = BitcoinValidateBlock170.transaction0In9;
+        Script subscript = transaction0In9.getOutputs().get(0).getScript();
+
+        // Copy the subscript into the txIn we're checking XXX NEED TO CHECK FOR OP_CODESEPARATORS! XXX
+        txCopy.getInputs().get(0).setInputScript((InputScript) subscript);
+
+        // Serialize txCopy
+        byte[] txCopyBytes = txCopy.dump();
+
+        // Add on four byte hash type code
+        ByteArrayHelper.concatenate(txCopyBytes, hashType.getValue());
 
         // Create the signature processor
         // XXX UBER TEMP INSANITY XXX
@@ -112,7 +126,6 @@ public class OpCheckSig extends CryptoOp {
         try {
             boolean valid = false;
 
-            Transaction transaction0In9 = BitcoinValidateBlock170.transaction0In9;
 
             //message[0] += 1;
             //boolean valid = eccMessageSignatureVerifier.signatureValid(message, eccSignature);

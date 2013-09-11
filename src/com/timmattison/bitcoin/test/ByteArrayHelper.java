@@ -59,6 +59,18 @@ public class ByteArrayHelper {
         }
     }
 
+
+    public static byte[] concatenate(byte[] input1, long value) {
+        byte[] valueBytes = new byte[4];
+
+        valueBytes[0] = (byte) ((value >> 24) & 0xFF);
+        valueBytes[1] = (byte) ((value >> 16) & 0xFF);
+        valueBytes[2] = (byte) ((value >> 8) & 0xFF);
+        valueBytes[3] = (byte) (value & 0xFF);
+
+        return concatenate(input1, valueBytes);
+    }
+
     /**
      * Reverse a byte array.  Typically used when endianness is backwards and we're converting to BigIntegers.
      *

@@ -43,6 +43,10 @@ public enum BitcoinHashType {
     }
 
     public long getValue() {
+        return value;
+    }
+
+    public long getLittleEndianValue() {
         if (littleEndianValue == null) {
             littleEndianValue = ((value >> 24) & 0xFF) |
                     (((value >> 16) & 0xFF) << 8) |
