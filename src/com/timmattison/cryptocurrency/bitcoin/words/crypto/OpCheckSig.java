@@ -152,10 +152,15 @@ public class OpCheckSig extends CryptoOp {
         Transaction transaction1In170 = BitcoinValidateBlock170.transaction1In170;
         Transaction txCopy = transaction1In170;
 
+        System.out.println("Transaction in 170: " + ByteArrayHelper.toHex(txCopy.dump()));
+
         // Clear all txIn scripts
         for (Input input : txCopy.getInputs()) {
             input.setScript(null);
         }
+
+        System.out.println("Cleared out inputs: " + ByteArrayHelper.toHex(txCopy.dump()));
+        System.out.println("Cleared out inputs: " + txCopy.prettyDump(0));
 
         // Get the subscript XXX NEED TO CHECK FOR OP_CODESEPARATORS! XXX
         Transaction transaction0In9 = BitcoinValidateBlock170.transaction0In9;
@@ -163,6 +168,9 @@ public class OpCheckSig extends CryptoOp {
 
         // Copy the subscript into the txIn we're checking XXX NEED TO CHECK FOR OP_CODESEPARATORS! XXX
         txCopy.getInputs().get(0).setScript(subscript);
+
+        System.out.println("Included subscript: " + ByteArrayHelper.toHex(txCopy.dump()));
+        System.out.println("Included subscript: " + txCopy.prettyDump(0));
 
         // Serialize txCopy
         byte[] txCopyBytes = txCopy.dump();
@@ -187,7 +195,6 @@ public class OpCheckSig extends CryptoOp {
 
         try {
             boolean valid = false;
-
 
             //message[0] += 1;
             valid = eccMessageSignatureVerifier.signatureValid(txCopyBytes, eccSignature);
