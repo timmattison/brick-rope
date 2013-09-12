@@ -135,7 +135,14 @@ public class BitcoinInput implements Input {
 
         stringBuilder.append(indentation);
         stringBuilder.append("Input script: ");
-        stringBuilder.append(inputScript.prettyDump(indentationLevel + 1));
+
+        if (inputScript != null) {
+            stringBuilder.append(inputScript.prettyDump(indentationLevel + 1));
+        }
+        else {
+            stringBuilder.append("NULL");
+        }
+
         stringBuilder.append("\n");
 
         stringBuilder.append(indentation);
