@@ -1,11 +1,9 @@
 package com.timmattison.cryptocurrency.interfaces;
 
 /**
- * Created with IntelliJ IDEA.
- * User: Tim
- * Date: 8/15/13
- * Time: 7:15 AM
- * To change this template use File | Settings | File Templates.
+ * Returns an ECC signature object.  This is a convenience interface that knows what curve is being used.
+ *
+ * @param <T> the type of signature that is returned
  */
 public interface SignatureProcessor<T> {
     T getSignature(byte[] signature, byte[] publicKey);
