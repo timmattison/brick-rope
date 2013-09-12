@@ -99,7 +99,7 @@ public class BitcoinOutput implements Output {
         stringBuilder.append("\n");
 
         stringBuilder.append(indentation);
-        stringBuilder.append("Output script length bytes: ");
+        stringBuilder.append("Output script length bytes: 0x");
         stringBuilder.append(ByteArrayHelper.toHex(outputScriptLengthBytes));
         stringBuilder.append("\n");
 
