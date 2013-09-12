@@ -7,6 +7,7 @@ import com.timmattison.crypto.ecc.interfaces.ECCMessageSignatureVerifier;
 import com.timmattison.crypto.ecc.interfaces.ECCMessageSignatureVerifierFactory;
 import com.timmattison.crypto.ecc.interfaces.ECCSignature;
 import com.timmattison.cryptocurrency.bitcoin.BitcoinHashType;
+import com.timmattison.cryptocurrency.bitcoin.BitcoinInputScript;
 import com.timmattison.cryptocurrency.bitcoin.BitcoinModule;
 import com.timmattison.cryptocurrency.bitcoin.StateMachine;
 import com.timmattison.cryptocurrency.bitcoin.applications.BitcoinValidateBlock170;
@@ -14,6 +15,7 @@ import com.timmattison.cryptocurrency.factories.SignatureProcessorFactory;
 import com.timmattison.cryptocurrency.interfaces.Input;
 import com.timmattison.cryptocurrency.interfaces.SignatureProcessor;
 import com.timmattison.cryptocurrency.interfaces.Transaction;
+import com.timmattison.cryptocurrency.standard.InputScript;
 import com.timmattison.cryptocurrency.standard.Script;
 
 import javax.inject.Inject;
@@ -150,6 +152,10 @@ public class OpCheckSig extends CryptoOp {
 
         // Copy txNew to txCopy, XXX I KNOW THIS ISN'T REALLY A COPY XXX
         Transaction transaction1In170 = BitcoinValidateBlock170.transaction1In170;
+        Script subscript = transaction1In170.getInputs().get(0).getScript();
+        byte[] subscriptBytes = subscript.dump();
+
+        // XXX - NEED A REAL COPY HERE OTHERWISE WE DESTROY OUR DATA!
         Transaction txCopy = transaction1In170;
 
         System.out.println("Transaction in 170: " + ByteArrayHelper.toHex(txCopy.dump()));
@@ -164,10 +170,13 @@ public class OpCheckSig extends CryptoOp {
 
         // Get the subscript XXX NEED TO CHECK FOR OP_CODESEPARATORS! XXX
         Transaction transaction0In9 = BitcoinValidateBlock170.transaction0In9;
-        Script subscript = transaction0In9.getOutputs().get(0).getScript();
+        subscript = transaction1In170.getInputs().get(0).getScript();
+
+        System.out.println("Subscript: " + ByteArrayHelper.toHex(subscriptBytes));
 
         // Copy the subscript into the txIn we're checking XXX NEED TO CHECK FOR OP_CODESEPARATORS! XXX
-        txCopy.getInputs().get(0).setScript(subscript);
+        InputScript safeSubscript = inputScriptFactory.create(subscriptBytes);
+        txCopy.getInputs().get(0).setScript(subscriptBytes);
 
         System.out.println("Included subscript: " + ByteArrayHelper.toHex(txCopy.dump()));
         System.out.println("Included subscript: " + txCopy.prettyDump(0));
@@ -177,6 +186,8 @@ public class OpCheckSig extends CryptoOp {
 
         // Add on four byte hash type code
         txCopyBytes = ByteArrayHelper.concatenate(txCopyBytes, hashType.getLittleEndianValue());
+
+        System.out.println("Included hash type code: " + ByteArrayHelper.toHex(txCopyBytes));
 
         // Create the signature processor
         // XXX UBER TEMP INSANITY XXX
