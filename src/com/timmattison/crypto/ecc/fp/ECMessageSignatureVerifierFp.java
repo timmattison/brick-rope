@@ -33,9 +33,12 @@ public class ECMessageSignatureVerifierFp implements ECCMessageSignatureVerifier
         ECCPoint Qu = eccSignature.getQu();
 
         // Hash the message
-        MessageDigest md = eccMessageSignerDigestFactory.create();
-        md.update(messageBytes);
-        byte[] hashBytes = md.digest();
+        MessageDigest md1 = eccMessageSignerDigestFactory.create();
+        md1.update(messageBytes);
+        byte[] hashBytes = md1.digest();
+        MessageDigest md2 = eccMessageSignerDigestFactory.create();
+        md2.update(hashBytes);
+        hashBytes = md2.digest();
         String H = ByteArrayHelper.toHex(hashBytes);
 
         // r and s must be >= 2
