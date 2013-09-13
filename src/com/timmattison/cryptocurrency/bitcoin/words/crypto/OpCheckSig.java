@@ -226,6 +226,7 @@ public class OpCheckSig extends CryptoOp {
         eccMessageSignatureVerifierFactory = injector.getInstance(ECCMessageSignatureVerifierFactory.class);
         ECCMessageSignatureVerifier eccMessageSignatureVerifier = eccMessageSignatureVerifierFactory.create();
 
+        // XXX - R and S match what the reference code shows
         ECCSignature eccSignature = (ECCSignature) signatureProcessor.getSignature(r, s, publicKey);
 
         try {
