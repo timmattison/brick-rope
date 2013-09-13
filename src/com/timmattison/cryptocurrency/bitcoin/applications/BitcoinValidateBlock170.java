@@ -27,6 +27,7 @@ public class BitcoinValidateBlock170 {
     public static ValidationScript validationScript;
     public static Transaction transaction1In170;
     public static Transaction transaction0In9;
+    public static Transaction transaction0In170;
 
     public static void main(String[] args) throws FileNotFoundException {
         List<Block> blocks = new ArrayList<Block>();
@@ -64,6 +65,9 @@ public class BitcoinValidateBlock170 {
                 System.out.println("Output bytes:");
                 System.out.println(ByteArrayHelper.toHex(block.getTransactions().get(0).getOutputs().get(0).dump()));
                 // This is the first block that has more than one transaction.
+
+                // Get the first transaction
+                transaction0In170 = block.getTransactions().get(0);
 
                 // Get the second transaction
                 transaction1In170 = block.getTransactions().get(1);

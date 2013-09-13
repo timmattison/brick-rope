@@ -132,4 +132,23 @@ public class ByteArrayHelper {
 
         return bytes;
     }
+
+    public static boolean equals(byte[] referenceBytes, byte[] txCopyBytes) {
+        if((referenceBytes == null) || (txCopyBytes == null)) {
+            throw new UnsupportedOperationException("Cannot be NULL");
+        }
+
+        if(referenceBytes.length != txCopyBytes.length) {
+            throw new UnsupportedOperationException("Different lengths");
+        }
+
+        for(int loop = 0; loop < referenceBytes.length; loop++) {
+            if(referenceBytes[loop] != txCopyBytes[loop]) {
+                System.out.println("Arrays differ at byte #" + loop + ".  Expected: " + referenceBytes[loop] + ", saw: " + txCopyBytes[loop]);
+                return false;
+            }
+        }
+
+        return true;
+    }
 }
