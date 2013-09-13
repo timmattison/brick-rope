@@ -16,7 +16,7 @@ public class SHA1MessageSignerDigestFactory implements ECCMessageSignerDigestFac
     @Override
     public MessageDigest create() {
         try {
-            return MessageDigest.getInstance("SHA256");
+            return MessageDigest.getInstance("SHA-1");
         } catch (NoSuchAlgorithmException e) {
             throw new UnsupportedOperationException(e);
         }
