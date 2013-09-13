@@ -52,6 +52,7 @@ public class OpCheckSig extends CryptoOp {
 
     @Override
     public void execute(StateMachine stateMachine) {
+        THIS WHOLE THING NEEDS A TON OF CLEAN UP
         // Pop the public key and the signature from the stack
         byte[] publicKey = (byte[]) stateMachine.pop();
         byte[] signature = (byte[]) stateMachine.pop();
