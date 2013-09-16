@@ -26,133 +26,12 @@ import java.util.Map;
  * To change this template use File | Settings | File Templates.
  */
 public class BitcoinWordFactory implements WordFactory {
-    @Override
-    public Word createWord(byte opcode) {
-        return getWordByOpcode(opcode);
-    }
-
     private static Map<Byte, Class<Word>> classesByOpcode;
     private static HashMap<String, Class<Word>> classesByName;
 
     // Initialize the list of available words
     List<Class> availableWords = new ArrayList<Class>() {{
-        add(Op0NotEqual.class);
-        add(Op1Add.class);
-        add(Op1Sub.class);
-        add(Op2Div.class);
-        add(Op2Mul.class);
-        add(OpAbs.class);
-        add(OpAdd.class);
-        add(OpBoolAnd.class);
-        add(OpBoolOr.class);
-        add(OpDiv.class);
-        add(OpGreaterThan.class);
-        add(OpGreaterThanOrEqual.class);
-        add(OpLessThan.class);
-        add(OpLessThanOrEqual.class);
-        add(OpLShift.class);
-        add(OpMax.class);
-        add(OpMin.class);
-        add(OpMod.class);
-        add(OpMul.class);
-        add(OpNegate.class);
-        add(OpNot.class);
-        add(OpNumEqual.class);
-        add(OpNumEqualVerify.class);
-        add(OpNumNotEqual.class);
-        add(OpRShift.class);
-        add(OpSub.class);
-        add(OpWithin.class);
-        add(OpAnd.class);
-        add(OpEqual.class);
-        add(OpEqualVerify.class);
-        add(OpInvert.class);
-        add(OpOr.class);
-        add(OpXor.class);
-        add(Op0.class);
-        add(Op1.class);
-        add(Op10.class);
-        add(Op11.class);
-        add(Op12.class);
-        add(Op13.class);
-        add(Op14.class);
-        add(Op15.class);
-        add(Op16.class);
-        add(Op1Negate.class);
-        add(Op2.class);
-        add(Op3.class);
-        add(Op4.class);
-        add(Op5.class);
-        add(Op6.class);
-        add(Op7.class);
-        add(Op8.class);
-        add(Op9.class);
-        add(OpFalse.class);
-        add(OpPushData1.class);
-        add(OpPushData2.class);
-        add(OpPushData4.class);
-        add(OpTrue.class);
-        add(OpCheckMultiSig.class);
-        add(OpCheckMultiSigVerify.class);
-        add(OpCheckSig.class);
-        add(OpCheckSigVerify.class);
-        add(OpCodeSeparator.class);
-        add(OpHash160.class);
-        add(OpHash256.class);
-        add(OpRipEmd160.class);
-        add(OpSha1.class);
-        add(OpSha256.class);
-        add(OpElse.class);
-        add(OpEndIf.class);
-        add(OpIf.class);
-        add(OpNop.class);
-        add(OpNotIf.class);
-        add(OpReturn.class);
-        add(OpVerify.class);
-        add(OpInvalidOpcode.class);
-        add(OpPubKey.class);
-        add(OpPubKeyHash.class);
-        add(OpNop1.class);
-        add(OpNop10.class);
-        add(OpNop2.class);
-        add(OpNop3.class);
-        add(OpNop4.class);
-        add(OpNop5.class);
-        add(OpNop6.class);
-        add(OpNop7.class);
-        add(OpNop8.class);
-        add(OpNop9.class);
-        add(OpReserved.class);
-        add(OpReserved1.class);
-        add(OpReserved2.class);
-        add(OpVer.class);
-        add(OpVerIf.class);
-        add(OpVerNotIf.class);
-        add(OpCat.class);
-        add(OpLeft.class);
-        add(OpRight.class);
-        add(OpSize.class);
-        add(OpSubStr.class);
-        add(Op2Drop.class);
-        add(Op2Dup.class);
-        add(Op2Over.class);
-        add(Op2Rot.class);
-        add(Op2Swap.class);
-        add(Op3Dup.class);
-        add(OpDepth.class);
-        add(OpDrop.class);
-        add(OpDup.class);
-        add(OpFromAltStack.class);
-        add(OpIfDup.class);
-        add(OpNip.class);
-        add(OpOver.class);
-        add(OpPick.class);
-        add(OpRoll.class);
-        add(OpRot.class);
-        add(OpSwap.class);
-        add(OpToAltStack.class);
-        add(OpTuck.class);
-    }};
+   }};
 
     public BitcoinWordFactory() throws InstantiationException, IllegalAccessException {
         if (classesByOpcode == null) {
@@ -162,6 +41,152 @@ public class BitcoinWordFactory implements WordFactory {
         if (classesByName == null) {
             createNameLookupTable();
         }
+    }
+
+    @Override
+    public Word createWord(byte opcode) {
+      switch(opcode) {
+          case 0x00 : return new OpFalse(); break;
+          case 0x4c : return new OpPushData1(); break;
+          case 0x4d : return new OpPushData2(); break;
+          case 0x4e : return new OpPushData4(); break;
+          case 0x4f : return new Op1Negate(); break;
+          case 0x51 : return new OpTrue(); break;
+          case 0x52 : return new Op2(); break;
+          case 0x53 : return new Op3(); break;
+          case 0x54 : return new Op4(); break;
+          case 0x55 : return new Op5(); break;
+          case 0x56 : return new Op6(); break;
+          case 0x57 : return new Op7(); break;
+          case 0x58 : return new Op8(); break;
+          case 0x59 : return new Op9(); break;
+          case 0x5a : return new Op10(); break;
+          case 0x5b : return new Op11(); break;
+          case 0x5c : return new Op12(); break;
+          case 0x5d : return new Op13(); break;
+          case 0x5e : return new Op14(); break;
+          case 0x5f : return new Op15(); break;
+          case 0x60 : return new Op16(); break;
+          case 0x61 : return new OpNop(); break;
+          case 0x63 : return new OpIf(); break;
+          case 0x64 :
+              Op0NotEqual
+              Op1Add
+              Op1Sub
+              Op2Div
+              Op2Mul
+              OpAbs
+              OpAdd
+              OpBoolAnd
+              OpBoolOr
+              OpDiv
+              OpGreaterThan
+              OpGreaterThanOrEqual
+              OpLessThan
+              OpLessThanOrEqual
+              OpLShift
+              OpMax
+              OpMin
+              OpMod
+              OpMul
+              OpNegate
+              OpNot
+              OpNumEqual
+              OpNumEqualVerify
+              OpNumNotEqual
+              OpRShift
+              OpSub
+              OpWithin
+              OpAnd
+              OpEqual
+              OpEqualVerify
+              OpInvert
+              OpOr
+              OpXor
+              Op0
+              Op1
+              Op10
+              Op11
+              Op12
+              Op13
+              Op14
+              Op15
+              Op16
+              Op1Negate
+              Op2
+              Op3
+              Op4
+              Op5
+              Op6
+              Op7
+              Op8
+              Op9
+              OpFalse
+              OpPushData1
+              OpPushData2
+              OpPushData4
+              OpTrue
+              OpCheckMultiSig
+              OpCheckMultiSigVerify
+              OpCheckSig
+              OpCheckSigVerify
+              OpCodeSeparator
+              OpHash160
+              OpHash256
+              OpRipEmd160
+              OpSha1
+              OpSha256
+              OpElse
+              OpEndIf
+              OpIf
+              OpNop
+              OpNotIf
+              OpReturn
+              OpVerify
+              OpInvalidOpcode
+              OpPubKey
+              OpPubKeyHash
+              OpNop1
+              OpNop10
+              OpNop2
+              OpNop3
+              OpNop4
+              OpNop5
+              OpNop6
+              OpNop7
+              OpNop8
+              OpNop9
+              OpReserved
+              OpReserved1
+              OpReserved2
+              OpVer
+              OpVerIf
+              OpVerNotIf
+              OpCat
+              OpLeft
+              OpRight
+              OpSize
+              OpSubStr
+              Op2Drop
+              Op2Dup
+              Op2Over
+              Op2Rot
+              Op2Swap
+              Op3Dup
+              OpDepth
+              OpDrop
+              OpDup
+              OpFromAltStack
+              OpIfDup
+              OpNip
+              OpOver
+              OpPick
+              OpRoll
+              OpRot
+              OpSwap
+              OpToAltStack
+              OpTuck
+      }
     }
 
     private void createOpcodeLookupTable() throws IllegalAccessException, InstantiationException {
