@@ -13,6 +13,7 @@ import com.timmattison.cryptocurrency.factories.SignatureProcessorFactory;
 import com.timmattison.cryptocurrency.interfaces.Input;
 import com.timmattison.cryptocurrency.interfaces.SignatureProcessor;
 import com.timmattison.cryptocurrency.interfaces.Transaction;
+import com.timmattison.cryptocurrency.interfaces.TransactionLocator;
 import com.timmattison.cryptocurrency.standard.InputScript;
 import com.timmattison.cryptocurrency.standard.Script;
 
@@ -32,7 +33,7 @@ public class OpCheckSig extends CryptoOp {
     private final SignatureProcessorFactory signatureProcessorFactory;
     private final ECCMessageSignatureVerifierFactory eccMessageSignatureVerifierFactory;
 
-    public OpCheckSig(SignatureProcessorFactory signatureProcessorFactory, ECCMessageSignatureVerifierFactory eccMessageSignatureVerifierFactory, ScriptingFactory scriptingFactory) {
+    public OpCheckSig(SignatureProcessorFactory signatureProcessorFactory, ECCMessageSignatureVerifierFactory eccMessageSignatureVerifierFactory, ScriptingFactory scriptingFactory, TransactionLocator transactionLocator) {
         this.signatureProcessorFactory = signatureProcessorFactory;
         this.eccMessageSignatureVerifierFactory = eccMessageSignatureVerifierFactory;
         this.scriptingFactory = scriptingFactory;
@@ -208,11 +209,9 @@ public class OpCheckSig extends CryptoOp {
 
         System.out.println("Included hash type code: " + ByteArrayHelper.toHex(txCopyBytes));
 
-        // Create the signature processor
-
-        //TransactionLocator transactionLocator = injector.getInstance(TransactionLocator.class);
         // XXX USE THE TRANSACTION LOCATOR!
 
+        // Create the signature processor
         SignatureProcessor signatureProcessor = signatureProcessorFactory.create();
         ECCMessageSignatureVerifier eccMessageSignatureVerifier = eccMessageSignatureVerifierFactory.create();
 
