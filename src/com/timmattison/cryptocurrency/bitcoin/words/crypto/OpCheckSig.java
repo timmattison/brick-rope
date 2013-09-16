@@ -220,10 +220,8 @@ public class OpCheckSig extends CryptoOp {
         ECCSignature eccSignature = (ECCSignature) signatureProcessor.getSignature(r, s, publicKey);
 
         try {
-            boolean valid = false;
-
             // Validate the signature
-            valid = eccMessageSignatureVerifier.signatureValid(txCopyBytes, eccSignature);
+            boolean valid = eccMessageSignatureVerifier.signatureValid(txCopyBytes, eccSignature);
 
             // Push the result onto the stack
             stateMachine.push(valid);
