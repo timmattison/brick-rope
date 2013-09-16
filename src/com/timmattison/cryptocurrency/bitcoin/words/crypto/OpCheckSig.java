@@ -32,12 +32,14 @@ import java.util.Arrays;
 public class OpCheckSig extends CryptoOp {
     private static final String word = "OP_CHECKSIG";
     private static final Byte opcode = (byte) 0xac;
-    @Inject
-    public SignatureProcessorFactory signatureProcessorFactory;
-    @Inject
-    public ECCMessageSignatureVerifierFactory eccMessageSignatureVerifierFactory;
+    private final ScriptFactory scriptFactory;
+    private final SignatureProcessorFactory signatureProcessorFactory;
+    private final ECCMessageSignatureVerifierFactory eccMessageSignatureVerifierFactory;
 
-    public OpCheckSig() {
+    public OpCheckSig(SignatureProcessorFactory signatureProcessorFactory, ECCMessageSignatureVerifierFactory eccMessageSignatureVerifierFactory, ScriptFactory scriptFactory) {
+        this.signatureProcessorFactory = signatureProcessorFactory;
+        this.eccMessageSignatureVerifierFactory = eccMessageSignatureVerifierFactory;
+        this.scriptFactory = scriptFactory;
     }
 
     @Override
@@ -52,7 +54,6 @@ public class OpCheckSig extends CryptoOp {
 
     @Override
     public void execute(StateMachine stateMachine) {
-        THIS WHOLE THING NEEDS A TON OF CLEAN UP
         // Pop the public key and the signature from the stack
         byte[] publicKey = (byte[]) stateMachine.pop();
         byte[] signature = (byte[]) stateMachine.pop();
@@ -171,11 +172,6 @@ public class OpCheckSig extends CryptoOp {
             input.setScript(null);
         }
 
-        // XXX UBER TEMP INSANITY XXX
-        Injector injector = Guice.createInjector(new BitcoinModule());
-
-        ScriptFactory scriptFactory = injector.getInstance(ScriptFactory.class);
-
         // Copy the subscript into the txIn we're checking XXX NEED TO CHECK FOR OP_CODESEPARATORS! XXX
         InputScript safeSubscript = scriptFactory.createInputScript(1, subscriptBytes.length, true);
         safeSubscript.build(subscriptBytes);
@@ -221,10 +217,7 @@ public class OpCheckSig extends CryptoOp {
         //TransactionLocator transactionLocator = injector.getInstance(TransactionLocator.class);
         // XXX USE THE TRANSACTION LOCATOR!
 
-        signatureProcessorFactory = injector.getInstance(SignatureProcessorFactory.class);
         SignatureProcessor signatureProcessor = signatureProcessorFactory.create();
-
-        eccMessageSignatureVerifierFactory = injector.getInstance(ECCMessageSignatureVerifierFactory.class);
         ECCMessageSignatureVerifier eccMessageSignatureVerifier = eccMessageSignatureVerifierFactory.create();
 
         // XXX - R and S match what the reference code shows

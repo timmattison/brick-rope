@@ -1,18 +1,24 @@
 package com.timmattison.cryptocurrency.bitcoin.factories;
 
+import com.timmattison.crypto.ecc.interfaces.ECCMessageSignatureVerifierFactory;
 import com.timmattison.cryptocurrency.bitcoin.Word;
 import com.timmattison.cryptocurrency.bitcoin.words.arithmetic.*;
 import com.timmattison.cryptocurrency.bitcoin.words.bitwiselogic.*;
 import com.timmattison.cryptocurrency.bitcoin.words.constants.*;
 import com.timmattison.cryptocurrency.bitcoin.words.crypto.*;
 import com.timmattison.cryptocurrency.bitcoin.words.flowcontrol.*;
-import com.timmattison.cryptocurrency.bitcoin.words.pseudowords.*;
+import com.timmattison.cryptocurrency.bitcoin.words.pseudowords.OpInvalidOpcode;
+import com.timmattison.cryptocurrency.bitcoin.words.pseudowords.OpPubKey;
+import com.timmattison.cryptocurrency.bitcoin.words.pseudowords.OpPubKeyHash;
 import com.timmattison.cryptocurrency.bitcoin.words.reservedwords.*;
 import com.timmattison.cryptocurrency.bitcoin.words.splice.*;
 import com.timmattison.cryptocurrency.bitcoin.words.stack.*;
+import com.timmattison.cryptocurrency.factories.ScriptFactory;
+import com.timmattison.cryptocurrency.factories.SignatureProcessorFactory;
 import com.timmattison.cryptocurrency.factories.WordFactory;
 import com.timmattison.cryptocurrency.helpers.ByteArrayHelper;
 
+import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -26,16 +32,21 @@ import java.util.Map;
  * To change this template use File | Settings | File Templates.
  */
 public class BitcoinWordFactory implements WordFactory {
-    @Override
-    public Word createWord(byte opcode) {
-        return getWordByOpcode(opcode);
-    }
-
-    private static Map<Byte, Class<Word>> classesByOpcode;
-    private static HashMap<String, Class<Word>> classesByName;
-
-    // Initialize the list of available words
-    List<Class> availableWords = new ArrayList<Class>() {{
+    /**
+     * These are the classes that can be instantiated without constructor arguments
+     */
+    private static Map<Byte, Class<Word>> noArgClassesByOpcode;
+    /**
+     * These are the no argument classes listed by name
+     */
+    private static HashMap<String, Class<Word>> noArgClassesByName;
+    private final SignatureProcessorFactory signatureProcessorFactory;
+    private final ECCMessageSignatureVerifierFactory eccMessageSignatureVerifierFactory;
+    private final ScriptFactory scriptFactory;
+    /**
+     * The list of all of the words that take no constructor arguments
+     */
+    List<Class> noArgConstructorWords = new ArrayList<Class>() {{
         add(Op0NotEqual.class);
         add(Op1Add.class);
         add(Op1Sub.class);
@@ -92,10 +103,6 @@ public class BitcoinWordFactory implements WordFactory {
         add(OpPushData2.class);
         add(OpPushData4.class);
         add(OpTrue.class);
-        add(OpCheckMultiSig.class);
-        add(OpCheckMultiSigVerify.class);
-        add(OpCheckSig.class);
-        add(OpCheckSigVerify.class);
         add(OpCodeSeparator.class);
         add(OpHash160.class);
         add(OpHash256.class);
@@ -154,39 +161,49 @@ public class BitcoinWordFactory implements WordFactory {
         add(OpTuck.class);
     }};
 
-    public BitcoinWordFactory() throws InstantiationException, IllegalAccessException {
-        if (classesByOpcode == null) {
+    @Inject
+    public BitcoinWordFactory(SignatureProcessorFactory signatureProcessorFactory, ECCMessageSignatureVerifierFactory eccMessageSignatureVerifierFactory, ScriptFactory scriptFactory) throws InstantiationException, IllegalAccessException {
+        this.signatureProcessorFactory = signatureProcessorFactory;
+        this.eccMessageSignatureVerifierFactory = eccMessageSignatureVerifierFactory;
+        this.scriptFactory = scriptFactory;
+
+        if (noArgClassesByOpcode == null) {
             createOpcodeLookupTable();
         }
 
-        if (classesByName == null) {
+        if (noArgClassesByName == null) {
             createNameLookupTable();
         }
     }
 
     private void createOpcodeLookupTable() throws IllegalAccessException, InstantiationException {
-        classesByOpcode = new HashMap<Byte, Class<Word>>();
+        noArgClassesByOpcode = new HashMap<Byte, Class<Word>>();
 
-        for (Class<Word> clazz : availableWords) {
+        for (Class<Word> clazz : noArgConstructorWords) {
             Word instance = clazz.newInstance();
-            classesByOpcode.put(instance.getOpcode(), clazz);
+            noArgClassesByOpcode.put(instance.getOpcode(), clazz);
         }
 
         /*
         for(int loop = 0x01; loop < 0x4B; loop++) {
             VirtualOpPush opPush = new VirtualOpPush(loop);
-            classesByOpcode.put(loop, (Class<Word>) opPush.getClass());
+            noArgClassesByOpcode.put(loop, (Class<Word>) opPush.getClass());
         }
         */
     }
 
     private void createNameLookupTable() throws IllegalAccessException, InstantiationException {
-        classesByName = new HashMap<String, Class<Word>>();
+        noArgClassesByName = new HashMap<String, Class<Word>>();
 
-        for (Class<Word> clazz : availableWords) {
+        for (Class<Word> clazz : noArgConstructorWords) {
             Word instance = clazz.newInstance();
-            classesByName.put(instance.getName(), clazz);
+            noArgClassesByName.put(instance.getName(), clazz);
         }
+    }
+
+    @Override
+    public Word createWord(byte opcode) {
+        return getWordByOpcode(opcode);
     }
 
     private Word getWordByOpcode(byte opcode) {
@@ -194,34 +211,41 @@ public class BitcoinWordFactory implements WordFactory {
             return new VirtualOpPush(opcode);
         }
 
-        Class<Word> clazz = classesByOpcode.get(opcode);
+        // See if this class is a no argument class
+        Class<Word> clazz = noArgClassesByOpcode.get(opcode);
 
-        if (clazz == null) {
-            throw new UnsupportedOperationException("No word found for opcode " + opcode + " [" + ByteArrayHelper.toHex(opcode) + "]");
+        // Did we find it?
+        if (clazz != null) {
+            // Yes, attempt to instantiate and return it
+            try {
+                return clazz.newInstance();
+            } catch (InstantiationException e) {
+                throw new UnsupportedOperationException("Couldn't instantiate class for opcode " + opcode);
+            } catch (IllegalAccessException e) {
+                throw new UnsupportedOperationException("Illegal access exception for opcode " + opcode);
+            }
         }
 
-        try {
-            return clazz.newInstance();
-        } catch (InstantiationException e) {
-            throw new UnsupportedOperationException("Couldn't instantiate class for opcode " + opcode);
-        } catch (IllegalAccessException e) {
-            throw new UnsupportedOperationException("Illegal access exception for opcode " + opcode);
+        // Didn't find it, see if this is a class that takes arguments
+        Word word = buildWordForOpcode(opcode);
+
+        // Did we find it?
+        if (word != null) {
+            // Yes, return it
+            return word;
         }
+
+        // Didn't find it, throw an exception
+        throw new UnsupportedOperationException("No word found for opcode " + opcode + " [" + ByteArrayHelper.toHex(opcode) + "]");
     }
 
-    private Word getWordByName(String name) {
-        Class<Word> clazz = classesByName.get(name);
-
-        if (clazz == null) {
-            throw new UnsupportedOperationException("No word found for name " + name);
-        }
-
-        try {
-            return clazz.newInstance();
-        } catch (InstantiationException e) {
-            throw new UnsupportedOperationException("Couldn't instantiate class for opcode " + name);
-        } catch (IllegalAccessException e) {
-            throw new UnsupportedOperationException("Illegal access exception for opcode " + name);
+    private Word buildWordForOpcode(byte opcode) {
+        switch (opcode) {
+            case (byte) 0xac:
+                return new OpCheckSig(signatureProcessorFactory, eccMessageSignatureVerifierFactory, scriptFactory);
+            default:
+                // Didn't find any match
+                return null;
         }
     }
 }
