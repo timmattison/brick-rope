@@ -222,17 +222,15 @@ public class OpCheckSig extends CryptoOp {
         try {
             boolean valid = false;
 
-            //message[0] += 1;
+            // Validate the signature
             valid = eccMessageSignatureVerifier.signatureValid(txCopyBytes, eccSignature);
 
-            if (!valid) {
-                throw new UnsupportedOperationException("Signature isn't valid!");
-            }
+            // Push the result onto the stack
+            stateMachine.push(valid);
         } catch (Exception e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            throw new UnsupportedOperationException(e);
         }
-
-        // XXX - Does something need to be put on the stack here?
     }
 }
 
