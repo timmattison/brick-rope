@@ -5,6 +5,7 @@ import com.timmattison.cryptocurrency.interfaces.BlockChain;
 import com.timmattison.cryptocurrency.interfaces.Transaction;
 import com.timmattison.cryptocurrency.interfaces.TransactionLocator;
 
+import javax.inject.Inject;
 import java.util.Arrays;
 
 /**
@@ -17,6 +18,7 @@ import java.util.Arrays;
 public class BitcoinTransactionLocator implements TransactionLocator {
     private final BlockChain blockChain;
 
+    @Inject
     public BitcoinTransactionLocator(BlockChain blockChain) {
         this.blockChain = blockChain;
     }

@@ -16,9 +16,10 @@ import com.timmattison.cryptocurrency.bitcoin.words.pseudowords.OpPubKeyHash;
 import com.timmattison.cryptocurrency.bitcoin.words.reservedwords.*;
 import com.timmattison.cryptocurrency.bitcoin.words.splice.*;
 import com.timmattison.cryptocurrency.bitcoin.words.stack.*;
-import com.timmattison.cryptocurrency.factories.SignatureProcessorFactory;
 import com.timmattison.cryptocurrency.factories.ScriptingFactory;
+import com.timmattison.cryptocurrency.factories.SignatureProcessorFactory;
 import com.timmattison.cryptocurrency.helpers.ByteArrayHelper;
+import com.timmattison.cryptocurrency.interfaces.TransactionLocator;
 import com.timmattison.cryptocurrency.standard.InputScript;
 import com.timmattison.cryptocurrency.standard.OutputScript;
 import com.timmattison.cryptocurrency.standard.Script;
@@ -48,6 +49,7 @@ public class BitcoinScriptingFactory implements ScriptingFactory {
     private static HashMap<String, Class<Word>> noArgClassesByName;
     private final SignatureProcessorFactory signatureProcessorFactory;
     private final ECCMessageSignatureVerifierFactory eccMessageSignatureVerifierFactory;
+    private final TransactionLocator transactionLocator;
     /**
      * The list of all of the words that take no constructor arguments
      */
@@ -167,9 +169,10 @@ public class BitcoinScriptingFactory implements ScriptingFactory {
     }};
 
     @Inject
-    public BitcoinScriptingFactory(SignatureProcessorFactory signatureProcessorFactory, ECCMessageSignatureVerifierFactory eccMessageSignatureVerifierFactory) throws InstantiationException, IllegalAccessException {
+    public BitcoinScriptingFactory(SignatureProcessorFactory signatureProcessorFactory, ECCMessageSignatureVerifierFactory eccMessageSignatureVerifierFactory, TransactionLocator transactionLocator) throws InstantiationException, IllegalAccessException {
         this.signatureProcessorFactory = signatureProcessorFactory;
         this.eccMessageSignatureVerifierFactory = eccMessageSignatureVerifierFactory;
+        this.transactionLocator = transactionLocator;
 
         if (noArgClassesByOpcode == null) {
             createOpcodeLookupTable();
@@ -239,7 +242,7 @@ public class BitcoinScriptingFactory implements ScriptingFactory {
     private Word buildWordForOpcode(byte opcode) {
         switch (opcode) {
             case (byte) 0xac:
-                return new OpCheckSig(signatureProcessorFactory, eccMessageSignatureVerifierFactory, this);
+                return new OpCheckSig(signatureProcessorFactory, eccMessageSignatureVerifierFactory, this, transactionLocator);
             default:
                 // Didn't find any match
                 return null;

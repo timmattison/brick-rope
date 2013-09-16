@@ -42,6 +42,7 @@ public class BitcoinModule extends AbstractModule {
         bind(BlockValidator.class).to(BitcoinBlockValidator.class);
 
         bind(TransactionFactory.class).to(BitcoinTransactionFactory.class);
+        bind(TransactionLocator.class).to(BitcoinTransactionLocator.class);
         bind(BlockFactory.class).to(StandardBlockFactory.class);
         bind(BlockHeaderFactory.class).to(BitcoinBlockHeaderFactory.class);
         bind(InputFactory.class).to(BitcoinInputFactory.class);
