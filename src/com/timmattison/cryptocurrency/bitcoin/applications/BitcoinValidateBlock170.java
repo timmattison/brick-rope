@@ -7,7 +7,7 @@ import com.timmattison.cryptocurrency.bitcoin.BitcoinModule;
 import com.timmattison.cryptocurrency.bitcoin.StateMachine;
 import com.timmattison.cryptocurrency.bitcoin.Word;
 import com.timmattison.cryptocurrency.factories.BlockChainFactory;
-import com.timmattison.cryptocurrency.factories.ScriptFactory;
+import com.timmattison.cryptocurrency.factories.ScriptingFactory;
 import com.timmattison.cryptocurrency.factories.StateMachineFactory;
 import com.timmattison.cryptocurrency.interfaces.*;
 import com.timmattison.cryptocurrency.standard.Script;
@@ -100,7 +100,7 @@ public class BitcoinValidateBlock170 {
                 Script outputScript = previousOutput.getScript();
                 List<Word> outputWordList = outputScript.getWords();
 
-                validationScript = injector.getInstance(ScriptFactory.class).createValidationScript(inputScript, outputScript);
+                validationScript = injector.getInstance(ScriptingFactory.class).createValidationScript(inputScript, outputScript);
 
                 StateMachine stateMachine = injector.getInstance(StateMachineFactory.class).createStateMachine();
 

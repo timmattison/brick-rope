@@ -2,8 +2,8 @@ package com.timmattison.cryptocurrency.bitcoin.factories;
 
 import com.timmattison.cryptocurrency.bitcoin.BitcoinOutput;
 import com.timmattison.cryptocurrency.factories.OutputFactory;
+import com.timmattison.cryptocurrency.factories.ScriptingFactory;
 import com.timmattison.cryptocurrency.interfaces.Output;
-import com.timmattison.cryptocurrency.factories.ScriptFactory;
 
 import javax.inject.Inject;
 
@@ -15,15 +15,15 @@ import javax.inject.Inject;
  * To change this template use File | Settings | File Templates.
  */
 public class BitcoinOutputFactory implements OutputFactory {
-    private final ScriptFactory scriptFactory;
+    private final ScriptingFactory scriptingFactory;
 
     @Inject
-    public BitcoinOutputFactory(ScriptFactory scriptFactory) {
-        this.scriptFactory = scriptFactory;
+    public BitcoinOutputFactory(ScriptingFactory scriptingFactory) {
+        this.scriptingFactory = scriptingFactory;
     }
 
     @Override
     public Output createOutput(int transactionVersionNumber, int outputNumber) {
-        return new BitcoinOutput(scriptFactory, transactionVersionNumber, outputNumber);
+        return new BitcoinOutput(scriptingFactory, transactionVersionNumber, outputNumber);
     }
 }

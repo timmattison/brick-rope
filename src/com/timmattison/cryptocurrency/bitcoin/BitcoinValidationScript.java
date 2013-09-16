@@ -1,8 +1,7 @@
 package com.timmattison.cryptocurrency.bitcoin;
 
 import com.timmattison.bitcoin.test.ByteArrayHelper;
-import com.timmattison.cryptocurrency.bitcoin.factories.BitcoinWordFactory;
-import com.timmattison.cryptocurrency.standard.OutputScript;
+import com.timmattison.cryptocurrency.bitcoin.factories.BitcoinScriptingFactory;
 import com.timmattison.cryptocurrency.standard.ValidationScript;
 
 /**
@@ -18,8 +17,8 @@ public class BitcoinValidationScript extends BitcoinScript implements Validation
      *
      * @param lengthInBytes
      */
-    public BitcoinValidationScript(BitcoinWordFactory wordFactory, long lengthInBytes) {
-        this.wordFactory = wordFactory;
+    public BitcoinValidationScript(BitcoinScriptingFactory wordFactory, long lengthInBytes) {
+        this.scriptingFactory = wordFactory;
 
         this.lengthInBytes = lengthInBytes;
     }

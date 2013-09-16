@@ -2,7 +2,6 @@ package com.timmattison.cryptocurrency.bitcoin;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
-import com.timmattison.crypto.ecc.factories.SHA1MessageSignerDigestFactory;
 import com.timmattison.crypto.ecc.factories.SHA256MessageSignerDigestFactory;
 import com.timmattison.crypto.ecc.fp.*;
 import com.timmattison.crypto.ecc.interfaces.*;
@@ -47,8 +46,7 @@ public class BitcoinModule extends AbstractModule {
         bind(BlockHeaderFactory.class).to(BitcoinBlockHeaderFactory.class);
         bind(InputFactory.class).to(BitcoinInputFactory.class);
         bind(OutputFactory.class).to(BitcoinOutputFactory.class);
-        bind(ScriptFactory.class).to(BitcoinScriptFactory.class);
-        bind(WordFactory.class).to(BitcoinWordFactory.class);
+        bind(ScriptingFactory.class).to(BitcoinScriptingFactory.class);
         bind(TargetFactory.class).to(BitcoinTargetFactory.class);
         bind(StateMachineFactory.class).to(BitcoinStateMachineFactory.class);
         bind(SignatureProcessorFactory.class).to(BitcoinSignatureProcessorFactory.class);

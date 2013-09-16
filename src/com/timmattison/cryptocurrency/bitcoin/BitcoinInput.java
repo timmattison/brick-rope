@@ -1,7 +1,7 @@
 package com.timmattison.cryptocurrency.bitcoin;
 
 import com.timmattison.bitcoin.test.ByteArrayHelper;
-import com.timmattison.cryptocurrency.factories.ScriptFactory;
+import com.timmattison.cryptocurrency.factories.ScriptingFactory;
 import com.timmattison.cryptocurrency.helpers.EndiannessHelper;
 import com.timmattison.cryptocurrency.interfaces.Input;
 import com.timmattison.cryptocurrency.standard.Script;
@@ -23,7 +23,7 @@ public class BitcoinInput implements Input {
     private static final int previousTransactionHashLengthInBytes = 32;
     private static final int previousOutputIndexLengthInBytes = 4;
     private static final int sequenceNumberLengthInBytes = 4;
-    private final ScriptFactory scriptFactory;
+    private final ScriptingFactory scriptingFactory;
     // These are not part of the script
     private final int transactionVersionNumber;
     private final int inputNumber;
@@ -51,8 +51,8 @@ public class BitcoinInput implements Input {
     private long sequenceNumber;
     private byte[] sequenceNumberBytes;
 
-    public BitcoinInput(ScriptFactory scriptFactory, int transactionVersionNumber, int inputNumber) {
-        this.scriptFactory = scriptFactory;
+    public BitcoinInput(ScriptingFactory scriptingFactory, int transactionVersionNumber, int inputNumber) {
+        this.scriptingFactory = scriptingFactory;
         this.transactionVersionNumber = transactionVersionNumber;
         this.inputNumber = inputNumber;
     }
@@ -75,7 +75,7 @@ public class BitcoinInput implements Input {
         inputScriptLength = temp.getValue();
 
         // Get the input script
-        inputScript = scriptFactory.createInputScript(transactionVersionNumber, inputScriptLength, isCoinbase());
+        inputScript = scriptingFactory.createInputScript(transactionVersionNumber, inputScriptLength, isCoinbase());
         data = inputScript.build(data);
 
         // Get the sequence number

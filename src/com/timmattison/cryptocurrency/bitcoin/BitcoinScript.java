@@ -1,6 +1,6 @@
 package com.timmattison.cryptocurrency.bitcoin;
 
-import com.timmattison.cryptocurrency.factories.WordFactory;
+import com.timmattison.cryptocurrency.factories.ScriptingFactory;
 import com.timmattison.cryptocurrency.standard.Script;
 
 import java.util.ArrayList;
@@ -19,7 +19,7 @@ public abstract class BitcoinScript implements Script {
     private static final int MAX_WORD_LIST_LENGTH = 9999;
     // These values are not in the script
     protected long lengthInBytes;
-    protected WordFactory wordFactory;
+    protected ScriptingFactory scriptingFactory;
     // Raw bytes, in order they were pulled from the block chain
     protected int transactionVersionNumber;
     /**
@@ -69,7 +69,7 @@ public abstract class BitcoinScript implements Script {
             byte[] temp = Arrays.copyOf(scriptBytes, scriptBytes.length);
 
             while ((temp != null) && (temp.length > 0)) {
-                Word word = wordFactory.createWord(temp[0]);
+                Word word = scriptingFactory.createWord(temp[0]);
                 words.add(word);
                 temp = word.build(Arrays.copyOfRange(temp, 1, temp.length));
             }

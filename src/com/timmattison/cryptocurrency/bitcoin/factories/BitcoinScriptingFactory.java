@@ -1,6 +1,9 @@
 package com.timmattison.cryptocurrency.bitcoin.factories;
 
 import com.timmattison.crypto.ecc.interfaces.ECCMessageSignatureVerifierFactory;
+import com.timmattison.cryptocurrency.bitcoin.BitcoinInputScript;
+import com.timmattison.cryptocurrency.bitcoin.BitcoinOutputScript;
+import com.timmattison.cryptocurrency.bitcoin.BitcoinValidationScript;
 import com.timmattison.cryptocurrency.bitcoin.Word;
 import com.timmattison.cryptocurrency.bitcoin.words.arithmetic.*;
 import com.timmattison.cryptocurrency.bitcoin.words.bitwiselogic.*;
@@ -13,10 +16,13 @@ import com.timmattison.cryptocurrency.bitcoin.words.pseudowords.OpPubKeyHash;
 import com.timmattison.cryptocurrency.bitcoin.words.reservedwords.*;
 import com.timmattison.cryptocurrency.bitcoin.words.splice.*;
 import com.timmattison.cryptocurrency.bitcoin.words.stack.*;
-import com.timmattison.cryptocurrency.factories.ScriptFactory;
 import com.timmattison.cryptocurrency.factories.SignatureProcessorFactory;
-import com.timmattison.cryptocurrency.factories.WordFactory;
+import com.timmattison.cryptocurrency.factories.ScriptingFactory;
 import com.timmattison.cryptocurrency.helpers.ByteArrayHelper;
+import com.timmattison.cryptocurrency.standard.InputScript;
+import com.timmattison.cryptocurrency.standard.OutputScript;
+import com.timmattison.cryptocurrency.standard.Script;
+import com.timmattison.cryptocurrency.standard.ValidationScript;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
@@ -31,7 +37,7 @@ import java.util.Map;
  * Time: 8:52 AM
  * To change this template use File | Settings | File Templates.
  */
-public class BitcoinWordFactory implements WordFactory {
+public class BitcoinScriptingFactory implements ScriptingFactory {
     /**
      * These are the classes that can be instantiated without constructor arguments
      */
@@ -42,7 +48,6 @@ public class BitcoinWordFactory implements WordFactory {
     private static HashMap<String, Class<Word>> noArgClassesByName;
     private final SignatureProcessorFactory signatureProcessorFactory;
     private final ECCMessageSignatureVerifierFactory eccMessageSignatureVerifierFactory;
-    private final ScriptFactory scriptFactory;
     /**
      * The list of all of the words that take no constructor arguments
      */
@@ -162,10 +167,9 @@ public class BitcoinWordFactory implements WordFactory {
     }};
 
     @Inject
-    public BitcoinWordFactory(SignatureProcessorFactory signatureProcessorFactory, ECCMessageSignatureVerifierFactory eccMessageSignatureVerifierFactory, ScriptFactory scriptFactory) throws InstantiationException, IllegalAccessException {
+    public BitcoinScriptingFactory(SignatureProcessorFactory signatureProcessorFactory, ECCMessageSignatureVerifierFactory eccMessageSignatureVerifierFactory) throws InstantiationException, IllegalAccessException {
         this.signatureProcessorFactory = signatureProcessorFactory;
         this.eccMessageSignatureVerifierFactory = eccMessageSignatureVerifierFactory;
-        this.scriptFactory = scriptFactory;
 
         if (noArgClassesByOpcode == null) {
             createOpcodeLookupTable();
@@ -235,10 +239,28 @@ public class BitcoinWordFactory implements WordFactory {
     private Word buildWordForOpcode(byte opcode) {
         switch (opcode) {
             case (byte) 0xac:
-                return new OpCheckSig(signatureProcessorFactory, eccMessageSignatureVerifierFactory, scriptFactory);
+                return new OpCheckSig(signatureProcessorFactory, eccMessageSignatureVerifierFactory, this);
             default:
                 // Didn't find any match
                 return null;
         }
+    }
+
+    @Override
+    public InputScript createInputScript(int transactionVersionNumber, long scriptLength, boolean coinbase) {
+        return (InputScript) new BitcoinInputScript(this, transactionVersionNumber, scriptLength, coinbase);
+    }
+
+    @Override
+    public OutputScript createOutputScript(int transactionVersionNumber, long scriptLength) {
+        return (OutputScript) new BitcoinOutputScript(this, transactionVersionNumber, scriptLength);
+    }
+
+    @Override
+    public ValidationScript createValidationScript(Script inputScript, Script outputScript) {
+        ValidationScript validationScript = new BitcoinValidationScript(this, inputScript.dump().length + outputScript.dump().length);
+        validationScript.build(ByteArrayHelper.concatenate(inputScript.dump(), outputScript.dump()));
+
+        return validationScript;
     }
 }

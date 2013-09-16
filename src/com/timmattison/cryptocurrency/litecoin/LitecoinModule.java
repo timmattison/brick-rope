@@ -33,8 +33,7 @@ public class LitecoinModule extends AbstractModule {
         bind(BlockHeaderFactory.class).to(BitcoinBlockHeaderFactory.class);
         bind(InputFactory.class).to(BitcoinInputFactory.class);
         bind(OutputFactory.class).to(BitcoinOutputFactory.class);
-        bind(ScriptFactory.class).to(BitcoinScriptFactory.class);
-        bind(WordFactory.class).to(BitcoinWordFactory.class);
+        bind(ScriptingFactory.class).to(BitcoinScriptingFactory.class);
         bind(TargetFactory.class).to(BitcoinTargetFactory.class);
 
         bind(HasherFactory.class).to(DoubleSha256Factory.class);

@@ -1,17 +1,14 @@
 package com.timmattison.cryptocurrency.bitcoin.words.crypto;
 
-import com.google.inject.Guice;
-import com.google.inject.Injector;
 import com.timmattison.bitcoin.test.ByteArrayHelper;
 import com.timmattison.crypto.ecc.interfaces.ECCMessageSignatureVerifier;
 import com.timmattison.crypto.ecc.interfaces.ECCMessageSignatureVerifierFactory;
 import com.timmattison.crypto.ecc.interfaces.ECCSignature;
 import com.timmattison.cryptocurrency.bitcoin.BitcoinHashType;
-import com.timmattison.cryptocurrency.bitcoin.BitcoinInputScript;
-import com.timmattison.cryptocurrency.bitcoin.BitcoinModule;
 import com.timmattison.cryptocurrency.bitcoin.StateMachine;
 import com.timmattison.cryptocurrency.bitcoin.applications.BitcoinValidateBlock170;
-import com.timmattison.cryptocurrency.factories.ScriptFactory;
+import com.timmattison.cryptocurrency.bitcoin.factories.BitcoinScriptingFactory;
+import com.timmattison.cryptocurrency.factories.ScriptingFactory;
 import com.timmattison.cryptocurrency.factories.SignatureProcessorFactory;
 import com.timmattison.cryptocurrency.interfaces.Input;
 import com.timmattison.cryptocurrency.interfaces.SignatureProcessor;
@@ -19,7 +16,6 @@ import com.timmattison.cryptocurrency.interfaces.Transaction;
 import com.timmattison.cryptocurrency.standard.InputScript;
 import com.timmattison.cryptocurrency.standard.Script;
 
-import javax.inject.Inject;
 import java.util.Arrays;
 
 /**
@@ -32,14 +28,14 @@ import java.util.Arrays;
 public class OpCheckSig extends CryptoOp {
     private static final String word = "OP_CHECKSIG";
     private static final Byte opcode = (byte) 0xac;
-    private final ScriptFactory scriptFactory;
+    private final ScriptingFactory scriptingFactory;
     private final SignatureProcessorFactory signatureProcessorFactory;
     private final ECCMessageSignatureVerifierFactory eccMessageSignatureVerifierFactory;
 
-    public OpCheckSig(SignatureProcessorFactory signatureProcessorFactory, ECCMessageSignatureVerifierFactory eccMessageSignatureVerifierFactory, ScriptFactory scriptFactory) {
+    public OpCheckSig(SignatureProcessorFactory signatureProcessorFactory, ECCMessageSignatureVerifierFactory eccMessageSignatureVerifierFactory, ScriptingFactory scriptingFactory) {
         this.signatureProcessorFactory = signatureProcessorFactory;
         this.eccMessageSignatureVerifierFactory = eccMessageSignatureVerifierFactory;
-        this.scriptFactory = scriptFactory;
+        this.scriptingFactory = scriptingFactory;
     }
 
     @Override
@@ -173,7 +169,7 @@ public class OpCheckSig extends CryptoOp {
         }
 
         // Copy the subscript into the txIn we're checking XXX NEED TO CHECK FOR OP_CODESEPARATORS! XXX
-        InputScript safeSubscript = scriptFactory.createInputScript(1, subscriptBytes.length, true);
+        InputScript safeSubscript = scriptingFactory.createInputScript(1, subscriptBytes.length, true);
         safeSubscript.build(subscriptBytes);
         txCopy.getInputs().get(0).setScript(safeSubscript);
 
@@ -236,7 +232,7 @@ public class OpCheckSig extends CryptoOp {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
 
-        throw new UnsupportedOperationException("Not finished yet");
+        // XXX - Does something need to be put on the stack here?
     }
 }
 

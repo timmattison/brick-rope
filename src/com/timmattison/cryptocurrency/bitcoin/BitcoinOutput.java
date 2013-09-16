@@ -1,7 +1,7 @@
 package com.timmattison.cryptocurrency.bitcoin;
 
 import com.timmattison.bitcoin.test.ByteArrayHelper;
-import com.timmattison.cryptocurrency.factories.ScriptFactory;
+import com.timmattison.cryptocurrency.factories.ScriptingFactory;
 import com.timmattison.cryptocurrency.helpers.EndiannessHelper;
 import com.timmattison.cryptocurrency.interfaces.Output;
 import com.timmattison.cryptocurrency.standard.OutputScript;
@@ -22,7 +22,7 @@ import java.util.Arrays;
  */
 public class BitcoinOutput implements Output {
     private static final int valueLengthInBytes = 8;
-    private final ScriptFactory scriptFactory;
+    private final ScriptingFactory scriptingFactory;
     // These values are not in the output
     private final int transactionVersionNumber;
     private final int outputNumber;
@@ -42,8 +42,8 @@ public class BitcoinOutput implements Output {
     private OutputScript outputScript;
     private OutputScript script;
 
-    public BitcoinOutput(ScriptFactory scriptFactory, int transactionVersionNumber, int outputNumber) {
-        this.scriptFactory = scriptFactory;
+    public BitcoinOutput(ScriptingFactory scriptingFactory, int transactionVersionNumber, int outputNumber) {
+        this.scriptingFactory = scriptingFactory;
         this.transactionVersionNumber = transactionVersionNumber;
         this.outputNumber = outputNumber;
     }
@@ -62,7 +62,7 @@ public class BitcoinOutput implements Output {
         outputScriptLength = temp.getValue();
 
         // Get the output script
-        outputScript = scriptFactory.createOutputScript(transactionVersionNumber, outputScriptLength);
+        outputScript = scriptingFactory.createOutputScript(transactionVersionNumber, outputScriptLength);
         return outputScript.build(data);
     }
 

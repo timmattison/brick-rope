@@ -1,7 +1,7 @@
 package com.timmattison.cryptocurrency.bitcoin;
 
 import com.timmattison.bitcoin.test.ByteArrayHelper;
-import com.timmattison.cryptocurrency.bitcoin.factories.BitcoinWordFactory;
+import com.timmattison.cryptocurrency.bitcoin.factories.BitcoinScriptingFactory;
 import com.timmattison.cryptocurrency.standard.OutputScript;
 
 import java.util.ArrayList;
@@ -21,8 +21,8 @@ public class BitcoinOutputScript extends BitcoinScript implements OutputScript {
      *
      * @param lengthInBytes
      */
-    public BitcoinOutputScript(BitcoinWordFactory wordFactory, int transactionVersionNumber, long lengthInBytes) {
-        this.wordFactory = wordFactory;
+    public BitcoinOutputScript(BitcoinScriptingFactory wordFactory, int transactionVersionNumber, long lengthInBytes) {
+        this.scriptingFactory = wordFactory;
         this.transactionVersionNumber = transactionVersionNumber;
 
         this.lengthInBytes = lengthInBytes;
@@ -77,7 +77,7 @@ public class BitcoinOutputScript extends BitcoinScript implements OutputScript {
             byte currentByte = scriptBytesCopy[0];
 
             // Get the word that the next byte corresponds to
-            Word currentWord = wordFactory.createWord(currentByte);
+            Word currentWord = scriptingFactory.createWord(currentByte);
             scriptBytesCopy = currentWord.build(Arrays.copyOfRange(scriptBytesCopy, 1, scriptBytesCopy.length));
             words.add(currentWord);
         }
