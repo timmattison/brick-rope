@@ -183,13 +183,6 @@ public class BitcoinWordFactory implements WordFactory {
             Word instance = clazz.newInstance();
             noArgClassesByOpcode.put(instance.getOpcode(), clazz);
         }
-
-        /*
-        for(int loop = 0x01; loop < 0x4B; loop++) {
-            VirtualOpPush opPush = new VirtualOpPush(loop);
-            noArgClassesByOpcode.put(loop, (Class<Word>) opPush.getClass());
-        }
-        */
     }
 
     private void createNameLookupTable() throws IllegalAccessException, InstantiationException {
