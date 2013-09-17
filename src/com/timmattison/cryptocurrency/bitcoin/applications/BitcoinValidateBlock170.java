@@ -94,11 +94,9 @@ public class BitcoinValidateBlock170 {
 
                 // Get the input script
                 Script inputScript = input.getScript();
-                List<Word> inputWordList = inputScript.getWords();
 
                 // Get the output script
                 Script outputScript = previousOutput.getScript();
-                List<Word> outputWordList = outputScript.getWords();
 
                 validationScript = injector.getInstance(ScriptingFactory.class).createValidationScript(inputScript, outputScript);
 
