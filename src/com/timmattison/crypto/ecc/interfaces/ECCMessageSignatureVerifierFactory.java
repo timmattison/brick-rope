@@ -1,8 +1,5 @@
 package com.timmattison.crypto.ecc.interfaces;
 
-import com.google.inject.assistedinject.Assisted;
-import com.timmattison.crypto.ecc.random.interfaces.BigIntegerRandom;
-
 /**
  * Created with IntelliJ IDEA.
  * User: Tim

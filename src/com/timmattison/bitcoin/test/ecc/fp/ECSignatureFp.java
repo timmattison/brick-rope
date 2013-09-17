@@ -1,7 +1,5 @@
 package com.timmattison.bitcoin.test.ecc.fp;
 
-import org.bouncycastle.pqc.math.linearalgebra.Vector;
-
 import java.math.BigInteger;
 
 /**

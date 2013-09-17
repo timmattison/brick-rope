@@ -2,9 +2,6 @@ package com.timmattison.cryptocurrency.bitcoin.factories;
 
 import com.timmattison.cryptocurrency.interfaces.Hash;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-
 /**
  * Created with IntelliJ IDEA.
  * User: timmattison

@@ -1,6 +1,5 @@
 package com.timmattison.cryptocurrency.bitcoin.words.stack;
 
-import com.timmattison.bitcoin.test.ByteArrayHelper;
 import com.timmattison.cryptocurrency.bitcoin.StateMachine;
 import com.timmattison.cryptocurrency.bitcoin.Word;
 

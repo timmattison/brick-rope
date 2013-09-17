@@ -5,7 +5,6 @@ import com.google.inject.Injector;
 import com.timmattison.bitcoin.test.ByteArrayHelper;
 import com.timmattison.cryptocurrency.bitcoin.BitcoinModule;
 import com.timmattison.cryptocurrency.bitcoin.StateMachine;
-import com.timmattison.cryptocurrency.bitcoin.Word;
 import com.timmattison.cryptocurrency.factories.BlockChainFactory;
 import com.timmattison.cryptocurrency.factories.ScriptingFactory;
 import com.timmattison.cryptocurrency.factories.StateMachineFactory;

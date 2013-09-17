@@ -1,11 +1,9 @@
 package com.timmattison.bitcoin.test.script.words.constants;
 
-import com.timmattison.bitcoin.test.ByteArrayHelper;
 import com.timmattison.bitcoin.test.script.ByteConsumingWord;
 import com.timmattison.bitcoin.test.script.StateMachine;
 
 import java.io.ByteArrayInputStream;
-import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.

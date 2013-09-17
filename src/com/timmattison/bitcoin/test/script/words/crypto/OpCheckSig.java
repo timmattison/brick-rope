@@ -5,7 +5,6 @@ import com.timmattison.bitcoin.test.script.HashType;
 import com.timmattison.bitcoin.test.script.ScriptHelper;
 import com.timmattison.bitcoin.test.script.StateMachine;
 import com.timmattison.bitcoin.test.script.Word;
-import sun.security.ec.ECKeyFactory;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -83,8 +82,6 @@ public class OpCheckSig extends Word {
                 ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
                 byteArrayOutputStream.write(txCopy.dumpBytes());
                 byteArrayOutputStream.write(stateMachine.getHashType().ordinal());
-
-                byte[] hashedTransaction = HashHelper.doubleSha256Hash(byteArrayOutputStream.toByteArray());
             }
         } catch (Exception e) {
             // Rethrow

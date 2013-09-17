@@ -1,11 +1,9 @@
 package com.timmattison.bitcoin.test.script;
 
-import com.timmattison.bitcoin.test.BlockChain;
 import com.timmattison.bitcoin.test.BlockChainTest;
 import com.timmattison.bitcoin.test.ByteArrayHelper;
 
 import java.io.ByteArrayInputStream;
-import java.util.List;
 import java.util.logging.Logger;
 
 /**

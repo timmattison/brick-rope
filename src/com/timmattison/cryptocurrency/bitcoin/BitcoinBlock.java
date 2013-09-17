@@ -2,13 +2,9 @@ package com.timmattison.cryptocurrency.bitcoin;
 
 import com.timmattison.cryptocurrency.factories.BlockHeaderFactory;
 import com.timmattison.cryptocurrency.factories.TransactionFactory;
-import com.timmattison.cryptocurrency.interfaces.Block;
-import com.timmattison.cryptocurrency.interfaces.BlockHeader;
-import com.timmattison.cryptocurrency.interfaces.Transaction;
 import com.timmattison.cryptocurrency.standard.StandardBlock;
 
 import javax.inject.Inject;
-import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.

@@ -1,9 +1,5 @@
 package com.timmattison.crypto.ecc.interfaces;
 
-import com.timmattison.crypto.ecc.fp.ECPointFp;
-
-import java.math.BigInteger;
-
 /**
  * Created with IntelliJ IDEA.
  * User: Tim

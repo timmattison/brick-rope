@@ -1,6 +1,5 @@
 package com.timmattison.cryptocurrency.bitcoin.words.reservedwords;
 
-import com.timmattison.bitcoin.test.script.Word;
 import com.timmattison.cryptocurrency.bitcoin.StateMachine;
 
 /**

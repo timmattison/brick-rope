@@ -7,8 +7,6 @@ import com.timmattison.cryptocurrency.factories.BlockChainFactory;
 import com.timmattison.cryptocurrency.interfaces.Block;
 import com.timmattison.cryptocurrency.interfaces.BlockChain;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.Date;
 

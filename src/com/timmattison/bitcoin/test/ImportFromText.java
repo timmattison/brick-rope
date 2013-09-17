@@ -1,8 +1,6 @@
 package com.timmattison.bitcoin.test;
 
 import java.io.ByteArrayOutputStream;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.

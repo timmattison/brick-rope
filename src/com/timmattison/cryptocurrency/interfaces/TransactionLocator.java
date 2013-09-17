@@ -1,7 +1,5 @@
 package com.timmattison.cryptocurrency.interfaces;
 
-import java.util.List;
-
 /**
  * Created with IntelliJ IDEA.
  * User: Tim

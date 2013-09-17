@@ -1,7 +1,5 @@
 package com.timmattison.cryptocurrency.interfaces;
 
-import com.timmattison.cryptocurrency.interfaces.Target;
-
 /**
  * Created with IntelliJ IDEA.
  * User: Tim

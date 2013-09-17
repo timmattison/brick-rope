@@ -5,7 +5,6 @@ import com.google.inject.Injector;
 import com.timmattison.crypto.ecc.interfaces.ECCKeyPair;
 import com.timmattison.crypto.ecc.interfaces.ECCMessageSigner;
 import com.timmattison.crypto.ecc.interfaces.ECCSignature;
-import com.timmattison.crypto.ecc.tests.modules.ECCBitcoinTestModule;
 import com.timmattison.crypto.ecc.tests.modules.ECCSECTestModule;
 import org.junit.Assert;
 import org.junit.Test;

@@ -2,8 +2,6 @@ package com.timmattison.cryptocurrency.interfaces;
 
 import com.timmattison.cryptocurrency.standard.Script;
 
-import java.util.Iterator;
-
 /**
  * Created with IntelliJ IDEA.
  * User: Tim

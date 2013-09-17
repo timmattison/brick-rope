@@ -1,12 +1,7 @@
 package com.timmattison.cryptocurrency.interfaces;
 
-import com.timmattison.bitcoin.test.EndiannessHelper;
-import com.timmattison.cryptocurrency.helpers.ByteArrayHelper;
-import com.timmattison.cryptocurrency.helpers.InputStreamHelper;
-
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Arrays;
 
 /**
  * Created with IntelliJ IDEA.

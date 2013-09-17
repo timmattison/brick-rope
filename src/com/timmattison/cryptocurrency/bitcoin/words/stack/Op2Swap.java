@@ -1,8 +1,5 @@
 package com.timmattison.cryptocurrency.bitcoin.words.stack;
 
-import com.timmattison.bitcoin.test.script.StateMachine;
-import com.timmattison.bitcoin.test.script.Word;
-
 /**
  * Created with IntelliJ IDEA.
  * User: timmattison

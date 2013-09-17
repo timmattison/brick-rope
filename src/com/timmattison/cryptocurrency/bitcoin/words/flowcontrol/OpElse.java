@@ -1,7 +1,6 @@
 package com.timmattison.cryptocurrency.bitcoin.words.flowcontrol;
 
 import com.timmattison.cryptocurrency.bitcoin.StateMachine;
-import com.timmattison.cryptocurrency.bitcoin.Word;
 
 /**
  * Created with IntelliJ IDEA.

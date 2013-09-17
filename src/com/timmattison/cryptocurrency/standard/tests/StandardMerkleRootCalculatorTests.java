@@ -1,7 +1,6 @@
 package com.timmattison.cryptocurrency.standard.tests;
 
 import com.timmattison.cryptocurrency.bitcoin.factories.DoubleSha256Factory;
-import com.timmattison.cryptocurrency.helpers.ByteArrayHelper;
 import com.timmattison.cryptocurrency.standard.StandardMerkleRootCalculator;
 import org.junit.AfterClass;
 import org.junit.Assert;

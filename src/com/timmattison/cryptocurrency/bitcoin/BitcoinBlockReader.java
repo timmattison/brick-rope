@@ -5,7 +5,6 @@ import com.timmattison.cryptocurrency.helpers.ByteArrayHelper;
 import com.timmattison.cryptocurrency.helpers.InputStreamHelper;
 import com.timmattison.cryptocurrency.interfaces.BlockReader;
 
-import javax.inject.Inject;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;

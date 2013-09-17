@@ -2,8 +2,6 @@ package com.timmattison.cryptocurrency.factories;
 
 import com.timmattison.cryptocurrency.interfaces.BlockHeader;
 
-import java.io.InputStream;
-
 /**
  * Created with IntelliJ IDEA.
  * User: Tim

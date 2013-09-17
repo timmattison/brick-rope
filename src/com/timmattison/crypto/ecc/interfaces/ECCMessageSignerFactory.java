@@ -3,8 +3,6 @@ package com.timmattison.crypto.ecc.interfaces;
 import com.google.inject.assistedinject.Assisted;
 import com.timmattison.crypto.ecc.random.interfaces.BigIntegerRandom;
 
-import java.util.Random;
-
 /**
  * Created with IntelliJ IDEA.
  * User: Tim

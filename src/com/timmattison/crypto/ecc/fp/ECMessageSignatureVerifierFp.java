@@ -7,7 +7,6 @@ import com.timmattison.cryptocurrency.helpers.ByteArrayHelper;
 import com.timmattison.cryptocurrency.interfaces.Hash;
 
 import java.math.BigInteger;
-import java.security.MessageDigest;
 
 /**
  * Created with IntelliJ IDEA.

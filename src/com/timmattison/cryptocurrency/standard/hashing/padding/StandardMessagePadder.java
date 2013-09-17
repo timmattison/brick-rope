@@ -3,8 +3,6 @@ package com.timmattison.cryptocurrency.standard.hashing.padding;
 import com.timmattison.cryptocurrency.helpers.ByteArrayHelper;
 import com.timmattison.cryptocurrency.standard.hashing.Endianness;
 
-import javax.inject.Inject;
-
 /**
  * Created with IntelliJ IDEA.
  * User: Tim

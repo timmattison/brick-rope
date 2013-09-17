@@ -1,7 +1,6 @@
 package com.timmattison.cryptocurrency.standard;
 
 import com.timmattison.cryptocurrency.bitcoin.BitcoinBlock;
-import com.timmattison.cryptocurrency.bitcoin.BitcoinBlockReader;
 import com.timmattison.cryptocurrency.factories.BlockFactory;
 import com.timmattison.cryptocurrency.factories.BlockHeaderFactory;
 import com.timmattison.cryptocurrency.factories.TransactionFactory;

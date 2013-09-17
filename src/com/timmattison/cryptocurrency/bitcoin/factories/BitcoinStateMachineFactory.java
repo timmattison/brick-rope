@@ -2,8 +2,8 @@ package com.timmattison.cryptocurrency.bitcoin.factories;
 
 import com.timmattison.cryptocurrency.bitcoin.BitcoinStateMachine;
 import com.timmattison.cryptocurrency.bitcoin.StateMachine;
-import com.timmattison.cryptocurrency.factories.StateMachineFactory;
 import com.timmattison.cryptocurrency.factories.ScriptingFactory;
+import com.timmattison.cryptocurrency.factories.StateMachineFactory;
 
 import javax.inject.Inject;
 

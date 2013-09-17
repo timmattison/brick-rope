@@ -2,7 +2,6 @@ package com.timmattison.bitcoin.test;
 
 import com.timmattison.bitcoin.test.script.Word;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;

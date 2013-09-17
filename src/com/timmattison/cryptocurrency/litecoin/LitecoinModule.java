@@ -5,8 +5,8 @@ import com.timmattison.cryptocurrency.bitcoin.*;
 import com.timmattison.cryptocurrency.bitcoin.factories.*;
 import com.timmattison.cryptocurrency.factories.*;
 import com.timmattison.cryptocurrency.interfaces.*;
-import com.timmattison.cryptocurrency.standard.StandardBlockFactory;
 import com.timmattison.cryptocurrency.standard.StandardBlockChain;
+import com.timmattison.cryptocurrency.standard.StandardBlockFactory;
 import com.timmattison.cryptocurrency.standard.StandardMerkleRootCalculator;
 
 /**

@@ -7,7 +7,10 @@ import com.timmattison.cryptocurrency.factories.BlockChainFactory;
 import com.timmattison.cryptocurrency.interfaces.Block;
 import com.timmattison.cryptocurrency.interfaces.BlockChain;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 
 /**
  * Created with IntelliJ IDEA.

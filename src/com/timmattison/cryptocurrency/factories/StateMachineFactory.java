@@ -1,7 +1,6 @@
 package com.timmattison.cryptocurrency.factories;
 
 import com.timmattison.cryptocurrency.bitcoin.StateMachine;
-import com.timmattison.cryptocurrency.bitcoin.Word;
 
 /**
  * Created with IntelliJ IDEA.

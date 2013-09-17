@@ -1,8 +1,6 @@
 package com.timmattison.bitcoin.test.ecc.fp;
 
 import java.math.BigInteger;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Created with IntelliJ IDEA.

@@ -1,6 +1,5 @@
 package com.timmattison.cryptocurrency.standard.hashing.tests;
 
-import com.timmattison.cryptocurrency.standard.hashing.Endianness;
 import com.timmattison.cryptocurrency.standard.hashing.HashFunction;
 import com.timmattison.cryptocurrency.standard.hashing.RIPEMD160;
 import com.timmattison.cryptocurrency.standard.hashing.chunks.StandardChunkExtractor;

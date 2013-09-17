@@ -2,8 +2,6 @@ package com.timmattison.cryptocurrency.factories;
 
 import com.timmattison.cryptocurrency.interfaces.Transaction;
 
-import java.io.InputStream;
-
 /**
  * Created with IntelliJ IDEA.
  * User: Tim

@@ -10,8 +10,6 @@ import com.timmattison.cryptocurrency.interfaces.BlockChain;
 import com.timmattison.cryptocurrency.interfaces.Output;
 import com.timmattison.cryptocurrency.interfaces.Transaction;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.Date;
 import java.util.HashSet;

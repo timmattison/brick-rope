@@ -4,7 +4,6 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.timmattison.crypto.ecc.interfaces.ECCParameters;
 import com.timmattison.crypto.ecc.interfaces.ECCPoint;
-import com.timmattison.crypto.ecc.tests.modules.ECCBitcoinTestModule;
 import com.timmattison.crypto.ecc.tests.modules.ECCSECTestModule;
 import org.junit.Assert;
 import org.junit.Test;
