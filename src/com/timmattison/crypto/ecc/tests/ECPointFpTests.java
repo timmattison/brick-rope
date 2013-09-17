@@ -3,7 +3,6 @@ package com.timmattison.crypto.ecc.tests;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.timmattison.crypto.ecc.enums.ECCFieldType;
-import com.timmattison.crypto.ecc.interfaces.ECCCurve;
 import com.timmattison.crypto.ecc.interfaces.ECCParameters;
 import com.timmattison.crypto.ecc.interfaces.ECCPoint;
 import org.junit.Assert;

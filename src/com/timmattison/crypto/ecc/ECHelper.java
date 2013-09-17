@@ -65,7 +65,7 @@ public class ECHelper {
     }
 
     /**
-     * Implements section 2.3.8 of SEC 1
+     * Implements section 4.1.3.5 of SEC 1
      * @param n
      * @param hashHexString
      * @param hashBytes
@@ -79,11 +79,14 @@ public class ECHelper {
 
         BigInteger e;
 
+        // Can we use the whole value?
         if (logBase2OfN >= (hashBytes.length * 8)) {
+            // Yes, use the whole value
             e = new BigInteger(hashHexString, 16);
         } else {
-            // TODO - Not implementing this yet
-            throw new UnsupportedOperationException("Not implemented yet");
+            // No, only use the leftmost log_2 n bits of H
+            e = new BigInteger(hashHexString, 16);
+            e = e.shiftRight(logBase2OfN - e.bitLength());
         }
 
         return e;

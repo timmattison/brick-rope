@@ -3,7 +3,6 @@ package com.timmattison.crypto.ecc.tests;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.timmattison.bitcoin.test.ByteArrayHelper;
-import com.timmattison.crypto.ecc.interfaces.ECCNamedCurve;
 import com.timmattison.crypto.ecc.interfaces.ECCParameters;
 import com.timmattison.crypto.ecc.interfaces.ECCPoint;
 import com.timmattison.crypto.ecc.ECHelper;
