@@ -12,7 +12,7 @@ import java.math.BigInteger;
  * Time: 8:23 AM
  * To change this template use File | Settings | File Templates.
  */
-public class SECNamedCurveFp implements ECCNamedCurve {
+public class SECNamedCurveFp implements ECCNamedCurveFp {
     private ECCCurveFactory eccCurveFactory;
     private ECCParametersFactory eccParametersFactory;
 

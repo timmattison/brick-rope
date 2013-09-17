@@ -1,5 +1,7 @@
 package com.timmattison.cryptocurrency.bitcoin;
 
+import com.google.inject.assistedinject.Assisted;
+import com.google.inject.assistedinject.AssistedInject;
 import com.timmattison.bitcoin.test.script.Constants;
 import com.timmattison.cryptocurrency.helpers.ByteArrayHelper;
 import com.timmattison.cryptocurrency.interfaces.Hash;
@@ -13,7 +15,8 @@ public class DoubleSha256Hash implements Hash {
     private byte[] output;
     private BigInteger outputBigInteger;
 
-    public DoubleSha256Hash(byte[] input) {
+    @AssistedInject
+    public DoubleSha256Hash(@Assisted("input") byte[] input) {
         this.input = input;
     }
 

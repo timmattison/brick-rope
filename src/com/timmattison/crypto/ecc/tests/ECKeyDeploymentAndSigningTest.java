@@ -6,6 +6,8 @@ import com.timmattison.bitcoin.test.ByteArrayHelper;
 import com.timmattison.crypto.ecc.interfaces.ECCParameters;
 import com.timmattison.crypto.ecc.interfaces.ECCPoint;
 import com.timmattison.crypto.ecc.ECHelper;
+import com.timmattison.crypto.ecc.tests.modules.ECCBitcoinTestModule;
+import com.timmattison.crypto.ecc.tests.modules.ECCSECTestModule;
 import org.junit.Test;
 
 import java.math.BigInteger;
@@ -19,7 +21,7 @@ import java.security.MessageDigest;
  * To change this template use File | Settings | File Templates.
  */
 public class ECKeyDeploymentAndSigningTest {
-    Injector injector = Guice.createInjector(new ECCTestModule());
+    Injector injector = Guice.createInjector(new ECCSECTestModule());
 
     // (Chosen) Instantiate the dU value
     private final BigInteger dU = new BigInteger("971761939728640320549601132085879836204587084162", 10);

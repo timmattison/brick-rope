@@ -2,18 +2,16 @@ package com.timmattison.cryptocurrency.bitcoin;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
-import com.timmattison.crypto.ecc.factories.SHA256MessageSignerDigestFactory;
 import com.timmattison.crypto.ecc.fp.*;
 import com.timmattison.crypto.ecc.interfaces.*;
 import com.timmattison.crypto.ecc.random.impl.RealBigIntegerRandom;
 import com.timmattison.crypto.ecc.random.interfaces.BigIntegerRandom;
 import com.timmattison.crypto.ecc.random.interfaces.RandomFactory;
 import com.timmattison.cryptocurrency.bitcoin.factories.*;
-import com.timmattison.cryptocurrency.interfaces.TargetFactory;
 import com.timmattison.cryptocurrency.factories.*;
 import com.timmattison.cryptocurrency.interfaces.*;
-import com.timmattison.cryptocurrency.standard.StandardBlockFactory;
 import com.timmattison.cryptocurrency.standard.StandardBlockChain;
+import com.timmattison.cryptocurrency.standard.StandardBlockFactory;
 import com.timmattison.cryptocurrency.standard.StandardMerkleRootCalculator;
 import com.timmattison.cryptocurrency.standard.hashing.chunks.ChunkExtractor;
 import com.timmattison.cryptocurrency.standard.hashing.chunks.StandardChunkExtractor;
@@ -57,7 +55,7 @@ public class BitcoinModule extends AbstractModule {
         bind(ECCParamsFactory.class).to(BitcoinECCParamsFactory.class);
 
         bind(ECCCurve.class).to(ECCurveFp.class);
-        bind(ECCNamedCurve.class).to(SECNamedCurveFp.class);
+        bind(ECCNamedCurveFp.class).to(SECNamedCurveFp.class);
         bind(ECCParameters.class).to(ECParametersFp.class);
         bind(ECCFieldElement.class).to(ECFieldElementFp.class);
         bind(ECCPoint.class).to(ECPointFp.class);
@@ -66,7 +64,7 @@ public class BitcoinModule extends AbstractModule {
         bind(ECCSignature.class).to(ECSignatureFp.class);
 
         install(new FactoryModuleBuilder().implement(ECCCurve.class, ECCurveFp.class).build(ECCCurveFactory.class));
-        install(new FactoryModuleBuilder().implement(ECCNamedCurve.class, SECNamedCurveFp.class).build(ECCNamedCurveFactory.class));
+        install(new FactoryModuleBuilder().implement(ECCNamedCurveFp.class, SECNamedCurveFp.class).build(ECCNamedCurveFactory.class));
         install(new FactoryModuleBuilder().implement(ECCParameters.class, ECParametersFp.class).build(ECCParametersFactory.class));
         install(new FactoryModuleBuilder().implement(ECCFieldElement.class, ECFieldElementFp.class).build(ECCFieldElementFactory.class));
         install(new FactoryModuleBuilder().implement(ECCPoint.class, ECPointFp.class).build(ECCPointFactory.class));
@@ -76,7 +74,7 @@ public class BitcoinModule extends AbstractModule {
         // Message signing
         bind(ECCMessageSigner.class).to(ECMessageSignerFp.class);
         install(new FactoryModuleBuilder().implement(ECCMessageSigner.class, ECMessageSignerFp.class).build(ECCMessageSignerFactory.class));
-        bind(ECCMessageSignerDigestFactory.class).to(SHA256MessageSignerDigestFactory.class);
+        install(new FactoryModuleBuilder().implement(Hash.class, DoubleSha256Hash.class).build(ECCMessageSignerHashFactory.class));
         bind(BigIntegerRandom.class).to(RealBigIntegerRandom.class);
         install(new FactoryModuleBuilder().implement(Random.class, Random.class).build(RandomFactory.class));
         install(new FactoryModuleBuilder().implement(ECCMessageSignatureVerifier.class, ECMessageSignatureVerifierFp.class).build(ECCMessageSignatureVerifierFactory.class));

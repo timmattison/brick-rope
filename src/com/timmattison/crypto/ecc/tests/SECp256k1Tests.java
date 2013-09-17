@@ -4,6 +4,8 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.timmattison.crypto.ecc.interfaces.ECCParameters;
 import com.timmattison.crypto.ecc.interfaces.ECCPoint;
+import com.timmattison.crypto.ecc.tests.modules.ECCBitcoinTestModule;
+import com.timmattison.crypto.ecc.tests.modules.ECCSECTestModule;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -18,7 +20,7 @@ import java.util.Random;
  * To change this template use File | Settings | File Templates.
  */
 public class SECp256k1Tests {
-    Injector injector = Guice.createInjector(new ECCTestModule());
+    Injector injector = Guice.createInjector(new ECCSECTestModule());
 
     /*
      * From http://crypto.stackexchange.com/questions/784/secp256k1-test-examples

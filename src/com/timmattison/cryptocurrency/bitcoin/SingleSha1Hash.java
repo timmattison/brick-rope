@@ -10,13 +10,13 @@ import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-public class SingleSha256Hash implements Hash {
+public class SingleSha1Hash implements Hash {
     private final byte[] input;
     private byte[] output;
     private BigInteger outputBigInteger;
 
     @AssistedInject
-    public SingleSha256Hash(@Assisted("input") byte[] input) {
+    public SingleSha1Hash(@Assisted("input") byte[] input) {
         this.input = input;
     }
 
@@ -29,7 +29,7 @@ public class SingleSha256Hash implements Hash {
     public byte[] getOutput() {
         if (output == null) {
             try {
-                MessageDigest messageDigest1 = MessageDigest.getInstance(Constants.SHA256_ALGORITHM);
+                MessageDigest messageDigest1 = MessageDigest.getInstance(Constants.SHA1_ALGORITHM);
 
                 output = messageDigest1.digest(input);
             } catch (NoSuchAlgorithmException e) {

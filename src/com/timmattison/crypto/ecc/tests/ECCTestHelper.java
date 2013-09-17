@@ -32,7 +32,7 @@ public class ECCTestHelper {
     }
 
     public static ECCParameters getSecp160r1(Injector injector) {
-        return injector.getInstance(ECCNamedCurve.class).getSecp160r1();
+        return injector.getInstance(ECCNamedCurveFp.class).getSecp160r1();
     }
 
     public static ECCParameters getSecp256k1(Injector injector) {

@@ -7,14 +7,12 @@ package com.timmattison.crypto.ecc.interfaces;
  * Time: 8:23 AM
  * To change this template use File | Settings | File Templates.
  */
-public interface ECCNamedCurve {
+public interface ECCNamedCurveFp {
     public ECCParameters getSecp128r1();
 
     public ECCParameters getSecp160k1();
 
     public ECCParameters getSecp160r1();
-
-    public ECCParameters getSect163k1();
 
     public ECCParameters getSecp192k1();
 

@@ -5,8 +5,9 @@ import com.google.inject.Injector;
 import com.timmattison.crypto.ecc.interfaces.ECCKeyPair;
 import com.timmattison.crypto.ecc.interfaces.ECCPoint;
 import com.timmattison.crypto.ecc.interfaces.ECCSignature;
+import com.timmattison.crypto.ecc.tests.modules.ECCBitcoinTestModule;
 import com.timmattison.crypto.ecc.tests.ECCTestHelper;
-import com.timmattison.crypto.ecc.tests.ECCTestModule;
+import com.timmattison.crypto.ecc.tests.modules.ECCSECTestModule;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -20,7 +21,7 @@ import java.math.BigInteger;
  * To change this template use File | Settings | File Templates.
  */
 public class ECSECMessageSignatureVerifierFpTests {
-    static Injector injector = Guice.createInjector(new ECCTestModule());
+    static Injector injector = Guice.createInjector(new ECCSECTestModule());
 
     private static final BigInteger gec2_1_4_3_r = new BigInteger("1176954224688105769566774212902092897866168635793");
     private static final BigInteger gec2_1_4_3_s = new BigInteger("299742580584132926933316745664091704165278518100");

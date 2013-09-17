@@ -6,6 +6,7 @@ import com.timmattison.crypto.ecc.ECHelper;
 import com.timmattison.crypto.ecc.interfaces.*;
 import com.timmattison.crypto.ecc.random.interfaces.BigIntegerRandom;
 import com.timmattison.cryptocurrency.helpers.ByteArrayHelper;
+import com.timmattison.cryptocurrency.interfaces.Hash;
 
 import java.math.BigInteger;
 import java.security.MessageDigest;
@@ -19,7 +20,7 @@ import java.security.MessageDigest;
  */
 public class ECMessageSignerFp implements ECCMessageSigner {
     private ECCSignatureFactory eccSignatureFactory;
-    private ECCMessageSignerDigestFactory eccMessageSignerDigestFactory;
+    private ECCMessageSignerHashFactory eccMessageSignerHashFactory;
     private BigIntegerRandom bigIntegerRandom;
     private ECCKeyPair eccKeyPair;
 
@@ -27,9 +28,9 @@ public class ECMessageSignerFp implements ECCMessageSigner {
     }
 
     @AssistedInject
-    public ECMessageSignerFp(ECCSignatureFactory eccSignatureFactory, ECCMessageSignerDigestFactory eccMessageSignerDigestFactory, @Assisted("bigIntegerRandom") BigIntegerRandom bigIntegerRandom, @Assisted("eccKeyPair") ECCKeyPair eccKeyPair) {
+    public ECMessageSignerFp(ECCSignatureFactory eccSignatureFactory, ECCMessageSignerHashFactory eccMessageSignerHashFactory, @Assisted("bigIntegerRandom") BigIntegerRandom bigIntegerRandom, @Assisted("eccKeyPair") ECCKeyPair eccKeyPair) {
         this.eccSignatureFactory = eccSignatureFactory;
-        this.eccMessageSignerDigestFactory = eccMessageSignerDigestFactory;
+        this.eccMessageSignerHashFactory = eccMessageSignerHashFactory;
         this.bigIntegerRandom = bigIntegerRandom;
         this.eccKeyPair = eccKeyPair;
     }
@@ -57,9 +58,8 @@ public class ECMessageSignerFp implements ECCMessageSigner {
         }
 
         // Hash the message
-        MessageDigest md = eccMessageSignerDigestFactory.create();
-        md.update(messageBytes);
-        byte[] hashBytes = md.digest();
+        Hash hash = eccMessageSignerHashFactory.create(messageBytes);
+        byte[] hashBytes = hash.getOutput();
         String H = ByteArrayHelper.toHex(hashBytes);
 
         // Calculate e

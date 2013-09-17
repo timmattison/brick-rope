@@ -1,7 +1,7 @@
 package com.timmattison.cryptocurrency.bitcoin;
 
 import com.google.inject.Inject;
-import com.timmattison.crypto.ecc.interfaces.ECCNamedCurve;
+import com.timmattison.crypto.ecc.interfaces.ECCNamedCurveFp;
 import com.timmattison.crypto.ecc.interfaces.ECCParameters;
 import com.timmattison.cryptocurrency.factories.ECCParamsFactory;
 
@@ -13,10 +13,10 @@ import com.timmattison.cryptocurrency.factories.ECCParamsFactory;
  * To change this template use File | Settings | File Templates.
  */
 public class BitcoinECCParamsFactory implements ECCParamsFactory {
-    private final ECCNamedCurve namedCurve;
+    private final ECCNamedCurveFp namedCurve;
 
     @Inject
-    public BitcoinECCParamsFactory(ECCNamedCurve namedCurve) {
+    public BitcoinECCParamsFactory(ECCNamedCurveFp namedCurve) {
         this.namedCurve = namedCurve;
     }
     @Override

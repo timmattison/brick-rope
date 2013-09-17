@@ -4,6 +4,8 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.timmattison.crypto.ecc.interfaces.ECCCurve;
 import com.timmattison.crypto.ecc.interfaces.ECCParameters;
+import com.timmattison.crypto.ecc.tests.modules.ECCBitcoinTestModule;
+import com.timmattison.crypto.ecc.tests.modules.ECCSECTestModule;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -15,7 +17,7 @@ import org.junit.Test;
  * To change this template use File | Settings | File Templates.
  */
 public class ECParametersFpTests {
-    Injector injector = Guice.createInjector(new ECCTestModule());
+    Injector injector = Guice.createInjector(new ECCSECTestModule());
 
     @Test
     public void testShouldBeEqual1() {

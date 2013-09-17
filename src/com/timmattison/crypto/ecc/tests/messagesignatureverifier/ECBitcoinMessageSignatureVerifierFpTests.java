@@ -3,8 +3,8 @@ package com.timmattison.crypto.ecc.tests.messagesignatureverifier;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.timmattison.crypto.ecc.interfaces.ECCSignature;
+import com.timmattison.crypto.ecc.tests.modules.ECCBitcoinTestModule;
 import com.timmattison.crypto.ecc.tests.ECCTestHelper;
-import com.timmattison.crypto.ecc.tests.ECCTestModule;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -16,7 +16,7 @@ import org.junit.Test;
  * To change this template use File | Settings | File Templates.
  */
 public class ECBitcoinMessageSignatureVerifierFpTests {
-    static Injector injector = Guice.createInjector(new ECCTestModule());
+    static Injector injector = Guice.createInjector(new ECCBitcoinTestModule());
 
     private static final byte[] block170Transaction1Input0RValue = new byte[]{78, 69, -31, 105, 50, -72, -81, 81, 73, 97, -95, -45, -95, -94, 95, -33, 63, 79, 119, 50, -23, -42, 36, -58, -58, 21, 72, -85, 95, -72, -51, 65};
     private static final byte[] block170Transaction1Input0SValue = new byte[]{24, 21, 34, -20, -114, -54, 7, -34, 72, 96, -92, -84, -35, 18, -112, -99, -125, 28, -59, 108, -69, -84, 70, 34, 8, 34, 33, -88, 118, -115, 29, 9};

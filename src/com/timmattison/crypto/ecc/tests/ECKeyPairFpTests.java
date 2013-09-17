@@ -4,6 +4,8 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.timmattison.crypto.ecc.enums.ECCFieldType;
 import com.timmattison.crypto.ecc.interfaces.ECCKeyPair;
+import com.timmattison.crypto.ecc.tests.modules.ECCBitcoinTestModule;
+import com.timmattison.crypto.ecc.tests.modules.ECCSECTestModule;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -17,7 +19,7 @@ import java.math.BigInteger;
  * To change this template use File | Settings | File Templates.
  */
 public class ECKeyPairFpTests {
-    static Injector injector = Guice.createInjector(new ECCTestModule());
+    static Injector injector = Guice.createInjector(new ECCSECTestModule());
 
     private static final BigInteger gec2_2_1_2_dU = new BigInteger("971761939728640320549601132085879836204587084162");
     private static final BigInteger gec2_2_1_2_QuX = new BigInteger("466448783855397898016055842232266600516272889280");

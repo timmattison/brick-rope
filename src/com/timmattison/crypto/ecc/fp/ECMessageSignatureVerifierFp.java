@@ -4,6 +4,7 @@ import com.google.inject.Inject;
 import com.timmattison.crypto.ecc.ECHelper;
 import com.timmattison.crypto.ecc.interfaces.*;
 import com.timmattison.cryptocurrency.helpers.ByteArrayHelper;
+import com.timmattison.cryptocurrency.interfaces.Hash;
 
 import java.math.BigInteger;
 import java.security.MessageDigest;
@@ -16,13 +17,13 @@ import java.security.MessageDigest;
  * To change this template use File | Settings | File Templates.
  */
 public class ECMessageSignatureVerifierFp implements ECCMessageSignatureVerifier {
-    private final ECCMessageSignerDigestFactory eccMessageSignerDigestFactory;
+    private final ECCMessageSignerHashFactory eccMessageSignerHashFactory;
 
     private final static BigInteger two = BigInteger.valueOf(2);
 
     @Inject
-    public ECMessageSignatureVerifierFp(ECCMessageSignerDigestFactory eccMessageSignerDigestFactory) {
-        this.eccMessageSignerDigestFactory = eccMessageSignerDigestFactory;
+    public ECMessageSignatureVerifierFp(ECCMessageSignerHashFactory eccMessageSignerHashFactory) {
+        this.eccMessageSignerHashFactory = eccMessageSignerHashFactory;
     }
 
     @Override
@@ -33,12 +34,8 @@ public class ECMessageSignatureVerifierFp implements ECCMessageSignatureVerifier
         ECCPoint Qu = eccSignature.getQu();
 
         // Hash the message
-        MessageDigest md1 = eccMessageSignerDigestFactory.create();
-        md1.update(messageBytes);
-        byte[] hashBytes = md1.digest();
-        MessageDigest md2 = eccMessageSignerDigestFactory.create();
-        md2.update(hashBytes);
-        hashBytes = md2.digest();
+        Hash hash = eccMessageSignerHashFactory.create(messageBytes);
+        byte[] hashBytes = hash.getOutput();
         String H = ByteArrayHelper.toHex(hashBytes);
 
         // r and s must be >= 2

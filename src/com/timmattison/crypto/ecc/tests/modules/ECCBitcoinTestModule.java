@@ -1,17 +1,18 @@
-package com.timmattison.crypto.ecc.tests;
+package com.timmattison.crypto.ecc.tests.modules;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
-import com.timmattison.crypto.ecc.factories.SHA256MessageSignerDigestFactory;
 import com.timmattison.crypto.ecc.fp.*;
 import com.timmattison.crypto.ecc.interfaces.*;
 import com.timmattison.crypto.ecc.random.impl.RealBigIntegerRandom;
 import com.timmattison.crypto.ecc.random.interfaces.BigIntegerRandom;
 import com.timmattison.crypto.ecc.random.interfaces.RandomFactory;
 import com.timmattison.cryptocurrency.bitcoin.BitcoinECCParamsFactory;
+import com.timmattison.cryptocurrency.bitcoin.DoubleSha256Hash;
 import com.timmattison.cryptocurrency.bitcoin.factories.BitcoinSignatureProcessorFactory;
 import com.timmattison.cryptocurrency.factories.ECCParamsFactory;
 import com.timmattison.cryptocurrency.factories.SignatureProcessorFactory;
+import com.timmattison.cryptocurrency.interfaces.Hash;
 
 import java.util.Random;
 
@@ -22,11 +23,11 @@ import java.util.Random;
  * Time: 5:56 PM
  * To change this template use File | Settings | File Templates.
  */
-public class ECCTestModule extends AbstractModule {
+public class ECCBitcoinTestModule extends AbstractModule {
     @Override
     protected void configure() {
         bind(ECCCurve.class).to(ECCurveFp.class);
-        bind(ECCNamedCurve.class).to(SECNamedCurveFp.class);
+        bind(ECCNamedCurveFp.class).to(SECNamedCurveFp.class);
         bind(ECCParameters.class).to(ECParametersFp.class);
         bind(ECCFieldElement.class).to(ECFieldElementFp.class);
         bind(ECCPoint.class).to(ECPointFp.class);
@@ -35,7 +36,7 @@ public class ECCTestModule extends AbstractModule {
         bind(ECCSignature.class).to(ECSignatureFp.class);
 
         install(new FactoryModuleBuilder().implement(ECCCurve.class, ECCurveFp.class).build(ECCCurveFactory.class));
-        install(new FactoryModuleBuilder().implement(ECCNamedCurve.class, SECNamedCurveFp.class).build(ECCNamedCurveFactory.class));
+        install(new FactoryModuleBuilder().implement(ECCNamedCurveFp.class, SECNamedCurveFp.class).build(ECCNamedCurveFactory.class));
         install(new FactoryModuleBuilder().implement(ECCParameters.class, ECParametersFp.class).build(ECCParametersFactory.class));
         install(new FactoryModuleBuilder().implement(ECCFieldElement.class, ECFieldElementFp.class).build(ECCFieldElementFactory.class));
         install(new FactoryModuleBuilder().implement(ECCPoint.class, ECPointFp.class).build(ECCPointFactory.class));
@@ -45,7 +46,7 @@ public class ECCTestModule extends AbstractModule {
         // Message signing
         bind(ECCMessageSigner.class).to(ECMessageSignerFp.class);
         install(new FactoryModuleBuilder().implement(ECCMessageSigner.class, ECMessageSignerFp.class).build(ECCMessageSignerFactory.class));
-        bind(ECCMessageSignerDigestFactory.class).to(SHA256MessageSignerDigestFactory.class);
+        install(new FactoryModuleBuilder().implement(Hash.class, DoubleSha256Hash.class).build(ECCMessageSignerHashFactory.class));
         bind(BigIntegerRandom.class).to(RealBigIntegerRandom.class);
         install(new FactoryModuleBuilder().implement(Random.class, Random.class).build(RandomFactory.class));
         install(new FactoryModuleBuilder().implement(ECCMessageSignatureVerifier.class, ECMessageSignatureVerifierFp.class).build(ECCMessageSignatureVerifierFactory.class));
