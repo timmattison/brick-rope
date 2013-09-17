@@ -45,47 +45,47 @@ public class BitcoinValidateAllBlocks {
                 continue;
             }
 
-            // Loop through the non-coinbase transactions and prove they are valid
-            System.out.println(block.prettyDump(0));
-            System.out.println(ByteArrayHelper.toHex(block.dump()));
+            for (int loop = 1; loop < block.getTransactions().size(); loop++) {
+                // Loop through the non-coinbase transactions and prove they are valid
+                System.out.println(block.prettyDump(0));
+                System.out.println(ByteArrayHelper.toHex(block.dump()));
 
-            System.out.println("Transaction bytes:");
-            System.out.println(ByteArrayHelper.toHex(block.getTransactions().get(0).dump()));
-            System.out.println("Output bytes:");
-            System.out.println(ByteArrayHelper.toHex(block.getTransactions().get(0).getOutputs().get(0).dump()));
-            // This is the first block that has more than one transaction.
+                System.out.println("Transaction bytes:");
+                System.out.println(ByteArrayHelper.toHex(block.getTransactions().get(0).dump()));
+                System.out.println("Output bytes:");
+                System.out.println(ByteArrayHelper.toHex(block.getTransactions().get(0).getOutputs().get(0).dump()));
+                // This is the first block that has more than one transaction.
 
-            Transaction currentTransaction = block.getTransactions().get(1);
+                Transaction currentTransaction = block.getTransactions().get(loop);
 
-            // Get its inputs
-            List<Input> inputs = currentTransaction.getInputs();
+                // Get its inputs
+                List<Input> inputs = currentTransaction.getInputs();
 
-            Input input = inputs.get(0);
-            String previousTransactionHash = ByteArrayHelper.toHex(input.getPreviousTransactionId());
+                Input input = inputs.get(0);
+                String previousTransactionHash = ByteArrayHelper.toHex(input.getPreviousTransactionId());
 
-            long previousOutputIndex = input.getPreviousOutputIndex();
+                long previousOutputIndex = input.getPreviousOutputIndex();
 
-            // Get the previous transaction
-            Transaction previousTransaction = transactionLocator.findTransaction(input.getPreviousTransactionId());
+                // Get the previous transaction
+                Transaction previousTransaction = transactionLocator.findTransaction(input.getPreviousTransactionId());
 
-            // Get the output
-            Output previousOutput = previousTransaction.getOutputs().get((int) previousOutputIndex);
+                // Get the output
+                Output previousOutput = previousTransaction.getOutputs().get((int) previousOutputIndex);
 
-            // Get the input script
-            Script inputScript = input.getScript();
+                // Get the input script
+                Script inputScript = input.getScript();
 
-            // Get the output script
-            Script outputScript = previousOutput.getScript();
+                // Get the output script
+                Script outputScript = previousOutput.getScript();
 
-            validationScript = injector.getInstance(ScriptingFactory.class).createValidationScript(inputScript, outputScript);
+                validationScript = injector.getInstance(ScriptingFactory.class).createValidationScript(inputScript, outputScript);
 
-            StateMachine stateMachine = injector.getInstance(StateMachineFactory.class).createStateMachine();
-            stateMachine.setPreviousTransactionHash(input.getPreviousTransactionId());
-            stateMachine.setCurrentTransactionHash(block.getTransactions().get(1).getHash());
+                StateMachine stateMachine = injector.getInstance(StateMachineFactory.class).createStateMachine();
+                stateMachine.setPreviousTransactionHash(input.getPreviousTransactionId());
+                stateMachine.setCurrentTransactionHash(block.getTransactions().get(loop).getHash());
 
-            stateMachine.execute(validationScript);
-
-            return;
+                stateMachine.execute(validationScript);
+            }
         }
     }
 }
