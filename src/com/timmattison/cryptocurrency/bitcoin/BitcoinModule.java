@@ -57,7 +57,7 @@ public class BitcoinModule extends AbstractModule {
         bind(ECCParamsFactory.class).to(BitcoinECCParamsFactory.class);
 
         bind(ECCCurve.class).to(ECCurveFp.class);
-        bind(ECCNamedCurve.class).to(SECNamedCurve.class);
+        bind(ECCNamedCurve.class).to(SECNamedCurveFp.class);
         bind(ECCParameters.class).to(ECParametersFp.class);
         bind(ECCFieldElement.class).to(ECFieldElementFp.class);
         bind(ECCPoint.class).to(ECPointFp.class);
@@ -66,7 +66,7 @@ public class BitcoinModule extends AbstractModule {
         bind(ECCSignature.class).to(ECSignatureFp.class);
 
         install(new FactoryModuleBuilder().implement(ECCCurve.class, ECCurveFp.class).build(ECCCurveFactory.class));
-        install(new FactoryModuleBuilder().implement(ECCNamedCurve.class, SECNamedCurve.class).build(ECCNamedCurveFactory.class));
+        install(new FactoryModuleBuilder().implement(ECCNamedCurve.class, SECNamedCurveFp.class).build(ECCNamedCurveFactory.class));
         install(new FactoryModuleBuilder().implement(ECCParameters.class, ECParametersFp.class).build(ECCParametersFactory.class));
         install(new FactoryModuleBuilder().implement(ECCFieldElement.class, ECFieldElementFp.class).build(ECCFieldElementFactory.class));
         install(new FactoryModuleBuilder().implement(ECCPoint.class, ECPointFp.class).build(ECCPointFactory.class));

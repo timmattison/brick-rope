@@ -12,15 +12,15 @@ import java.math.BigInteger;
  * Time: 8:23 AM
  * To change this template use File | Settings | File Templates.
  */
-public class SECNamedCurve implements ECCNamedCurve {
+public class SECNamedCurveFp implements ECCNamedCurve {
     private ECCCurveFactory eccCurveFactory;
     private ECCParametersFactory eccParametersFactory;
 
-    public SECNamedCurve() {
+    public SECNamedCurveFp() {
     }
 
     @Inject
-    public SECNamedCurve(ECCCurveFactory eccCurveFactory, ECCParametersFactory eccParametersFactory) {
+    public SECNamedCurveFp(ECCCurveFactory eccCurveFactory, ECCParametersFactory eccParametersFactory) {
         this.eccCurveFactory = eccCurveFactory;
         this.eccParametersFactory = eccParametersFactory;
     }
@@ -74,7 +74,7 @@ public class SECNamedCurve implements ECCNamedCurve {
         return eccParametersFactory.create(curve, G, n, h);
     }
 
-    public ECCParameters getSecp192k1() {
+   public ECCParameters getSecp192k1() {
         // p = 2^192 - 2^32 - 2^12 - 2^8 - 2^7 - 2^6 - 2^3 - 1
         BigInteger p = fromHex("FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEFFFFEE37");
         BigInteger a = BigInteger.ZERO;
