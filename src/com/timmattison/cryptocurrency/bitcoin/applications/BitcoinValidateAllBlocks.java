@@ -70,12 +70,15 @@ public class BitcoinValidateAllBlocks {
                     // Get the output script
                     Script outputScript = previousOutput.getScript();
 
+                    // Create the validation script
                     validationScript = scriptingFactory.createValidationScript(inputScript, outputScript);
 
+                    // Create a state machine and give it the references to the transactions by hash
                     StateMachine stateMachine = stateMachineFactory.createStateMachine();
                     stateMachine.setPreviousTransactionHash(input.getPreviousTransactionId());
                     stateMachine.setCurrentTransactionHash(block.getTransactions().get(loop).getHash());
 
+                    // Execute the script.  It will throw an exception if it fails.
                     stateMachine.execute(validationScript);
                 }
             }
