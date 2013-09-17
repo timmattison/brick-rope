@@ -19,4 +19,12 @@ public interface StateMachine {
     void reset();
 
     public void execute(Script script);
+
+    void setPreviousTransactionHash(byte[] previousTransactionHash);
+
+    void setCurrentTransactionHash(byte[] currentTransactionHash);
+
+    byte[] getPreviousTransactionHash();
+
+    byte[] getCurrentTransactionHash();
 }

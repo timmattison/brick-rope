@@ -18,6 +18,8 @@ public class BitcoinStateMachine implements StateMachine {
     private static final int MAX_WORD_LIST_LENGTH = 9999;
     private final ScriptingFactory scriptingFactory;
     Stack<Object> stack;
+    private byte[] previousTransactionHash;
+    private byte[] currentTransactionHash;
 
     @Inject
     public BitcoinStateMachine(ScriptingFactory scriptingFactory) {
@@ -104,9 +106,37 @@ public class BitcoinStateMachine implements StateMachine {
         return;
     }
 
+    @Override
+    public void setPreviousTransactionHash(byte[] previousTransactionHash) {
+        this.previousTransactionHash = previousTransactionHash;
+    }
+
+    @Override
+    public void setCurrentTransactionHash(byte[] currentTransactionHash) {
+        this.currentTransactionHash = currentTransactionHash;
+    }
+
+    @Override
+    public byte[] getPreviousTransactionHash() {
+        if (previousTransactionHash == null) {
+            throw new UnsupportedOperationException("Previous transaction hash has not been set");
+        }
+
+        return previousTransactionHash;
+    }
+
+    @Override
+    public byte[] getCurrentTransactionHash() {
+        if (currentTransactionHash == null) {
+            throw new UnsupportedOperationException("Current transaction hash has not been set");
+        }
+
+        return currentTransactionHash;
+    }
+
     private void throwExceptionIfStackNotInitialized() {
         if (stack == null) {
-            throw new IllegalStateException("Stack has not been initialzied");
+            throw new IllegalStateException("Stack has not been initialized");
         }
     }
 }

@@ -1,5 +1,6 @@
 package com.timmattison.cryptocurrency.bitcoin;
 
+import com.timmattison.cryptocurrency.factories.BlockChainFactory;
 import com.timmattison.cryptocurrency.interfaces.Block;
 import com.timmattison.cryptocurrency.interfaces.BlockChain;
 import com.timmattison.cryptocurrency.interfaces.Transaction;
@@ -16,16 +17,16 @@ import java.util.Arrays;
  * To change this template use File | Settings | File Templates.
  */
 public class BitcoinTransactionLocator implements TransactionLocator {
-    private final BlockChain blockChain;
+    private final BlockChainFactory blockChainFactory;
 
     @Inject
-    public BitcoinTransactionLocator(BlockChain blockChain) {
-        this.blockChain = blockChain;
+    public BitcoinTransactionLocator(BlockChainFactory blockChainFactory) {
+        this.blockChainFactory = blockChainFactory;
     }
 
     @Override
     public Transaction findTransaction(byte[] transactionHash) {
-        boolean found = false;
+        BlockChain blockChain = blockChainFactory.getBlockChain();
 
         // Loop until we find something or until we run out of blocks
         while (blockChain.hasNext()) {

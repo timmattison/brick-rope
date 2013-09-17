@@ -25,9 +25,6 @@ import java.util.*;
  */
 public class BitcoinValidateBlock170 {
     public static ValidationScript validationScript;
-    public static Transaction transaction1In170;
-    public static Transaction transaction0In9;
-    public static Transaction transaction0In170;
 
     public static void main(String[] args) throws FileNotFoundException {
         List<Block> blocks = new ArrayList<Block>();
@@ -52,10 +49,6 @@ public class BitcoinValidateBlock170 {
                 transactionMap.put(hash, transaction);
             }
 
-            if (blockNumber == 9) {
-                transaction0In9 = block.getTransactions().get(0);
-            }
-
             if (blockNumber == 170) {
                 System.out.println(block.prettyDump(0));
                 System.out.println(ByteArrayHelper.toHex(block.dump()));
@@ -66,14 +59,10 @@ public class BitcoinValidateBlock170 {
                 System.out.println(ByteArrayHelper.toHex(block.getTransactions().get(0).getOutputs().get(0).dump()));
                 // This is the first block that has more than one transaction.
 
-                // Get the first transaction
-                transaction0In170 = block.getTransactions().get(0);
-
-                // Get the second transaction
-                transaction1In170 = block.getTransactions().get(1);
+                Transaction currentTransaction = block.getTransactions().get(1);
 
                 // Get its inputs
-                List<Input> inputs = transaction1In170.getInputs();
+                List<Input> inputs = currentTransaction.getInputs();
 
                 Input input = inputs.get(0);
                 String previousTransactionHash = ByteArrayHelper.toHex(input.getPreviousTransactionId());
@@ -101,6 +90,8 @@ public class BitcoinValidateBlock170 {
                 validationScript = injector.getInstance(ScriptingFactory.class).createValidationScript(inputScript, outputScript);
 
                 StateMachine stateMachine = injector.getInstance(StateMachineFactory.class).createStateMachine();
+                stateMachine.setPreviousTransactionHash(input.getPreviousTransactionId());
+                stateMachine.setCurrentTransactionHash(block.getTransactions().get(1).getHash());
 
                 stateMachine.execute(validationScript);
 

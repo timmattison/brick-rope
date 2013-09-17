@@ -32,11 +32,13 @@ public class OpCheckSig extends CryptoOp {
     private final ScriptingFactory scriptingFactory;
     private final SignatureProcessorFactory signatureProcessorFactory;
     private final ECCMessageSignatureVerifierFactory eccMessageSignatureVerifierFactory;
+    private final TransactionLocator transactionLocator;
 
     public OpCheckSig(SignatureProcessorFactory signatureProcessorFactory, ECCMessageSignatureVerifierFactory eccMessageSignatureVerifierFactory, ScriptingFactory scriptingFactory, TransactionLocator transactionLocator) {
         this.signatureProcessorFactory = signatureProcessorFactory;
         this.eccMessageSignatureVerifierFactory = eccMessageSignatureVerifierFactory;
         this.scriptingFactory = scriptingFactory;
+        this.transactionLocator = transactionLocator;
     }
 
     @Override
@@ -151,9 +153,8 @@ public class OpCheckSig extends CryptoOp {
         }
 
         // Copy txNew to txCopy, XXX I KNOW THIS ISN'T REALLY A COPY XXX
-        Transaction transaction0In170 = BitcoinValidateBlock170.transaction0In170;
-        Transaction transaction1In170 = BitcoinValidateBlock170.transaction1In170;
-        Transaction transaction0In9 = BitcoinValidateBlock170.transaction0In9;
+        Transaction transaction0In9 = transactionLocator.findTransaction(stateMachine.getPreviousTransactionHash());
+        Transaction transaction1In170 = transactionLocator.findTransaction(stateMachine.getCurrentTransactionHash());
 
         // Get the subscript XXX NEED TO CHECK FOR OP_CODESEPARATORS! XXX
         Script subscript = transaction0In9.getOutputs().get(0).getScript();
