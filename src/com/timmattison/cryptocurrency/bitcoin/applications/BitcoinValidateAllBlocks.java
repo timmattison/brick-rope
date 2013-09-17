@@ -32,6 +32,8 @@ public class BitcoinValidateAllBlocks {
 
         BlockChain blockChain = injector.getInstance(BlockChainFactory.class).getBlockChain();
         TransactionLocator transactionLocator = injector.getInstance(TransactionLocator.class);
+        StateMachineFactory stateMachineFactory = injector.getInstance(StateMachineFactory.class);
+        ScriptingFactory scriptingFactory = injector.getInstance(ScriptingFactory.class);
 
         Block block;
         int blockNumber = -1;
@@ -61,30 +63,30 @@ public class BitcoinValidateAllBlocks {
                 // Get its inputs
                 List<Input> inputs = currentTransaction.getInputs();
 
-                Input input = inputs.get(0);
-                String previousTransactionHash = ByteArrayHelper.toHex(input.getPreviousTransactionId());
+                // Validate each input
+                for (Input input : inputs) {
+                    long previousOutputIndex = input.getPreviousOutputIndex();
 
-                long previousOutputIndex = input.getPreviousOutputIndex();
+                    // Get the previous transaction
+                    Transaction previousTransaction = transactionLocator.findTransaction(input.getPreviousTransactionId());
 
-                // Get the previous transaction
-                Transaction previousTransaction = transactionLocator.findTransaction(input.getPreviousTransactionId());
+                    // Get the output
+                    Output previousOutput = previousTransaction.getOutputs().get((int) previousOutputIndex);
 
-                // Get the output
-                Output previousOutput = previousTransaction.getOutputs().get((int) previousOutputIndex);
+                    // Get the input script
+                    Script inputScript = input.getScript();
 
-                // Get the input script
-                Script inputScript = input.getScript();
+                    // Get the output script
+                    Script outputScript = previousOutput.getScript();
 
-                // Get the output script
-                Script outputScript = previousOutput.getScript();
+                    validationScript = scriptingFactory.createValidationScript(inputScript, outputScript);
 
-                validationScript = injector.getInstance(ScriptingFactory.class).createValidationScript(inputScript, outputScript);
+                    StateMachine stateMachine = stateMachineFactory.createStateMachine();
+                    stateMachine.setPreviousTransactionHash(input.getPreviousTransactionId());
+                    stateMachine.setCurrentTransactionHash(block.getTransactions().get(loop).getHash());
 
-                StateMachine stateMachine = injector.getInstance(StateMachineFactory.class).createStateMachine();
-                stateMachine.setPreviousTransactionHash(input.getPreviousTransactionId());
-                stateMachine.setCurrentTransactionHash(block.getTransactions().get(loop).getHash());
-
-                stateMachine.execute(validationScript);
+                    stateMachine.execute(validationScript);
+                }
             }
         }
     }
