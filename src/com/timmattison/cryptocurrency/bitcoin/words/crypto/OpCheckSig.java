@@ -170,7 +170,7 @@ public class OpCheckSig extends CryptoOp {
         }
 
         // Copy the subscript into the txIn we're checking XXX NEED TO CHECK FOR OP_CODESEPARATORS! XXX
-        InputScript safeSubscript = scriptingFactory.createInputScript(1, subscriptBytes.length, true);
+        InputScript safeSubscript = scriptingFactory.createInputScript(1, subscriptBytes.length, false);
         safeSubscript.build(subscriptBytes);
         txCopy.getInputs().get(0).setScript(safeSubscript);
 
@@ -196,7 +196,7 @@ public class OpCheckSig extends CryptoOp {
             boolean valid = eccMessageSignatureVerifier.signatureValid(txCopyBytes, eccSignature);
 
             // Push the result onto the stack
-            stateMachine.push(valid);
+            stateMachine.push(valid ? 1 : 0);
         } catch (Exception e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
             throw new UnsupportedOperationException(e);
