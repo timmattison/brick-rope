@@ -27,4 +27,8 @@ public interface StateMachine {
     byte[] getPreviousTransactionHash();
 
     byte[] getCurrentTransactionHash();
+
+    void setPreviousOutputIndex(int previousOutputIndex);
+
+    int getPreviousOutputIndex();
 }

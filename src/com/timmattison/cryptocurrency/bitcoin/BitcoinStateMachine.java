@@ -20,6 +20,7 @@ public class BitcoinStateMachine implements StateMachine {
     Stack<Object> stack;
     private byte[] previousTransactionHash;
     private byte[] currentTransactionHash;
+    private int previousOutputIndex;
 
     @Inject
     public BitcoinStateMachine(ScriptingFactory scriptingFactory) {
@@ -132,6 +133,17 @@ public class BitcoinStateMachine implements StateMachine {
         }
 
         return currentTransactionHash;
+    }
+
+    @Override
+    public void setPreviousOutputIndex(int previousOutputIndex) {
+        this.previousOutputIndex = previousOutputIndex;
+    }
+
+
+    @Override
+    public int getPreviousOutputIndex() {
+        return previousOutputIndex;
     }
 
     private void throwExceptionIfStackNotInitialized() {

@@ -12,6 +12,8 @@ import com.timmattison.cryptocurrency.standard.ValidationScript;
  * To change this template use File | Settings | File Templates.
  */
 public class BitcoinValidationScript extends BitcoinScript implements ValidationScript {
+    private int previousOutputIndex;
+
     /**
      * Create a validation script
      *

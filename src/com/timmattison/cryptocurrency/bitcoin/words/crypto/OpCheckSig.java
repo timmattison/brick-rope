@@ -155,7 +155,7 @@ public class OpCheckSig extends CryptoOp {
         Transaction destinationTransaction = transactionLocator.findTransaction(stateMachine.getCurrentTransactionHash());
 
         // Get the subscript XXX NEED TO CHECK FOR OP_CODESEPARATORS! XXX
-        Script subscript = sourceTransaction.getOutputs().get(0).getScript();
+        Script subscript = sourceTransaction.getOutputs().get(stateMachine.getPreviousOutputIndex()).getScript();
 
         // Get the raw bytes so we have a new reference to it and can recreate it later
         byte[] subscriptBytes = subscript.dump();
