@@ -6,8 +6,6 @@ import com.timmattison.crypto.ecc.interfaces.ECCMessageSignatureVerifierFactory;
 import com.timmattison.crypto.ecc.interfaces.ECCSignature;
 import com.timmattison.cryptocurrency.bitcoin.BitcoinHashType;
 import com.timmattison.cryptocurrency.bitcoin.StateMachine;
-import com.timmattison.cryptocurrency.bitcoin.applications.BitcoinValidateBlock170;
-import com.timmattison.cryptocurrency.bitcoin.factories.BitcoinScriptingFactory;
 import com.timmattison.cryptocurrency.factories.ScriptingFactory;
 import com.timmattison.cryptocurrency.factories.SignatureProcessorFactory;
 import com.timmattison.cryptocurrency.interfaces.Input;
@@ -153,17 +151,17 @@ public class OpCheckSig extends CryptoOp {
         }
 
         // Copy txNew to txCopy, XXX I KNOW THIS ISN'T REALLY A COPY XXX
-        Transaction transaction0In9 = transactionLocator.findTransaction(stateMachine.getPreviousTransactionHash());
-        Transaction transaction1In170 = transactionLocator.findTransaction(stateMachine.getCurrentTransactionHash());
+        Transaction sourceTransaction = transactionLocator.findTransaction(stateMachine.getPreviousTransactionHash());
+        Transaction destinationTransaction = transactionLocator.findTransaction(stateMachine.getCurrentTransactionHash());
 
         // Get the subscript XXX NEED TO CHECK FOR OP_CODESEPARATORS! XXX
-        Script subscript = transaction0In9.getOutputs().get(0).getScript();
+        Script subscript = sourceTransaction.getOutputs().get(0).getScript();
 
         // Get the raw bytes so we have a new reference to it and can recreate it later
         byte[] subscriptBytes = subscript.dump();
 
         // XXX - NEED A REAL COPY HERE OTHERWISE WE DESTROY OUR DATA!
-        Transaction txCopy = transaction1In170;
+        Transaction txCopy = destinationTransaction;
 
         // Clear all txIn scripts
         for (Input input : txCopy.getInputs()) {
