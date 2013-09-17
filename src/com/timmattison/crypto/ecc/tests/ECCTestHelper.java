@@ -1,9 +1,9 @@
 package com.timmattison.crypto.ecc.tests;
 
-import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.timmattison.crypto.ecc.interfaces.*;
 import com.timmattison.crypto.ecc.random.impl.BigIntegerRandomForTesting;
+import com.timmattison.cryptocurrency.factories.SignatureProcessorFactory;
 
 import java.math.BigInteger;
 
@@ -49,6 +49,10 @@ public class ECCTestHelper {
 
     public static ECCSignature getSignature(Injector injector, ECCParameters eccParameters, BigInteger r, BigInteger s, ECCPoint Qu) {
         return injector.getInstance(ECCSignatureFactory.class).create(eccParameters, r, s, Qu);
+    }
+
+    public static Object getSignature(Injector injector, byte[] r, byte[] s, byte[] publicKey) {
+        return injector.getInstance(SignatureProcessorFactory.class).create().getSignature(r, s, publicKey);
     }
 
     public static ECCMessageSigner getSigner(Injector injector, BigInteger valueToReturn, ECCKeyPair eccKeyPair) {

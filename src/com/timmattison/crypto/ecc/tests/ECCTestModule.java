@@ -2,12 +2,16 @@ package com.timmattison.crypto.ecc.tests;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
-import com.timmattison.crypto.ecc.factories.SHA1MessageSignerDigestFactory;
+import com.timmattison.crypto.ecc.factories.SHA256MessageSignerDigestFactory;
 import com.timmattison.crypto.ecc.fp.*;
 import com.timmattison.crypto.ecc.interfaces.*;
 import com.timmattison.crypto.ecc.random.impl.RealBigIntegerRandom;
 import com.timmattison.crypto.ecc.random.interfaces.BigIntegerRandom;
 import com.timmattison.crypto.ecc.random.interfaces.RandomFactory;
+import com.timmattison.cryptocurrency.bitcoin.BitcoinECCParamsFactory;
+import com.timmattison.cryptocurrency.bitcoin.factories.BitcoinSignatureProcessorFactory;
+import com.timmattison.cryptocurrency.factories.ECCParamsFactory;
+import com.timmattison.cryptocurrency.factories.SignatureProcessorFactory;
 
 import java.util.Random;
 
@@ -41,9 +45,13 @@ public class ECCTestModule extends AbstractModule {
         // Message signing
         bind(ECCMessageSigner.class).to(ECMessageSignerFp.class);
         install(new FactoryModuleBuilder().implement(ECCMessageSigner.class, ECMessageSignerFp.class).build(ECCMessageSignerFactory.class));
-        bind(ECCMessageSignerDigestFactory.class).to(SHA1MessageSignerDigestFactory.class);
+        bind(ECCMessageSignerDigestFactory.class).to(SHA256MessageSignerDigestFactory.class);
         bind(BigIntegerRandom.class).to(RealBigIntegerRandom.class);
         install(new FactoryModuleBuilder().implement(Random.class, Random.class).build(RandomFactory.class));
         install(new FactoryModuleBuilder().implement(ECCMessageSignatureVerifier.class, ECMessageSignatureVerifierFp.class).build(ECCMessageSignatureVerifierFactory.class));
+
+        // For block 170 test
+        bind(SignatureProcessorFactory.class).to(BitcoinSignatureProcessorFactory.class);
+        bind(ECCParamsFactory.class).to(BitcoinECCParamsFactory.class);
     }
 }
