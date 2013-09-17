@@ -49,15 +49,6 @@ public class BitcoinValidateAllBlocks {
 
             for (int loop = 1; loop < block.getTransactions().size(); loop++) {
                 // Loop through the non-coinbase transactions and prove they are valid
-                System.out.println(block.prettyDump(0));
-                System.out.println(ByteArrayHelper.toHex(block.dump()));
-
-                System.out.println("Transaction bytes:");
-                System.out.println(ByteArrayHelper.toHex(block.getTransactions().get(0).dump()));
-                System.out.println("Output bytes:");
-                System.out.println(ByteArrayHelper.toHex(block.getTransactions().get(0).getOutputs().get(0).dump()));
-                // This is the first block that has more than one transaction.
-
                 Transaction currentTransaction = block.getTransactions().get(loop);
 
                 // Get its inputs
