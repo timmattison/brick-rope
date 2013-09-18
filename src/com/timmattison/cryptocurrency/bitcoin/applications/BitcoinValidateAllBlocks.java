@@ -50,6 +50,10 @@ public class BitcoinValidateAllBlocks {
                 // Loop through the non-coinbase transactions and prove they are valid
                 Transaction currentTransaction = block.getTransactions().get(loop);
 
+                if (blockNumber == 496) {
+                    System.out.println(block.prettyDump(0));
+                }
+
                 // Get its inputs
                 List<Input> inputs = currentTransaction.getInputs();
 
@@ -71,10 +75,6 @@ public class BitcoinValidateAllBlocks {
 
                     // Create the validation script
                     validationScript = scriptingFactory.createValidationScript(inputScript, outputScript);
-
-                    if (blockNumber == 496) {
-                        System.out.println(validationScript.prettyDump(0));
-                    }
 
                     // Create a state machine and give it the references to the transactions by hash
                     StateMachine stateMachine = stateMachineFactory.createStateMachine();
