@@ -55,7 +55,7 @@ public class OpCheckSig extends CryptoOp {
         byte[] publicKey = (byte[]) stateMachine.pop();
         byte[] signature = (byte[]) stateMachine.pop();
 
-        System.out.println("Public key bytes: " + ByteArrayHelper.toHex(publicKey));
+        //System.out.println("Public key bytes: " + ByteArrayHelper.toHex(publicKey));
 
         // Sanity check: Public key must start with 0x04
         if (publicKey[0] != 0x04) {
@@ -71,8 +71,8 @@ public class OpCheckSig extends CryptoOp {
         byte[] x = Arrays.copyOfRange(publicKey, xStart, xEnd);
         byte[] y = Arrays.copyOfRange(publicKey, yStart, yEnd);
 
-        System.out.println("X bytes: " + ByteArrayHelper.toHex(x));
-        System.out.println("Y bytes: " + ByteArrayHelper.toHex(y));
+        //System.out.println("X bytes: " + ByteArrayHelper.toHex(x));
+        //System.out.println("Y bytes: " + ByteArrayHelper.toHex(y));
 
         // Sanity check: x and y are both 32 bytes
         if (x.length != 32) {
@@ -83,7 +83,7 @@ public class OpCheckSig extends CryptoOp {
             throw new UnsupportedOperationException("y is not 32 bytes");
         }
 
-        System.out.println("Signature bytes: " + ByteArrayHelper.toHex(signature));
+        //System.out.println("Signature bytes: " + ByteArrayHelper.toHex(signature));
 
         // Sanity check: Signature starts with 0x30
         if (signature[0] != 0x30) {
@@ -118,8 +118,8 @@ public class OpCheckSig extends CryptoOp {
         int sEnd = sStart + sLength;
         byte[] s = Arrays.copyOfRange(signature, sStart, sEnd);
 
-        System.out.println("R bytes: " + ByteArrayHelper.toHex(r));
-        System.out.println("S bytes: " + ByteArrayHelper.toHex(s));
+        //System.out.println("R bytes: " + ByteArrayHelper.toHex(r));
+        //System.out.println("S bytes: " + ByteArrayHelper.toHex(s));
 
         // Get the last byte of the signature as the hash type
         BitcoinHashType hashType = BitcoinHashType.convert(signature[signature.length - 1]);
@@ -173,7 +173,7 @@ public class OpCheckSig extends CryptoOp {
         safeSubscript.build(subscriptBytes);
         txCopy.getInputs().get(0).setScript(safeSubscript);
 
-        System.out.println("Included subscript: " + txCopy.prettyDump(0));
+        //System.out.println("Included subscript: " + txCopy.prettyDump(0));
 
         // Serialize txCopy
         byte[] txCopyBytes = txCopy.dump();
