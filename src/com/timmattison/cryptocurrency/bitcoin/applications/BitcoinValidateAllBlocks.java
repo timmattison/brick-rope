@@ -24,7 +24,7 @@ import java.util.List;
  */
 public class BitcoinValidateAllBlocks {
     public static ValidationScript validationScript;
-    private static int debugBlock = 496;
+    private static int debugBlock = 2812;
 
     public static void main(String[] args) throws FileNotFoundException {
         ApplicationHelper.logFine();
