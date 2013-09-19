@@ -23,6 +23,7 @@ import java.util.List;
  */
 public class BitcoinValidateAllBlocks {
     public static ValidationScript validationScript;
+    private static int debugBlock = 496;
 
     public static void main(String[] args) throws FileNotFoundException {
         ApplicationHelper.logFine();
@@ -50,15 +51,19 @@ public class BitcoinValidateAllBlocks {
                 // Loop through the non-coinbase transactions and prove they are valid
                 Transaction currentTransaction = block.getTransactions().get(loop);
 
-                if (blockNumber == 496) {
+                if (blockNumber == debugBlock) {
                     System.out.println(block.prettyDump(0));
                 }
 
                 // Get its inputs
                 List<Input> inputs = currentTransaction.getInputs();
 
+                int inputCounter = 0;
+
                 // Validate each input
                 for (Input input : inputs) {
+                    System.out.println("Block #" + blockNumber + ", input #" + inputCounter++);
+
                     long previousOutputIndex = input.getPreviousOutputIndex();
 
                     // Get the previous transaction
@@ -75,6 +80,10 @@ public class BitcoinValidateAllBlocks {
 
                     // Create the validation script
                     validationScript = scriptingFactory.createValidationScript(inputScript, outputScript);
+
+                    if(blockNumber == debugBlock) {
+                        System.out.println("Validation script: " + validationScript.prettyDump(0));
+                    }
 
                     // Create a state machine and give it the references to the transactions by hash
                     StateMachine stateMachine = stateMachineFactory.createStateMachine();
