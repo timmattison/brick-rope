@@ -48,6 +48,10 @@ public class BitcoinValidateAllBlocks {
                 continue;
             }
 
+            if(blockNumber != debugBlock) {
+                continue;
+            }
+
             for (int loop = 1; loop < block.getTransactions().size(); loop++) {
                 // Loop through the non-coinbase transactions and prove they are valid
                 Transaction currentTransaction = block.getTransactions().get(loop);
