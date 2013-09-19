@@ -2,6 +2,7 @@ package com.timmattison.cryptocurrency.bitcoin.words.bitwiselogic;
 
 import com.timmattison.cryptocurrency.bitcoin.StateMachine;
 import com.timmattison.cryptocurrency.bitcoin.Word;
+import com.timmattison.cryptocurrency.bitcoin.words.flowcontrol.OpVerify;
 
 /**
  * Created with IntelliJ IDEA.
@@ -27,7 +28,7 @@ public class OpEqualVerify extends BitwiseOp {
     @Override
     public void execute(StateMachine stateMachine) {
         Word equal = new OpEqual();
-        Word verify = new OpEqual();
+        Word verify = new OpVerify();
 
         equal.execute(stateMachine);
         verify.execute(stateMachine);
