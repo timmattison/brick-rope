@@ -56,10 +56,6 @@ public class BitcoinValidateAllBlocks {
                 // Loop through the non-coinbase transactions and prove they are valid
                 Transaction currentTransaction = block.getTransactions().get(loop);
 
-                if (blockNumber == debugBlock) {
-                    System.out.println(block.prettyDump(0));
-                }
-
                 // Get its inputs
                 List<Input> inputs = currentTransaction.getInputs();
 
