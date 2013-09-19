@@ -2,6 +2,7 @@ package com.timmattison.cryptocurrency.bitcoin.applications;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import com.timmattison.bitcoin.test.ByteArrayHelper;
 import com.timmattison.cryptocurrency.bitcoin.BitcoinModule;
 import com.timmattison.cryptocurrency.bitcoin.StateMachine;
 import com.timmattison.cryptocurrency.factories.BlockChainFactory;
@@ -92,6 +93,7 @@ public class BitcoinValidateAllBlocks {
                     stateMachine.setPreviousOutputIndex((int) previousOutputIndex);
                     stateMachine.setInputNumber(inputNumber);
 
+                    System.out.println("Previous transaction hash: " + ByteArrayHelper.toHex(input.getPreviousTransactionId()));
                     // Execute the script.  It will throw an exception if it fails.
                     stateMachine.execute(validationScript);
 
