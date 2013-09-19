@@ -24,12 +24,14 @@ public class StandardBlockChain implements BlockChain, Iterator<Block> {
     private int blockNumber;
     private InputStream inputStream;
     private Block previousBlock = null;
+    private long position;
 
     @Inject
     public StandardBlockChain(BlockFactory blockFactory, BlockValidator blockValidator) throws IOException {
         this.blockFactory = blockFactory;
         this.blockValidator = blockValidator;
         blockNumber = 0;
+        position = 0;
     }
 
     @Override
@@ -52,8 +54,11 @@ public class StandardBlockChain implements BlockChain, Iterator<Block> {
                 // Yes, create and parse the block
                 Block block = blockFactory.createBlock(inputStream);
 
+                // Keep track of how many bytes we've read
+                position += block.dump().length;
+
                 // Validate the block
-                if(!blockValidator.isValid(block)) {
+                if (!blockValidator.isValid(block)) {
                     // No, current block is not valid
                     throw new IllegalStateException("Block [" + blockNumber + "] is not valid");
                 }
@@ -85,5 +90,19 @@ public class StandardBlockChain implements BlockChain, Iterator<Block> {
     @Override
     public void setInputStream(InputStream inputStream) {
         this.inputStream = inputStream;
+    }
+
+    @Override
+    public long getPosition() {
+        return position;
+    }
+
+    @Override
+    public void skip(long position) {
+        try {
+            inputStream.skip(position);
+        } catch (IOException e) {
+            throw new UnsupportedOperationException(e);
+        }
     }
 }

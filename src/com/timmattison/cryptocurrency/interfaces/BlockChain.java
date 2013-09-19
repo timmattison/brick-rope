@@ -12,4 +12,8 @@ import java.util.Iterator;
  */
 public interface BlockChain extends Iterator<Block> {
     public void setInputStream(InputStream inputStream);
+
+    long getPosition();
+
+    void skip(long position);
 }
