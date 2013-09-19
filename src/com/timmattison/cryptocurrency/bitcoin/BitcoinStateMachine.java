@@ -20,7 +20,8 @@ public class BitcoinStateMachine implements StateMachine {
     Stack<Object> stack;
     private byte[] previousTransactionHash;
     private byte[] currentTransactionHash;
-    private int previousOutputIndex;
+    private Integer previousOutputIndex;
+    private Integer inputNumber;
 
     @Inject
     public BitcoinStateMachine(ScriptingFactory scriptingFactory) {
@@ -143,7 +144,25 @@ public class BitcoinStateMachine implements StateMachine {
 
     @Override
     public int getPreviousOutputIndex() {
+        if (previousOutputIndex == null) {
+            throw new UnsupportedOperationException("Previous output index has not been set");
+        }
+
         return previousOutputIndex;
+    }
+
+    @Override
+    public int getInputNumber() {
+        if (inputNumber == null) {
+            throw new UnsupportedOperationException("Input number has not been set");
+        }
+
+        return inputNumber;
+    }
+
+    @Override
+    public void setInputNumber(int inputNumber) {
+        this.inputNumber = inputNumber;
     }
 
     private void throwExceptionIfStackNotInitialized() {

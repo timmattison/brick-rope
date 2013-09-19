@@ -31,4 +31,8 @@ public interface StateMachine {
     void setPreviousOutputIndex(int previousOutputIndex);
 
     int getPreviousOutputIndex();
+
+    int getInputNumber();
+
+    void setInputNumber(int inputNumber);
 }

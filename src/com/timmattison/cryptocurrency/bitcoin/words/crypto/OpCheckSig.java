@@ -171,7 +171,7 @@ public class OpCheckSig extends CryptoOp {
         // Copy the subscript into the txIn we're checking XXX NEED TO CHECK FOR OP_CODESEPARATORS! XXX
         InputScript safeSubscript = scriptingFactory.createInputScript(1, subscriptBytes.length, false);
         safeSubscript.build(subscriptBytes);
-        txCopy.getInputs().get(0).setScript(safeSubscript);
+        txCopy.getInputs().get(stateMachine.getInputNumber()).setScript(safeSubscript);
 
         //System.out.println("Included subscript: " + txCopy.prettyDump(0));
 

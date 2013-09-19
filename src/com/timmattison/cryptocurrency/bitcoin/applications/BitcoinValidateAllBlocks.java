@@ -58,11 +58,11 @@ public class BitcoinValidateAllBlocks {
                 // Get its inputs
                 List<Input> inputs = currentTransaction.getInputs();
 
-                int inputCounter = 0;
+                int inputNumber = 0;
 
                 // Validate each input
                 for (Input input : inputs) {
-                    System.out.println("Block #" + blockNumber + ", input #" + inputCounter++);
+                    System.out.println("Block #" + blockNumber + ", input #" + inputNumber);
 
                     long previousOutputIndex = input.getPreviousOutputIndex();
 
@@ -81,7 +81,7 @@ public class BitcoinValidateAllBlocks {
                     // Create the validation script
                     validationScript = scriptingFactory.createValidationScript(inputScript, outputScript);
 
-                    if(blockNumber == debugBlock) {
+                    if (blockNumber == debugBlock) {
                         System.out.println("Validation script: " + validationScript.prettyDump(0));
                     }
 
@@ -90,9 +90,12 @@ public class BitcoinValidateAllBlocks {
                     stateMachine.setPreviousTransactionHash(input.getPreviousTransactionId());
                     stateMachine.setCurrentTransactionHash(block.getTransactions().get(loop).getHash());
                     stateMachine.setPreviousOutputIndex((int) previousOutputIndex);
+                    stateMachine.setInputNumber(inputNumber);
 
                     // Execute the script.  It will throw an exception if it fails.
                     stateMachine.execute(validationScript);
+
+                    inputNumber++;
                 }
             }
         }
