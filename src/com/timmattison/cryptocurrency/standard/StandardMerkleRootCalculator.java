@@ -40,7 +40,7 @@ public class StandardMerkleRootCalculator implements MerkleRootCalculator {
         do {
             // Is the number of transactions odd?
             if ((transactionBytes.size() % 2) == 1) {
-                // Yes, duplicate the last transaction getHash
+                // Yes, duplicate the last transaction hash
                 transactionBytes.add(transactionBytes.get(transactionBytes.size() - 1));
             }
 
@@ -80,7 +80,6 @@ public class StandardMerkleRootCalculator implements MerkleRootCalculator {
         } while (transactionBytes.size() != 1);
 
         return transactionBytes.get(0);
-
     }
 
     @Override
