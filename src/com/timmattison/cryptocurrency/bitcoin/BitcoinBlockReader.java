@@ -22,6 +22,7 @@ public class BitcoinBlockReader implements BlockReader {
     private static final int magicNumberLengthInBytes = 4;
     private static final int blockSizeLengthInBytes = 4;
     private static final int bytesRequired = magicNumberLengthInBytes + blockSizeLengthInBytes;
+    private int blockNumber = 0;
 
     public BitcoinBlockReader() {
     }
@@ -29,7 +30,7 @@ public class BitcoinBlockReader implements BlockReader {
     @Override
     public byte[] getNextBlock(InputStream inputStream) throws IOException {
         // Are there enough bytes to read the values we need?
-        if(InputStreamHelper.getAvailableBytes(inputStream) < bytesRequired) {
+        if (InputStreamHelper.getAvailableBytes(inputStream) < bytesRequired) {
             // No, just return NULL
             return null;
         }
@@ -39,13 +40,13 @@ public class BitcoinBlockReader implements BlockReader {
         int bytesRead = inputStream.read(magicNumber, 0, magicNumberLengthInBytes);
 
         // Did we get the right number of bytes?
-        if(bytesRead != magicNumberLengthInBytes) {
+        if (bytesRead != magicNumberLengthInBytes) {
             // No, don't be clever and just throw an exception
             throwExceptionWhenIncorrectLengthRead("the magic number", magicNumberLengthInBytes, bytesRead);
         }
 
         // Did we get the value we expected?
-        if(!Arrays.equals(requiredMagicNumberBytes, magicNumber)) {
+        if (!Arrays.equals(requiredMagicNumberBytes, magicNumber)) {
             // No, throw an exception
             throwExceptionWhenIncorrectValueRead("the magic number", requiredMagicNumberBytes, magicNumber);
         }
@@ -54,8 +55,14 @@ public class BitcoinBlockReader implements BlockReader {
         byte[] blockSizeBytes = new byte[blockSizeLengthInBytes];
         bytesRead = inputStream.read(blockSizeBytes, 0, blockSizeLengthInBytes);
 
+        if (blockNumber == 29664) {
+            if ((blockSizeBytes[0] == 0x85) && (blockSizeBytes[1] == 0x8f)) {
+                System.out.println("XXX");
+            }
+        }
+
         // Did we get the right number of bytes?
-        if(bytesRead != blockSizeLengthInBytes) {
+        if (bytesRead != blockSizeLengthInBytes) {
             // No, don't be clever and just throw an exception
             throwExceptionWhenIncorrectLengthRead("the block size", blockSizeLengthInBytes, bytesRead);
         }
@@ -64,7 +71,7 @@ public class BitcoinBlockReader implements BlockReader {
         int blockSize = EndiannessHelper.BytesToInt(blockSizeBytes);
 
         // Was the block size valid?
-        if(blockSize == 0) {
+        if (blockSize == 0) {
             // No, don't be clever and just throw an exception
             throw new IllegalStateException("Block size cannot be zero");
         }
@@ -73,16 +80,17 @@ public class BitcoinBlockReader implements BlockReader {
         byte[] blockData = new byte[blockSize];
         bytesRead = inputStream.read(blockData, 0, blockSize);
 
-        if(blockSize != bytesRead) {
+        if (blockSize != bytesRead) {
             throwExceptionWhenIncorrectLengthRead("the block data", magicNumberLengthInBytes, bytesRead);
         }
 
+        blockNumber++;
         return blockData;
     }
 
     @Override
     public void skipNextBlocks(InputStream inputStream, int count) throws IOException {
-        for(int loop = 0; loop < count; loop++) {
+        for (int loop = 0; loop < count; loop++) {
             getNextBlock(inputStream);
         }
     }

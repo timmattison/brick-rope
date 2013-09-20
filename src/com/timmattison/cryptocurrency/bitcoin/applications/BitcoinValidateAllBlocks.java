@@ -24,7 +24,7 @@ import java.util.List;
  */
 public class BitcoinValidateAllBlocks {
     public static ValidationScript validationScript;
-    private static int debugBlock = 2812;
+    private static int debugBlock = 29664;
 
     public static void main(String[] args) throws FileNotFoundException {
         ApplicationHelper.logFine();
@@ -45,6 +45,10 @@ public class BitcoinValidateAllBlocks {
             // Does this block have any non-coinbase transactions?
             if (block.getTransactions().size() == 1) {
                 // No, just continue
+                continue;
+            }
+
+            if (blockNumber != debugBlock) {
                 continue;
             }
 

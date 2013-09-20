@@ -159,9 +159,19 @@ public class BitcoinTransaction implements Transaction {
             //logger.fine("In counter bytes: " + ByteArrayHelper.toHex(inCounterBytes));
             bytes.write(inCounterBytes);
 
+            ByteArrayOutputStream temp = new ByteArrayOutputStream();
+
             for (Input input : inputs) {
                 //logger.fine("Input: " + ByteArrayHelper.toHex(input.dump()));
+                temp.write(input.dump());
                 bytes.write(input.dump());
+            }
+
+            byte[] temptemp = temp.toByteArray();
+
+            boolean bob = false;
+            if (bob) {
+                System.out.println(ByteArrayHelper.toHex(temptemp));
             }
 
             //logger.fine("Out counter bytes: " + ByteArrayHelper.toHex(outCounterBytes));
@@ -244,7 +254,7 @@ public class BitcoinTransaction implements Transaction {
 
     @Override
     public void clearInputScripts() {
-        for(Input input : getInputs()) {
+        for (Input input : getInputs()) {
             input.setScript(null);
         }
     }
