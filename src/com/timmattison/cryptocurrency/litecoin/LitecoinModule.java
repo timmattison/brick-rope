@@ -39,6 +39,5 @@ public class LitecoinModule extends AbstractModule {
         bind(HasherFactory.class).to(DoubleSha256Factory.class);
 
         bind(MerkleRootCalculator.class).to(StandardMerkleRootCalculator.class);
-        //bind(MerkleRootCalculator.class).to(ParallelMerkleRootCalculator.class);
     }
 }
