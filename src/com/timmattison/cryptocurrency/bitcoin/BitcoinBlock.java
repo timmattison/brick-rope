@@ -5,6 +5,8 @@ import com.timmattison.cryptocurrency.factories.TransactionFactory;
 import com.timmattison.cryptocurrency.standard.StandardBlock;
 
 import javax.inject.Inject;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 
 /**
  * Created with IntelliJ IDEA.
@@ -17,5 +19,35 @@ public class BitcoinBlock extends StandardBlock {
     @Inject
     public BitcoinBlock(BlockHeaderFactory blockHeaderFactory, TransactionFactory transactionFactory) {
         super(blockHeaderFactory, transactionFactory);
+    }
+
+    @Override
+    public byte[] dump() {
+        byte[] magic = new byte[]{(byte) 0xf9, (byte) 0xbe, (byte) 0xb4, (byte) 0xd9};
+
+        byte[] bytes = super.dump();
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+
+        try {
+            baos.write(magic);
+        } catch (IOException e) {
+            throw new UnsupportedOperationException(e);
+        }
+
+        int length = bytes.length;
+
+        baos.write(length & 0xFF);
+        baos.write((length >> 8) & 0xFF);
+        baos.write((length >> 16) & 0xFF);
+        baos.write((length >> 24) & 0xFF);
+
+        try {
+            baos.write(bytes);
+        } catch (IOException e) {
+            throw new UnsupportedOperationException(e);
+        }
+
+        return baos.toByteArray();
     }
 }
