@@ -7,7 +7,6 @@ import com.timmattison.cryptocurrency.interfaces.Block;
 import com.timmattison.cryptocurrency.interfaces.BlockChain;
 import com.timmattison.cryptocurrency.interfaces.BlockValidator;
 
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Iterator;
@@ -26,7 +25,6 @@ public class StandardBlockChain implements BlockChain, Iterator<Block> {
     private InputStream inputStream;
     private Block previousBlock = null;
     private long position;
-    private FileOutputStream x;
 
     @Inject
     public StandardBlockChain(BlockFactory blockFactory, BlockValidator blockValidator) throws IOException {
@@ -34,7 +32,6 @@ public class StandardBlockChain implements BlockChain, Iterator<Block> {
         this.blockValidator = blockValidator;
         blockNumber = 0;
         position = 0;
-        x = new FileOutputStream("a.dat");
     }
 
     @Override
@@ -60,12 +57,9 @@ public class StandardBlockChain implements BlockChain, Iterator<Block> {
                 // Keep track of how many bytes we've read
                 position += block.dump().length;
 
-                x.write(block.dump());
-
                 // Validate the block
                 if (!blockValidator.isValid(block)) {
                     // No, current block is not valid
-                    System.out.println(block.prettyDump(0));
                     throw new IllegalStateException("Block [" + blockNumber + "] is not valid");
                 }
 

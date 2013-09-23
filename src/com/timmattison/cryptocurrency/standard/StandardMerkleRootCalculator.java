@@ -1,9 +1,7 @@
 package com.timmattison.cryptocurrency.standard;
 
-import com.timmattison.bitcoin.test.ByteArrayHelper;
 import com.timmattison.cryptocurrency.bitcoin.factories.HasherFactory;
 import com.timmattison.cryptocurrency.interfaces.Block;
-import com.timmattison.cryptocurrency.interfaces.Input;
 import com.timmattison.cryptocurrency.interfaces.MerkleRootCalculator;
 import com.timmattison.cryptocurrency.interfaces.Transaction;
 
@@ -86,22 +84,14 @@ public class StandardMerkleRootCalculator implements MerkleRootCalculator {
 
     @Override
     public byte[] calculateMerkleRoot(Block block) {
-        List<byte[]> transactionHashBytes = new ArrayList<byte[]>();
+        List<byte[]> transactionBytes = new ArrayList<byte[]>();
 
         logger.fine("Number of transactions used in merkle root calculation: " + block.getTransactions().size());
 
         for (Transaction transaction : block.getTransactions()) {
-            if("6de362e19f205401ce0c81cf2a9b366d8c2cdedd45c93dfaf0100f5f8fd829bb".equals(ByteArrayHelper.toHex(transaction.getHash()))) {
-                // Do some debug magic
-                transaction.getHash();
-                for(Input input : transaction.getInputs()) {
-                    System.out.println(ByteArrayHelper.toHex(input.getPreviousTransactionId()));
-                }
-            }
-
-            transactionHashBytes.add(transaction.getHash());
+            transactionBytes.add(hasherFactory.createHasher(transaction.dump()).getOutput());
         }
 
-        return calculateMerkleRoot(transactionHashBytes);
+        return calculateMerkleRoot(transactionBytes);
     }
 }
