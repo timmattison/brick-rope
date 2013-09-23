@@ -128,14 +128,24 @@ public class VariableLengthInteger implements Buildable {
             // It is a single byte value
             valueBytes = new byte[]{(byte) (value & 0xFF)};
         } else if (value < max16BitValue) {
+            // It is a two byte value
+            valueBytes = new byte[]{
+                    (byte) header16BitInteger,
+                    (byte) (value & 0xFF),
+                    (byte) ((value >> 8) & 0xFF)};
+        } else if (value < max32BitValue) {
             // It is a four byte value
-            valueBytes = new byte[]{(byte) (value & 0xFF),
+            valueBytes = new byte[]{
+                    (byte) header32BitInteger,
+                    (byte) (value & 0xFF),
                     (byte) ((value >> 8) & 0xFF),
                     (byte) ((value >> 16) & 0xFF),
                     (byte) ((value >> 24) & 0xFF)};
-        } else if (value < max32BitValue) {
+        } else {
             // It is an eight byte value
-            valueBytes = new byte[]{(byte) (value & 0xFF),
+            valueBytes = new byte[]{
+                    (byte) header64BitInteger,
+                    (byte) (value & 0xFF),
                     (byte) ((value >> 8) & 0xFF),
                     (byte) ((value >> 16) & 0xFF),
                     (byte) ((value >> 24) & 0xFF),
@@ -143,8 +153,6 @@ public class VariableLengthInteger implements Buildable {
                     (byte) ((value >> 40) & 0xFF),
                     (byte) ((value >> 48) & 0xFF),
                     (byte) ((value >> 56) & 0xFF)};
-        } else {
-            throw new UnsupportedOperationException("Value greater than 64-bit max");
         }
     }
 
