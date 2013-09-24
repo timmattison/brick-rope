@@ -39,6 +39,8 @@ public class BitcoinValidateAllBlocks {
         Block block;
         int blockNumber = -1;
 
+        StateMachine stateMachine = stateMachineFactory.createStateMachine();
+
         while ((block = blockChain.next()) != null) {
             blockNumber++;
 
@@ -78,18 +80,12 @@ public class BitcoinValidateAllBlocks {
                     // Create the validation script
                     validationScript = scriptingFactory.createValidationScript(inputScript, outputScript);
 
-                    if (blockNumber == debugBlock) {
-                        System.out.println("Validation script: " + validationScript.prettyDump(0));
-                    }
-
                     // Create a state machine and give it the references to the transactions by hash
-                    StateMachine stateMachine = stateMachineFactory.createStateMachine();
                     stateMachine.setPreviousTransactionHash(input.getPreviousTransactionId());
                     stateMachine.setCurrentTransactionHash(block.getTransactions().get(loop).getHash());
                     stateMachine.setPreviousOutputIndex((int) previousOutputIndex);
                     stateMachine.setInputNumber(inputNumber);
 
-                    System.out.println("Previous transaction hash: " + ByteArrayHelper.toHex(input.getPreviousTransactionId()));
                     // Execute the script.  It will throw an exception if it fails.
                     stateMachine.execute(validationScript);
 
