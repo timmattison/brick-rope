@@ -73,6 +73,7 @@ public class ECPointFp implements ECCPoint {
         return curve;
     }
 
+    @Override
     public ECCFieldElement getX() {
         if (x == null) {
             x = eccFieldElementFactory.create(curve.getP(), BigInteger.ZERO);
@@ -85,6 +86,7 @@ public class ECPointFp implements ECCPoint {
         return trueX;
     }
 
+    @Override
     public ECCFieldElement getY() {
         if (y == null) {
             y = eccFieldElementFactory.create(curve.getP(), BigInteger.ZERO);
@@ -97,6 +99,7 @@ public class ECPointFp implements ECCPoint {
         return trueY;
     }
 
+    @Override
     public boolean equals(ECCPoint other) {
         if (other == this) return true;
         if (this.isInfinity()) return other.isInfinity();
@@ -109,6 +112,7 @@ public class ECPointFp implements ECCPoint {
         }
     }
 
+    @Override
     public boolean isInfinity() {
         if ((getX().toBigInteger().equals(BigInteger.ZERO)) && (getY().toBigInteger().equals(BigInteger.ZERO)))
             return true;
@@ -116,10 +120,12 @@ public class ECPointFp implements ECCPoint {
         //return this.z.equals(BigInteger.ZERO) && !this.y.toBigInteger().equals(BigInteger.ZERO);
     }
 
+    @Override
     public ECCPoint negate() {
         return eccPointFactory.create(curve, getX(), getY().negate());
     }
 
+    @Override
     public ECCPoint add(ECCPoint b) {
         if (this.isInfinity()) return b;
         if (b.isInfinity()) return this;
@@ -147,6 +153,7 @@ public class ECPointFp implements ECCPoint {
         return getPointFromS(s, b.getX().toBigInteger());
     }
 
+    @Override
     public ECCPoint twice() {
         if (this.isInfinity()) return this;
         if (this.y.toBigInteger().signum() == 0) return this.curve.getInfinity();
@@ -179,6 +186,7 @@ public class ECPointFp implements ECCPoint {
         return eccPointFactory.create(this.curve, this.curve.fromBigInteger(x3), this.curve.fromBigInteger(y3));
     }
 
+    @Override
     public ECCPoint multiply(BigInteger d) {
         ECCPoint q = eccPointFactory.create(curve, curve.fromBigInteger(BigInteger.ZERO), curve.fromBigInteger(BigInteger.ZERO));
 
