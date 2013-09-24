@@ -141,16 +141,19 @@ public class ECPointFp implements ECCPoint {
 
         try {
             // Find the multiplicative inverse of the bottom
-            bottom = bottom.modInverse(curve.getP());
+            bottom = invertBottom(bottom);
         } catch (ArithmeticException ex) {
             // XXX - Big integer was not invertible.  Does this mean that it is infinity?
             return eccPointFactory.create(curve, null, null);
         }
 
-        BigInteger s = top.multiply(bottom);
-        s = s.mod(curve.getP());
+        BigInteger s = calculateS(bottom, top);
 
         return getPointFromS(s, b.getX().toBigInteger());
+    }
+
+    private BigInteger calculateS(BigInteger bottom, BigInteger top) {
+        return top.multiply(bottom).mod(curve.getP());
     }
 
     @Override
@@ -159,12 +162,12 @@ public class ECPointFp implements ECCPoint {
         if (this.y.toBigInteger().signum() == 0) return this.curve.getInfinity();
 
         // Calculate s = ((3 * x_1^2) + a) / (2 * y_1)
-        BigInteger bottom = two.multiply(getY().toBigInteger());
-        BigInteger top = three.multiply(getX().toBigInteger().pow(2)).add(curve.getA().toBigInteger()).mod(curve.getP());
+        BigInteger bottom = calculateBottom();
+        BigInteger top = calculateTop();
 
         try {
             // Find the multiplicative inverse of the bottom
-            bottom = bottom.modInverse(curve.getP());
+            bottom = invertBottom(bottom);
         } catch (ArithmeticException ex) {
             // XXX - Big integer was not invertible.  Does this mean that it is infinity?
             return eccPointFactory.create(curve, null, null);
@@ -174,6 +177,18 @@ public class ECPointFp implements ECCPoint {
         s = s.mod(curve.getP());
 
         return getPointFromS(s, getX().toBigInteger());
+    }
+
+    private BigInteger invertBottom(BigInteger bottom) {
+        return bottom.modInverse(curve.getP());
+    }
+
+    private BigInteger calculateTop() {
+        return three.multiply(getX().toBigInteger().pow(2)).add(curve.getA().toBigInteger()).mod(curve.getP());
+    }
+
+    private BigInteger calculateBottom() {
+        return two.multiply(getY().toBigInteger());
     }
 
     private ECCPoint getPointFromS(BigInteger s, BigInteger x_2) {
