@@ -16,11 +16,11 @@ import java.util.Arrays;
  * Time: 11:49 AM
  * To change this template use File | Settings | File Templates.
  */
-public class BitcoinTransactionLocator implements TransactionLocator {
+public class BitcoinNaiveTransactionLocator implements TransactionLocator {
     private final BlockChainFactory blockChainFactory;
 
     @Inject
-    public BitcoinTransactionLocator(BlockChainFactory blockChainFactory) {
+    public BitcoinNaiveTransactionLocator(BlockChainFactory blockChainFactory) {
         this.blockChainFactory = blockChainFactory;
     }
 

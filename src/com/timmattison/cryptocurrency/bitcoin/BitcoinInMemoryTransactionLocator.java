@@ -18,14 +18,14 @@ import java.util.Map;
  * Time: 11:49 AM
  * To change this template use File | Settings | File Templates.
  */
-public class BitcoinFastTransactionLocator implements TransactionLocator {
+public class BitcoinInMemoryTransactionLocator implements TransactionLocator {
     private final BlockChainFactory blockChainFactory;
     private BlockChain blockChain;
     private Map<String, Transaction> transactionMap = new HashMap<String, Transaction>();
     private int blockNumber = 0;
 
     @Inject
-    public BitcoinFastTransactionLocator(BlockChainFactory blockChainFactory) {
+    public BitcoinInMemoryTransactionLocator(BlockChainFactory blockChainFactory) {
         this.blockChainFactory = blockChainFactory;
     }
 
