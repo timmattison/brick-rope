@@ -173,7 +173,8 @@ public class ECPointFp implements ECCPoint {
             return eccPointFactory.create(curve, null, null);
         }
 
-        BigInteger s = calculateS(bottom, top);
+        BigInteger s = top.multiply(bottom);
+        s = s.mod(curve.getP());
 
         return getPointFromS(s, getX().toBigInteger());
     }
