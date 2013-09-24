@@ -24,6 +24,9 @@ public class ECPointFp implements ECCPoint {
     private ECCFieldElement trueX;
     private ECCFieldElement trueY;
 
+    private static final BigInteger two = new BigInteger("2");
+    private static final BigInteger three = new BigInteger("3");
+
     public ECPointFp() {
     }
 
@@ -149,8 +152,8 @@ public class ECPointFp implements ECCPoint {
         if (this.y.toBigInteger().signum() == 0) return this.curve.getInfinity();
 
         // Calculate s = ((3 * x_1^2) + a) / (2 * y_1)
-        BigInteger bottom = new BigInteger("2").multiply(getY().toBigInteger());
-        BigInteger top = new BigInteger("3").multiply(getX().toBigInteger().pow(2)).add(curve.getA().toBigInteger()).mod(curve.getP());
+        BigInteger bottom = two.multiply(getY().toBigInteger());
+        BigInteger top = three.multiply(getX().toBigInteger().pow(2)).add(curve.getA().toBigInteger()).mod(curve.getP());
 
         try {
             // Find the multiplicative inverse of the bottom
