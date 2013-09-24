@@ -147,7 +147,7 @@ public class OpCheckSig extends CryptoOp {
         */
 
         if (hashType != BitcoinHashType.SIGHASH_ALL) {
-            throw new UnsupportedOperationException("Only SIGHASH_ALL accepted currently");
+            throw new UnsupportedOperationException("Only SIGHASH_ALL accepted currently, saw " + hashType);
         }
 
         // Copy txNew to txCopy, XXX I KNOW THIS ISN'T REALLY A COPY XXX
