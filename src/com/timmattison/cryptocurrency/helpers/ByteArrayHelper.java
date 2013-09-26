@@ -244,4 +244,23 @@ public class ByteArrayHelper {
 
         return returnValue;
     }
+
+    public static byte[] xor(byte[] array1, byte[] array2) {
+        // Sanity checks
+        if ((array1 == null) || (array2 == null)) {
+            throw new UnsupportedOperationException("Arrays cannot be NULL");
+        }
+
+        if (array1.length != array2.length) {
+            throw new UnsupportedOperationException("Arrays must be the same size");
+        }
+
+        byte[] returnValue = new byte[array1.length];
+
+        for (int loop = 0; loop < returnValue.length; loop++) {
+            returnValue[loop] = (byte) (array1[loop] ^ array2[loop]);
+        }
+
+        return returnValue;
+    }
 }
