@@ -55,6 +55,7 @@ public class ECMessageSignatureVerifierFp implements ECCMessageSignatureVerifier
             return false;
         }
 
+        // Compute e
         BigInteger e = ECHelper.calculateE(eccParameters, H, hashBytes);
 
         // Compute u1
