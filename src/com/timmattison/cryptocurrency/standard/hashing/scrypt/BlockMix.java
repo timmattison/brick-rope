@@ -8,4 +8,5 @@ package com.timmattison.cryptocurrency.standard.hashing.scrypt;
  * To change this template use File | Settings | File Templates.
  */
 public interface BlockMix {
+    public byte[][] execute(byte[][] input, int rounds);
 }

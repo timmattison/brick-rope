@@ -7,5 +7,10 @@ package com.timmattison.cryptocurrency.standard.hashing.scrypt;
  * Time: 6:34 PM
  * To change this template use File | Settings | File Templates.
  */
-public class Salsa20Slash8 {
+public class Salsa20Slash8 implements Salsa {
+    @Override
+    public byte[] execute(byte[] input) {
+        //To change body of implemented methods use File | Settings | File Templates.
+        throw new UnsupportedOperationException();
+    }
 }
