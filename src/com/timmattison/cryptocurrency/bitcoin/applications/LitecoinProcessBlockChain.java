@@ -23,7 +23,7 @@ public class LitecoinProcessBlockChain {
 
         Injector injector = Guice.createInjector(new LitecoinModule());
 
-        BlockChain blockChain = injector.getInstance(BlockChainFactory.class).getBlockChain();
+        BlockChain blockChain = injector.getInstance(BlockChainFactory.class).getBlockChain("litecoin-blockchain.dat");
 
         Block block = blockChain.next();
         int blockNumber = 0;

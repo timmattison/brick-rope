@@ -33,7 +33,7 @@ public class BitcoinValidateBlock170 {
 
         Injector injector = Guice.createInjector(new BitcoinModule());
 
-        BlockChain blockChain = injector.getInstance(BlockChainFactory.class).getBlockChain();
+        BlockChain blockChain = injector.getInstance(BlockChainFactory.class).getBlockChain("bitcoin-blockchain.dat");
 
         Block block = blockChain.next();
         int blockNumber = 0;

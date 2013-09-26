@@ -23,17 +23,25 @@ public class BitcoinExtractBlock {
     public static void main(String[] args) throws IOException {
         Injector injector = Guice.createInjector(new BitcoinModule());
 
-        BlockChain blockChain = injector.getInstance(BlockChainFactory.class).getBlockChain();
+        BlockChain blockChain = injector.getInstance(BlockChainFactory.class).getBlockChain("bitcoin-blockchain.dat");
 
         int blockNumber = 0;
+        int blockToExtract = 110300;
         Block block = blockChain.next();
 
-        while(block != null) {
-            System.out.println("Block #" + blockNumber);
-            File outputFile = new File("blocks/bitcoin-block-" + String.format("%06d", blockNumber) + ".dat");
+        while (block != null) {
+            System.out.println("Block #" + ++blockNumber);
 
-            OutputStream outputStream = new FileOutputStream(outputFile);
-            outputStream.write(block.dump());
+            if (blockNumber >= blockToExtract) {
+                File outputFile = new File("blocks/bitcoin-block-" + String.format("%06d", blockNumber) + ".dat");
+
+                OutputStream outputStream = new FileOutputStream(outputFile);
+                outputStream.write(block.dump());
+            }
+
+            if(blockNumber == (blockToExtract + 10)) {
+                return;
+            }
 
             block = blockChain.next();
         }

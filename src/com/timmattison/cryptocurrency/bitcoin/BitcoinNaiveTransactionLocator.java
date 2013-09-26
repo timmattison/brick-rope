@@ -26,7 +26,7 @@ public class BitcoinNaiveTransactionLocator implements TransactionLocator {
 
     @Override
     public Transaction findTransaction(byte[] transactionHash) {
-        BlockChain blockChain = blockChainFactory.getBlockChain();
+        BlockChain blockChain = blockChainFactory.getBlockChain("bitcoin-blockchain.dat");
 
         // Loop until we find something or until we run out of blocks
         while (blockChain.hasNext()) {

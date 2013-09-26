@@ -27,9 +27,10 @@ public class BitcoinBlockChainFactory implements BlockChainFactory {
         this.blockValidator = blockValidator;
     }
 
-    public BlockChain getBlockChain() {
+    @Override
+    public BlockChain getBlockChain(String filename) {
         try {
-            File inputFile = new File("bitcoin-blockchain.dat");
+            File inputFile = new File(filename);
             FileInputStream inputStream = new FileInputStream(inputFile);
 
             BlockChain blockChain = new StandardBlockChain(blockFactory, blockValidator);

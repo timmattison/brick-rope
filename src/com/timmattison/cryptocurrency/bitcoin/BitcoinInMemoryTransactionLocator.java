@@ -76,7 +76,7 @@ public class BitcoinInMemoryTransactionLocator implements TransactionLocator {
 
     private BlockChain getBlockChain() {
         if (blockChain == null) {
-            blockChain = blockChainFactory.getBlockChain();
+            blockChain = blockChainFactory.getBlockChain("bitcoin-blockchain.dat");
         }
 
         return blockChain;

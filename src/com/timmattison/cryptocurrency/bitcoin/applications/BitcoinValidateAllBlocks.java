@@ -31,7 +31,7 @@ public class BitcoinValidateAllBlocks {
 
         Injector injector = Guice.createInjector(new BitcoinModule());
 
-        BlockChain blockChain = injector.getInstance(BlockChainFactory.class).getBlockChain();
+        BlockChain blockChain = injector.getInstance(BlockChainFactory.class).getBlockChain("blocks/bitcoin-block-110301.dat");
         TransactionLocator transactionLocator = injector.getInstance(TransactionLocator.class);
         StateMachineFactory stateMachineFactory = injector.getInstance(StateMachineFactory.class);
         ScriptingFactory scriptingFactory = injector.getInstance(ScriptingFactory.class);
@@ -42,6 +42,7 @@ public class BitcoinValidateAllBlocks {
         StateMachine stateMachine = stateMachineFactory.createStateMachine();
 
         while ((block = blockChain.next()) != null) {
+            System.out.println(block.prettyDump(0));
             blockNumber++;
 
             // Does this block have any non-coinbase transactions?

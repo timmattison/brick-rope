@@ -30,7 +30,7 @@ public class BitcoinBuildBlockIndex {
 
         Injector injector = Guice.createInjector(new BitcoinModule());
 
-        BlockChain blockChain = injector.getInstance(BlockChainFactory.class).getBlockChain();
+        BlockChain blockChain = injector.getInstance(BlockChainFactory.class).getBlockChain("bitcoin-blockchain.dat");
         TransactionLocator transactionLocator = injector.getInstance(TransactionLocator.class);
         StateMachineFactory stateMachineFactory = injector.getInstance(StateMachineFactory.class);
 
