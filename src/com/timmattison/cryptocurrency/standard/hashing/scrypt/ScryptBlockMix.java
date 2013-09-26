@@ -2,6 +2,7 @@ package com.timmattison.cryptocurrency.standard.hashing.scrypt;
 
 import com.timmattison.cryptocurrency.helpers.ByteArrayHelper;
 
+import javax.inject.Inject;
 import java.util.Arrays;
 
 /**
@@ -14,6 +15,7 @@ import java.util.Arrays;
 public class ScryptBlockMix implements BlockMix {
     private final Salsa salsa;
 
+    @Inject
     public ScryptBlockMix(Salsa salsa) {
         this.salsa = salsa;
     }
