@@ -13,6 +13,7 @@ import com.timmattison.cryptocurrency.interfaces.*;
 import com.timmattison.cryptocurrency.standard.StandardBlockChain;
 import com.timmattison.cryptocurrency.standard.StandardBlockFactory;
 import com.timmattison.cryptocurrency.standard.StandardMerkleRootCalculator;
+import com.timmattison.cryptocurrency.standard.hashing.sha.DoubleSha256Hash;
 import com.timmattison.cryptocurrency.standard.hashing.chunks.ChunkExtractor;
 import com.timmattison.cryptocurrency.standard.hashing.chunks.StandardChunkExtractor;
 import com.timmattison.cryptocurrency.standard.hashing.padding.MessagePadder;

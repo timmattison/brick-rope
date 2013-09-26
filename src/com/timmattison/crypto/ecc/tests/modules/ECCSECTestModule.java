@@ -8,7 +8,7 @@ import com.timmattison.crypto.ecc.random.impl.RealBigIntegerRandom;
 import com.timmattison.crypto.ecc.random.interfaces.BigIntegerRandom;
 import com.timmattison.crypto.ecc.random.interfaces.RandomFactory;
 import com.timmattison.cryptocurrency.bitcoin.BitcoinECCParamsFactory;
-import com.timmattison.cryptocurrency.bitcoin.SingleSha1Hash;
+import com.timmattison.cryptocurrency.standard.hashing.sha.SingleSha1Hash;
 import com.timmattison.cryptocurrency.bitcoin.factories.BitcoinSignatureProcessorFactory;
 import com.timmattison.cryptocurrency.factories.ECCParamsFactory;
 import com.timmattison.cryptocurrency.factories.SignatureProcessorFactory;

@@ -1,6 +1,10 @@
-package com.timmattison.cryptocurrency.standard.hashing;
+package com.timmattison.cryptocurrency.standard.hashing.ripemd;
 
 import com.timmattison.cryptocurrency.helpers.ByteArrayHelper;
+import com.timmattison.cryptocurrency.standard.hashing.Endianness;
+import com.timmattison.cryptocurrency.standard.hashing.HashFunction;
+import com.timmattison.cryptocurrency.standard.hashing.HashState;
+import com.timmattison.cryptocurrency.standard.hashing.HashStateListener;
 import com.timmattison.cryptocurrency.standard.hashing.chunks.ChunkExtractor;
 import com.timmattison.cryptocurrency.standard.hashing.padding.MessagePadder;
 

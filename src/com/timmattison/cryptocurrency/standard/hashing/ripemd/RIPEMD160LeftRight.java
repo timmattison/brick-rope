@@ -1,4 +1,4 @@
-package com.timmattison.cryptocurrency.standard.hashing;
+package com.timmattison.cryptocurrency.standard.hashing.ripemd;
 
 /**
  * Created with IntelliJ IDEA.

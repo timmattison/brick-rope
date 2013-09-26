@@ -1,6 +1,6 @@
 package com.timmattison.cryptocurrency.bitcoin.factories;
 
-import com.timmattison.cryptocurrency.bitcoin.SingleSha256Hash;
+import com.timmattison.cryptocurrency.standard.hashing.sha.SingleSha256Hash;
 import com.timmattison.cryptocurrency.interfaces.Hash;
 
 /**

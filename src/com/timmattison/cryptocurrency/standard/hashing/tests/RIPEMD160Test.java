@@ -1,7 +1,7 @@
 package com.timmattison.cryptocurrency.standard.hashing.tests;
 
 import com.timmattison.cryptocurrency.standard.hashing.HashFunction;
-import com.timmattison.cryptocurrency.standard.hashing.RIPEMD160;
+import com.timmattison.cryptocurrency.standard.hashing.ripemd.RIPEMD160;
 import com.timmattison.cryptocurrency.standard.hashing.chunks.StandardChunkExtractor;
 import com.timmattison.cryptocurrency.standard.hashing.padding.StandardMessagePadder;
 import org.junit.Test;

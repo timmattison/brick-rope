@@ -1,4 +1,4 @@
-package com.timmattison.cryptocurrency.bitcoin;
+package com.timmattison.cryptocurrency.standard.hashing.sha;
 
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;

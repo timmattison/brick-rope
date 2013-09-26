@@ -1,7 +1,7 @@
 package com.timmattison.cryptocurrency.bitcoin.tests;
 
 import com.timmattison.bitcoin.test.ByteArrayHelper;
-import com.timmattison.cryptocurrency.bitcoin.DoubleSha256Hash;
+import com.timmattison.cryptocurrency.standard.hashing.sha.DoubleSha256Hash;
 import com.timmattison.cryptocurrency.standard.tests.TestHelper;
 import junit.framework.Assert;
 import org.junit.AfterClass;

@@ -1,4 +1,7 @@
-package com.timmattison.cryptocurrency.standard.hashing;
+package com.timmattison.cryptocurrency.standard.hashing.ripemd;
+
+import com.timmattison.cryptocurrency.standard.hashing.HashState;
+import com.timmattison.cryptocurrency.standard.hashing.NamedValue;
 
 import java.util.ArrayList;
 import java.util.List;
