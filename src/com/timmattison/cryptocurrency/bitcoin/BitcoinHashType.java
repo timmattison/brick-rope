@@ -9,6 +9,11 @@ package com.timmattison.cryptocurrency.bitcoin;
  */
 public enum BitcoinHashType {
     /**
+     * XXX HACK!
+     */
+    SIGHASH_ALL_2(0x00000000L),
+
+    /**
      * No special handling.  Sign all of the outputs.
      */
     SIGHASH_ALL(0x00000001L),
@@ -59,7 +64,9 @@ public enum BitcoinHashType {
 
     public static BitcoinHashType convert(long value) {
         // Determine which hash type this is
-        if (((value & 31) == BitcoinHashType.SIGHASH_ALL.getValue())) {
+        if (((value & 31) == BitcoinHashType.SIGHASH_ALL_2.getValue())) {
+            return BitcoinHashType.SIGHASH_ALL_2;
+        } else if (((value & 31) == BitcoinHashType.SIGHASH_ALL.getValue())) {
             // TODO - Check the logic on this.  It is missing from the docs.
             return BitcoinHashType.SIGHASH_ALL;
         } else if ((value & 31) == BitcoinHashType.SIGHASH_NONE.getValue()) {
