@@ -146,6 +146,13 @@ public class OpCheckSig extends CryptoOp {
                  publicKeyLength is always 0×21 (= 33) since keyX is 32 bytes and 0×02/0×03 is 1 byte.
         */
 
+        // XXX TEMP XXX TEMP TODO XXX
+        if(hashType == null) {
+            // XXX TEMP XXX TEMP TODO XXX
+            // This is an attempt to deal with block 110300 transaction 16 where the hashtype is 0x00
+            hashType = BitcoinHashType.SIGHASH_ALL;
+        }
+
         if (hashType != BitcoinHashType.SIGHASH_ALL) {
             throw new UnsupportedOperationException("Only SIGHASH_ALL accepted currently, saw " + hashType);
         }
