@@ -23,7 +23,7 @@ public class BitcoinExtractBlock {
     public static void main(String[] args) throws IOException {
         Injector injector = Guice.createInjector(new BitcoinModule());
 
-        BlockChain blockChain = injector.getInstance(BlockChainFactory.class).getBlockChain("bitcoin-blockchain.dat");
+        BlockChain blockChain = injector.getInstance(BlockChainFactory.class).getBlockChain();
 
         int blockNumber = 0;
         int blockToExtract = 110300;

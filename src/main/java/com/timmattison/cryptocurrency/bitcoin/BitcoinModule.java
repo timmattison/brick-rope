@@ -2,6 +2,7 @@ package com.timmattison.cryptocurrency.bitcoin;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
+import com.google.inject.name.Names;
 import com.timmattison.crypto.ecc.fp.*;
 import com.timmattison.crypto.ecc.interfaces.*;
 import com.timmattison.crypto.ecc.random.impl.RealBigIntegerRandom;
@@ -31,6 +32,8 @@ import java.util.Random;
 public class BitcoinModule extends AbstractModule {
     @Override
     protected void configure() {
+        // Default blockchain file
+        bind(String.class).annotatedWith(Names.named("defaultBlockChain")).toInstance("/Users/timmattison/Desktop/bitcoin-blockchain.dat");
         bind(BlockReader.class).to(BitcoinBlockReader.class);
 
         bind(BlockChain.class).to(StandardBlockChain.class);

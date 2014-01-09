@@ -30,7 +30,7 @@ public class BitcoinFindAllUsedOpcodes {
 
         Injector injector = Guice.createInjector(new BitcoinModule());
 
-        BlockChain blockChain = injector.getInstance(BlockChainFactory.class).getBlockChain("bitcoin-blockchain.dat");
+        BlockChain blockChain = injector.getInstance(BlockChainFactory.class).getBlockChain();
 
         Block block = blockChain.next();
         int blockNumber = 0;
