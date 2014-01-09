@@ -1,4 +1,4 @@
-package com.timmattison.bitcoin.old;
+package com.timmattison.cryptocurrency.helpers;
 
 import java.math.BigInteger;
 

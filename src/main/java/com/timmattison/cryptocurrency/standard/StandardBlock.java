@@ -1,8 +1,8 @@
 package com.timmattison.cryptocurrency.standard;
 
-import com.timmattison.bitcoin.old.ByteArrayHelper;
 import com.timmattison.cryptocurrency.factories.BlockHeaderFactory;
 import com.timmattison.cryptocurrency.factories.TransactionFactory;
+import com.timmattison.cryptocurrency.helpers.ByteArrayHelper;
 import com.timmattison.cryptocurrency.interfaces.Block;
 import com.timmattison.cryptocurrency.interfaces.BlockHeader;
 import com.timmattison.cryptocurrency.interfaces.Transaction;

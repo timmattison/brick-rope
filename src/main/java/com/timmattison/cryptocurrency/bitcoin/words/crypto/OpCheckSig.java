@@ -1,6 +1,5 @@
 package com.timmattison.cryptocurrency.bitcoin.words.crypto;
 
-import com.timmattison.bitcoin.old.ByteArrayHelper;
 import com.timmattison.crypto.ecc.interfaces.ECCMessageSignatureVerifier;
 import com.timmattison.crypto.ecc.interfaces.ECCMessageSignatureVerifierFactory;
 import com.timmattison.crypto.ecc.interfaces.ECCSignature;
@@ -8,6 +7,7 @@ import com.timmattison.cryptocurrency.bitcoin.BitcoinHashType;
 import com.timmattison.cryptocurrency.bitcoin.StateMachine;
 import com.timmattison.cryptocurrency.factories.ScriptingFactory;
 import com.timmattison.cryptocurrency.factories.SignatureProcessorFactory;
+import com.timmattison.cryptocurrency.helpers.ByteArrayHelper;
 import com.timmattison.cryptocurrency.interfaces.Input;
 import com.timmattison.cryptocurrency.interfaces.SignatureProcessor;
 import com.timmattison.cryptocurrency.interfaces.Transaction;

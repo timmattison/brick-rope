@@ -1,7 +1,7 @@
 package com.timmattison.cryptocurrency.standard;
 
-import com.timmattison.bitcoin.old.ByteArrayHelper;
-import com.timmattison.bitcoin.old.EndiannessHelper;
+import com.timmattison.cryptocurrency.helpers.ByteArrayHelper;
+import com.timmattison.cryptocurrency.helpers.EndiannessHelper;
 import com.timmattison.cryptocurrency.interfaces.Buildable;
 
 import java.util.Arrays;

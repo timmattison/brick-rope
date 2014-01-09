@@ -1,4 +1,4 @@
-package com.timmattison.bitcoin.old.script;
+package com.timmattison.cryptocurrency.bitcoin;
 
 /**
  * Created with IntelliJ IDEA.

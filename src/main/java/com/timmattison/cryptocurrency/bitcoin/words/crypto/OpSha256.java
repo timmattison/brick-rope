@@ -1,6 +1,6 @@
 package com.timmattison.cryptocurrency.bitcoin.words.crypto;
 
-import com.timmattison.bitcoin.old.script.Constants;
+import com.timmattison.cryptocurrency.bitcoin.Constants;
 import com.timmattison.cryptocurrency.bitcoin.StateMachine;
 
 import java.security.MessageDigest;

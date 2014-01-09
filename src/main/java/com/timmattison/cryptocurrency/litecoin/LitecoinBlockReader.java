@@ -1,7 +1,7 @@
 package com.timmattison.cryptocurrency.litecoin;
 
-import com.timmattison.bitcoin.old.EndiannessHelper;
 import com.timmattison.cryptocurrency.helpers.ByteArrayHelper;
+import com.timmattison.cryptocurrency.helpers.EndiannessHelper;
 import com.timmattison.cryptocurrency.helpers.InputStreamHelper;
 import com.timmattison.cryptocurrency.interfaces.BlockReader;
 

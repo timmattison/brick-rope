@@ -1,7 +1,7 @@
 package com.timmattison.cryptocurrency.bitcoin;
 
-import com.timmattison.bitcoin.old.ByteArrayHelper;
 import com.timmattison.cryptocurrency.factories.ScriptingFactory;
+import com.timmattison.cryptocurrency.helpers.ByteArrayHelper;
 import com.timmattison.cryptocurrency.helpers.EndiannessHelper;
 import com.timmattison.cryptocurrency.interfaces.Input;
 import com.timmattison.cryptocurrency.standard.Script;

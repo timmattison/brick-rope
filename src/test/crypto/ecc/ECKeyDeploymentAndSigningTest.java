@@ -2,9 +2,9 @@ package crypto.ecc;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import com.timmattison.bitcoin.old.ByteArrayHelper;
 import com.timmattison.crypto.ecc.interfaces.ECCParameters;
 import com.timmattison.crypto.ecc.interfaces.ECCPoint;
+import com.timmattison.cryptocurrency.helpers.ByteArrayHelper;
 import crypto.ecc.modules.ECCSECTestModule;
 import org.junit.Test;
 

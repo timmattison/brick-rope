@@ -1,6 +1,6 @@
 package cryptocurrency.bitcoin;
 
-import com.timmattison.bitcoin.old.ByteArrayHelper;
+import com.timmattison.cryptocurrency.helpers.ByteArrayHelper;
 import com.timmattison.cryptocurrency.standard.hashing.sha.DoubleSha256Hash;
 import cryptocurrency.standard.TestHelper;
 import junit.framework.Assert;

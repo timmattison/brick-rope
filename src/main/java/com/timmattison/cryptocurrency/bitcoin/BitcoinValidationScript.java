@@ -1,7 +1,7 @@
 package com.timmattison.cryptocurrency.bitcoin;
 
-import com.timmattison.bitcoin.old.ByteArrayHelper;
 import com.timmattison.cryptocurrency.bitcoin.factories.BitcoinScriptingFactory;
+import com.timmattison.cryptocurrency.helpers.ByteArrayHelper;
 import com.timmattison.cryptocurrency.standard.ValidationScript;
 
 /**

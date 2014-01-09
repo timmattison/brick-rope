@@ -1,7 +1,7 @@
 package com.timmattison.cryptocurrency.bitcoin.words.stack;
 
-import com.timmattison.bitcoin.old.ByteArrayHelper;
 import com.timmattison.cryptocurrency.bitcoin.StateMachine;
+import com.timmattison.cryptocurrency.helpers.ByteArrayHelper;
 
 import java.util.Arrays;
 

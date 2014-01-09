@@ -2,7 +2,7 @@ package com.timmattison.cryptocurrency.standard.hashing.sha;
 
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
-import com.timmattison.bitcoin.old.script.Constants;
+import com.timmattison.cryptocurrency.bitcoin.Constants;
 import com.timmattison.cryptocurrency.helpers.ByteArrayHelper;
 import com.timmattison.cryptocurrency.interfaces.Hash;
 
