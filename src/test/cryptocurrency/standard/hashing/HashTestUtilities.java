@@ -1,4 +1,4 @@
-package com.timmattison.cryptocurrency.standard.hashing.tests;
+package cryptocurrency.standard.hashing;
 
 import java.math.BigInteger;
 import java.security.MessageDigest;
