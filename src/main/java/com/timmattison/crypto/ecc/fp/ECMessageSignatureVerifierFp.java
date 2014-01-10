@@ -1,7 +1,6 @@
 package com.timmattison.crypto.ecc.fp;
 
 import com.google.inject.Inject;
-import crypto.ecc.ECHelper;
 import com.timmattison.crypto.ecc.interfaces.*;
 import com.timmattison.cryptocurrency.helpers.ByteArrayHelper;
 import com.timmattison.cryptocurrency.interfaces.Hash;

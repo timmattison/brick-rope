@@ -2,7 +2,6 @@ package com.timmattison.crypto.ecc.fp;
 
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
-import crypto.ecc.ECHelper;
 import com.timmattison.crypto.ecc.interfaces.*;
 import com.timmattison.crypto.ecc.random.interfaces.BigIntegerRandom;
 import com.timmattison.cryptocurrency.helpers.ByteArrayHelper;
