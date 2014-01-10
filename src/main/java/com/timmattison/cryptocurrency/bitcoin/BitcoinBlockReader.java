@@ -74,7 +74,7 @@ public class BitcoinBlockReader implements BlockReader {
         bytesRead = inputStream.read(blockData, 0, blockSize);
 
         if (blockSize != bytesRead) {
-            throwExceptionWhenIncorrectLengthRead("the block data", magicNumberLengthInBytes, bytesRead);
+            throwExceptionWhenIncorrectLengthRead("the block data", blockSize, bytesRead);
         }
 
         return blockData;
@@ -83,6 +83,10 @@ public class BitcoinBlockReader implements BlockReader {
     @Override
     public void skipNextBlocks(InputStream inputStream, int count) throws IOException {
         for (int loop = 0; loop < count; loop++) {
+            if ((loop % 1000) == 0) {
+                System.out.println("Block #" + loop);
+            }
+
             getNextBlock(inputStream);
         }
     }

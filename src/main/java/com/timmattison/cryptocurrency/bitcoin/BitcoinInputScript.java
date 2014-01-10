@@ -54,7 +54,10 @@ public class BitcoinInputScript extends BitcoinScript implements InputScript {
             else if ((transactionVersionNumber == 1) && (!coinbase)) {
                 // No, no version 1 non-coinbase script can be zero bytes
                 // XXX - This is a problem in block 211914
-                throw new UnsupportedOperationException("Version 1 scripts cannot be zero bytes long unless they are the coinbase");
+                //throw new UnsupportedOperationException("Version 1 scripts cannot be zero bytes long unless they are the coinbase");
+                // Don't die here!
+                int x = 5;
+                x++;
             }
         }
     }
