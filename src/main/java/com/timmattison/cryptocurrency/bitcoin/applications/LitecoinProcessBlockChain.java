@@ -5,7 +5,7 @@ import com.google.inject.Injector;
 import com.timmattison.cryptocurrency.factories.BlockChainFactory;
 import com.timmattison.cryptocurrency.interfaces.Block;
 import com.timmattison.cryptocurrency.interfaces.BlockChain;
-import com.timmattison.cryptocurrency.litecoin.LitecoinModule;
+import com.timmattison.cryptocurrency.modules.LitecoinModule;
 
 import java.io.FileNotFoundException;
 import java.util.Date;

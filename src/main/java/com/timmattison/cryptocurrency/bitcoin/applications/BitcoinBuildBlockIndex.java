@@ -3,7 +3,7 @@ package com.timmattison.cryptocurrency.bitcoin.applications;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.timmattison.cryptocurrency.bitcoin.BitcoinBlockChainIndex;
-import com.timmattison.cryptocurrency.bitcoin.BitcoinModule;
+import com.timmattison.cryptocurrency.modules.BitcoinModule;
 import com.timmattison.cryptocurrency.factories.BlockChainFactory;
 import com.timmattison.cryptocurrency.factories.StateMachineFactory;
 import com.timmattison.cryptocurrency.interfaces.Block;

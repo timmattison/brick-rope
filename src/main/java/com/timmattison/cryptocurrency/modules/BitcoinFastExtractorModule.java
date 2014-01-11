@@ -1,4 +1,4 @@
-package com.timmattison.cryptocurrency.bitcoin;
+package com.timmattison.cryptocurrency.modules;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
@@ -8,17 +8,21 @@ import com.timmattison.crypto.ecc.interfaces.*;
 import com.timmattison.crypto.ecc.random.impl.RealBigIntegerRandom;
 import com.timmattison.crypto.ecc.random.interfaces.BigIntegerRandom;
 import com.timmattison.crypto.ecc.random.interfaces.RandomFactory;
+import com.timmattison.cryptocurrency.bitcoin.*;
 import com.timmattison.cryptocurrency.bitcoin.factories.*;
 import com.timmattison.cryptocurrency.factories.*;
+import com.timmattison.cryptocurrency.fakes.FakeBitcoinBlockReader;
+import com.timmattison.cryptocurrency.fakes.FakeBlockChain;
+import com.timmattison.cryptocurrency.fakes.FakeBlockChainFactory;
+import com.timmattison.cryptocurrency.fakes.FakeBlockValidator;
 import com.timmattison.cryptocurrency.interfaces.*;
-import com.timmattison.cryptocurrency.standard.StandardBlockChain;
 import com.timmattison.cryptocurrency.standard.StandardBlockFactory;
 import com.timmattison.cryptocurrency.standard.StandardMerkleRootCalculator;
-import com.timmattison.cryptocurrency.standard.hashing.sha.DoubleSha256Hash;
 import com.timmattison.cryptocurrency.standard.hashing.chunks.ChunkExtractor;
 import com.timmattison.cryptocurrency.standard.hashing.chunks.StandardChunkExtractor;
 import com.timmattison.cryptocurrency.standard.hashing.padding.MessagePadder;
 import com.timmattison.cryptocurrency.standard.hashing.padding.StandardMessagePadder;
+import com.timmattison.cryptocurrency.standard.hashing.sha.DoubleSha256Hash;
 
 import java.util.Random;
 
@@ -29,19 +33,34 @@ import java.util.Random;
  * Time: 5:56 PM
  * To change this template use File | Settings | File Templates.
  */
-public class BitcoinModule extends AbstractModule {
+public class BitcoinFastExtractorModule extends AbstractModule {
+    private final int blockToExtract;
+
+    public BitcoinFastExtractorModule(int blockToExtract) {
+        this.blockToExtract = blockToExtract;
+    }
+
     @Override
     protected void configure() {
+        // Set the number of blocks to skip
+        bind(Integer.class).annotatedWith(Names.named("blocksToSkip")).toInstance(blockToExtract);
+
         // Default blockchain file
         bind(String.class).annotatedWith(Names.named("defaultBlockChain")).toInstance("/Users/timmattison/Desktop/bitcoin-blockchain.dat");
-        bind(BlockReader.class).to(BitcoinBlockReader.class);
 
-        bind(BlockChain.class).to(StandardBlockChain.class);
+        // Use a fake Bitcoin block reader that skips blocks very quickly
+        bind(BlockReader.class).to(FakeBitcoinBlockReader.class);
+
+        // Use a fake block validator that always returns true
+        bind(BlockValidator.class).to(FakeBlockValidator.class);
+
+        // Use a fake block chain factory
+        bind(BlockChainFactory.class).to(FakeBlockChainFactory.class);
+
         bind(Block.class).to(BitcoinBlock.class);
         bind(BlockHeader.class).to(BitcoinBlockHeader.class);
         bind(Block.class).to(BitcoinBlock.class);
         bind(StateMachine.class).to(BitcoinStateMachine.class);
-        bind(BlockValidator.class).to(BitcoinBlockValidator.class);
 
         bind(TransactionFactory.class).to(BitcoinTransactionFactory.class);
         bind(TransactionLocator.class).to(BitcoinInMemoryTransactionLocator.class);
@@ -53,7 +72,6 @@ public class BitcoinModule extends AbstractModule {
         bind(TargetFactory.class).to(BitcoinTargetFactory.class);
         bind(StateMachineFactory.class).to(BitcoinStateMachineFactory.class);
         bind(SignatureProcessorFactory.class).to(BitcoinSignatureProcessorFactory.class);
-        bind(BlockChainFactory.class).to(BitcoinBlockChainFactory.class);
 
         // ECC bindings
         bind(ECCParamsFactory.class).to(BitcoinECCParamsFactory.class);
@@ -72,8 +90,8 @@ public class BitcoinModule extends AbstractModule {
         install(new FactoryModuleBuilder().implement(ECCParameters.class, ECParametersFp.class).build(ECCParametersFactory.class));
         install(new FactoryModuleBuilder().implement(ECCFieldElement.class, ECFieldElementFp.class).build(ECCFieldElementFactory.class));
         install(new FactoryModuleBuilder().implement(ECCPoint.class, ECPointFp.class).build(ECCPointFactory.class));
-        install(new FactoryModuleBuilder().implement(ECCKeyPair.class, ECKeyPairFp.class).build(com.timmattison.crypto.ecc.interfaces.ECCKeyPairFactory.class));
-        install(new FactoryModuleBuilder().implement(ECCSignature.class, ECSignatureFp.class).build(com.timmattison.crypto.ecc.interfaces.ECCSignatureFactory.class));
+        install(new FactoryModuleBuilder().implement(ECCKeyPair.class, ECKeyPairFp.class).build(ECCKeyPairFactory.class));
+        install(new FactoryModuleBuilder().implement(ECCSignature.class, ECSignatureFp.class).build(ECCSignatureFactory.class));
 
         // Message signing
         bind(ECCMessageSigner.class).to(ECMessageSignerFp.class);

@@ -19,10 +19,10 @@ import java.util.Iterator;
  * To change this template use File | Settings | File Templates.
  */
 public class StandardBlockChain implements BlockChain, Iterator<Block> {
-    private final BlockFactory blockFactory;
+    protected final BlockFactory blockFactory;
     private final BlockValidator blockValidator;
     private int blockNumber;
-    private InputStream inputStream;
+    protected InputStream inputStream;
     private Block previousBlock = null;
     private long position;
 
