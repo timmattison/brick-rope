@@ -96,7 +96,11 @@ public class BitcoinInput implements Input {
             bytes.write(inputScriptLengthBytes);
 
             if (inputScript != null) {
-                bytes.write(inputScript.dump());
+                byte[] temp = inputScript.dump();
+
+                if (temp != null) {
+                    bytes.write(temp);
+                }
             }
 
             bytes.write(sequenceNumberBytes);
@@ -138,8 +142,7 @@ public class BitcoinInput implements Input {
 
         if (inputScript != null) {
             stringBuilder.append(inputScript.prettyDump(indentationLevel + 1));
-        }
-        else {
+        } else {
             stringBuilder.append("NULL");
         }
 
