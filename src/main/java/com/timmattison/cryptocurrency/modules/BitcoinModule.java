@@ -12,6 +12,8 @@ import com.timmattison.cryptocurrency.bitcoin.*;
 import com.timmattison.cryptocurrency.bitcoin.factories.*;
 import com.timmattison.cryptocurrency.factories.*;
 import com.timmattison.cryptocurrency.interfaces.*;
+import com.timmattison.cryptocurrency.standard.BlockStorage;
+import com.timmattison.cryptocurrency.standard.NopBlockStorage;
 import com.timmattison.cryptocurrency.standard.StandardBlockFactory;
 import com.timmattison.cryptocurrency.standard.StandardMerkleRootCalculator;
 import com.timmattison.cryptocurrency.standard.hashing.chunks.ChunkExtractor;
@@ -89,5 +91,8 @@ public class BitcoinModule extends AbstractModule {
         bind(HasherFactory.class).to(DoubleSha256Factory.class);
         bind(ChunkExtractor.class).to(StandardChunkExtractor.class);
         bind(MessagePadder.class).to(StandardMessagePadder.class);
+
+        // For storage
+        bind(BlockStorage.class).to(NopBlockStorage.class);
     }
 }

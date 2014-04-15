@@ -6,8 +6,10 @@ import com.timmattison.cryptocurrency.modules.BitcoinModule;
 import com.timmattison.cryptocurrency.factories.BlockChainFactory;
 import com.timmattison.cryptocurrency.interfaces.Block;
 import com.timmattison.cryptocurrency.interfaces.BlockChain;
+import com.timmattison.cryptocurrency.standard.BlockStorage;
 
 import java.io.FileNotFoundException;
+import java.sql.SQLException;
 import java.util.Date;
 
 /**
@@ -18,12 +20,13 @@ import java.util.Date;
  * To change this template use File | Settings | File Templates.
  */
 public class BitcoinProcessBlockChain {
-    public static void main(String[] args) throws FileNotFoundException {
+    public static void main(String[] args) throws FileNotFoundException, SQLException, ClassNotFoundException {
         ApplicationHelper.logFine();
 
         Injector injector = Guice.createInjector(new BitcoinModule());
 
         BlockChain blockChain = injector.getInstance(BlockChainFactory.class).getBlockChain();
+        BlockStorage blockStorage = injector.getInstance(BlockStorage.class);
 
         Block block = blockChain.next();
         int blockNumber = 0;
@@ -35,6 +38,8 @@ public class BitcoinProcessBlockChain {
                 long timestamp = new Date().getTime();
                 System.out.println((timestamp - start) + ", " + blockNumber);
             }
+
+            blockStorage.storeBlock(blockNumber, block);
 
             block = blockChain.next();
             blockNumber++;
