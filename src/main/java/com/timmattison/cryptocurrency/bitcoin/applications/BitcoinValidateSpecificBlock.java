@@ -22,8 +22,9 @@ import java.util.*;
  * Time: 5:58 PM
  * To change this template use File | Settings | File Templates.
  */
-public class BitcoinValidateBlock170 {
+public class BitcoinValidateSpecificBlock {
     public static ValidationScript validationScript;
+    private static final int blockToValidate = 211914;
 
     public static void main(String[] args) throws FileNotFoundException {
         List<Block> blocks = new ArrayList<Block>();
@@ -48,7 +49,7 @@ public class BitcoinValidateBlock170 {
                 transactionMap.put(hash, transaction);
             }
 
-            if (blockNumber == 170) {
+            if (blockNumber == blockToValidate) {
                 System.out.println(block.prettyDump(0));
                 System.out.println(ByteArrayHelper.toHex(block.dump()));
 
