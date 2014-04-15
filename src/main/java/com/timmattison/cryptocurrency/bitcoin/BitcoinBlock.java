@@ -7,6 +7,7 @@ import com.timmattison.cryptocurrency.standard.StandardBlock;
 import javax.inject.Inject;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.Serializable;
 
 /**
  * Created with IntelliJ IDEA.
@@ -15,10 +16,14 @@ import java.io.IOException;
  * Time: 11:49 AM
  * To change this template use File | Settings | File Templates.
  */
-public class BitcoinBlock extends StandardBlock {
+public class BitcoinBlock extends StandardBlock implements Serializable {
     @Inject
     public BitcoinBlock(BlockHeaderFactory blockHeaderFactory, TransactionFactory transactionFactory) {
         super(blockHeaderFactory, transactionFactory);
+    }
+
+    public BitcoinBlock() {
+        super(null, null);
     }
 
     @Override

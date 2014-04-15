@@ -8,7 +8,7 @@ import java.sql.SQLException;
  * Created by timmattison on 4/15/14.
  */
 public interface BlockStorage {
-    public Block getBlock(int blockNumber);
+    public Block getBlock(int blockNumber) throws SQLException, ClassNotFoundException;
 
     public void storeBlock(int blockNumber, Block block) throws SQLException, ClassNotFoundException;
 }

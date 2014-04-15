@@ -40,6 +40,7 @@ public class BitcoinProcessBlockChain {
             }
 
             blockStorage.storeBlock(blockNumber, block);
+            Block fromDb = blockStorage.getBlock(blockNumber);
 
             block = blockChain.next();
             blockNumber++;

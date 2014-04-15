@@ -34,8 +34,19 @@ public class H2BlockStorage implements BlockStorage {
     }
 
     @Override
-    public Block getBlock(int blockNumber) {
-        return null;
+    public Block getBlock(int blockNumber) throws SQLException, ClassNotFoundException {
+        String getBlockSql = "SELECT block FROM BLOCKS WHERE blockNumber = ?";
+
+        PreparedStatement preparedStatement = prepareStatement(getBlockSql);
+        preparedStatement.setInt(1, blockNumber);
+
+        ResultSet resultSet = preparedStatement.executeQuery();
+
+        if(!resultSet.first()) {
+            return null;
+        }
+
+        return (Block) resultSet.getObject(1);
     }
 
     @Override
