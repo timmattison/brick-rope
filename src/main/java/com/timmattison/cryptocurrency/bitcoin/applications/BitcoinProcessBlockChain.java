@@ -1,11 +1,12 @@
 package com.timmattison.cryptocurrency.bitcoin.applications;
 
+import com.google.gson.Gson;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import com.timmattison.cryptocurrency.modules.BitcoinModule;
 import com.timmattison.cryptocurrency.factories.BlockChainFactory;
 import com.timmattison.cryptocurrency.interfaces.Block;
 import com.timmattison.cryptocurrency.interfaces.BlockChain;
+import com.timmattison.cryptocurrency.modules.BitcoinModule;
 import com.timmattison.cryptocurrency.standard.BlockStorage;
 
 import java.io.FileNotFoundException;
@@ -40,6 +41,8 @@ public class BitcoinProcessBlockChain {
             }
 
             blockStorage.storeBlock(blockNumber, block);
+            Gson gson = new Gson();
+            System.out.println(gson.toJson(block));
             Block fromDb = blockStorage.getBlock(blockNumber);
 
             block = blockChain.next();
