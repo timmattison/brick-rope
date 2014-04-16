@@ -8,7 +8,6 @@ import com.timmattison.cryptocurrency.interfaces.BlockValidator;
 import com.timmattison.cryptocurrency.standard.StandardBlockChain;
 
 import java.io.IOException;
-import java.io.InputStream;
 
 /**
  * Created with IntelliJ IDEA.

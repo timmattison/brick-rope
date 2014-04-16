@@ -12,14 +12,13 @@ import com.timmattison.cryptocurrency.bitcoin.*;
 import com.timmattison.cryptocurrency.bitcoin.factories.*;
 import com.timmattison.cryptocurrency.factories.*;
 import com.timmattison.cryptocurrency.interfaces.*;
-import com.timmattison.cryptocurrency.standard.StandardBlockChain;
 import com.timmattison.cryptocurrency.standard.StandardBlockFactory;
 import com.timmattison.cryptocurrency.standard.StandardMerkleRootCalculator;
-import com.timmattison.cryptocurrency.standard.hashing.sha.DoubleSha256Hash;
 import com.timmattison.cryptocurrency.standard.hashing.chunks.ChunkExtractor;
 import com.timmattison.cryptocurrency.standard.hashing.chunks.StandardChunkExtractor;
 import com.timmattison.cryptocurrency.standard.hashing.padding.MessagePadder;
 import com.timmattison.cryptocurrency.standard.hashing.padding.StandardMessagePadder;
+import com.timmattison.cryptocurrency.standard.hashing.sha.DoubleSha256Hash;
 
 import java.util.Random;
 

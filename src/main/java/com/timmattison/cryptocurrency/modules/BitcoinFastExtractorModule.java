@@ -12,7 +12,6 @@ import com.timmattison.cryptocurrency.bitcoin.*;
 import com.timmattison.cryptocurrency.bitcoin.factories.*;
 import com.timmattison.cryptocurrency.factories.*;
 import com.timmattison.cryptocurrency.fakes.FakeBitcoinBlockReader;
-import com.timmattison.cryptocurrency.fakes.FakeBlockChain;
 import com.timmattison.cryptocurrency.fakes.FakeBlockChainFactory;
 import com.timmattison.cryptocurrency.fakes.FakeBlockValidator;
 import com.timmattison.cryptocurrency.interfaces.*;
