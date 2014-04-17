@@ -30,7 +30,7 @@ public class BitcoinValidateAllBlocks {
 
         Injector injector = Guice.createInjector(new BitcoinModule());
 
-        BlockChain blockChain = injector.getInstance(BlockChainFactory.class).getBlockChain("blocks/bitcoin-block-110301.dat");
+        BlockChain blockChain = injector.getInstance(BlockChainFactory.class).getBlockChain();
         TransactionLocator transactionLocator = injector.getInstance(TransactionLocator.class);
         StateMachineFactory stateMachineFactory = injector.getInstance(StateMachineFactory.class);
         ScriptingFactory scriptingFactory = injector.getInstance(ScriptingFactory.class);
