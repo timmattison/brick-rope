@@ -2,7 +2,7 @@ package com.timmattison.ecc.messagesignatureverifier;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import com.timmattison.crypto.ECCBitcoinTestModule;
+import com.timmattison.crypto.modules.ECCBitcoinTestModule;
 import com.timmattison.crypto.ecc.interfaces.ECCSignature;
 import com.timmattison.ecc.ECCTestHelper;
 import org.junit.Assert;

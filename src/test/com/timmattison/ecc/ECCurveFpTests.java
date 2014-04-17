@@ -2,7 +2,7 @@ package com.timmattison.ecc;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import com.timmattison.crypto.ECCSECTestModule;
+import com.timmattison.crypto.modules.ECCSECTestModule;
 import com.timmattison.crypto.ecc.enums.ECCFieldType;
 import com.timmattison.crypto.ecc.interfaces.ECCCurve;
 import com.timmattison.crypto.ecc.interfaces.ECCParameters;

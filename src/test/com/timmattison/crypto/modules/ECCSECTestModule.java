@@ -1,4 +1,4 @@
-package com.timmattison.crypto;
+package com.timmattison.crypto.modules;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
@@ -12,7 +12,7 @@ import com.timmattison.cryptocurrency.bitcoin.factories.BitcoinSignatureProcesso
 import com.timmattison.cryptocurrency.factories.ECCParamsFactory;
 import com.timmattison.cryptocurrency.factories.SignatureProcessorFactory;
 import com.timmattison.cryptocurrency.interfaces.Hash;
-import com.timmattison.cryptocurrency.standard.hashing.sha.DoubleSha256Hash;
+import com.timmattison.cryptocurrency.standard.hashing.sha.SingleSha1Hash;
 
 import java.util.Random;
 
@@ -23,7 +23,7 @@ import java.util.Random;
  * Time: 5:56 PM
  * To change this template use File | Settings | File Templates.
  */
-public class ECCBitcoinTestModule extends AbstractModule {
+public class ECCSECTestModule extends AbstractModule {
     @Override
     protected void configure() {
         bind(ECCCurve.class).to(ECCurveFp.class);
@@ -46,7 +46,7 @@ public class ECCBitcoinTestModule extends AbstractModule {
         // Message signing
         bind(ECCMessageSigner.class).to(ECMessageSignerFp.class);
         install(new FactoryModuleBuilder().implement(ECCMessageSigner.class, ECMessageSignerFp.class).build(ECCMessageSignerFactory.class));
-        install(new FactoryModuleBuilder().implement(Hash.class, DoubleSha256Hash.class).build(ECCMessageSignerHashFactory.class));
+        install(new FactoryModuleBuilder().implement(Hash.class, SingleSha1Hash.class).build(ECCMessageSignerHashFactory.class));
         bind(BigIntegerRandom.class).to(RealBigIntegerRandom.class);
         install(new FactoryModuleBuilder().implement(Random.class, Random.class).build(RandomFactory.class));
         install(new FactoryModuleBuilder().implement(ECCMessageSignatureVerifier.class, ECMessageSignatureVerifierFp.class).build(ECCMessageSignatureVerifierFactory.class));
