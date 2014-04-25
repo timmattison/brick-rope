@@ -9,6 +9,8 @@ import com.timmattison.cryptocurrency.helpers.ByteArrayHelper;
 import java.math.BigInteger;
 import java.util.Random;
 
+// This code is based off of the Javascript implementation found here - http://www-cs-students.stanford.edu/~tjw/jsbn/
+
 /**
  * Created with IntelliJ IDEA.
  * User: timmattison

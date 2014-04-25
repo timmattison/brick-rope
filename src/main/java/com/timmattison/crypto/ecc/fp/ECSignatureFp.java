@@ -8,6 +8,8 @@ import com.timmattison.crypto.ecc.interfaces.ECCSignature;
 
 import java.math.BigInteger;
 
+// This code is based off of the Javascript implementation found here - http://www-cs-students.stanford.edu/~tjw/jsbn/
+
 /**
  * Created with IntelliJ IDEA.
  * User: timmattison
