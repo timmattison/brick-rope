@@ -40,7 +40,6 @@ public class DoubleSha256HashTests {
         final DoubleSha256Hash hasher = new DoubleSha256Hash(helloBytes);
 
         final byte[] result = hasher.getOutput();
-        final String resultString = ByteArrayHelper.toHex(result);
 
         Assert.assertTrue(Arrays.equals(result, helloStringExpectedHash));
     }
@@ -52,7 +51,6 @@ public class DoubleSha256HashTests {
         final DoubleSha256Hash hasher = new DoubleSha256Hash(helloBytes);
 
         final byte[] result = hasher.getOutput();
-        final String resultString = ByteArrayHelper.toHex(result);
 
         Assert.assertTrue(Arrays.equals(result, helloStringExpectedHash));
     }
