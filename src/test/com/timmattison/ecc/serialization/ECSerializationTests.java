@@ -20,4 +20,25 @@ public class ECSerializationTests {
         Gson gson = new Gson();
         gson.toJson(secp256k1);
     }
+
+    @Test
+    public void testECCPointCanBeSerialized() {
+        ECCParameters secp256k1 = ECCTestHelper.getSecp256k1(injector);
+        Gson gson = new Gson();
+        gson.toJson(secp256k1.getG());
+    }
+
+    @Test
+    public void testECCFieldElementCanBeSerialized() {
+        ECCParameters secp256k1 = ECCTestHelper.getSecp256k1(injector);
+        Gson gson = new Gson();
+        gson.toJson(secp256k1.getG().getX());
+    }
+
+    @Test
+    public void testECCFieldTypeCanBeSerialized() {
+        ECCParameters secp256k1 = ECCTestHelper.getSecp256k1(injector);
+        Gson gson = new Gson();
+        gson.toJson(secp256k1.getECCFieldType());
+    }
 }
