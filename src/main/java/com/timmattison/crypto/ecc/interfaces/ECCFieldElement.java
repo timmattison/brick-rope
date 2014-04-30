@@ -1,5 +1,7 @@
 package com.timmattison.crypto.ecc.interfaces;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
+
 import java.math.BigInteger;
 
 /**
@@ -28,6 +30,7 @@ public interface ECCFieldElement extends ECCElement {
 
     public BigInteger toBigInteger();
 
+    @JsonIgnore
     public ECCFieldElement negate();
 
     public ECCFieldElement add(ECCFieldElement b);
@@ -36,6 +39,7 @@ public interface ECCFieldElement extends ECCElement {
 
     public ECCFieldElement multiply(ECCFieldElement b);
 
+    @JsonIgnore
     public ECCFieldElement square();
 
     public ECCFieldElement divide(ECCFieldElement b);

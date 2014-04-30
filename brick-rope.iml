@@ -103,6 +103,8 @@
     <orderEntry type="library" name="Maven: jgoodies:plastic:1.2.0" level="project" />
     <orderEntry type="library" name="Maven: org.codehaus.plexus:plexus-resources:1.0-alpha-7" level="project" />
     <orderEntry type="library" name="Maven: org.sonatype.plexus:plexus-build-api:0.0.7" level="project" />
+    <orderEntry type="library" name="Maven: org.codehaus.jackson:jackson-mapper-lgpl:1.9.13" level="project" />
+    <orderEntry type="library" name="Maven: org.codehaus.jackson:jackson-core-lgpl:1.9.13" level="project" />
   </component>
 </module>
 

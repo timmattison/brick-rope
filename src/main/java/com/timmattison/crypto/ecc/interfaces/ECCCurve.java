@@ -1,5 +1,7 @@
 package com.timmattison.crypto.ecc.interfaces;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
+
 import java.math.BigInteger;
 import java.util.Random;
 
@@ -45,6 +47,7 @@ public interface ECCCurve extends ECCElement {
 
     public boolean equals(ECCCurve other);
 
+    @JsonIgnore
     public ECCPoint getInfinity();
 
     public ECCPoint generateBasePoint(Random random);
