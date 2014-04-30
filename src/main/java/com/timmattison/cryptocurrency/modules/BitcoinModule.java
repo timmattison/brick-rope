@@ -91,5 +91,8 @@ public class BitcoinModule extends AbstractModule {
         bind(HasherFactory.class).to(DoubleSha256Factory.class);
         bind(ChunkExtractor.class).to(StandardChunkExtractor.class);
         bind(MessagePadder.class).to(StandardMessagePadder.class);
+
+        // For storage
+        bind(BlockStorage.class).to(H2BlockStorage.class);
     }
 }
