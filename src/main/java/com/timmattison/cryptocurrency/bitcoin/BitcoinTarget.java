@@ -20,16 +20,6 @@ public class BitcoinTarget implements Target<BigInteger> {
 
     @Override
     public boolean isBelowHash(BigInteger value) {
-        String targetString = target.toString(16);
-        String valueString = value.toString(16);
-        int targetStringLength = targetString.length();
-        int valueStringLength = valueString.length();
-
-        if(value.compareTo(target) < 0) {
-            return true;
-        }
-        else {
-            return false;
-        }
+        return (value.compareTo(target) == -1);
     }
 }
