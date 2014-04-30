@@ -58,7 +58,5 @@ public class H2BlockStorage implements BlockStorage {
         preparedStatement.setObject(2, block);
 
         preparedStatement.executeUpdate();
-        connection.commit();
-        connection.close();
     }
 }
