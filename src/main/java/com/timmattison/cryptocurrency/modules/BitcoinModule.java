@@ -93,6 +93,6 @@ public class BitcoinModule extends AbstractModule {
         bind(MessagePadder.class).to(StandardMessagePadder.class);
 
         // For storage
-        bind(BlockStorage.class).to(H2BlockStorage.class);
+        install(new FactoryModuleBuilder().implement(BlockStorage.class, H2BlockStorage.class).build(BlockStorageFactory.class));
     }
 }

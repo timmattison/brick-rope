@@ -3,6 +3,7 @@ package com.timmattison.cryptocurrency.bitcoin.applications;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.timmattison.cryptocurrency.factories.BlockChainFactory;
+import com.timmattison.cryptocurrency.factories.BlockStorageFactory;
 import com.timmattison.cryptocurrency.interfaces.Block;
 import com.timmattison.cryptocurrency.interfaces.BlockChain;
 import com.timmattison.cryptocurrency.modules.BitcoinModule;
@@ -28,7 +29,7 @@ public class BitcoinDumpBlockChainToH2 {
         Injector injector = Guice.createInjector(new BitcoinModule());
 
         BlockChain blockChain = injector.getInstance(BlockChainFactory.class).getBlockChain();
-        BlockStorage blockStorage = injector.getInstance(BlockStorage.class);
+        BlockStorage blockStorage = injector.getInstance(BlockStorageFactory.class).getBlockStorage("~/test");
 
         Block block = blockChain.next();
         int blockNumber = 0;
