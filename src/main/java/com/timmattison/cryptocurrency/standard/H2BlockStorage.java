@@ -47,6 +47,7 @@ public class H2BlockStorage implements BlockStorage {
         if (connection == null) {
             Class.forName(h2Driver);
             connection = DriverManager.getConnection(h2JdbcPrefix + databaseName);
+            connection.setAutoCommit(false);
 
             createTablesIfNecessary(connection);
             // TODO - Don't do this yet because it bloats the database size during the initial build! createIndexesIfNecessary(connection);
@@ -107,6 +108,7 @@ public class H2BlockStorage implements BlockStorage {
         // TODO - Do this in a transaction
         innerStoreBlock(blockNumber, block);
         innerStoreTransactions(blockNumber, block);
+        connection.commit();
     }
 
     @Override
@@ -155,7 +157,6 @@ public class H2BlockStorage implements BlockStorage {
         preparedStatement.setLong(3, currentOffset);
 
         preparedStatement.executeUpdate();
-        connection.commit();
 
         lastBlockInserted = blockNumber;
         currentOffset += block.dump().length;
