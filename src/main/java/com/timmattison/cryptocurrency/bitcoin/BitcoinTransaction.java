@@ -31,7 +31,7 @@ public class BitcoinTransaction implements Transaction {
     private static final int versionNumberLengthInBytes = 4;
     private static final int lockTimeLengthInBytes = 4;
     private final long maxVersionNumber = 2;
-    private final int transactionCounter;
+    private final int transactionNumber;
     private final InputFactory inputFactory;
     private final OutputFactory outputFactory;
     private final HasherFactory hasherFactory;
@@ -66,11 +66,11 @@ public class BitcoinTransaction implements Transaction {
     private byte[] lockTimeBytes;
 
     @Inject
-    public BitcoinTransaction(InputFactory inputFactory, OutputFactory outputFactory, HasherFactory hasherFactory, int transactionCounter) {
+    public BitcoinTransaction(InputFactory inputFactory, OutputFactory outputFactory, HasherFactory hasherFactory, int transactionNumber) {
         this.inputFactory = inputFactory;
         this.outputFactory = outputFactory;
         this.hasherFactory = hasherFactory;
-        this.transactionCounter = transactionCounter;
+        this.transactionNumber = transactionNumber;
     }
 
     @Override
@@ -247,5 +247,10 @@ public class BitcoinTransaction implements Transaction {
         for(Input input : getInputs()) {
             input.setScript(null);
         }
+    }
+
+    @Override
+    public int getTransactionNumber() {
+        return transactionNumber;
     }
 }

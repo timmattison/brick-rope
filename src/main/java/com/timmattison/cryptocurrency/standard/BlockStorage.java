@@ -14,5 +14,5 @@ public interface BlockStorage {
 
     public void storeBlock(int blockNumber, Block block) throws SQLException, ClassNotFoundException;
 
-    public Transaction getTransaction(byte[] transactionHash) throws SQLException, ClassNotFoundException;
+    public Transaction getTransaction(byte[] transactionHash) throws SQLException, ClassNotFoundException, IOException;
 }

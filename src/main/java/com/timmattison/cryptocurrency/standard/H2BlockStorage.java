@@ -41,7 +41,7 @@ public class H2BlockStorage implements BlockStorage {
         String createBlocksTableSql = "CREATE TABLE IF NOT EXISTS " + blocksTableName + " (blockNumber int not null, block BLOB not null);";
         connection.createStatement().execute(createBlocksTableSql);
 
-        String createTransactionsTableSql = "CREATE TABLE IF NOT EXISTS " + transactionsTableName + " (transactionHash BINARY not null, transaction BLOB not null, blockNumber int not null);";
+        String createTransactionsTableSql = "CREATE TABLE IF NOT EXISTS " + transactionsTableName + " (transactionHash BINARY not null, blockNumber int not null, transactionNumber int not null);";
         connection.createStatement().execute(createTransactionsTableSql);
     }
 
@@ -72,8 +72,8 @@ public class H2BlockStorage implements BlockStorage {
     }
 
     @Override
-    public Transaction getTransaction(byte[] transactionHash) throws SQLException, ClassNotFoundException {
-        String getTransactionSql = "SELECT transaction FROM " + transactionsTableName + " WHERE transactionHash = ?";
+    public Transaction getTransaction(byte[] transactionHash) throws SQLException, ClassNotFoundException, IOException {
+        String getTransactionSql = "SELECT blockNumber, transactionNumber FROM " + transactionsTableName + " WHERE transactionHash = ?";
 
         PreparedStatement preparedStatement = prepareStatement(getTransactionSql);
         preparedStatement.setBytes(1, transactionHash);
@@ -84,20 +84,24 @@ public class H2BlockStorage implements BlockStorage {
             return null;
         }
 
-        Transaction transaction = transactionFactory.createTransaction(-1);
-        transaction.build(resultSet.getBytes(1));
+        int blockNumber = resultSet.getInt(1);
+        int transactionNumber = resultSet.getInt(2);
+
+        Block block = getBlock(blockNumber);
+
+        Transaction transaction = block.getTransactions().get(transactionNumber);
 
         return transaction;
     }
 
     private void innerStoreTransactions(int blockNumber, Block block) throws SQLException, ClassNotFoundException {
-        String storeTransactionSql = "INSERT INTO TRANSACTIONS(transactionHash, transaction, blockNumber) VALUES (?, ?, ?)";
+        String storeTransactionSql = "INSERT INTO TRANSACTIONS(transactionHash, blockNumber, transactionNumber) VALUES (?, ?, ?)";
 
         for (Transaction transaction : block.getTransactions()) {
             PreparedStatement preparedStatement = prepareStatement(storeTransactionSql);
             preparedStatement.setBytes(1, transaction.getHash());
-            preparedStatement.setBytes(2, transaction.dump());
-            preparedStatement.setInt(3, blockNumber);
+            preparedStatement.setInt(2, blockNumber);
+            preparedStatement.setInt(3, transaction.getTransactionNumber());
 
             preparedStatement.executeUpdate();
         }

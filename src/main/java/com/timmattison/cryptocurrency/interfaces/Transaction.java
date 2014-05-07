@@ -17,4 +17,6 @@ public interface Transaction extends Buildable {
     byte[] getHash();
 
     void clearInputScripts();
+
+    public int getTransactionNumber();
 }
