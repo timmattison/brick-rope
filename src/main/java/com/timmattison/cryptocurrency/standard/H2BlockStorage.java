@@ -34,6 +34,8 @@ public class H2BlockStorage implements BlockStorage {
     private final String databaseName;
 
     private Connection connection;
+    private Long currentOffset = 0L;
+    private Long lastBlockInserted = -1L;
 
     @Inject
     public H2BlockStorage(BlockFactory blockFactory, @Assisted("databaseName") String databaseName) {
@@ -140,15 +142,13 @@ public class H2BlockStorage implements BlockStorage {
     }
 
     private void innerStoreBlock(long blockNumber, Block block) throws SQLException, ClassNotFoundException, IOException {
-        long currentOffset;
+        // Are we inserting the next block?
+        if(lastBlockInserted != (blockNumber - 1)) {
+            // No, we need to re-calculate the offset
+            long lastOffset = getBlockOffset(blockNumber - 1);
+            currentOffset = lastOffset + getBlock(blockNumber - 1).dump().length;
+        }
 
-        if(blockNumber == 0) {
-            currentOffset = 0;
-        }
-        else {
-            long previousOffset = getBlockOffset(blockNumber - 1);
-            currentOffset = previousOffset + getBlock(blockNumber - 1).dump().length;
-        }
         PreparedStatement preparedStatement = prepareStatement(storeBlockSql);
         preparedStatement.setLong(1, blockNumber);
         preparedStatement.setBytes(2, block.dump());
@@ -156,5 +156,8 @@ public class H2BlockStorage implements BlockStorage {
 
         preparedStatement.executeUpdate();
         connection.commit();
+
+        lastBlockInserted = blockNumber;
+        currentOffset += block.dump().length;
     }
 }

@@ -53,6 +53,8 @@ public class BitcoinDumpBlockChainToH2 {
 
                 block = blockChain.next();
                 blockNumber++;
+
+                if(blockNumber == 100000) { return; }
             }
         } finally {
             long timestamp = System.currentTimeMillis();
