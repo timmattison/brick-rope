@@ -31,13 +31,25 @@ public class H2BlockStorage implements BlockStorage {
             Class.forName("org.h2.Driver");
             connection = DriverManager.getConnection("jdbc:h2:~/test");
 
-            createTableIfNecessary(connection);
+            createTablesIfNecessary(connection);
+            createIndexesIfNecessary(connection);
         }
 
         return connection;
     }
 
-    private void createTableIfNecessary(Connection connection) throws SQLException {
+    private void createIndexesIfNecessary(Connection connection) throws SQLException {
+        String createBlockNumberBlocksTableIndexSql = "CREATE INDEX IF NOT EXISTS blocknumber_" + blocksTableName + "_index on " + blocksTableName + "(blocknumber)";
+        connection.createStatement().execute(createBlockNumberBlocksTableIndexSql);
+
+        String createBlockNumberTransactionsTableIndexSql = "CREATE INDEX IF NOT EXISTS blocknumber_" + transactionsTableName + "_index on " + transactionsTableName + "(blocknumber)";
+        connection.createStatement().execute(createBlockNumberTransactionsTableIndexSql);
+
+        String createTransactionHashTransactionsTableIndexSql = "CREATE INDEX IF NOT EXISTS transactionhash_" + transactionsTableName + "_index on " + transactionsTableName + "(transactionhash)";
+        connection.createStatement().execute(createTransactionHashTransactionsTableIndexSql);
+    }
+
+    private void createTablesIfNecessary(Connection connection) throws SQLException {
         String createBlocksTableSql = "CREATE TABLE IF NOT EXISTS " + blocksTableName + " (blockNumber int not null, block BLOB not null);";
         connection.createStatement().execute(createBlocksTableSql);
 
