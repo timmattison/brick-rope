@@ -9,9 +9,8 @@ import com.timmattison.cryptocurrency.modules.BitcoinModule;
 import com.timmattison.cryptocurrency.standard.BlockStorage;
 import org.junit.Assert;
 
-import java.io.*;
+import java.io.IOException;
 import java.sql.SQLException;
-import java.util.Date;
 
 /**
  * Created with IntelliJ IDEA.
@@ -34,24 +33,37 @@ public class BitcoinDumpBlockChainToH2 {
         Block block = blockChain.next();
         int blockNumber = 0;
 
-        long start = new Date().getTime();
+        long start = System.currentTimeMillis();
 
-        while (block != null) {
-            if((blockNumber % 1000) == 0) {
-                long timestamp = new Date().getTime();
-                System.out.println((timestamp - start) + ", " + blockNumber);
+        try {
+            while (block != null) {
+                if ((blockNumber % 1000) == 0) {
+                    long timestamp = System.currentTimeMillis();
+                    System.out.println((timestamp - start) + ", " + blockNumber);
+                }
+
+                blockStorage.storeBlock(blockNumber, block);
+
+                if (debug) {
+                    Block fromDb = blockStorage.getBlock(blockNumber);
+
+                    Assert.assertEquals(block, fromDb);
+                }
+
+                block = blockChain.next();
+                blockNumber++;
+
+                if(blockNumber == 90000) {
+                    return;
+                }
             }
+        } finally {
+            long timestamp = System.currentTimeMillis();
+            long duration = timestamp - start;
+            System.out.println(duration + " ms for " + blockNumber + " block(s)");
 
-            blockStorage.storeBlock(blockNumber, block);
-
-            if(debug) {
-                Block fromDb = blockStorage.getBlock(blockNumber);
-
-                Assert.assertEquals(block, fromDb);
-            }
-
-            block = blockChain.next();
-            blockNumber++;
+            double averageDurationPerBlock = (double) duration / (double) blockNumber;
+            System.out.println(averageDurationPerBlock + " ms / block");
         }
 
         //    BlockHeader blockHeader = block.getBlockHeader();
