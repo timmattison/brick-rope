@@ -24,3 +24,57 @@ sql> select count(*) from transactions;
 COUNT(*)
 15993693
 (1 row, 1 ms)
+
+Size before index:
+Controls-MacBook-Pro:~ timmattison$ ls -la test.mv.db 
+-rw-r--r--  1 timmattison  staff  12049440768 May  7 14:48 test.mv.db
+
+Performance before index:
+sql> select * from transactions where transactionhash = X'3ba3edfd7a7b12b27ac72c3e67768f617fc81bc3888a51323a9fb8aa4b1e5e4a';
+TRANSACTIONHASH                                                  | BLOCKNUMBER | TRANSACTIONNUMBER
+3ba3edfd7a7b12b27ac72c3e67768f617fc81bc3888a51323a9fb8aa4b1e5e4a | 0           | 0
+(1 row, 16239 ms)
+
+Create transaction hash index time:
+sql> create index transactionhash_index on transactions(transactionhash);
+(Update count: 0, 77982 ms)
+
+Size after index:
+Controls-MacBook-Pro:~ timmattison$ ls -la test.mv.db
+-rw-r--r--  1 timmattison  staff  13611352064 May  7 14:50 test.mv.db
+
+Size delta from index:
+Controls-MacBook-Pro:~ timmattison$ perl -e "print (13611352064 - 12049440768)"
+1561911296
+  1.5GB index (1,561,911,296 bytes)
+
+Performance after index:
+sql> select * from transactions where transactionhash = X'3ba3edfd7a7b12b27ac72c3e67768f617fc81bc3888a51323a9fb8aa4b1e5e4a';
+TRANSACTIONHASH                                                  | BLOCKNUMBER | TRANSACTIONNUMBER
+3ba3edfd7a7b12b27ac72c3e67768f617fc81bc3888a51323a9fb8aa4b1e5e4a | 0           | 0
+(1 row, 23 ms)
+
+Create block number index time:
+sql> create index blocknumber_block_index on blocks(blocknumber);
+(Update count: 0, 1152 ms)
+sql> create index blocknumber_transaction_index on transactions(blocknumber);
+(Update count: 0, 32828 ms)
+
+(Update count: 0, 77982 ms)
+
+Before block number index:
+sql> select * from transactions where blocknumber = 100000;
+TRANSACTIONHASH                                                  | BLOCKNUMBER | TRANSACTIONNUMBER
+876dd0a3ef4a2816ffd1c12ab649825a958b0ff3bb3d6f3e1250f13ddbf0148c | 100000      | 0
+c40297f730dd7b5a99567eb8d27b78758f607507c52292d02d4031895b52f2ff | 100000      | 1
+c46e239ab7d28e2c019b6d66ad8fae98a56ef1f21aeecb94d1b1718186f05963 | 100000      | 2
+1d0cb83721529a062d9675b98d6e5c587e4a770fc84ed00abc5a5de04568a6e9 | 100000      | 3
+(4 rows, 6345 ms)
+
+After block number index:
+sql> select * from transactions where blocknumber = 100000;
+TRANSACTIONHASH                                                  | BLOCKNUMBER | TRANSACTIONNUMBER
+876dd0a3ef4a2816ffd1c12ab649825a958b0ff3bb3d6f3e1250f13ddbf0148c | 100000      | 0
+c40297f730dd7b5a99567eb8d27b78758f607507c52292d02d4031895b52f2ff | 100000      | 1
+c46e239ab7d28e2c019b6d66ad8fae98a56ef1f21aeecb94d1b1718186f05963 | 100000      | 2
+1d0cb83721529a062d9675b98d6e5c587e4a770fc84ed00abc5a5de04568a6e9 | 100000      | 3
