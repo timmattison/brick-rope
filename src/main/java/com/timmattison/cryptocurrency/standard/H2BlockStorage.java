@@ -32,7 +32,7 @@ public class H2BlockStorage implements BlockStorage {
             connection = DriverManager.getConnection("jdbc:h2:~/test");
 
             createTablesIfNecessary(connection);
-            createIndexesIfNecessary(connection);
+            // TODO - Don't do this yet because it bloats the database size during the initial build! createIndexesIfNecessary(connection);
         }
 
         return connection;
@@ -79,6 +79,7 @@ public class H2BlockStorage implements BlockStorage {
 
     @Override
     public void storeBlock(int blockNumber, Block block) throws SQLException, ClassNotFoundException {
+        // TODO - Do this in a transaction
         innerStoreBlock(blockNumber, block);
         innerStoreTransactions(blockNumber, block);
     }
