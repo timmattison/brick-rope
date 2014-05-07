@@ -1,0 +1,26 @@
+As of this commit:
+
+commit 39521cefecb524d06b047b910e55090c279a59d1
+Author: Tim Mattison <tim.mattison@controlgroup.com>
+Date:   Wed May 7 10:21:37 2014 -0400
+
+The system is running at about 23.2 milliseconds per block including parsing and dumping to the database.  The actual message from the application:
+
+5344552 ms for 230925 block(s)
+23.144103063765293 ms / block
+
+And from H2:
+
+sql> show tables;
+TABLE_NAME   | TABLE_SCHEMA
+BLOCKS       | PUBLIC
+TRANSACTIONS | PUBLIC
+(2 rows, 3 ms)
+sql> select count(*) from blocks;
+COUNT(*)
+230926
+(1 row, 1 ms)
+sql> select count(*) from transactions;
+COUNT(*)
+15993693
+(1 row, 1 ms)
