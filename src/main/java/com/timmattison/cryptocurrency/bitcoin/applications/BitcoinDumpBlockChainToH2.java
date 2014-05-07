@@ -7,6 +7,7 @@ import com.timmattison.cryptocurrency.interfaces.Block;
 import com.timmattison.cryptocurrency.interfaces.BlockChain;
 import com.timmattison.cryptocurrency.modules.BitcoinModule;
 import com.timmattison.cryptocurrency.standard.BlockStorage;
+import org.junit.Assert;
 
 import java.io.*;
 import java.sql.SQLException;
@@ -45,6 +46,8 @@ public class BitcoinDumpBlockChainToH2 {
 
             if(debug) {
                 Block fromDb = blockStorage.getBlock(blockNumber);
+
+                Assert.assertEquals(block, fromDb);
             }
 
             block = blockChain.next();
