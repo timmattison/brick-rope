@@ -1,6 +1,5 @@
 package com.timmattison.cryptocurrency.bitcoin.applications;
 
-import com.google.gson.Gson;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.timmattison.cryptocurrency.factories.BlockChainFactory;
@@ -9,7 +8,7 @@ import com.timmattison.cryptocurrency.interfaces.BlockChain;
 import com.timmattison.cryptocurrency.modules.BitcoinModule;
 import com.timmattison.cryptocurrency.standard.BlockStorage;
 
-import java.io.FileNotFoundException;
+import java.io.*;
 import java.sql.SQLException;
 import java.util.Date;
 
@@ -21,7 +20,9 @@ import java.util.Date;
  * To change this template use File | Settings | File Templates.
  */
 public class BitcoinProcessBlockChain {
-    public static void main(String[] args) throws FileNotFoundException, SQLException, ClassNotFoundException {
+    private static boolean debug = false;
+
+    public static void main(String[] args) throws IOException, SQLException, ClassNotFoundException {
         ApplicationHelper.logFine();
 
         Injector injector = Guice.createInjector(new BitcoinModule());
@@ -41,9 +42,10 @@ public class BitcoinProcessBlockChain {
             }
 
             blockStorage.storeBlock(blockNumber, block);
-            Gson gson = new Gson();
-            System.out.println(gson.toJson(block));
-            Block fromDb = blockStorage.getBlock(blockNumber);
+
+            if(debug) {
+                Block fromDb = blockStorage.getBlock(blockNumber);
+            }
 
             block = blockChain.next();
             blockNumber++;
