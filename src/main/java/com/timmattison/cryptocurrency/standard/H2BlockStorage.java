@@ -16,16 +16,18 @@ import java.sql.*;
 public class H2BlockStorage implements BlockStorage {
     private static final String h2Driver = "org.h2.Driver";
     private static final String h2JdbcPrefix = "jdbc:h2:";
-    private static final String blocksTableName = "BLOCKS";
-    private static final String transactionsTableName = "TRANSACTIONS";
+    private static final String blocksTable = "BLOCKS";
+    private static final String transactionsTable = "TRANSACTIONS";
     private static final String transactionHashField = "transactionHash";
     private static final String transactionNumberField = "transactionNumber";
     private static final String blockNumberField = "blockNumber";
     private static final String blockField = "block";
-    private static final String getBlockSql = "SELECT " + blockField + " FROM " + blocksTableName + " WHERE " + blockNumberField + " = ?";
-    private static final String getTransactionSql = "SELECT " + blockNumberField + ", " + transactionNumberField + " FROM " + transactionsTableName + " WHERE " + transactionHashField + " = ?";
-    private static final String storeBlockSql = "INSERT INTO " + blocksTableName + " (" + blockNumberField + ", " + blockField + ") VALUES (?, ?)";
-    private static final String storeTransactionSql = "INSERT INTO " + transactionsTableName + " (" + transactionHashField + ", " + blockNumberField + ", " + transactionNumberField + ") VALUES (?, ?, ?)";
+    private static final String createBlocksTableSql = "CREATE TABLE IF NOT EXISTS " + blocksTable + " (" + blockNumberField + " int not null, " + blockField + " BLOB not null);";
+    private static final String createTransactionsTableSql = "CREATE TABLE IF NOT EXISTS " + transactionsTable + " (" + transactionHashField + " BINARY not null, " + blockNumberField + " int not null, " + transactionNumberField + " int not null);";
+    private static final String getBlockSql = "SELECT " + blockField + " FROM " + blocksTable + " WHERE " + blockNumberField + " = ?";
+    private static final String getTransactionSql = "SELECT " + blockNumberField + ", " + transactionNumberField + " FROM " + transactionsTable + " WHERE " + transactionHashField + " = ?";
+    private static final String storeBlockSql = "INSERT INTO " + blocksTable + " (" + blockNumberField + ", " + blockField + ") VALUES (?, ?)";
+    private static final String storeTransactionSql = "INSERT INTO " + transactionsTable + " (" + transactionHashField + ", " + blockNumberField + ", " + transactionNumberField + ") VALUES (?, ?, ?)";
     private final BlockFactory blockFactory;
     private final String databaseName;
 
@@ -50,21 +52,18 @@ public class H2BlockStorage implements BlockStorage {
     }
 
     private void createIndexesIfNecessary(Connection connection) throws SQLException {
-        String createBlockNumberBlocksTableIndexSql = "CREATE INDEX IF NOT EXISTS blocknumber_" + blocksTableName + "_index on " + blocksTableName + "(blocknumber)";
+        String createBlockNumberBlocksTableIndexSql = "CREATE INDEX IF NOT EXISTS blocknumber_" + blocksTable + "_index on " + blocksTable + "(blocknumber)";
         connection.createStatement().execute(createBlockNumberBlocksTableIndexSql);
 
-        String createBlockNumberTransactionsTableIndexSql = "CREATE INDEX IF NOT EXISTS blocknumber_" + transactionsTableName + "_index on " + transactionsTableName + "(blocknumber)";
+        String createBlockNumberTransactionsTableIndexSql = "CREATE INDEX IF NOT EXISTS blocknumber_" + transactionsTable + "_index on " + transactionsTable + "(blocknumber)";
         connection.createStatement().execute(createBlockNumberTransactionsTableIndexSql);
 
-        String createTransactionHashTransactionsTableIndexSql = "CREATE INDEX IF NOT EXISTS transactionhash_" + transactionsTableName + "_index on " + transactionsTableName + "(transactionhash)";
+        String createTransactionHashTransactionsTableIndexSql = "CREATE INDEX IF NOT EXISTS transactionhash_" + transactionsTable + "_index on " + transactionsTable + "(transactionhash)";
         connection.createStatement().execute(createTransactionHashTransactionsTableIndexSql);
     }
 
     private void createTablesIfNecessary(Connection connection) throws SQLException {
-        String createBlocksTableSql = "CREATE TABLE IF NOT EXISTS " + blocksTableName + " (blockNumber int not null, block BLOB not null);";
         connection.createStatement().execute(createBlocksTableSql);
-
-        String createTransactionsTableSql = "CREATE TABLE IF NOT EXISTS " + transactionsTableName + " (transactionHash BINARY not null, blockNumber int not null, transactionNumber int not null);";
         connection.createStatement().execute(createTransactionsTableSql);
     }
 
