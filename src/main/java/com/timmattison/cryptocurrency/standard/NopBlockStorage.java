@@ -3,6 +3,7 @@ package com.timmattison.cryptocurrency.standard;
 import com.timmattison.cryptocurrency.interfaces.Block;
 import com.timmattison.cryptocurrency.interfaces.Transaction;
 
+import java.io.IOException;
 import java.sql.SQLException;
 
 /**
@@ -10,12 +11,13 @@ import java.sql.SQLException;
  */
 public class NopBlockStorage implements BlockStorage {
     @Override
-    public Block getBlock(int blockNumber) {
+    public Block getBlock(long blockNumber) throws SQLException, ClassNotFoundException, IOException {
         return null;
     }
 
     @Override
-    public void storeBlock(int blockNumber, Block block) throws SQLException, ClassNotFoundException {
+    public void storeBlock(long blockNumber, Block block) throws SQLException, ClassNotFoundException, IOException {
+
     }
 
     @Override

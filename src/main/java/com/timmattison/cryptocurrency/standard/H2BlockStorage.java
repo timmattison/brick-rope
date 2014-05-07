@@ -22,11 +22,13 @@ public class H2BlockStorage implements BlockStorage {
     private static final String transactionNumberField = "transactionNumber";
     private static final String blockNumberField = "blockNumber";
     private static final String blockField = "block";
-    private static final String createBlocksTableSql = "CREATE TABLE IF NOT EXISTS " + blocksTable + " (" + blockNumberField + " int not null, " + blockField + " BLOB not null);";
-    private static final String createTransactionsTableSql = "CREATE TABLE IF NOT EXISTS " + transactionsTable + " (" + transactionHashField + " BINARY not null, " + blockNumberField + " int not null, " + transactionNumberField + " int not null);";
+    private static final String blockOffsetField = "blockOffset";
+    private static final String createBlocksTableSql = "CREATE TABLE IF NOT EXISTS " + blocksTable + " (" + blockNumberField + " BIGINT not null, " + blockField + " BLOB not null, " + blockOffsetField + " BIGINT not null);";
+    private static final String createTransactionsTableSql = "CREATE TABLE IF NOT EXISTS " + transactionsTable + " (" + transactionHashField + " BINARY not null, " + blockNumberField + " BIGINT not null, " + transactionNumberField + " BIGINT not null);";
     private static final String getBlockSql = "SELECT " + blockField + " FROM " + blocksTable + " WHERE " + blockNumberField + " = ?";
+    private static final String getBlockOffsetSql = "SELECT " + blockOffsetField + " FROM " + blocksTable + " WHERE " + blockNumberField + " = ?";
     private static final String getTransactionSql = "SELECT " + blockNumberField + ", " + transactionNumberField + " FROM " + transactionsTable + " WHERE " + transactionHashField + " = ?";
-    private static final String storeBlockSql = "INSERT INTO " + blocksTable + " (" + blockNumberField + ", " + blockField + ") VALUES (?, ?)";
+    private static final String storeBlockSql = "INSERT INTO " + blocksTable + " (" + blockNumberField + ", " + blockField + ", " + blockOffsetField + ") VALUES (?, ?, ?)";
     private static final String storeTransactionSql = "INSERT INTO " + transactionsTable + " (" + transactionHashField + ", " + blockNumberField + ", " + transactionNumberField + ") VALUES (?, ?, ?)";
     private final BlockFactory blockFactory;
     private final String databaseName;
@@ -72,9 +74,9 @@ public class H2BlockStorage implements BlockStorage {
     }
 
     @Override
-    public Block getBlock(int blockNumber) throws SQLException, ClassNotFoundException, IOException {
+    public Block getBlock(long blockNumber) throws SQLException, ClassNotFoundException, IOException {
         PreparedStatement preparedStatement = prepareStatement(getBlockSql);
-        preparedStatement.setInt(1, blockNumber);
+        preparedStatement.setLong(1, blockNumber);
 
         ResultSet resultSet = preparedStatement.executeQuery();
 
@@ -85,8 +87,21 @@ public class H2BlockStorage implements BlockStorage {
         return (Block) blockFactory.createBlock(new ByteArrayInputStream(resultSet.getBytes(1)));
     }
 
+    public Long getBlockOffset(long blockNumber) throws SQLException, ClassNotFoundException, IOException {
+        PreparedStatement preparedStatement = prepareStatement(getBlockOffsetSql);
+        preparedStatement.setLong(1, blockNumber);
+
+        ResultSet resultSet = preparedStatement.executeQuery();
+
+        if (!resultSet.first()) {
+            return null;
+        }
+
+        return resultSet.getLong(1);
+    }
+
     @Override
-    public void storeBlock(int blockNumber, Block block) throws SQLException, ClassNotFoundException {
+    public void storeBlock(long blockNumber, Block block) throws SQLException, ClassNotFoundException, IOException {
         // TODO - Do this in a transaction
         innerStoreBlock(blockNumber, block);
         innerStoreTransactions(blockNumber, block);
@@ -113,21 +128,31 @@ public class H2BlockStorage implements BlockStorage {
         return transaction;
     }
 
-    private void innerStoreTransactions(int blockNumber, Block block) throws SQLException, ClassNotFoundException {
+    private void innerStoreTransactions(long blockNumber, Block block) throws SQLException, ClassNotFoundException {
         for (Transaction transaction : block.getTransactions()) {
             PreparedStatement preparedStatement = prepareStatement(storeTransactionSql);
             preparedStatement.setBytes(1, transaction.getHash());
-            preparedStatement.setInt(2, blockNumber);
+            preparedStatement.setLong(2, blockNumber);
             preparedStatement.setInt(3, transaction.getTransactionNumber());
 
             preparedStatement.executeUpdate();
         }
     }
 
-    private void innerStoreBlock(int blockNumber, Block block) throws SQLException, ClassNotFoundException {
+    private void innerStoreBlock(long blockNumber, Block block) throws SQLException, ClassNotFoundException, IOException {
+        long currentOffset;
+
+        if(blockNumber == 0) {
+            currentOffset = 0;
+        }
+        else {
+            long previousOffset = getBlockOffset(blockNumber - 1);
+            currentOffset = previousOffset + getBlock(blockNumber - 1).dump().length;
+        }
         PreparedStatement preparedStatement = prepareStatement(storeBlockSql);
-        preparedStatement.setInt(1, blockNumber);
+        preparedStatement.setLong(1, blockNumber);
         preparedStatement.setBytes(2, block.dump());
+        preparedStatement.setLong(3, currentOffset);
 
         preparedStatement.executeUpdate();
         connection.commit();

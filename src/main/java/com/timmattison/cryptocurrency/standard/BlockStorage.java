@@ -10,9 +10,9 @@ import java.sql.SQLException;
  * Created by timmattison on 4/15/14.
  */
 public interface BlockStorage {
-    public Block getBlock(int blockNumber) throws SQLException, ClassNotFoundException, IOException;
+    public Block getBlock(long blockNumber) throws SQLException, ClassNotFoundException, IOException;
 
-    public void storeBlock(int blockNumber, Block block) throws SQLException, ClassNotFoundException;
+    public void storeBlock(long blockNumber, Block block) throws SQLException, ClassNotFoundException, IOException;
 
     public Transaction getTransaction(byte[] transactionHash) throws SQLException, ClassNotFoundException, IOException;
 }
