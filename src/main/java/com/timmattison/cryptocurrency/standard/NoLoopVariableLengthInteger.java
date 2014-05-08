@@ -13,7 +13,7 @@ import java.util.Arrays;
  * Time: 10:22 AM
  * To change this template use File | Settings | File Templates.
  */
-public class StandardVariableLengthInteger implements VariableLengthInteger {
+public class NoLoopVariableLengthInteger implements VariableLengthInteger {
     private static final int header16BitInteger = 0xfd;
     private static final int header32BitInteger = 0xfe;
     private static final int header64BitInteger = 0xff;
@@ -28,7 +28,7 @@ public class StandardVariableLengthInteger implements VariableLengthInteger {
     Long value;
     private byte[] valueBytes;
 
-    public StandardVariableLengthInteger() {
+    public NoLoopVariableLengthInteger() {
     }
 
     @Override
@@ -49,21 +49,18 @@ public class StandardVariableLengthInteger implements VariableLengthInteger {
         if (firstByte == (byte) header16BitInteger) {
             // 16-bit
             bytesToRead = 2;
-            valueBytes = Arrays.copyOfRange(data, 0, bytesToRead);
-            data = Arrays.copyOfRange(data, bytesToRead, data.length);
-            value = Long.valueOf(EndiannessHelper.BytesToShort(valueBytes));
+            data = generateValueBytes(data, firstByte, bytesToRead);
+            value = Long.valueOf(EndiannessHelper.BytesToShort(valueBytes, 1));
         } else if (firstByte == (byte) header32BitInteger) {
             // 32-bit
             bytesToRead = 4;
-            valueBytes = Arrays.copyOfRange(data, 0, bytesToRead);
-            data = Arrays.copyOfRange(data, bytesToRead, data.length);
-            value = Long.valueOf(EndiannessHelper.BytesToInt(valueBytes));
+            data = generateValueBytes(data, firstByte, bytesToRead);
+            value = Long.valueOf(EndiannessHelper.BytesToInt(valueBytes, 1));
         } else if (firstByte == (byte) header64BitInteger) {
             // 64-bit
             bytesToRead = 8;
-            valueBytes = Arrays.copyOfRange(data, 0, bytesToRead);
-            data = Arrays.copyOfRange(data, bytesToRead, data.length);
-            value = EndiannessHelper.BytesToLong(valueBytes);
+            data = generateValueBytes(data, firstByte, bytesToRead);
+            value = EndiannessHelper.BytesToLong(valueBytes, 1);
         } else {
             // 8-bit (mask this so that we don't get negative values)
             valueBytes = new byte[1];
@@ -71,23 +68,15 @@ public class StandardVariableLengthInteger implements VariableLengthInteger {
             valueBytes[0] = (byte) (value & 0xFF);
         }
 
-        // TODO - Optimization - We should build the valueBytes array with the expected number of bytes and just drop the first byte in
-
-        // Did we have a multi-byte value?
-        if (valueBytes.length != 1) {
-            // Yes, add the missing first byte
-            byte[] tempValueBytes = new byte[valueBytes.length + 1];
-            tempValueBytes[0] = (byte) firstByte;
-
-            for (int loop = 0; loop < valueBytes.length; loop++) {
-                tempValueBytes[loop + 1] = valueBytes[loop];
-            }
-
-            // Store the true bytes back in valueBytes
-            valueBytes = tempValueBytes;
-        }
-
         // Return what is left
+        return data;
+    }
+
+    private byte[] generateValueBytes(byte[] data, byte firstByte, int bytesToRead) {
+        valueBytes = new byte[bytesToRead + 1];
+        valueBytes[0] = firstByte;
+        data = Arrays.copyOfRange(data, bytesToRead, data.length);
+        System.arraycopy(data, 0, valueBytes, 1, data.length);
         return data;
     }
 

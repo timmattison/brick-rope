@@ -17,56 +17,36 @@ public class EndiannessHelper {
     private static final int longSize = 4;
 
     public static short BytesToShort(byte[] bytes) {
+        return BytesToShort(bytes, 0);
+    }
+
+    public static short BytesToShort(byte[] bytes, int offset) {
         validateSize(bytes, shortSize);
 
-        long returnValue = ((ToRealByte(bytes[1]) << 8) | ToRealByte(bytes[0])) & shortMask;
+        long returnValue = ((ToRealByte(bytes[offset + 1]) << 8) | ToRealByte(bytes[offset + 0])) & shortMask;
         return (short) returnValue;
     }
 
     public static int BytesToInt(byte[] bytes) {
+        return BytesToInt(bytes, 0);
+    }
+
+    public static int BytesToInt(byte[] bytes, int offset) {
         validateSize(bytes, intSize);
 
-        long returnValue = ((ToRealByte(bytes[3]) << 24) | (ToRealByte(bytes[2]) << 16) | (ToRealByte(bytes[1]) << 8) | (ToRealByte(bytes[0]))) & intMask;
+        long returnValue = ((ToRealByte(bytes[offset + 3]) << 24) | (ToRealByte(bytes[offset + 2]) << 16) | (ToRealByte(bytes[offset + 1]) << 8) | (ToRealByte(bytes[offset + 0]))) & intMask;
         return (int) returnValue;
     }
 
     public static long BytesToLong(byte[] bytes) {
-        validateSize(bytes, longSize);
-
-        long returnValue = (ToRealByte(bytes[7]) << 56) | (ToRealByte(bytes[6]) << 48) | (ToRealByte(bytes[5]) << 40) | (ToRealByte(bytes[4]) << 32) | (ToRealByte(bytes[3]) << 24) | (ToRealByte(bytes[2]) << 16) | (ToRealByte(bytes[1]) << 8) | (ToRealByte(bytes[0]));
-        return returnValue;
+        return BytesToLong(bytes, 0);
     }
 
-    public static long BytesToValue(byte[] bytes) {
-        if(bytes == null) {
-            throw new UnsupportedOperationException("Bytes cannot be NULL");
-        }
+    public static long BytesToLong(byte[] bytes, int offset) {
+        validateSize(bytes, longSize);
 
-        if(bytes.length == 1) {
-            return ToRealByte(bytes);
-        }
-        else if(bytes.length == 2) {
-            return BytesToShort(bytes);
-        }
-        else if(bytes.length == 3) {
-            byte[] tempBytes = new byte[longSize];
-
-            for(int loop = 0; loop < longSize; loop++) {
-                tempBytes[loop] = 0;
-            }
-
-            tempBytes[0] = bytes[0];
-            tempBytes[1] = bytes[1];
-            tempBytes[2] = bytes[2];
-
-            return BytesToInt(tempBytes);
-        }
-        else if(bytes.length == 4) {
-            return BytesToLong(bytes);
-        }
-        else {
-            throw new UnsupportedOperationException("Bytes is longer than " + longSize + ".  This is not yet supported.");
-        }
+        long returnValue = (ToRealByte(bytes[offset + 7]) << 56) | (ToRealByte(bytes[offset + 6]) << 48) | (ToRealByte(bytes[offset + 5]) << 40) | (ToRealByte(bytes[offset + 4]) << 32) | (ToRealByte(bytes[offset + 3]) << 24) | (ToRealByte(bytes[offset + 2]) << 16) | (ToRealByte(bytes[offset + 1]) << 8) | (ToRealByte(bytes[offset + 0]));
+        return returnValue;
     }
 
     public static byte[] ShortToBytes(short value) {
@@ -109,11 +89,11 @@ public class EndiannessHelper {
     }
 
     public static long ToRealByte(byte[] input) {
-        if(input == null) {
+        if (input == null) {
             throw new UnsupportedOperationException("Input cannot be NULL");
         }
 
-        if(input.length != 1) {
+        if (input.length != 1) {
             throw new UnsupportedOperationException("Input length must be 1, saw " + input.length);
         }
 
