@@ -2,6 +2,7 @@ package com.timmattison.cryptocurrency.bitcoin;
 
 import com.timmattison.cryptocurrency.factories.BlockHeaderFactory;
 import com.timmattison.cryptocurrency.factories.TransactionFactory;
+import com.timmattison.cryptocurrency.factories.VariableLengthIntegerFactory;
 import com.timmattison.cryptocurrency.standard.StandardBlock;
 
 import javax.inject.Inject;
@@ -18,12 +19,12 @@ import java.io.Serializable;
  */
 public class BitcoinBlock extends StandardBlock implements Serializable {
     @Inject
-    public BitcoinBlock(BlockHeaderFactory blockHeaderFactory, TransactionFactory transactionFactory) {
-        super(blockHeaderFactory, transactionFactory);
+    public BitcoinBlock(BlockHeaderFactory blockHeaderFactory, TransactionFactory transactionFactory, VariableLengthIntegerFactory variableLengthIntegerFactory) {
+        super(blockHeaderFactory, transactionFactory, variableLengthIntegerFactory);
     }
 
     public BitcoinBlock() {
-        super(null, null);
+        super(null, null, null);
     }
 
     @Override

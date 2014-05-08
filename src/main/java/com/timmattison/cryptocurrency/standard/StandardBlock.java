@@ -2,10 +2,12 @@ package com.timmattison.cryptocurrency.standard;
 
 import com.timmattison.cryptocurrency.factories.BlockHeaderFactory;
 import com.timmattison.cryptocurrency.factories.TransactionFactory;
+import com.timmattison.cryptocurrency.factories.VariableLengthIntegerFactory;
 import com.timmattison.cryptocurrency.helpers.ByteArrayHelper;
 import com.timmattison.cryptocurrency.interfaces.Block;
 import com.timmattison.cryptocurrency.interfaces.BlockHeader;
 import com.timmattison.cryptocurrency.interfaces.Transaction;
+import com.timmattison.cryptocurrency.standard.interfaces.VariableLengthInteger;
 
 import javax.inject.Inject;
 import java.io.ByteArrayOutputStream;
@@ -23,15 +25,17 @@ import java.util.List;
 public abstract class StandardBlock implements Block {
     private final BlockHeaderFactory blockHeaderFactory;
     private final TransactionFactory transactionFactory;
+    private final VariableLengthIntegerFactory variableLengthIntegerFactory;
     private byte[] transactionCountBytes;
     private long transactionCount;
     private List<Transaction> transactions;
     private BlockHeader blockHeader = null;
 
     @Inject
-    public StandardBlock(BlockHeaderFactory blockHeaderFactory, TransactionFactory transactionFactory) {
+    public StandardBlock(BlockHeaderFactory blockHeaderFactory, TransactionFactory transactionFactory, VariableLengthIntegerFactory variableLengthIntegerFactory) {
         this.blockHeaderFactory = blockHeaderFactory;
         this.transactionFactory = transactionFactory;
+        this.variableLengthIntegerFactory = variableLengthIntegerFactory;
     }
 
     @Override
@@ -50,7 +54,7 @@ public abstract class StandardBlock implements Block {
         data = blockHeader.build(data);
 
         // Get the transaction count and return the remaining bytes back
-        VariableLengthInteger temp = new VariableLengthInteger();
+        VariableLengthInteger temp = variableLengthIntegerFactory.create();
         data = temp.build(data);
         transactionCountBytes = temp.getValueBytes();
         transactionCount = (int) temp.getValue();

@@ -1,7 +1,7 @@
 package com.timmattison.cryptocurrency.factories;
 
 import com.google.inject.assistedinject.Assisted;
-import com.timmattison.cryptocurrency.standard.BlockStorage;
+import com.timmattison.cryptocurrency.standard.interfaces.BlockStorage;
 
 /**
  * Created with IntelliJ IDEA.

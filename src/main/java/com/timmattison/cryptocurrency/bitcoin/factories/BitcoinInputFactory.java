@@ -3,6 +3,7 @@ package com.timmattison.cryptocurrency.bitcoin.factories;
 import com.timmattison.cryptocurrency.bitcoin.BitcoinInput;
 import com.timmattison.cryptocurrency.factories.InputFactory;
 import com.timmattison.cryptocurrency.factories.ScriptingFactory;
+import com.timmattison.cryptocurrency.factories.VariableLengthIntegerFactory;
 import com.timmattison.cryptocurrency.interfaces.Input;
 
 import javax.inject.Inject;
@@ -16,14 +17,16 @@ import javax.inject.Inject;
  */
 public class BitcoinInputFactory implements InputFactory {
     private final ScriptingFactory scriptingFactory;
+    private final VariableLengthIntegerFactory variableLengthIntegerFactory;
 
     @Inject
-    public BitcoinInputFactory(ScriptingFactory scriptingFactory) {
+    public BitcoinInputFactory(ScriptingFactory scriptingFactory, VariableLengthIntegerFactory variableLengthIntegerFactory) {
         this.scriptingFactory = scriptingFactory;
+        this.variableLengthIntegerFactory = variableLengthIntegerFactory;
     }
 
     @Override
     public Input createInput(int transactionVersionNumber, int inputNumber) {
-        return new BitcoinInput(scriptingFactory, transactionVersionNumber, inputNumber);
+        return new BitcoinInput(scriptingFactory, variableLengthIntegerFactory, transactionVersionNumber, inputNumber);
     }
 }

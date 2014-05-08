@@ -3,12 +3,13 @@ package com.timmattison.cryptocurrency.bitcoin;
 import com.timmattison.cryptocurrency.bitcoin.factories.HasherFactory;
 import com.timmattison.cryptocurrency.factories.InputFactory;
 import com.timmattison.cryptocurrency.factories.OutputFactory;
+import com.timmattison.cryptocurrency.factories.VariableLengthIntegerFactory;
 import com.timmattison.cryptocurrency.helpers.ByteArrayHelper;
 import com.timmattison.cryptocurrency.helpers.EndiannessHelper;
 import com.timmattison.cryptocurrency.interfaces.Input;
 import com.timmattison.cryptocurrency.interfaces.Output;
 import com.timmattison.cryptocurrency.interfaces.Transaction;
-import com.timmattison.cryptocurrency.standard.VariableLengthInteger;
+import com.timmattison.cryptocurrency.standard.interfaces.VariableLengthInteger;
 
 import javax.inject.Inject;
 import java.io.ByteArrayOutputStream;
@@ -32,9 +33,12 @@ public class BitcoinTransaction implements Transaction {
     private static final int lockTimeLengthInBytes = 4;
     private final long maxVersionNumber = 2;
     private final int transactionNumber;
+
     private final InputFactory inputFactory;
     private final OutputFactory outputFactory;
     private final HasherFactory hasherFactory;
+    private final VariableLengthIntegerFactory variableLengthIntegerFactory;
+
     private byte[] hashBytes;
     /**
      * Version number
@@ -66,11 +70,12 @@ public class BitcoinTransaction implements Transaction {
     private byte[] lockTimeBytes;
 
     @Inject
-    public BitcoinTransaction(InputFactory inputFactory, OutputFactory outputFactory, HasherFactory hasherFactory, int transactionNumber) {
+    public BitcoinTransaction(InputFactory inputFactory, OutputFactory outputFactory, HasherFactory hasherFactory, int transactionNumber, VariableLengthIntegerFactory variableLengthIntegerFactory) {
         this.inputFactory = inputFactory;
         this.outputFactory = outputFactory;
         this.hasherFactory = hasherFactory;
         this.transactionNumber = transactionNumber;
+        this.variableLengthIntegerFactory = variableLengthIntegerFactory;
     }
 
     @Override
@@ -90,7 +95,7 @@ public class BitcoinTransaction implements Transaction {
         }
 
         // Get the input counter
-        VariableLengthInteger temp = new VariableLengthInteger();
+        VariableLengthInteger temp = variableLengthIntegerFactory.create();
         data = temp.build(data);
         inCounterBytes = temp.getValueBytes();
         inCounter = temp.getValue();
@@ -104,7 +109,7 @@ public class BitcoinTransaction implements Transaction {
         }
 
         // Get the output counter
-        temp = new VariableLengthInteger();
+        temp = variableLengthIntegerFactory.create();
         data = temp.build(data);
         outCounterBytes = temp.getValueBytes();
         outCounter = temp.getValue();

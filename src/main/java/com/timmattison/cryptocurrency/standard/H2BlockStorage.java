@@ -4,6 +4,7 @@ import com.google.inject.assistedinject.Assisted;
 import com.timmattison.cryptocurrency.factories.BlockFactory;
 import com.timmattison.cryptocurrency.interfaces.Block;
 import com.timmattison.cryptocurrency.interfaces.Transaction;
+import com.timmattison.cryptocurrency.standard.interfaces.BlockStorage;
 
 import javax.inject.Inject;
 import java.io.ByteArrayInputStream;

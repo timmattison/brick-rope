@@ -12,7 +12,8 @@ import com.timmattison.cryptocurrency.bitcoin.*;
 import com.timmattison.cryptocurrency.bitcoin.factories.*;
 import com.timmattison.cryptocurrency.factories.*;
 import com.timmattison.cryptocurrency.interfaces.*;
-import com.timmattison.cryptocurrency.standard.BlockStorage;
+import com.timmattison.cryptocurrency.standard.StandardVariableLengthInteger;
+import com.timmattison.cryptocurrency.standard.interfaces.BlockStorage;
 import com.timmattison.cryptocurrency.standard.H2BlockStorage;
 import com.timmattison.cryptocurrency.standard.StandardBlockFactory;
 import com.timmattison.cryptocurrency.standard.StandardMerkleRootCalculator;
@@ -21,6 +22,7 @@ import com.timmattison.cryptocurrency.standard.hashing.chunks.StandardChunkExtra
 import com.timmattison.cryptocurrency.standard.hashing.padding.MessagePadder;
 import com.timmattison.cryptocurrency.standard.hashing.padding.StandardMessagePadder;
 import com.timmattison.cryptocurrency.standard.hashing.sha.DoubleSha256Hash;
+import com.timmattison.cryptocurrency.standard.interfaces.VariableLengthInteger;
 
 import java.util.Random;
 
@@ -55,6 +57,8 @@ public class BitcoinModule extends AbstractModule {
         bind(StateMachineFactory.class).to(BitcoinStateMachineFactory.class);
         bind(SignatureProcessorFactory.class).to(BitcoinSignatureProcessorFactory.class);
         bind(BlockChainFactory.class).to(BitcoinBlockChainFactory.class);
+
+        install(new FactoryModuleBuilder().implement(VariableLengthInteger.class, StandardVariableLengthInteger.class).build(VariableLengthIntegerFactory.class));
 
         // ECC bindings
         bind(ECCParamsFactory.class).to(BitcoinECCParamsFactory.class);

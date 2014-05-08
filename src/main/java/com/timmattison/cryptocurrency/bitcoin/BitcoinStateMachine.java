@@ -1,7 +1,7 @@
 package com.timmattison.cryptocurrency.bitcoin;
 
 import com.timmattison.cryptocurrency.factories.ScriptingFactory;
-import com.timmattison.cryptocurrency.standard.Script;
+import com.timmattison.cryptocurrency.standard.interfaces.Script;
 
 import javax.inject.Inject;
 import java.util.Arrays;

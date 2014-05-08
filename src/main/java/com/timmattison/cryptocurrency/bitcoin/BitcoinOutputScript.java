@@ -2,7 +2,7 @@ package com.timmattison.cryptocurrency.bitcoin;
 
 import com.timmattison.cryptocurrency.bitcoin.factories.BitcoinScriptingFactory;
 import com.timmattison.cryptocurrency.helpers.ByteArrayHelper;
-import com.timmattison.cryptocurrency.standard.OutputScript;
+import com.timmattison.cryptocurrency.standard.interfaces.OutputScript;
 
 import java.util.ArrayList;
 import java.util.Arrays;

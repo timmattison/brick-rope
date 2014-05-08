@@ -2,7 +2,7 @@ package com.timmattison.cryptocurrency.standard;
 
 import com.timmattison.cryptocurrency.helpers.ByteArrayHelper;
 import com.timmattison.cryptocurrency.helpers.EndiannessHelper;
-import com.timmattison.cryptocurrency.interfaces.Buildable;
+import com.timmattison.cryptocurrency.standard.interfaces.VariableLengthInteger;
 
 import java.util.Arrays;
 
@@ -13,7 +13,7 @@ import java.util.Arrays;
  * Time: 10:22 AM
  * To change this template use File | Settings | File Templates.
  */
-public class VariableLengthInteger implements Buildable {
+public class StandardVariableLengthInteger implements VariableLengthInteger {
     private static final int header16BitInteger = 0xfd;
     private static final int header32BitInteger = 0xfe;
     private static final int header64BitInteger = 0xff;
@@ -28,14 +28,16 @@ public class VariableLengthInteger implements Buildable {
     Long value;
     private byte[] valueBytes;
 
-    public VariableLengthInteger() {
+    public StandardVariableLengthInteger() {
     }
 
+    @Override
     public void setValue(Long value) {
         this.value = value;
         valueBytes = null;
     }
 
+    @Override
     public byte[] build(byte[] data) {
         // Get the first byte
         byte firstByte = data[0];
@@ -108,11 +110,13 @@ public class VariableLengthInteger implements Buildable {
         return stringBuilder.toString();
     }
 
+    @Override
     public long getValue() {
         throwExceptionIfNotSet();
         return value;
     }
 
+    @Override
     public byte[] getValueBytes() {
         throwExceptionIfNotSet();
         buildIfNecessary();

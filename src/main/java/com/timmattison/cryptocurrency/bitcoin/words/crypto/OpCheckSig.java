@@ -12,8 +12,8 @@ import com.timmattison.cryptocurrency.interfaces.Input;
 import com.timmattison.cryptocurrency.interfaces.SignatureProcessor;
 import com.timmattison.cryptocurrency.interfaces.Transaction;
 import com.timmattison.cryptocurrency.interfaces.TransactionLocator;
-import com.timmattison.cryptocurrency.standard.InputScript;
-import com.timmattison.cryptocurrency.standard.Script;
+import com.timmattison.cryptocurrency.standard.interfaces.InputScript;
+import com.timmattison.cryptocurrency.standard.interfaces.Script;
 
 import java.util.Arrays;
 

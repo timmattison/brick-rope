@@ -1,6 +1,6 @@
 package com.timmattison.cryptocurrency.interfaces;
 
-import com.timmattison.cryptocurrency.standard.Script;
+import com.timmattison.cryptocurrency.standard.interfaces.Script;
 
 /**
  * Created with IntelliJ IDEA.

@@ -20,10 +20,10 @@ import com.timmattison.cryptocurrency.factories.ScriptingFactory;
 import com.timmattison.cryptocurrency.factories.SignatureProcessorFactory;
 import com.timmattison.cryptocurrency.helpers.ByteArrayHelper;
 import com.timmattison.cryptocurrency.interfaces.TransactionLocator;
-import com.timmattison.cryptocurrency.standard.InputScript;
-import com.timmattison.cryptocurrency.standard.OutputScript;
-import com.timmattison.cryptocurrency.standard.Script;
-import com.timmattison.cryptocurrency.standard.ValidationScript;
+import com.timmattison.cryptocurrency.standard.interfaces.InputScript;
+import com.timmattison.cryptocurrency.standard.interfaces.OutputScript;
+import com.timmattison.cryptocurrency.standard.interfaces.Script;
+import com.timmattison.cryptocurrency.standard.interfaces.ValidationScript;
 
 import javax.inject.Inject;
 import java.util.ArrayList;

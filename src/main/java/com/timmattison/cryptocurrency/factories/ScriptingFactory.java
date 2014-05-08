@@ -1,10 +1,10 @@
 package com.timmattison.cryptocurrency.factories;
 
 import com.timmattison.cryptocurrency.bitcoin.Word;
-import com.timmattison.cryptocurrency.standard.InputScript;
-import com.timmattison.cryptocurrency.standard.OutputScript;
-import com.timmattison.cryptocurrency.standard.Script;
-import com.timmattison.cryptocurrency.standard.ValidationScript;
+import com.timmattison.cryptocurrency.standard.interfaces.InputScript;
+import com.timmattison.cryptocurrency.standard.interfaces.OutputScript;
+import com.timmattison.cryptocurrency.standard.interfaces.Script;
+import com.timmattison.cryptocurrency.standard.interfaces.ValidationScript;
 
 /**
  * Created with IntelliJ IDEA.

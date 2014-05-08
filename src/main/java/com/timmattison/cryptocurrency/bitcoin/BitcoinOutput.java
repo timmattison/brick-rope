@@ -1,12 +1,13 @@
 package com.timmattison.cryptocurrency.bitcoin;
 
 import com.timmattison.cryptocurrency.factories.ScriptingFactory;
+import com.timmattison.cryptocurrency.factories.VariableLengthIntegerFactory;
 import com.timmattison.cryptocurrency.helpers.ByteArrayHelper;
 import com.timmattison.cryptocurrency.helpers.EndiannessHelper;
 import com.timmattison.cryptocurrency.interfaces.Output;
-import com.timmattison.cryptocurrency.standard.OutputScript;
-import com.timmattison.cryptocurrency.standard.Script;
-import com.timmattison.cryptocurrency.standard.VariableLengthInteger;
+import com.timmattison.cryptocurrency.standard.interfaces.OutputScript;
+import com.timmattison.cryptocurrency.standard.interfaces.Script;
+import com.timmattison.cryptocurrency.standard.interfaces.VariableLengthInteger;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -23,6 +24,7 @@ import java.util.Arrays;
 public class BitcoinOutput implements Output {
     private static final int valueLengthInBytes = 8;
     private final ScriptingFactory scriptingFactory;
+    private final VariableLengthIntegerFactory variableLengthIntegerFactory;
     // These values are not in the output
     private final int transactionVersionNumber;
     private final int outputNumber;
@@ -42,8 +44,9 @@ public class BitcoinOutput implements Output {
     private OutputScript outputScript;
     private OutputScript script;
 
-    public BitcoinOutput(ScriptingFactory scriptingFactory, int transactionVersionNumber, int outputNumber) {
+    public BitcoinOutput(ScriptingFactory scriptingFactory, VariableLengthIntegerFactory variableLengthIntegerFactory, int transactionVersionNumber, int outputNumber) {
         this.scriptingFactory = scriptingFactory;
+        this.variableLengthIntegerFactory = variableLengthIntegerFactory;
         this.transactionVersionNumber = transactionVersionNumber;
         this.outputNumber = outputNumber;
     }
@@ -56,7 +59,7 @@ public class BitcoinOutput implements Output {
         value = EndiannessHelper.BytesToLong(valueBytes);
 
         // Get the output script length
-        VariableLengthInteger temp = new VariableLengthInteger();
+        VariableLengthInteger temp = variableLengthIntegerFactory.create();
         data = temp.build(data);
         outputScriptLengthBytes = temp.getValueBytes();
         outputScriptLength = temp.getValue();

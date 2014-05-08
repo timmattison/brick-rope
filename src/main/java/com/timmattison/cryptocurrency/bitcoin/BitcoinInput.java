@@ -1,11 +1,12 @@
 package com.timmattison.cryptocurrency.bitcoin;
 
 import com.timmattison.cryptocurrency.factories.ScriptingFactory;
+import com.timmattison.cryptocurrency.factories.VariableLengthIntegerFactory;
 import com.timmattison.cryptocurrency.helpers.ByteArrayHelper;
 import com.timmattison.cryptocurrency.helpers.EndiannessHelper;
 import com.timmattison.cryptocurrency.interfaces.Input;
-import com.timmattison.cryptocurrency.standard.Script;
-import com.timmattison.cryptocurrency.standard.VariableLengthInteger;
+import com.timmattison.cryptocurrency.standard.interfaces.Script;
+import com.timmattison.cryptocurrency.standard.interfaces.VariableLengthInteger;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -24,6 +25,7 @@ public class BitcoinInput implements Input {
     private static final int previousOutputIndexLengthInBytes = 4;
     private static final int sequenceNumberLengthInBytes = 4;
     private final ScriptingFactory scriptingFactory;
+    private final VariableLengthIntegerFactory variableLengthIntegerFactory;
     // These are not part of the script
     private final int transactionVersionNumber;
     private final int inputNumber;
@@ -51,8 +53,9 @@ public class BitcoinInput implements Input {
     private long sequenceNumber;
     private byte[] sequenceNumberBytes;
 
-    public BitcoinInput(ScriptingFactory scriptingFactory, int transactionVersionNumber, int inputNumber) {
+    public BitcoinInput(ScriptingFactory scriptingFactory, VariableLengthIntegerFactory variableLengthIntegerFactory, int transactionVersionNumber, int inputNumber) {
         this.scriptingFactory = scriptingFactory;
+        this.variableLengthIntegerFactory = variableLengthIntegerFactory;
         this.transactionVersionNumber = transactionVersionNumber;
         this.inputNumber = inputNumber;
     }
@@ -69,7 +72,7 @@ public class BitcoinInput implements Input {
         previousOutputIndex = EndiannessHelper.BytesToInt(previousOutputIndexBytes);
 
         // Get the input script length
-        VariableLengthInteger temp = new VariableLengthInteger();
+        VariableLengthInteger temp = variableLengthIntegerFactory.create();
         data = temp.build(data);
         inputScriptLengthBytes = temp.getValueBytes();
         inputScriptLength = temp.getValue();
@@ -176,7 +179,7 @@ public class BitcoinInput implements Input {
             inputScriptLength = 0;
         }
 
-        VariableLengthInteger temp = new VariableLengthInteger();
+        VariableLengthInteger temp = variableLengthIntegerFactory.create();
         temp.setValue(inputScriptLength);
         inputScriptLengthBytes = temp.getValueBytes();
     }

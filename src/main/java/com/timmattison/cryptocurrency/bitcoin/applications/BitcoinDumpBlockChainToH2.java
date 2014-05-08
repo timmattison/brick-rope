@@ -7,7 +7,7 @@ import com.timmattison.cryptocurrency.factories.BlockStorageFactory;
 import com.timmattison.cryptocurrency.interfaces.Block;
 import com.timmattison.cryptocurrency.interfaces.BlockChain;
 import com.timmattison.cryptocurrency.modules.BitcoinModule;
-import com.timmattison.cryptocurrency.standard.BlockStorage;
+import com.timmattison.cryptocurrency.standard.interfaces.BlockStorage;
 import org.junit.Assert;
 
 import java.io.IOException;

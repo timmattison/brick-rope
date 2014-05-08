@@ -2,6 +2,7 @@ package com.timmattison.cryptocurrency.standard;
 
 import com.timmattison.cryptocurrency.interfaces.Block;
 import com.timmattison.cryptocurrency.interfaces.Transaction;
+import com.timmattison.cryptocurrency.standard.interfaces.BlockStorage;
 
 import java.io.IOException;
 import java.sql.SQLException;

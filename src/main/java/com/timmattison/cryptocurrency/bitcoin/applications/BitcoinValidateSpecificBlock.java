@@ -9,8 +9,8 @@ import com.timmattison.cryptocurrency.factories.StateMachineFactory;
 import com.timmattison.cryptocurrency.helpers.ByteArrayHelper;
 import com.timmattison.cryptocurrency.interfaces.*;
 import com.timmattison.cryptocurrency.modules.BitcoinModule;
-import com.timmattison.cryptocurrency.standard.Script;
-import com.timmattison.cryptocurrency.standard.ValidationScript;
+import com.timmattison.cryptocurrency.standard.interfaces.Script;
+import com.timmattison.cryptocurrency.standard.interfaces.ValidationScript;
 
 import java.io.FileNotFoundException;
 import java.util.*;
