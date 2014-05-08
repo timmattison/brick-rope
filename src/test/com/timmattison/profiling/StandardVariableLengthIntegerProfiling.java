@@ -13,28 +13,28 @@ public class StandardVariableLengthIntegerProfiling {
     @Test
     public void createVariableLengthIntegersWithLong() {
         long expectedValue = 0x0A00AA00L;
-        innerCreateVariableLengthIntegers(count, expectedValue);
+        innerCreateVariableLengthIntegers(count, expectedValue, "long");
     }
 
     @Test
     public void createVariableLengthIntegersWithInt() {
         long expectedValue = 0x0A00AAL;
-        innerCreateVariableLengthIntegers(count, expectedValue);
+        innerCreateVariableLengthIntegers(count, expectedValue, "int");
     }
 
     @Test
     public void createVariableLengthIntegersWithShort() {
         long expectedValue = 0x0A00L;
-        innerCreateVariableLengthIntegers(count, expectedValue);
+        innerCreateVariableLengthIntegers(count, expectedValue, "short");
     }
 
     @Test
     public void createVariableLengthIntegersWithByte() {
         long expectedValue = 0x0A;
-        innerCreateVariableLengthIntegers(count, expectedValue);
+        innerCreateVariableLengthIntegers(count, expectedValue, "byte");
     }
 
-    private void innerCreateVariableLengthIntegers(long count, long expectedValue) {
+    private void innerCreateVariableLengthIntegers(long count, long expectedValue, String valueType) {
         long start = System.currentTimeMillis();
 
         StandardVariableLengthInteger standardVariableLengthInteger = new StandardVariableLengthInteger();
@@ -55,6 +55,6 @@ public class StandardVariableLengthIntegerProfiling {
 
         double millisecondsPerValue = (double) difference / (double) count;
 
-        System.out.println(millisecondsPerValue + " ms per value");
+        System.out.println(millisecondsPerValue + " ms per " + valueType + " value");
     }
 }
