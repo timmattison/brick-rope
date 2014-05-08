@@ -71,6 +71,8 @@ public class StandardVariableLengthInteger implements VariableLengthInteger {
             valueBytes[0] = (byte) (value & 0xFF);
         }
 
+        // TODO - Optimization - We should build the valueBytes array with the expected number of bytes and just drop the first byte in
+        
         // Did we have a multi-byte value?
         if (valueBytes.length != 1) {
             // Yes, add the missing first byte
