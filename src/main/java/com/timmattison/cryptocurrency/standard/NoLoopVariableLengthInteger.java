@@ -76,7 +76,7 @@ public class NoLoopVariableLengthInteger implements VariableLengthInteger {
         valueBytes = new byte[bytesToRead + 1];
         valueBytes[0] = firstByte;
         data = Arrays.copyOfRange(data, bytesToRead, data.length);
-        System.arraycopy(data, 0, valueBytes, 1, data.length);
+        System.arraycopy(data, 0, valueBytes, 1, bytesToRead);
         return data;
     }
 

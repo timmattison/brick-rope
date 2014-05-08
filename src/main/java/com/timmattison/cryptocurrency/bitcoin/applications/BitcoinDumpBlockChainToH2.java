@@ -6,7 +6,7 @@ import com.timmattison.cryptocurrency.factories.BlockChainFactory;
 import com.timmattison.cryptocurrency.factories.BlockStorageFactory;
 import com.timmattison.cryptocurrency.interfaces.Block;
 import com.timmattison.cryptocurrency.interfaces.BlockChain;
-import com.timmattison.cryptocurrency.modules.BitcoinModule;
+import com.timmattison.cryptocurrency.modules.BitcoinNoLoopTestModule;
 import com.timmattison.cryptocurrency.standard.interfaces.BlockStorage;
 import org.junit.Assert;
 
@@ -26,7 +26,7 @@ public class BitcoinDumpBlockChainToH2 {
     public static void main(String[] args) throws IOException, SQLException, ClassNotFoundException {
         ApplicationHelper.logFine();
 
-        Injector injector = Guice.createInjector(new BitcoinModule());
+        Injector injector = Guice.createInjector(new BitcoinNoLoopTestModule());
 
         BlockChain blockChain = injector.getInstance(BlockChainFactory.class).getBlockChain();
         BlockStorage blockStorage = injector.getInstance(BlockStorageFactory.class).getBlockStorage("~/test");
