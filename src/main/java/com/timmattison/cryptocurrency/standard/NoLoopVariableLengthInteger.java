@@ -73,10 +73,18 @@ public class NoLoopVariableLengthInteger implements VariableLengthInteger {
     }
 
     private byte[] generateValueBytes(byte[] data, byte firstByte, int bytesToRead) {
+        // Create enough space to hold the value bytes
         valueBytes = new byte[bytesToRead + 1];
+
+        // Fill in the first byte
         valueBytes[0] = firstByte;
-        data = Arrays.copyOfRange(data, bytesToRead, data.length);
+
+        // Get the rest of the value bytes
         System.arraycopy(data, 0, valueBytes, 1, bytesToRead);
+
+        // Update the data
+        data = Arrays.copyOfRange(data, bytesToRead, data.length);
+
         return data;
     }
 
