@@ -76,8 +76,6 @@ public class StandardVariableLengthIntegerTests {
             variableLengthInteger1.setValue(value);
             variableLengthInteger2.build(variableLengthInteger1.getValueBytes());
 
-            long a = variableLengthInteger1.getValue();
-            long b = variableLengthInteger2.getValue();
             Assert.assertEquals(variableLengthInteger1.getValue(), variableLengthInteger2.getValue());
         } catch (Throwable t) {
             throw(t);
