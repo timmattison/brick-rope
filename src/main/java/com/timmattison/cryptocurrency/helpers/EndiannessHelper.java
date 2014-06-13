@@ -16,15 +16,15 @@ public class EndiannessHelper {
     private static final long intMask = 0x00FFFFFFFFL;
     private static final int longSize = 4;
 
-    public static short BytesToShort(byte[] bytes) {
+    public static int BytesToShort(byte[] bytes) {
         return BytesToShort(bytes, 0);
     }
 
-    public static short BytesToShort(byte[] bytes, int offset) {
+    public static int BytesToShort(byte[] bytes, int offset) {
         validateSize(bytes, shortSize);
 
         long returnValue = ((ToRealByte(bytes[offset + 1]) << 8) | ToRealByte(bytes[offset + 0])) & shortMask;
-        return (short) returnValue;
+        return (int) returnValue;
     }
 
     public static int BytesToInt(byte[] bytes) {
