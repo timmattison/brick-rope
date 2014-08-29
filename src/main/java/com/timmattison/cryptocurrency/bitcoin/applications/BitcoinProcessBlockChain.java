@@ -12,7 +12,6 @@ import org.apache.commons.cli.ParseException;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.Date;
 import java.util.Map;
 
 /**
@@ -45,8 +44,24 @@ public class BitcoinProcessBlockChain {
         BlockChain blockChain = injector.getInstance(BlockChainFactory.class).getBlockChain();
         BlockStorage blockStorage = injector.getInstance(BlockStorageFactory.class).getBlockStorage();
 
+        long blockNumber = 0;
+
+        int blockCount = blockStorage.getBlockCount();
+
+        if (blockCount > 0) {
+            long lastBlockNumber = blockStorage.getLastBlockNumber();
+            long lastBlockOffset = blockStorage.getBlockOffset(lastBlockNumber);
+
+            // Go to the last block we already processed
+            blockChain.skip(lastBlockOffset);
+
+            // Read the block so the next read skips over it
+            blockChain.next();
+
+            blockNumber = lastBlockNumber + 1;
+        }
+
         Block block = blockChain.next();
-        int blockNumber = 0;
 
         while (block != null) {
             blockStorage.storeBlock(blockNumber, block);

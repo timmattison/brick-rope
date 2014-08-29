@@ -1,6 +1,5 @@
 package com.timmattison.cryptocurrency.standard;
 
-import com.google.inject.assistedinject.Assisted;
 import com.google.inject.name.Named;
 import com.timmattison.cryptocurrency.factories.BlockFactory;
 import com.timmattison.cryptocurrency.interfaces.Block;
@@ -28,6 +27,8 @@ public class H2BlockStorage implements BlockStorage {
     private static final String blockOffsetField = "blockOffset";
     private static final String createBlocksTableSql = "CREATE TABLE IF NOT EXISTS " + blocksTable + " (" + blockNumberField + " BIGINT not null, " + blockField + " BLOB not null, " + blockOffsetField + " BIGINT not null);";
     private static final String createTransactionsTableSql = "CREATE TABLE IF NOT EXISTS " + transactionsTable + " (" + transactionHashField + " BINARY not null, " + blockNumberField + " BIGINT not null, " + transactionNumberField + " BIGINT not null);";
+    private static final String getBlockCountSql = "SELECT COUNT(" + blockField + ") FROM " + blocksTable;
+    private static final String getLastBlockNumberSql = "SELECT MAX(" + blockNumberField + ") FROM " + blocksTable;
     private static final String getBlockSql = "SELECT " + blockField + " FROM " + blocksTable + " WHERE " + blockNumberField + " = ?";
     private static final String getBlockOffsetSql = "SELECT " + blockOffsetField + " FROM " + blocksTable + " WHERE " + blockNumberField + " = ?";
     private static final String getTransactionSql = "SELECT " + blockNumberField + ", " + transactionNumberField + " FROM " + transactionsTable + " WHERE " + transactionHashField + " = ?";
@@ -80,6 +81,30 @@ public class H2BlockStorage implements BlockStorage {
     }
 
     @Override
+    public int getBlockCount() throws SQLException, ClassNotFoundException {
+        PreparedStatement preparedStatement = prepareStatement(getBlockCountSql);
+
+        ResultSet resultSet = preparedStatement.executeQuery();
+
+        resultSet.first();
+        int blockCount = resultSet.getInt(1);
+
+        return blockCount;
+    }
+
+    @Override
+    public int getLastBlockNumber() throws SQLException, ClassNotFoundException {
+        PreparedStatement preparedStatement = prepareStatement(getLastBlockNumberSql);
+
+        ResultSet resultSet = preparedStatement.executeQuery();
+
+        resultSet.first();
+        int lastBlockNumber = resultSet.getInt(1);
+
+        return lastBlockNumber;
+    }
+
+    @Override
     public Block getBlock(long blockNumber) throws SQLException, ClassNotFoundException, IOException {
         PreparedStatement preparedStatement = prepareStatement(getBlockSql);
         preparedStatement.setLong(1, blockNumber);
@@ -93,6 +118,7 @@ public class H2BlockStorage implements BlockStorage {
         return (Block) blockFactory.createBlock(new ByteArrayInputStream(resultSet.getBytes(1)));
     }
 
+    @Override
     public Long getBlockOffset(long blockNumber) throws SQLException, ClassNotFoundException, IOException {
         PreparedStatement preparedStatement = prepareStatement(getBlockOffsetSql);
         preparedStatement.setLong(1, blockNumber);
