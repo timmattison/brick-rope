@@ -11,5 +11,5 @@ import com.timmattison.cryptocurrency.standard.interfaces.BlockStorage;
  * To change this template use File | Settings | File Templates.
  */
 public interface BlockStorageFactory {
-    BlockStorage getBlockStorage(@Assisted("databaseName") String databaseName);
+    BlockStorage getBlockStorage();
 }

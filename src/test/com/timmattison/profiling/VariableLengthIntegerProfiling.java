@@ -29,25 +29,25 @@ public class VariableLengthIntegerProfiling {
         variableLengthIntegerFactorySet.add(injector.getInstance(VariableLengthIntegerFactory.class));
     }
 
-    @Test
+    //@Test
     public void createVariableLengthIntegersWithLong() {
         long expectedValue = 0x0A00AA00L;
         innerCreateVariableLengthIntegers(count, expectedValue, "long");
     }
 
-    @Test
+    //@Test
     public void createVariableLengthIntegersWithInt() {
         long expectedValue = 0x0A00AAL;
         innerCreateVariableLengthIntegers(count, expectedValue, "int");
     }
 
-    @Test
+    //@Test
     public void createVariableLengthIntegersWithShort() {
         long expectedValue = 0x0A00L;
         innerCreateVariableLengthIntegers(count, expectedValue, "short");
     }
 
-    @Test
+    //@Test
     public void createVariableLengthIntegersWithByte() {
         long expectedValue = 0x0A;
         innerCreateVariableLengthIntegers(count, expectedValue, "byte");

@@ -4,6 +4,7 @@ import com.timmattison.cryptocurrency.factories.BlockChainFactory;
 import com.timmattison.cryptocurrency.factories.BlockFactory;
 import com.timmattison.cryptocurrency.interfaces.BlockChain;
 import com.timmattison.cryptocurrency.interfaces.BlockValidator;
+import com.timmattison.cryptocurrency.modules.BitcoinModule;
 import com.timmattison.cryptocurrency.standard.StandardBlockChain;
 
 import javax.inject.Inject;
@@ -19,15 +20,15 @@ import java.io.FileInputStream;
  * To change this template use File | Settings | File Templates.
  */
 public class BitcoinBlockChainFactory implements BlockChainFactory {
-    private final String defaultBlockChain;
+    private final String blockchainFile;
     private BlockFactory blockFactory;
     private BlockValidator blockValidator;
 
     @Inject
-    public BitcoinBlockChainFactory(BlockFactory blockFactory, BlockValidator blockValidator, @Named("defaultBlockChain") String defaultBlockChain) {
+    public BitcoinBlockChainFactory(BlockFactory blockFactory, BlockValidator blockValidator, @Named(BitcoinModule.BLOCKCHAIN_FILE_NAME) String blockchainFile) {
         this.blockFactory = blockFactory;
         this.blockValidator = blockValidator;
-        this.defaultBlockChain = defaultBlockChain;
+        this.blockchainFile = blockchainFile;
     }
 
     @Override
@@ -39,7 +40,7 @@ public class BitcoinBlockChainFactory implements BlockChainFactory {
     public BlockChain getBlockChain(String filename) {
         try {
             if (filename == null) {
-                filename = defaultBlockChain;
+                filename = blockchainFile;
             }
 
             File inputFile = new File(filename);
