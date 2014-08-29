@@ -13,6 +13,7 @@ import org.apache.commons.cli.ParseException;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Map;
+import java.util.logging.Logger;
 
 /**
  * Created with IntelliJ IDEA.
@@ -23,6 +24,7 @@ import java.util.Map;
  */
 public class BitcoinProcessBlockChain {
     private static final String APPLICATION_NAME = "BitcoinProcessBlockChain";
+    private static Logger logger;
 
     public static void main(String[] args) throws IOException, SQLException, ClassNotFoundException, ParseException {
         ApplicationHelper.logFine();
@@ -40,6 +42,7 @@ public class BitcoinProcessBlockChain {
         }
 
         Injector injector = Guice.createInjector(bitcoinModule);
+        logger = injector.getInstance(Logger.class);
 
         BlockChain blockChain = injector.getInstance(BlockChainFactory.class).getBlockChain();
         BlockStorage blockStorage = injector.getInstance(BlockStorageFactory.class).getBlockStorage();
@@ -59,6 +62,8 @@ public class BitcoinProcessBlockChain {
             blockChain.next();
 
             blockNumber = lastBlockNumber + 1;
+
+            logger.info("Starting at block number " + blockNumber + ", offset " + lastBlockOffset);
         }
 
         Block block = blockChain.next();
