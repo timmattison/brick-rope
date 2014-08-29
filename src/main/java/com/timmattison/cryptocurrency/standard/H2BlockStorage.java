@@ -1,9 +1,11 @@
 package com.timmattison.cryptocurrency.standard;
 
 import com.google.inject.assistedinject.Assisted;
+import com.google.inject.name.Named;
 import com.timmattison.cryptocurrency.factories.BlockFactory;
 import com.timmattison.cryptocurrency.interfaces.Block;
 import com.timmattison.cryptocurrency.interfaces.Transaction;
+import com.timmattison.cryptocurrency.modules.BitcoinModule;
 import com.timmattison.cryptocurrency.standard.interfaces.BlockStorage;
 
 import javax.inject.Inject;
@@ -39,7 +41,7 @@ public class H2BlockStorage implements BlockStorage {
     private Long lastBlockInserted = -1L;
 
     @Inject
-    public H2BlockStorage(BlockFactory blockFactory, @Assisted("databaseName") String databaseName) {
+    public H2BlockStorage(BlockFactory blockFactory, @Named(BitcoinModule.DATABASE_FILE_NAME) String databaseName) {
         this.blockFactory = blockFactory;
         this.databaseName = databaseName;
     }

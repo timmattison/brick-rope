@@ -12,16 +12,16 @@ import com.timmattison.cryptocurrency.bitcoin.*;
 import com.timmattison.cryptocurrency.bitcoin.factories.*;
 import com.timmattison.cryptocurrency.factories.*;
 import com.timmattison.cryptocurrency.interfaces.*;
-import com.timmattison.cryptocurrency.standard.StandardVariableLengthInteger;
-import com.timmattison.cryptocurrency.standard.interfaces.BlockStorage;
 import com.timmattison.cryptocurrency.standard.H2BlockStorage;
 import com.timmattison.cryptocurrency.standard.StandardBlockFactory;
 import com.timmattison.cryptocurrency.standard.StandardMerkleRootCalculator;
+import com.timmattison.cryptocurrency.standard.StandardVariableLengthInteger;
 import com.timmattison.cryptocurrency.standard.hashing.chunks.ChunkExtractor;
 import com.timmattison.cryptocurrency.standard.hashing.chunks.StandardChunkExtractor;
 import com.timmattison.cryptocurrency.standard.hashing.padding.MessagePadder;
 import com.timmattison.cryptocurrency.standard.hashing.padding.StandardMessagePadder;
 import com.timmattison.cryptocurrency.standard.hashing.sha.DoubleSha256Hash;
+import com.timmattison.cryptocurrency.standard.interfaces.BlockStorage;
 import com.timmattison.cryptocurrency.standard.interfaces.VariableLengthInteger;
 
 import java.util.Random;
@@ -34,10 +34,32 @@ import java.util.Random;
  * To change this template use File | Settings | File Templates.
  */
 public class BitcoinModule extends AbstractModule {
+    public static final String DATABASE_FILE_NAME = "databaseFile";
+    public static final String BLOCKCHAIN_FILE_NAME = "blockchainFile";
+
+    private String databaseFile;
+    private boolean useH2Storage = true;
+    private String blockchainFile;
+
+    public void useH2Storage(String databaseFile) {
+        this.databaseFile = databaseFile;
+        this.useH2Storage = true;
+    }
+
+    public void useBlockChainFile(String blockchainFile) {
+        this.blockchainFile = blockchainFile;
+    }
+
     @Override
     protected void configure() {
-        // Default blockchain file
-        bind(String.class).annotatedWith(Names.named("defaultBlockChain")).toInstance("/Users/timmattison/Desktop/bitcoin-blockchain.dat");
+        if (blockchainFile == null) {
+            // Default blockchain file
+            bind(String.class).annotatedWith(Names.named(BLOCKCHAIN_FILE_NAME)).toInstance("/Users/timmattison/Desktop/bitcoin-blockchain.dat");
+        }
+        else {
+            bind(String.class).annotatedWith(Names.named(BLOCKCHAIN_FILE_NAME)).toInstance(blockchainFile);
+        }
+
         bind(BlockReader.class).to(BitcoinBlockReader.class);
 
         bind(Block.class).to(BitcoinBlock.class);
@@ -97,6 +119,9 @@ public class BitcoinModule extends AbstractModule {
         bind(MessagePadder.class).to(StandardMessagePadder.class);
 
         // For storage
-        install(new FactoryModuleBuilder().implement(BlockStorage.class, H2BlockStorage.class).build(BlockStorageFactory.class));
+        if(useH2Storage) {
+            bind(String.class).annotatedWith(Names.named(DATABASE_FILE_NAME)).toInstance(databaseFile);
+            install(new FactoryModuleBuilder().implement(BlockStorage.class, H2BlockStorage.class).build(BlockStorageFactory.class));
+        }
     }
 }

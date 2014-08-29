@@ -29,7 +29,7 @@ public class BitcoinDumpBlockChainToH2 {
         Injector injector = Guice.createInjector(new BitcoinNoLoopTestModule());
 
         BlockChain blockChain = injector.getInstance(BlockChainFactory.class).getBlockChain();
-        BlockStorage blockStorage = injector.getInstance(BlockStorageFactory.class).getBlockStorage("~/test");
+        BlockStorage blockStorage = injector.getInstance(BlockStorageFactory.class).getBlockStorage();
 
         Block block = blockChain.next();
         int blockNumber = 0;
