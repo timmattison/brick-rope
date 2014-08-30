@@ -120,6 +120,7 @@ public class BitcoinProcessBlockChain {
             int inputNumber = 0;
 
             for (Input input : inputs) {
+                // TODO: Roll this up into a single method.  It is duplicated in several places (BitcoinValidateAllBlocks, BitcoinValidateSpecificBlock, etc)
                 long previousOutputIndex = input.getPreviousOutputIndex();
 
                 // Get the previous transaction
