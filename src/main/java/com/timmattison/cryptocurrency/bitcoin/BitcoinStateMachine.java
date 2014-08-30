@@ -80,7 +80,6 @@ public class BitcoinStateMachine implements StateMachine {
             currentWord.execute(this);
         } while ((scriptData != null) && (scriptData.length > 0));
 
-
         // Pop the top value of the stack
         Object topStackValue = pop();
 
@@ -140,7 +139,6 @@ public class BitcoinStateMachine implements StateMachine {
     public void setPreviousOutputIndex(int previousOutputIndex) {
         this.previousOutputIndex = previousOutputIndex;
     }
-
 
     @Override
     public int getPreviousOutputIndex() {

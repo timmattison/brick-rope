@@ -36,7 +36,7 @@ public class NopBlockStorage implements BlockStorage {
     }
 
     @Override
-    public Transaction getTransaction(byte[] transactionHash) {
+    public Transaction getTransaction(String transactionHash) throws SQLException, ClassNotFoundException, IOException {
         return null;
     }
 }

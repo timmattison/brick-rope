@@ -2,6 +2,7 @@ package com.timmattison.cryptocurrency.standard;
 
 import com.google.inject.name.Named;
 import com.timmattison.cryptocurrency.factories.BlockFactory;
+import com.timmattison.cryptocurrency.helpers.ByteArrayHelper;
 import com.timmattison.cryptocurrency.interfaces.Block;
 import com.timmattison.cryptocurrency.interfaces.Transaction;
 import com.timmattison.cryptocurrency.modules.BitcoinModule;
@@ -26,7 +27,7 @@ public class H2BlockStorage implements BlockStorage {
     private static final String blockField = "block";
     private static final String blockOffsetField = "blockOffset";
     private static final String createBlocksTableSql = "CREATE TABLE IF NOT EXISTS " + blocksTable + " (" + blockNumberField + " BIGINT not null, " + blockField + " BLOB not null, " + blockOffsetField + " BIGINT not null);";
-    private static final String createTransactionsTableSql = "CREATE TABLE IF NOT EXISTS " + transactionsTable + " (" + transactionHashField + " BINARY not null, " + blockNumberField + " BIGINT not null, " + transactionNumberField + " BIGINT not null);";
+    private static final String createTransactionsTableSql = "CREATE TABLE IF NOT EXISTS " + transactionsTable + " (" + transactionHashField + " VARCHAR(255) not null, " + blockNumberField + " BIGINT not null, " + transactionNumberField + " BIGINT not null);";
     private static final String getBlockCountSql = "SELECT COUNT(" + blockField + ") FROM " + blocksTable;
     private static final String getLastBlockNumberSql = "SELECT MAX(" + blockNumberField + ") FROM " + blocksTable;
     private static final String getBlockSql = "SELECT " + blockField + " FROM " + blocksTable + " WHERE " + blockNumberField + " = ?";
@@ -141,9 +142,9 @@ public class H2BlockStorage implements BlockStorage {
     }
 
     @Override
-    public Transaction getTransaction(byte[] transactionHash) throws SQLException, ClassNotFoundException, IOException {
+    public Transaction getTransaction(String transactionHash) throws SQLException, ClassNotFoundException, IOException {
         PreparedStatement preparedStatement = prepareStatement(getTransactionSql);
-        preparedStatement.setBytes(1, transactionHash);
+        preparedStatement.setString(1, transactionHash);
 
         ResultSet resultSet = preparedStatement.executeQuery();
 
@@ -164,7 +165,7 @@ public class H2BlockStorage implements BlockStorage {
     private void innerStoreTransactions(long blockNumber, Block block) throws SQLException, ClassNotFoundException {
         for (Transaction transaction : block.getTransactions()) {
             PreparedStatement preparedStatement = prepareStatement(storeTransactionSql);
-            preparedStatement.setBytes(1, transaction.getHash());
+            preparedStatement.setString(1, ByteArrayHelper.toHex(transaction.getHash()));
             preparedStatement.setLong(2, blockNumber);
             preparedStatement.setInt(3, transaction.getTransactionNumber());
 
