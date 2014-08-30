@@ -23,37 +23,7 @@ public abstract class AbstractBitcoinTransactionValidator implements Transaction
         this.stateMachineFactory = stateMachineFactory;
     }
 
-    @Override
-    public boolean isValid(Transaction transaction) {
-        // Is this the first transaction?
-        if (transaction.getTransactionNumber() == 0) {
-            // Yes, it is the coinbase.  It does not need validation.
-            // TODO: Implement BIP-0034 (https://github.com/bitcoin/bips/blob/master/bip-0034.mediawiki)
-            return true;
-        }
-
-        // Get the transaction's inputs
-        List<Input> inputs = transaction.getInputs();
-
-        // Start the input counter
-        int inputNumber = 0;
-
-        // Loop through all of the inputs
-        for (Input input : inputs) {
-            doValidation(transaction, inputNumber, input);
-
-            // Increment the input number
-            inputNumber++;
-        }
-
-        return allValid();
-    }
-
-    protected abstract boolean allValid();
-
-    protected abstract void doValidation(Transaction transaction, int inputNumber, Input input);
-
-    protected void innerValidate(Transaction transaction, int inputNumber, Input input) {
+    protected void innerValidateTransactionInput(Transaction transaction, int inputNumber, Input input) {
         // Get the index of the previous output that this input is taken from
         long previousOutputIndex = input.getPreviousOutputIndex();
 

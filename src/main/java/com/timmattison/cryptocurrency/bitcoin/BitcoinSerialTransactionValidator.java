@@ -7,6 +7,7 @@ import com.timmattison.cryptocurrency.interfaces.Transaction;
 import com.timmattison.cryptocurrency.interfaces.TransactionLocator;
 
 import javax.inject.Inject;
+import java.util.List;
 
 public class BitcoinSerialTransactionValidator extends AbstractBitcoinTransactionValidator {
     @Inject
@@ -15,17 +16,33 @@ public class BitcoinSerialTransactionValidator extends AbstractBitcoinTransactio
     }
 
     @Override
-    protected boolean allValid() {
-        /*
-         * Since innerValidate would throw an exception before we got here we can always return true.  If it wasn't
-         * valid we'd never get here.
-         */
+    public boolean isValid(Transaction transaction) {
+        // Is this the first transaction?
+        if (transaction.getTransactionNumber() == 0) {
+            // Yes, it is the coinbase.  It does not need validation.
+            // TODO: Implement BIP-0034 (https://github.com/bitcoin/bips/blob/master/bip-0034.mediawiki)
+            return true;
+        }
+
+        // Get the transaction's inputs
+        List<Input> inputs = transaction.getInputs();
+
+        // Start the input counter
+        int inputNumber = 0;
+
+        // Loop through all of the inputs
+        for (Input input : inputs) {
+            try {
+                innerValidateTransactionInput(transaction, inputNumber, input);
+            } catch (Exception e) {
+                e.printStackTrace();
+                return false;
+            }
+
+            // Increment the input number
+            inputNumber++;
+        }
 
         return true;
-    }
-
-    @Override
-    protected void doValidation(Transaction transaction, int inputNumber, Input input) {
-        innerValidate(transaction, inputNumber, input);
     }
 }

@@ -2,6 +2,7 @@ package com.timmattison.cryptocurrency.bitcoin;
 
 import com.timmattison.cryptocurrency.factories.ScriptingFactory;
 import com.timmattison.cryptocurrency.factories.StateMachineFactory;
+import com.timmattison.cryptocurrency.helpers.FutureHelper;
 import com.timmattison.cryptocurrency.interfaces.Input;
 import com.timmattison.cryptocurrency.interfaces.Transaction;
 import com.timmattison.cryptocurrency.interfaces.TransactionLocator;
@@ -9,71 +10,65 @@ import com.timmattison.cryptocurrency.interfaces.TransactionLocator;
 import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.*;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Future;
 
 public class BitcoinParallelTransactionValidator extends AbstractBitcoinTransactionValidator {
-    private static final int threads = 10;
-    private ExecutorService executor = Executors.newFixedThreadPool(threads);
-    private List<Future<Boolean>> results;
+    private final ExecutorService executorService;
 
     @Inject
-    public BitcoinParallelTransactionValidator(TransactionLocator transactionLocator, ScriptingFactory scriptingFactory, StateMachineFactory stateMachineFactory) {
+    public BitcoinParallelTransactionValidator(TransactionLocator transactionLocator, ScriptingFactory scriptingFactory, StateMachineFactory stateMachineFactory, ExecutorService executorService) {
         super(transactionLocator, scriptingFactory, stateMachineFactory);
+        this.executorService = executorService;
     }
 
     @Override
-    protected boolean allValid() {
-        boolean returnValue = true;
+    public boolean isValid(final Transaction transaction) {
+        List<Future<Boolean>> results = new ArrayList<Future<Boolean>>();
 
-        for (Future<Boolean> future : results) {
+        // Is this the first transaction?
+        if (transaction.getTransactionNumber() == 0) {
+            // Yes, it is the coinbase.  It does not need validation.
+            // TODO: Implement BIP-0034 (https://github.com/bitcoin/bips/blob/master/bip-0034.mediawiki)
+            return true;
+        }
+
+        // Get the transaction's inputs
+        List<Input> inputs = transaction.getInputs();
+
+        // Start the input counter
+        int inputNumber = 0;
+
+        // Loop through all of the inputs
+        for (final Input input : inputs) {
+            final int currentInputNumber = inputNumber;
+
+            final Callable<Boolean> worker = new Callable<Boolean>() {
+                @Override
+                public Boolean call() throws Exception {
+                    try {
+                        innerValidateTransactionInput(transaction, currentInputNumber, input);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        return false;
+                    }
+
+                    return true;
+                }
+            };
+
             try {
-                if (future.get().equals(Boolean.FALSE)) {
-                    returnValue = false;
-                    break;
-                }
-            } catch (InterruptedException e) {
+                Future<Boolean> submit = executorService.submit(worker);
+                results.add(submit);
+            } catch (Exception e) {
                 e.printStackTrace();
-                returnValue = false;
-                break;
-            } catch (ExecutionException e) {
-                e.printStackTrace();
-                returnValue = false;
-                break;
             }
+
+            // Increment the input number
+            inputNumber++;
         }
 
-        executor.shutdown();
-
-        results = null;
-        executor = null;
-
-        return returnValue;
-    }
-
-    @Override
-    protected void doValidation(final Transaction transaction, final int inputNumber, final Input input) {
-        if (results == null) {
-            results = new ArrayList<Future<Boolean>>();
-        }
-
-        if (executor == null) {
-            executor = Executors.newFixedThreadPool(threads);
-        }
-
-        final Callable<Boolean> worker = new Callable<Boolean>() {
-            @Override
-            public Boolean call() throws Exception {
-                try {
-                    innerValidate(transaction, inputNumber, input);
-                } catch (Exception e) {
-                    return false;
-                }
-
-                return true;
-            }
-        };
-
-        Future<Boolean> submit = executor.submit(worker);
-        results.add(submit);
+        return FutureHelper.allTrue(results);
     }
 }

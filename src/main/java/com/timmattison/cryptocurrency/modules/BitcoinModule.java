@@ -26,6 +26,8 @@ import com.timmattison.cryptocurrency.standard.interfaces.BlockStorage;
 import com.timmattison.cryptocurrency.standard.interfaces.VariableLengthInteger;
 
 import java.util.Random;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * Created with IntelliJ IDEA.
@@ -37,6 +39,7 @@ import java.util.Random;
 public class BitcoinModule extends AbstractModule {
     public static final String DATABASE_FILE_NAME = "databaseFile";
     public static final String BLOCKCHAIN_FILE_NAME = "blockchainFile";
+    private static final int threads = 10;
 
     private String databaseFile;
     private boolean useH2Storage = true;
@@ -56,8 +59,7 @@ public class BitcoinModule extends AbstractModule {
         if (blockchainFile == null) {
             // Default blockchain file
             bind(String.class).annotatedWith(Names.named(BLOCKCHAIN_FILE_NAME)).toInstance("/Users/timmattison/Desktop/bitcoin-blockchain.dat");
-        }
-        else {
+        } else {
             bind(String.class).annotatedWith(Names.named(BLOCKCHAIN_FILE_NAME)).toInstance(blockchainFile);
         }
 
@@ -81,6 +83,7 @@ public class BitcoinModule extends AbstractModule {
         bind(SignatureProcessorFactory.class).to(BitcoinSignatureProcessorFactory.class);
         bind(BlockChainFactory.class).to(BitcoinBlockChainFactory.class);
         bind(TransactionValidator.class).to(BitcoinParallelTransactionValidator.class);
+        bind(TransactionListValidator.class).to(BitcoinParallelTransactionListValidator.class);
 
         install(new FactoryModuleBuilder().implement(VariableLengthInteger.class, StandardVariableLengthInteger.class).build(VariableLengthIntegerFactory.class));
 
@@ -121,9 +124,12 @@ public class BitcoinModule extends AbstractModule {
         bind(MessagePadder.class).to(StandardMessagePadder.class);
 
         // For storage
-        if(useH2Storage) {
+        if (useH2Storage) {
             bind(String.class).annotatedWith(Names.named(DATABASE_FILE_NAME)).toInstance(databaseFile);
             bind(BlockStorage.class).to(H2BlockStorage.class).in(Singleton.class);
         }
+
+        // For multithreading
+        bind(ExecutorService.class).toInstance(Executors.newFixedThreadPool(threads));
     }
 }

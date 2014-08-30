@@ -1,10 +1,12 @@
 package com.timmattison.cryptocurrency.bitcoin;
 
-import com.timmattison.cryptocurrency.interfaces.*;
+import com.timmattison.cryptocurrency.interfaces.Block;
+import com.timmattison.cryptocurrency.interfaces.BlockValidator;
+import com.timmattison.cryptocurrency.interfaces.MerkleRootCalculator;
+import com.timmattison.cryptocurrency.interfaces.TransactionListValidator;
 
 import javax.inject.Inject;
 import java.util.Arrays;
-import java.util.List;
 import java.util.logging.Logger;
 
 /**
@@ -17,13 +19,13 @@ import java.util.logging.Logger;
 public class BitcoinBlockValidator implements BlockValidator {
     private final Logger logger;
     private final MerkleRootCalculator merkleRootCalculator;
-    private final TransactionValidator transactionValidator;
+    private final TransactionListValidator transactionListValidator;
 
     @Inject
-    public BitcoinBlockValidator(Logger logger, MerkleRootCalculator merkleRootCalculator, TransactionValidator transactionValidator) {
+    public BitcoinBlockValidator(Logger logger, MerkleRootCalculator merkleRootCalculator, TransactionListValidator transactionListValidator) {
         this.logger = logger;
         this.merkleRootCalculator = merkleRootCalculator;
-        this.transactionValidator = transactionValidator;
+        this.transactionListValidator = transactionListValidator;
     }
 
     @Override
@@ -59,7 +61,7 @@ public class BitcoinBlockValidator implements BlockValidator {
         }
 
         // Check to see if the transactions are valid
-        boolean transactionsAreValid = transactionsAreValid(block, blockNumber);
+        boolean transactionsAreValid = transactionListValidator.isValid(blockNumber, block.getTransactions());
 
         if (!transactionsAreValid) {
             // Transactions aren't valid, fail
@@ -67,34 +69,6 @@ public class BitcoinBlockValidator implements BlockValidator {
         }
 
         // Looks good
-        return true;
-    }
-
-    private boolean transactionsAreValid(Block block, long blockNumber) {
-        // Get the transaction list
-        List<Transaction> transactionList = block.getTransactions();
-
-        // Does the block have any transactions other than the coinbase?
-        if (transactionList.size() > 1) {
-            // Yes, check them out
-            logger.info((transactionList.size() - 1) + " transaction(s) other than the coinbase in block number " + blockNumber);
-        } else {
-            // No, do nothing
-            //logger.info("Only a coinbase in block number " + blockNumber);
-        }
-
-        for (Transaction currentTransaction : transactionList) {
-            if (currentTransaction.getTransactionNumber() == 0) {
-                continue;
-            }
-
-            // Validate the transaction
-            if (!transactionValidator.isValid(currentTransaction)) {
-                logger.info("Transactions in block number " + blockNumber + " are not valid");
-                return false;
-            }
-        }
-
         return true;
     }
 
