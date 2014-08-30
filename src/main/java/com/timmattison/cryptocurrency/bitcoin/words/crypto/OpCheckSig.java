@@ -83,7 +83,7 @@ public class OpCheckSig extends CryptoOp {
             throw new UnsupportedOperationException("y is not 32 bytes");
         }
 
-        System.out.println("Signature bytes: " + ByteArrayHelper.toHex(signature));
+        //System.out.println("Signature bytes: " + ByteArrayHelper.toHex(signature));
 
         // Sanity check: Signature starts with 0x30
         if (signature[0] != 0x30) {
