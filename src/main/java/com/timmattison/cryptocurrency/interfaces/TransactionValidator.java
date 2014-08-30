@@ -11,5 +11,5 @@ import java.sql.SQLException;
  * To change this template use File | Settings | File Templates.
  */
 public interface TransactionValidator {
-    boolean isValid(Transaction transaction) throws SQLException, IOException, ClassNotFoundException;
+    boolean isValid(Transaction transaction);
 }

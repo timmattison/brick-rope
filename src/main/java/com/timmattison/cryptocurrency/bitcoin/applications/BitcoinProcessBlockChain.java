@@ -5,10 +5,7 @@ import com.google.inject.Injector;
 import com.timmattison.cryptocurrency.factories.BlockChainFactory;
 import com.timmattison.cryptocurrency.factories.ScriptingFactory;
 import com.timmattison.cryptocurrency.factories.StateMachineFactory;
-import com.timmattison.cryptocurrency.interfaces.Block;
-import com.timmattison.cryptocurrency.interfaces.BlockChain;
-import com.timmattison.cryptocurrency.interfaces.Transaction;
-import com.timmattison.cryptocurrency.interfaces.TransactionValidator;
+import com.timmattison.cryptocurrency.interfaces.*;
 import com.timmattison.cryptocurrency.modules.BitcoinModule;
 import com.timmattison.cryptocurrency.standard.interfaces.BlockStorage;
 import org.apache.commons.cli.ParseException;
@@ -29,8 +26,6 @@ import java.util.logging.Logger;
 public class BitcoinProcessBlockChain {
     private static final String APPLICATION_NAME = "BitcoinProcessBlockChain";
     private static Logger logger;
-    private static ScriptingFactory scriptingFactory;
-    private static StateMachineFactory stateMachineFactory;
 
     public static void main(String[] args) throws IOException, SQLException, ClassNotFoundException, ParseException {
         ApplicationHelper.logFine();
@@ -49,12 +44,10 @@ public class BitcoinProcessBlockChain {
 
         Injector injector = Guice.createInjector(bitcoinModule);
         logger = injector.getInstance(Logger.class);
-        scriptingFactory = injector.getInstance(ScriptingFactory.class);
-        stateMachineFactory = injector.getInstance(StateMachineFactory.class);
 
         BlockChain blockChain = injector.getInstance(BlockChainFactory.class).getBlockChain();
         BlockStorage blockStorage = injector.getInstance(BlockStorage.class);
-        TransactionValidator transactionValidator = injector.getInstance(TransactionValidator.class);
+        BlockValidator blockValidator = injector.getInstance(BlockValidator.class);
 
         long blockNumber = 0;
 
@@ -68,7 +61,11 @@ public class BitcoinProcessBlockChain {
             blockChain.skip(lastBlockOffset);
 
             // Read the block so the next read skips over it
-            blockChain.next();
+            Block lastBlock = blockChain.next();
+
+            if(!blockValidator.isValid(lastBlock, lastBlockNumber)) {
+                throw new UnsupportedOperationException("Block failed to validate!");
+            }
 
             blockNumber = lastBlockNumber + 1;
 
@@ -82,17 +79,8 @@ public class BitcoinProcessBlockChain {
 
             Block fromDb = blockStorage.getBlock(blockNumber);
 
-            // Get the transaction list
-            List<Transaction> transactionList = fromDb.getTransactions();
-
-            // Does the block have any transactions other than the coinbase?
-            if (transactionList.size() > 1) {
-                // Yes, check them out
-                logger.info((transactionList.size() - 1) + " transaction(s) other than the coinbase in block number " + blockNumber);
-                checkoutTransactions(transactionValidator, transactionList);
-            } else {
-                // No, do nothing
-                //logger.info("Only a coinbase in block number " + blockNumber);
+            if(!blockValidator.isValid(fromDb, blockNumber)) {
+                throw new UnsupportedOperationException("Block failed to validate!");
             }
 
             block = blockChain.next();

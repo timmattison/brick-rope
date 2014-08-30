@@ -8,7 +8,9 @@ package com.timmattison.cryptocurrency.interfaces;
  * To change this template use File | Settings | File Templates.
  */
 public interface BlockValidator {
-    boolean isValid(Block block);
+    boolean hasValidHeaders(Block block);
+
+    boolean isValid(Block block, long blockNumber);
 
     boolean isParentOf(Block parentBlock, Block childBlock);
 }

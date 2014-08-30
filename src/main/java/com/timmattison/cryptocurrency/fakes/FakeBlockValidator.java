@@ -8,7 +8,12 @@ import com.timmattison.cryptocurrency.interfaces.BlockValidator;
  */
 public class FakeBlockValidator implements BlockValidator {
     @Override
-    public boolean isValid(Block block) {
+    public boolean hasValidHeaders(Block block) {
+        return false;
+    }
+
+    @Override
+    public boolean isValid(Block block, long blockNumber) {
         return true;
     }
 

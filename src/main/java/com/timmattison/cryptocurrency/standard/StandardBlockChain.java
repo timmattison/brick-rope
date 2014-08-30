@@ -57,8 +57,8 @@ public class StandardBlockChain implements BlockChain, Iterator<Block> {
                 // Keep track of how many bytes we've read
                 position += block.dump().length;
 
-                // Validate the block
-                if (!blockValidator.isValid(block)) {
+                // Validate the block headers
+                if (!blockValidator.hasValidHeaders(block)) {
                     // No, current block is not valid
                     throw new IllegalStateException("Block [" + blockNumber + "] is not valid");
                 }

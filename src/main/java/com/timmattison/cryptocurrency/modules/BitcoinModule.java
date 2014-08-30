@@ -80,7 +80,7 @@ public class BitcoinModule extends AbstractModule {
         bind(StateMachineFactory.class).to(BitcoinStateMachineFactory.class);
         bind(SignatureProcessorFactory.class).to(BitcoinSignatureProcessorFactory.class);
         bind(BlockChainFactory.class).to(BitcoinBlockChainFactory.class);
-        bind(TransactionValidator.class).to(BitcoinSerialTransactionValidator.class);
+        bind(TransactionValidator.class).to(BitcoinParallelTransactionValidator.class);
 
         install(new FactoryModuleBuilder().implement(VariableLengthInteger.class, StandardVariableLengthInteger.class).build(VariableLengthIntegerFactory.class));
 
