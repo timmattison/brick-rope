@@ -51,11 +51,13 @@ public class H2BlockStorage implements BlockStorage {
     private Connection getConnection() throws ClassNotFoundException, SQLException {
         if (connection == null) {
             Class.forName(h2Driver);
-            connection = DriverManager.getConnection(h2JdbcPrefix + databaseName);
+            String fullJdbcUrl = h2JdbcPrefix + databaseName;
+            connection = DriverManager.getConnection(fullJdbcUrl);
             connection.setAutoCommit(false);
 
             createTablesIfNecessary(connection);
-            // TODO - Don't do this yet because it bloats the database size during the initial build! createIndexesIfNecessary(connection);
+            // TODO - Don't do this yet because it bloats the database size during the initial build!
+            createIndexesIfNecessary(connection);
         }
 
         return connection;

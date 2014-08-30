@@ -53,12 +53,18 @@ public class BitcoinStateMachine implements StateMachine {
 
     @Override
     public void execute(Script script) {
+        // Get a copy of the script
         byte[] scriptData = Arrays.copyOf(script.dump(), script.dump().length);
+
+        // Initialize the word counter
         int wordCounter = 0;
 
+        // Reset the state machine
         reset();
 
+        // Is this script executable?
         if (!script.isExecutable()) {
+            // No, just return
             return;
         }
 

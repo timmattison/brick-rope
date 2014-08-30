@@ -22,7 +22,6 @@ public class BitcoinInMemoryTransactionLocator implements TransactionLocator {
     private final BlockChainFactory blockChainFactory;
     private BlockChain blockChain;
     private Map<String, Transaction> transactionMap = new HashMap<String, Transaction>();
-    private int blockNumber = 0;
 
     @Inject
     public BitcoinInMemoryTransactionLocator(BlockChainFactory blockChainFactory) {
@@ -31,6 +30,10 @@ public class BitcoinInMemoryTransactionLocator implements TransactionLocator {
 
     @Override
     public Transaction findTransaction(byte[] transactionHash) {
+        if (true) {
+            throw new UnsupportedOperationException("This is not supported anymore!");
+        }
+
         String transactionHashString = ByteArrayHelper.toHex(transactionHash);
 
         Transaction result = innerGetTransaction(transactionHashString);
@@ -44,7 +47,6 @@ public class BitcoinInMemoryTransactionLocator implements TransactionLocator {
         // Loop until we find something or until we run out of blocks
         while (getBlockChain().hasNext()) {
             Block block = getBlockChain().next();
-            blockNumber++;
 
             // Loop through all of this block's transactions and add them to the map
             for (Transaction transaction : block.getTransactions()) {

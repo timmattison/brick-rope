@@ -1,6 +1,7 @@
 package com.timmattison.cryptocurrency.modules;
 
 import com.google.inject.AbstractModule;
+import com.google.inject.Singleton;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 import com.google.inject.name.Names;
 import com.timmattison.crypto.ecc.fp.*;
@@ -97,6 +98,6 @@ public class BitcoinNoLoopTestModule extends AbstractModule {
         bind(MessagePadder.class).to(StandardMessagePadder.class);
 
         // For storage
-        install(new FactoryModuleBuilder().implement(BlockStorage.class, H2BlockStorage.class).build(BlockStorageFactory.class));
+        bind(BlockStorage.class).to(H2BlockStorage.class).in(Singleton.class);
     }
 }

@@ -150,7 +150,7 @@ public class OpCheckSig extends CryptoOp {
             throw new UnsupportedOperationException("Only SIGHASH_ALL accepted currently, saw " + hashType);
         }
 
-        // Copy txNew to txCopy, XXX I KNOW THIS ISN'T REALLY A COPY XXX
+        // Copy txNew to txCopy
         Transaction sourceTransaction = transactionLocator.findTransaction(stateMachine.getPreviousTransactionHash());
         Transaction destinationTransaction = transactionLocator.findTransaction(stateMachine.getCurrentTransactionHash());
 

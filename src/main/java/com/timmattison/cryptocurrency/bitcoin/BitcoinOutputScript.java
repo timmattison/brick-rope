@@ -30,7 +30,7 @@ public class BitcoinOutputScript extends BitcoinScript implements OutputScript {
 
     @Override
     public boolean isExecutable() {
-        return true;  //To change body of implemented methods use File | Settings | File Templates.
+        return true;
     }
 
     @Override

@@ -1,6 +1,7 @@
 package com.timmattison.cryptocurrency.modules;
 
 import com.google.inject.AbstractModule;
+import com.google.inject.Singleton;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 import com.google.inject.name.Names;
 import com.timmattison.crypto.ecc.fp.*;
@@ -69,7 +70,7 @@ public class BitcoinModule extends AbstractModule {
         bind(BlockValidator.class).to(BitcoinBlockValidator.class);
 
         bind(TransactionFactory.class).to(BitcoinTransactionFactory.class);
-        bind(TransactionLocator.class).to(BitcoinInMemoryTransactionLocator.class);
+        bind(TransactionLocator.class).to(BitcoinBlockStorageTransactionLocator.class);
         bind(BlockFactory.class).to(StandardBlockFactory.class);
         bind(BlockHeaderFactory.class).to(BitcoinBlockHeaderFactory.class);
         bind(InputFactory.class).to(BitcoinInputFactory.class);
@@ -79,6 +80,7 @@ public class BitcoinModule extends AbstractModule {
         bind(StateMachineFactory.class).to(BitcoinStateMachineFactory.class);
         bind(SignatureProcessorFactory.class).to(BitcoinSignatureProcessorFactory.class);
         bind(BlockChainFactory.class).to(BitcoinBlockChainFactory.class);
+        bind(TransactionValidator.class).to(BitcoinSerialTransactionValidator.class);
 
         install(new FactoryModuleBuilder().implement(VariableLengthInteger.class, StandardVariableLengthInteger.class).build(VariableLengthIntegerFactory.class));
 
@@ -121,7 +123,7 @@ public class BitcoinModule extends AbstractModule {
         // For storage
         if(useH2Storage) {
             bind(String.class).annotatedWith(Names.named(DATABASE_FILE_NAME)).toInstance(databaseFile);
-            install(new FactoryModuleBuilder().implement(BlockStorage.class, H2BlockStorage.class).build(BlockStorageFactory.class));
+            bind(BlockStorage.class).to(H2BlockStorage.class).in(Singleton.class);
         }
     }
 }
