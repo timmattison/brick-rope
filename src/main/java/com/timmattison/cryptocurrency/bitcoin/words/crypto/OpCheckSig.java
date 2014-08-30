@@ -16,6 +16,7 @@ import com.timmattison.cryptocurrency.standard.interfaces.InputScript;
 import com.timmattison.cryptocurrency.standard.interfaces.Script;
 
 import java.util.Arrays;
+import java.util.logging.Logger;
 
 /**
  * Created with IntelliJ IDEA.
@@ -31,8 +32,10 @@ public class OpCheckSig extends CryptoOp {
     private final SignatureProcessorFactory signatureProcessorFactory;
     private final ECCMessageSignatureVerifierFactory eccMessageSignatureVerifierFactory;
     private final TransactionLocator transactionLocator;
+    private Logger logger;
 
-    public OpCheckSig(SignatureProcessorFactory signatureProcessorFactory, ECCMessageSignatureVerifierFactory eccMessageSignatureVerifierFactory, ScriptingFactory scriptingFactory, TransactionLocator transactionLocator) {
+    public OpCheckSig(Logger logger, SignatureProcessorFactory signatureProcessorFactory, ECCMessageSignatureVerifierFactory eccMessageSignatureVerifierFactory, ScriptingFactory scriptingFactory, TransactionLocator transactionLocator) {
+        this.logger = logger;
         this.signatureProcessorFactory = signatureProcessorFactory;
         this.eccMessageSignatureVerifierFactory = eccMessageSignatureVerifierFactory;
         this.scriptingFactory = scriptingFactory;
@@ -151,6 +154,8 @@ public class OpCheckSig extends CryptoOp {
         }
 
         // Copy txNew to txCopy
+        logger.info(ByteArrayHelper.toHex(stateMachine.getPreviousTransactionHash()));
+        logger.info(ByteArrayHelper.toHex(stateMachine.getCurrentTransactionHash()));
         Transaction sourceTransaction = transactionLocator.findTransaction(stateMachine.getPreviousTransactionHash());
         Transaction destinationTransaction = transactionLocator.findTransaction(stateMachine.getCurrentTransactionHash());
 

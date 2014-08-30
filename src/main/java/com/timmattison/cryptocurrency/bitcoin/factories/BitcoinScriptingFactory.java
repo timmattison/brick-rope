@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
 /**
  * Created with IntelliJ IDEA.
@@ -50,6 +51,7 @@ public class BitcoinScriptingFactory implements ScriptingFactory {
     private final SignatureProcessorFactory signatureProcessorFactory;
     private final ECCMessageSignatureVerifierFactory eccMessageSignatureVerifierFactory;
     private final TransactionLocator transactionLocator;
+    private final Logger logger;
     /**
      * The list of all of the words that take no constructor arguments
      */
@@ -169,7 +171,8 @@ public class BitcoinScriptingFactory implements ScriptingFactory {
     }};
 
     @Inject
-    public BitcoinScriptingFactory(SignatureProcessorFactory signatureProcessorFactory, ECCMessageSignatureVerifierFactory eccMessageSignatureVerifierFactory, TransactionLocator transactionLocator) throws InstantiationException, IllegalAccessException {
+    public BitcoinScriptingFactory(Logger logger, SignatureProcessorFactory signatureProcessorFactory, ECCMessageSignatureVerifierFactory eccMessageSignatureVerifierFactory, TransactionLocator transactionLocator) throws InstantiationException, IllegalAccessException {
+        this.logger = logger;
         this.signatureProcessorFactory = signatureProcessorFactory;
         this.eccMessageSignatureVerifierFactory = eccMessageSignatureVerifierFactory;
         this.transactionLocator = transactionLocator;
@@ -242,7 +245,7 @@ public class BitcoinScriptingFactory implements ScriptingFactory {
     private Word buildWordForOpcode(byte opcode) {
         switch (opcode) {
             case (byte) 0xac:
-                return new OpCheckSig(signatureProcessorFactory, eccMessageSignatureVerifierFactory, this, transactionLocator);
+                return new OpCheckSig(logger, signatureProcessorFactory, eccMessageSignatureVerifierFactory, this, transactionLocator);
             default:
                 // Didn't find any match
                 return null;
