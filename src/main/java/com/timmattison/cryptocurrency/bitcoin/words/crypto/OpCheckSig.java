@@ -154,8 +154,6 @@ public class OpCheckSig extends CryptoOp {
         }
 
         // Copy txNew to txCopy
-        logger.info(ByteArrayHelper.toHex(stateMachine.getPreviousTransactionHash()));
-        logger.info(ByteArrayHelper.toHex(stateMachine.getCurrentTransactionHash()));
         Transaction sourceTransaction = transactionLocator.findTransaction(stateMachine.getPreviousTransactionHash());
         Transaction destinationTransaction = transactionLocator.findTransaction(stateMachine.getCurrentTransactionHash());
 
