@@ -130,6 +130,7 @@ public class BitcoinModule extends AbstractModule {
         }
 
         // For multithreading
-        bind(ExecutorService.class).toInstance(Executors.newFixedThreadPool(threads));
+        //bind(ExecutorService.class).toInstance(Executors.newFixedThreadPool(threads));
+        bind(ExecutorService.class).toInstance(Executors.newCachedThreadPool());
     }
 }
