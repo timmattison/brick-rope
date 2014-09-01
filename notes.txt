@@ -1,3 +1,55 @@
+$ java -cp ~/.m2/repository/com/h2database/h2/1.4.177/h2-1.4.177.jar org.h2.tools.Shell
+
+Welcome to H2 Shell 1.4.177 (2014-04-12)
+Exit with Ctrl+C
+[Enter]   jdbc:h2:~/temp-bitcoin
+URL       jdbc:h2:~/temp-bitcoin
+[Enter]   org.h2.Driver
+Driver    
+[Enter]   
+User      
+[Enter]   Hide
+Password  
+Password  
+Connected
+Commands are case insensitive; SQL statements end with ';'
+help or ?      Display this help
+list           Toggle result list / stack trace mode
+maxwidth       Set maximum column width (default is 100)
+autocommit     Enable or disable autocommit
+history        Show the last 20 statements
+quit or exit   Close the connection and exit
+
+sql> show tables
+...> ;
+TABLE_NAME   | TABLE_SCHEMA
+BLOCKS       | PUBLIC
+TRANSACTIONS | PUBLIC
+(2 rows, 20 ms)
+
+INFO: Validating 296 transaction(s) in block number 135106
+java.lang.UnsupportedOperationException: rsLength is incorrect
+	at com.timmattison.cryptocurrency.bitcoin.words.crypto.OpCheckSig.execute(OpCheckSig.java:100)
+	at com.timmattison.cryptocurrency.bitcoin.BitcoinStateMachine.execute(BitcoinStateMachine.java:86)
+	at com.timmattison.cryptocurrency.bitcoin.AbstractBitcoinTransactionValidator.innerValidateTransactionInput(AbstractBitcoinTransactionValidator.java:55)
+	at com.timmattison.cryptocurrency.bitcoin.BitcoinParallelTransactionValidator$1.call(BitcoinParallelTransactionValidator.java:51)
+	at com.timmattison.cryptocurrency.bitcoin.BitcoinParallelTransactionValidator$1.call(BitcoinParallelTransactionValidator.java:47)
+	at java.util.concurrent.FutureTask.run(FutureTask.java:262)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1145)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:615)
+	at java.lang.Thread.run(Thread.java:744)
+Sep 01, 2014 2:41:28 AM com.timmattison.cryptocurrency.bitcoin.BitcoinParallelTransactionListValidator$1 call
+INFO: Transactions in block number 135106 are not valid
+Exception in thread "main" java.lang.UnsupportedOperationException: Block failed to validate!
+	at com.timmattison.cryptocurrency.bitcoin.applications.BitcoinProcessBlockChain.main(BitcoinProcessBlockChain.java:83)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:606)
+	at com.intellij.rt.execution.application.AppMain.main(AppMain.java:134)
+
+Process finished with exit code 1
+
 As of this commit:
 
 commit 39521cefecb524d06b047b910e55090c279a59d1
