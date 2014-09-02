@@ -13,10 +13,9 @@ import com.timmattison.cryptocurrency.bitcoin.*;
 import com.timmattison.cryptocurrency.bitcoin.factories.*;
 import com.timmattison.cryptocurrency.factories.*;
 import com.timmattison.cryptocurrency.interfaces.*;
-import com.timmattison.cryptocurrency.standard.H2BlockStorage;
-import com.timmattison.cryptocurrency.standard.StandardBlockFactory;
-import com.timmattison.cryptocurrency.standard.StandardMerkleRootCalculator;
-import com.timmattison.cryptocurrency.standard.StandardVariableLengthInteger;
+import com.timmattison.cryptocurrency.standard.*;
+import com.timmattison.cryptocurrency.standard.blockstorage.database.H2BlockStorage;
+import com.timmattison.cryptocurrency.standard.blockstorage.database.PostgresqlBlockStorage;
 import com.timmattison.cryptocurrency.standard.hashing.chunks.ChunkExtractor;
 import com.timmattison.cryptocurrency.standard.hashing.chunks.StandardChunkExtractor;
 import com.timmattison.cryptocurrency.standard.hashing.padding.MessagePadder;
@@ -38,16 +37,24 @@ import java.util.concurrent.Executors;
  */
 public class BitcoinModule extends AbstractModule {
     public static final String DATABASE_FILE_NAME = "databaseFile";
+    public static final String DATABASE_NAME_NAME = "databaseName";
     public static final String BLOCKCHAIN_FILE_NAME = "blockchainFile";
     private static final int threads = 10;
 
     private String databaseFile;
-    private boolean useH2Storage = true;
+    private String databaseName;
+    private boolean useH2Storage = false;
     private String blockchainFile;
+    private boolean usePostgresqlStorage = false;
 
     public void useH2Storage(String databaseFile) {
         this.databaseFile = databaseFile;
         this.useH2Storage = true;
+    }
+
+    public void usePostgresqlStorage(String databaseName) {
+        this.databaseName = databaseName;
+        this.usePostgresqlStorage = true;
     }
 
     public void useBlockChainFile(String blockchainFile) {
@@ -127,6 +134,12 @@ public class BitcoinModule extends AbstractModule {
         if (useH2Storage) {
             bind(String.class).annotatedWith(Names.named(DATABASE_FILE_NAME)).toInstance(databaseFile);
             bind(BlockStorage.class).to(H2BlockStorage.class).in(Singleton.class);
+        }
+
+        // For storage
+        if (usePostgresqlStorage) {
+            bind(String.class).annotatedWith(Names.named(DATABASE_NAME_NAME)).toInstance(databaseName);
+            bind(BlockStorage.class).to(PostgresqlBlockStorage.class).in(Singleton.class);
         }
 
         // For multithreading
