@@ -7,6 +7,7 @@ import com.timmattison.cryptocurrency.interfaces.Block;
 import com.timmattison.cryptocurrency.interfaces.Transaction;
 import com.timmattison.cryptocurrency.modules.BitcoinModule;
 import com.timmattison.cryptocurrency.standard.interfaces.BlockStorage;
+import org.postgresql.util.PSQLException;
 
 import javax.inject.Inject;
 import java.io.ByteArrayInputStream;
@@ -28,6 +29,9 @@ public class PostgresqlBlockStorage implements BlockStorage {
     private static final String blockOffsetField = "blockOffset";
     private static final String createBlocksTableSql = "CREATE TABLE IF NOT EXISTS " + blocksTable + " (" + blockNumberField + " BIGINT not null, " + blockField + " BYTEA not null, " + blockOffsetField + " BIGINT not null);";
     private static final String createTransactionsTableSql = "CREATE TABLE IF NOT EXISTS " + transactionsTable + " (" + transactionHashField + " VARCHAR(255) not null, " + blockNumberField + " BIGINT not null, " + transactionNumberField + " BIGINT not null);";
+    private static final String createBlockNumberBlocksTableIndexSql = "CREATE INDEX blocknumber_" + blocksTable + "_index on " + blocksTable + "(blocknumber)";
+    private static final String createBlockNumberTransactionsTableIndexSql = "CREATE INDEX blocknumber_" + transactionsTable + "_index on " + transactionsTable + "(blocknumber)";
+    private static final String createTransactionHashTransactionsTableIndexSql = "CREATE INDEX transactionhash_" + transactionsTable + "_index on " + transactionsTable + "(transactionhash)";
     private static final String getBlockCountSql = "SELECT COUNT(" + blockField + ") FROM " + blocksTable;
     private static final String getLastBlockNumberSql = "SELECT MAX(" + blockNumberField + ") FROM " + blocksTable;
     private static final String getBlockSql = "SELECT " + blockField + " FROM " + blocksTable + " WHERE " + blockNumberField + " = ?";
@@ -56,7 +60,6 @@ public class PostgresqlBlockStorage implements BlockStorage {
             connection.setAutoCommit(false);
 
             createTablesIfNecessary(connection);
-            // TODO - Don't do this yet because it bloats the database size during the initial build!
             createIndexesIfNecessary(connection);
         }
 
@@ -64,14 +67,52 @@ public class PostgresqlBlockStorage implements BlockStorage {
     }
 
     private void createIndexesIfNecessary(Connection connection) throws SQLException {
-        String createBlockNumberBlocksTableIndexSql = "CREATE INDEX blocknumber_" + blocksTable + "_index on " + blocksTable + "(blocknumber)";
-        connection.createStatement().execute(createBlockNumberBlocksTableIndexSql);
+        try {
+            connection.createStatement().execute(createBlockNumberBlocksTableIndexSql);
+        } catch (PSQLException e) {
+            throwIfNotAlreadyExistsException(e);
+        }
 
-        String createBlockNumberTransactionsTableIndexSql = "CREATE INDEX blocknumber_" + transactionsTable + "_index on " + transactionsTable + "(blocknumber)";
-        connection.createStatement().execute(createBlockNumberTransactionsTableIndexSql);
+        doSafeCommit(connection);
 
-        String createTransactionHashTransactionsTableIndexSql = "CREATE INDEX transactionhash_" + transactionsTable + "_index on " + transactionsTable + "(transactionhash)";
-        connection.createStatement().execute(createTransactionHashTransactionsTableIndexSql);
+        try {
+            connection.createStatement().execute(createBlockNumberTransactionsTableIndexSql);
+        } catch (PSQLException e) {
+            throwIfNotAlreadyExistsException(e);
+        }
+
+        doSafeCommit(connection);
+
+        try {
+            connection.createStatement().execute(createTransactionHashTransactionsTableIndexSql);
+        } catch (PSQLException e) {
+            throwIfNotAlreadyExistsException(e);
+        }
+
+        doSafeCommit(connection);
+    }
+
+    private void throwIfNotAlreadyExistsException(PSQLException e) throws PSQLException {
+        if(!alreadyExistsException(e)) {
+            e.printStackTrace();
+            throw (e);
+        }
+    }
+
+    private boolean alreadyExistsException(PSQLException psqlException) {
+        if (psqlException.getMessage().contains("already exists")) {
+            return true;
+        }
+
+        return false;
+    }
+
+    private void doSafeCommit(Connection connection) throws SQLException {
+        /**
+         * This COMMIT is necessary because if the previous statement failed PostgreSQL will ignore any new commands
+         * until a commit or rollback;
+         */
+        connection.createStatement().execute("COMMIT");
     }
 
     private void createTablesIfNecessary(Connection connection) throws SQLException {
@@ -177,7 +218,7 @@ public class PostgresqlBlockStorage implements BlockStorage {
 
     private void innerStoreBlock(long blockNumber, Block block) throws SQLException, ClassNotFoundException, IOException {
         // Are we inserting the next block?
-        if(lastBlockInserted != (blockNumber - 1)) {
+        if (lastBlockInserted != (blockNumber - 1)) {
             // No, we need to re-calculate the offset
             long lastOffset = getBlockOffset(blockNumber - 1);
             currentOffset = lastOffset + getBlock(blockNumber - 1).dump().length;
