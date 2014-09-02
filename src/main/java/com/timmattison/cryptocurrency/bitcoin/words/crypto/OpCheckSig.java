@@ -97,7 +97,7 @@ public class OpCheckSig extends CryptoOp {
         int rsLength = signature[1];
 
         if (signature.length - 3 != rsLength) {
-            throw new UnsupportedOperationException("rsLength is incorrect");
+            throw new UnsupportedOperationException("rsLength is incorrect [expected " + (signature.length - 3) + ", actual " + rsLength + "]");
         }
 
         // Sanity check: r starts with 0x02
