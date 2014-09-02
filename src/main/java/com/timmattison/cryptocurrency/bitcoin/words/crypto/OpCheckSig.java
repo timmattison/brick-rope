@@ -124,6 +124,15 @@ public class OpCheckSig extends CryptoOp {
         //System.out.println("R bytes: " + ByteArrayHelper.toHex(r));
         //System.out.println("S bytes: " + ByteArrayHelper.toHex(s));
 
+        // Sanity check rsLength makes sense
+        int rsLength = signature[1];
+
+        int expectedRsLength = rLength + sLength + 4;
+
+        if (expectedRsLength != rsLength) {
+            throw new UnsupportedOperationException("rsLength is incorrect [expected " + expectedRsLength + ", actual " + rsLength + "]");
+        }
+
         // Get the last byte of the signature as the hash type
         BitcoinHashType hashType = BitcoinHashType.convert(signature[signature.length - 1]);
 
