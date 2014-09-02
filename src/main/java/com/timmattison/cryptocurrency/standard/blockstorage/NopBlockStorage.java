@@ -1,4 +1,4 @@
-package com.timmattison.cryptocurrency.standard;
+package com.timmattison.cryptocurrency.standard.blockstorage;
 
 import com.timmattison.cryptocurrency.interfaces.Block;
 import com.timmattison.cryptocurrency.interfaces.Transaction;

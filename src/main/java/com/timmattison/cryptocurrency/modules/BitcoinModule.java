@@ -14,6 +14,8 @@ import com.timmattison.cryptocurrency.bitcoin.factories.*;
 import com.timmattison.cryptocurrency.factories.*;
 import com.timmattison.cryptocurrency.interfaces.*;
 import com.timmattison.cryptocurrency.standard.*;
+import com.timmattison.cryptocurrency.standard.blockstorage.database.H2BlockStorage;
+import com.timmattison.cryptocurrency.standard.blockstorage.database.PostgresqlBlockStorage;
 import com.timmattison.cryptocurrency.standard.hashing.chunks.ChunkExtractor;
 import com.timmattison.cryptocurrency.standard.hashing.chunks.StandardChunkExtractor;
 import com.timmattison.cryptocurrency.standard.hashing.padding.MessagePadder;
