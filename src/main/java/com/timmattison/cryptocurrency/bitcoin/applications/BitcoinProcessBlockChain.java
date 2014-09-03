@@ -92,29 +92,4 @@ public class BitcoinProcessBlockChain {
             blockNumber++;
         }
     }
-
-    private static void validateTransactions(TransactionValidator transactionValidator, Block block, long blockNumber) throws SQLException, IOException, ClassNotFoundException {
-        // Get the transaction list
-        List<Transaction> transactionList = block.getTransactions();
-
-        // Does the block have any transactions other than the coinbase?
-        if (transactionList.size() > 1) {
-            // Yes, check them out
-            logger.info((transactionList.size() - 1) + " transaction(s) other than the coinbase in block number " + blockNumber);
-        } else {
-            // No, do nothing
-            //logger.info("Only a coinbase in block number " + blockNumber);
-        }
-
-        for (Transaction currentTransaction : transactionList) {
-            if (currentTransaction.getTransactionNumber() == 0) {
-                continue;
-            }
-
-            // Validate the transaction
-            if (!transactionValidator.isValid(currentTransaction)) {
-                throw new UnsupportedOperationException("Transactions in block number " + blockNumber + " are not valid");
-            }
-        }
-    }
 }
