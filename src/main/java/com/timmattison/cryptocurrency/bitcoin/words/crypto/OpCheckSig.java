@@ -65,6 +65,7 @@ public class OpCheckSig extends CryptoOp {
             throw new UnsupportedOperationException("Public key does not start with 0x04");
         }
 
+        /*
         // Extract X and Y
         int xStart = 1;
         int xEnd = xStart + 32;
@@ -85,6 +86,7 @@ public class OpCheckSig extends CryptoOp {
         if (y.length != 32) {
             throw new UnsupportedOperationException("y is not 32 bytes");
         }
+        */
 
         //System.out.println("Signature bytes: " + ByteArrayHelper.toHex(signature));
 
@@ -93,11 +95,9 @@ public class OpCheckSig extends CryptoOp {
             throw new UnsupportedOperationException("Signature does not start with 0x30");
         }
 
-        // Sanity check rsLength makes sense
-        int rsLength = signature[1];
-
-        if (signature.length - 3 != rsLength) {
-            throw new UnsupportedOperationException("rsLength is incorrect [expected " + (signature.length - 3) + ", actual " + rsLength + "]");
+        // Sanity check: Signature ends with 0x01
+        if (signature[signature.length - 1] != 0x01) {
+            throw new UnsupportedOperationException("Signature does not end with 0x01");
         }
 
         // Sanity check: r starts with 0x02
@@ -123,6 +123,15 @@ public class OpCheckSig extends CryptoOp {
 
         //System.out.println("R bytes: " + ByteArrayHelper.toHex(r));
         //System.out.println("S bytes: " + ByteArrayHelper.toHex(s));
+
+        // Sanity check rsLength makes sense
+        int rsLength = signature[1];
+
+        int expectedRsLength = rLength + sLength + 4;
+
+        if (expectedRsLength != rsLength) {
+            throw new UnsupportedOperationException("rsLength is incorrect [expected " + expectedRsLength + ", actual " + rsLength + "]");
+        }
 
         // Get the last byte of the signature as the hash type
         BitcoinHashType hashType = BitcoinHashType.convert(signature[signature.length - 1]);

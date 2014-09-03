@@ -1,31 +1,24 @@
-$ java -cp ~/.m2/repository/com/h2database/h2/1.4.177/h2-1.4.177.jar org.h2.tools.Shell
+https://blockchain.info/tx/a618dc10b8a1f9d9a1469b3bb84fc17da86df2d51c27e2aa16fa130953840735 - 135106 transaction giving me a headache
 
-Welcome to H2 Shell 1.4.177 (2014-04-12)
-Exit with Ctrl+C
-[Enter]   jdbc:h2:~/temp-bitcoin
-URL       jdbc:h2:~/temp-bitcoin
-[Enter]   org.h2.Driver
-Driver    
-[Enter]   
-User      
-[Enter]   Hide
-Password  
-Password  
-Connected
-Commands are case insensitive; SQL statements end with ';'
-help or ?      Display this help
-list           Toggle result list / stack trace mode
-maxwidth       Set maximum column width (default is 100)
-autocommit     Enable or disable autocommit
-history        Show the last 20 statements
-quit or exit   Close the connection and exit
+Ah, this came up on October 3, 2013 according to Evernote:
 
-sql> show tables
-...> ;
-TABLE_NAME   | TABLE_SCHEMA
-BLOCKS       | PUBLIC
-TRANSACTIONS | PUBLIC
-(2 rows, 20 ms)
+OLD DEBUG MESSAGES:
+
+Block #135106, input #0
+Signature bytes: 3045022100dbce2f92e046aa255241e09c9b73eec9f8d5dc7da95176a81c52327eb89da0b6022019443f8fe454a85384b3362da8d107ba6323440a972b4c13b13a7935c8a5704d01
+Block #135106, input #0
+Signature bytes: 3045022100a9379b66c22432585cb2f5e1e85736c69cf5fdc9e1033ad583fc27f0b7c561d802202c7b5d9d92ceca742829ffbe28ba6565faa8f94556cb091cbc39d2f11d4594670001
+Exception in thread "main" java.lang.UnsupportedOperationException: rsLength is incorrect
+     at com.timmattison.cryptocurrency.bitcoin.words.crypto.OpCheckSig.execute(OpCheckSig.java:97)
+     at com.timmattison.cryptocurrency.bitcoin.BitcoinStateMachine.execute(BitcoinStateMachine.java:80)
+     at com.timmattison.cryptocurrency.bitcoin.applications.BitcoinValidateAllBlocks.main(BitcoinValidateAllBlocks.java:92)
+     at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+     at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+     at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+     at java.lang.reflect.Method.invoke(Method.java:601)
+     at com.intellij.rt.execution.application.AppMain.main(AppMain.java:120)
+
+NEW DEBUG MESSAGE:
 
 INFO: Validating 296 transaction(s) in block number 135106
 java.lang.UnsupportedOperationException: rsLength is incorrect
@@ -47,86 +40,3 @@ Exception in thread "main" java.lang.UnsupportedOperationException: Block failed
 	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
 	at java.lang.reflect.Method.invoke(Method.java:606)
 	at com.intellij.rt.execution.application.AppMain.main(AppMain.java:134)
-
-Process finished with exit code 1
-
-As of this commit:
-
-commit 39521cefecb524d06b047b910e55090c279a59d1
-Author: Tim Mattison <tim.mattison@controlgroup.com>
-Date:   Wed May 7 10:21:37 2014 -0400
-
-The system is running at about 23.2 milliseconds per block including parsing and dumping to the database.  The actual message from the application:
-
-5344552 ms for 230925 block(s)
-23.144103063765293 ms / block
-
-And from H2:
-
-sql> show tables;
-TABLE_NAME   | TABLE_SCHEMA
-BLOCKS       | PUBLIC
-TRANSACTIONS | PUBLIC
-(2 rows, 3 ms)
-sql> select count(*) from blocks;
-COUNT(*)
-230926
-(1 row, 1 ms)
-sql> select count(*) from transactions;
-COUNT(*)
-15993693
-(1 row, 1 ms)
-
-Size before index:
-Controls-MacBook-Pro:~ timmattison$ ls -la test.mv.db 
--rw-r--r--  1 timmattison  staff  12049440768 May  7 14:48 test.mv.db
-
-Performance before index:
-sql> select * from transactions where transactionhash = X'3ba3edfd7a7b12b27ac72c3e67768f617fc81bc3888a51323a9fb8aa4b1e5e4a';
-TRANSACTIONHASH                                                  | BLOCKNUMBER | TRANSACTIONNUMBER
-3ba3edfd7a7b12b27ac72c3e67768f617fc81bc3888a51323a9fb8aa4b1e5e4a | 0           | 0
-(1 row, 16239 ms)
-
-Create transaction hash index time:
-sql> create index transactionhash_index on transactions(transactionhash);
-(Update count: 0, 77982 ms)
-
-Size after index:
-Controls-MacBook-Pro:~ timmattison$ ls -la test.mv.db
--rw-r--r--  1 timmattison  staff  13611352064 May  7 14:50 test.mv.db
-
-Size delta from index:
-Controls-MacBook-Pro:~ timmattison$ perl -e "print (13611352064 - 12049440768)"
-1561911296
-  1.5GB index (1,561,911,296 bytes)
-
-Performance after index:
-sql> select * from transactions where transactionhash = X'3ba3edfd7a7b12b27ac72c3e67768f617fc81bc3888a51323a9fb8aa4b1e5e4a';
-TRANSACTIONHASH                                                  | BLOCKNUMBER | TRANSACTIONNUMBER
-3ba3edfd7a7b12b27ac72c3e67768f617fc81bc3888a51323a9fb8aa4b1e5e4a | 0           | 0
-(1 row, 23 ms)
-
-Create block number index time:
-sql> create index blocknumber_block_index on blocks(blocknumber);
-(Update count: 0, 1152 ms)
-sql> create index blocknumber_transaction_index on transactions(blocknumber);
-(Update count: 0, 32828 ms)
-
-(Update count: 0, 77982 ms)
-
-Before block number index:
-sql> select * from transactions where blocknumber = 100000;
-TRANSACTIONHASH                                                  | BLOCKNUMBER | TRANSACTIONNUMBER
-876dd0a3ef4a2816ffd1c12ab649825a958b0ff3bb3d6f3e1250f13ddbf0148c | 100000      | 0
-c40297f730dd7b5a99567eb8d27b78758f607507c52292d02d4031895b52f2ff | 100000      | 1
-c46e239ab7d28e2c019b6d66ad8fae98a56ef1f21aeecb94d1b1718186f05963 | 100000      | 2
-1d0cb83721529a062d9675b98d6e5c587e4a770fc84ed00abc5a5de04568a6e9 | 100000      | 3
-(4 rows, 6345 ms)
-
-After block number index:
-sql> select * from transactions where blocknumber = 100000;
-TRANSACTIONHASH                                                  | BLOCKNUMBER | TRANSACTIONNUMBER
-876dd0a3ef4a2816ffd1c12ab649825a958b0ff3bb3d6f3e1250f13ddbf0148c | 100000      | 0
-c40297f730dd7b5a99567eb8d27b78758f607507c52292d02d4031895b52f2ff | 100000      | 1
-c46e239ab7d28e2c019b6d66ad8fae98a56ef1f21aeecb94d1b1718186f05963 | 100000      | 2
-1d0cb83721529a062d9675b98d6e5c587e4a770fc84ed00abc5a5de04568a6e9 | 100000      | 3
