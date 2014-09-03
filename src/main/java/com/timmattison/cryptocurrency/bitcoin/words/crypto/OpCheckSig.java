@@ -65,6 +65,7 @@ public class OpCheckSig extends CryptoOp {
             throw new UnsupportedOperationException("Public key does not start with 0x04");
         }
 
+        /*
         // Extract X and Y
         int xStart = 1;
         int xEnd = xStart + 32;
@@ -85,6 +86,7 @@ public class OpCheckSig extends CryptoOp {
         if (y.length != 32) {
             throw new UnsupportedOperationException("y is not 32 bytes");
         }
+        */
 
         //System.out.println("Signature bytes: " + ByteArrayHelper.toHex(signature));
 
