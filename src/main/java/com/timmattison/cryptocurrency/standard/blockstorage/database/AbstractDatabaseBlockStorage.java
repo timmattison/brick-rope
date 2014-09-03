@@ -175,9 +175,12 @@ public abstract class AbstractDatabaseBlockStorage implements BlockStorage {
     protected abstract String getStoreTransactionSql();
 
     private void innerStoreBlock(long blockNumber, Block block) throws SQLException, ClassNotFoundException, IOException {
-        // Are we inserting the next block?
-        if (lastBlockInserted != (blockNumber - 1)) {
-            // No, we need to re-calculate the offset
+        // What block are we inserting?
+        if (blockNumber == 0) {
+            // This is the first block, the offset is zero
+            currentOffset = 0;
+        } else if (lastBlockInserted != (blockNumber - 1)) {
+            // This is not the next block we thought we'd be inserting.  We need to re-calculate the offset.
             long lastOffset = getBlockOffset(blockNumber - 1);
             currentOffset = lastOffset + getBlock(blockNumber - 1).dump().length;
         }
