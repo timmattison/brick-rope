@@ -36,7 +36,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>com.timmattison.cryptocurrency.bitcoin.BitcoinBlockValidator</mainClass>
+                            <mainClass>com.timmattison.cryptocurrency.bitcoin.applications.BitcoinProcessBlockChain</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
@@ -46,7 +46,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>com.timmattison.cryptocurrency.bitcoin.BitcoinBlockValidator</mainClass>
+                            <mainClass>com.timmattison.cryptocurrency.bitcoin.applications.BitcoinProcessBlockChain</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>
