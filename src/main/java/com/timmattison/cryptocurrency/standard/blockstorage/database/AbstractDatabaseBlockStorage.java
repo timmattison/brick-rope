@@ -1,11 +1,9 @@
 package com.timmattison.cryptocurrency.standard.blockstorage.database;
 
-import com.google.inject.name.Named;
 import com.timmattison.cryptocurrency.factories.BlockFactory;
 import com.timmattison.cryptocurrency.helpers.ByteArrayHelper;
 import com.timmattison.cryptocurrency.interfaces.Block;
 import com.timmattison.cryptocurrency.interfaces.Transaction;
-import com.timmattison.cryptocurrency.modules.BitcoinModule;
 import com.timmattison.cryptocurrency.standard.interfaces.BlockStorage;
 
 import javax.inject.Inject;
@@ -26,6 +24,7 @@ public abstract class AbstractDatabaseBlockStorage implements BlockStorage {
     public AbstractDatabaseBlockStorage(BlockFactory blockFactory) {
         this.blockFactory = blockFactory;
     }
+
     protected Connection getConnection() throws ClassNotFoundException, SQLException {
         if (connection == null) {
             Class.forName(getDriverName());
@@ -45,9 +44,13 @@ public abstract class AbstractDatabaseBlockStorage implements BlockStorage {
     protected abstract String getDriverName();
 
     protected abstract String getCreateBlockNumberBlocksTableIndexSql();
+
     protected abstract String getCreateBlockNumberTransactionsTableIndexSql();
+
     protected abstract String getCreateTransactionHashTransactionsTableIndexSql();
+
     protected abstract String getCreateBlocksTableSql();
+
     protected abstract String getCreateTransactionsTableSql();
 
     protected void createIndexesIfNecessary(Connection connection) throws SQLException {
@@ -173,7 +176,7 @@ public abstract class AbstractDatabaseBlockStorage implements BlockStorage {
 
     private void innerStoreBlock(long blockNumber, Block block) throws SQLException, ClassNotFoundException, IOException {
         // Are we inserting the next block?
-        if(lastBlockInserted != (blockNumber - 1)) {
+        if (lastBlockInserted != (blockNumber - 1)) {
             // No, we need to re-calculate the offset
             long lastOffset = getBlockOffset(blockNumber - 1);
             currentOffset = lastOffset + getBlock(blockNumber - 1).dump().length;
