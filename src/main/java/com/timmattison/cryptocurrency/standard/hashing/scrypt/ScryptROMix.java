@@ -55,10 +55,12 @@ public class ScryptROMix implements ROMix {
 
         // First loop
         for (int loop = 0; loop < cpuMemoryCost; loop++) {
+            throw new UnsupportedOperationException("Not implemented yet");
         }
 
         // Second loop
         for (int loop = 0; loop < cpuMemoryCost; loop++) {
+            throw new UnsupportedOperationException("Not implemented yet");
         }
 
         return returnValue;
