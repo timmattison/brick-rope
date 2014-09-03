@@ -65,7 +65,8 @@ public class BitcoinModule extends AbstractModule {
     protected void configure() {
         if (blockchainFile == null) {
             // Default blockchain file
-            bind(String.class).annotatedWith(Names.named(BLOCKCHAIN_FILE_NAME)).toInstance("/Users/timmattison/Desktop/bitcoin-blockchain.dat");
+            //bind(String.class).annotatedWith(Names.named(BLOCKCHAIN_FILE_NAME)).toInstance("/Users/timmattison/Desktop/bitcoin-blockchain.dat");
+            bind(String.class).annotatedWith(Names.named(BLOCKCHAIN_FILE_NAME)).toInstance("bitcoin-blockchain.dat");
         } else {
             bind(String.class).annotatedWith(Names.named(BLOCKCHAIN_FILE_NAME)).toInstance(blockchainFile);
         }
