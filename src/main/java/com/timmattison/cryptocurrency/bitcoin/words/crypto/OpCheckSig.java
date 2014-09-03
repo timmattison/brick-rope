@@ -95,11 +95,9 @@ public class OpCheckSig extends CryptoOp {
             throw new UnsupportedOperationException("Signature does not start with 0x30");
         }
 
-        // Sanity check rsLength makes sense
-        int rsLength = signature[1];
-
-        if (signature.length - 3 != rsLength) {
-            throw new UnsupportedOperationException("rsLength is incorrect [expected " + (signature.length - 3) + ", actual " + rsLength + "]");
+        // Sanity check: Signature ends with 0x01
+        if (signature[signature.length - 1] != 0x01) {
+            throw new UnsupportedOperationException("Signature does not end with 0x01");
         }
 
         // Sanity check: r starts with 0x02
