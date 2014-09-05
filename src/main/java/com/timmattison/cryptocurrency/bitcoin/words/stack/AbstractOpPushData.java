@@ -18,7 +18,7 @@ public abstract class AbstractOpPushData extends StackOp {
     @Override
     public final byte[] build(byte[] data) {
         int bytesToPush = (int) EndiannessHelper.ToUnsignedValue(Arrays.copyOfRange(data, 0, getValueLength()));
-        valueToPush = Arrays.copyOfRange(data, getValueLength(), bytesToPush);
+        valueToPush = Arrays.copyOfRange(data, getValueLength(), bytesToPush + getValueLength());
         return Arrays.copyOfRange(data, bytesToPush + getValueLength(), data.length);
     }
 
