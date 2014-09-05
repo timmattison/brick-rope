@@ -23,7 +23,7 @@ public class EndiannessHelper {
     public static int BytesToShort(byte[] bytes, int offset) {
         validateSize(bytes, shortSize);
 
-        long returnValue = ((ToRealByte(bytes[offset + 1]) << 8) | ToRealByte(bytes[offset + 0])) & shortMask;
+        long returnValue = ((ToUnsignedByte(bytes[offset + 1]) << 8) | ToUnsignedByte(bytes[offset + 0])) & shortMask;
         return (int) returnValue;
     }
 
@@ -34,7 +34,7 @@ public class EndiannessHelper {
     public static int BytesToInt(byte[] bytes, int offset) {
         validateSize(bytes, intSize);
 
-        long returnValue = ((ToRealByte(bytes[offset + 3]) << 24) | (ToRealByte(bytes[offset + 2]) << 16) | (ToRealByte(bytes[offset + 1]) << 8) | (ToRealByte(bytes[offset + 0]))) & intMask;
+        long returnValue = ((ToUnsignedByte(bytes[offset + 3]) << 24) | (ToUnsignedByte(bytes[offset + 2]) << 16) | (ToUnsignedByte(bytes[offset + 1]) << 8) | (ToUnsignedByte(bytes[offset + 0]))) & intMask;
         return (int) returnValue;
     }
 
@@ -45,7 +45,7 @@ public class EndiannessHelper {
     public static long BytesToLong(byte[] bytes, int offset) {
         validateSize(bytes, longSize);
 
-        long returnValue = (ToRealByte(bytes[offset + 7]) << 56) | (ToRealByte(bytes[offset + 6]) << 48) | (ToRealByte(bytes[offset + 5]) << 40) | (ToRealByte(bytes[offset + 4]) << 32) | (ToRealByte(bytes[offset + 3]) << 24) | (ToRealByte(bytes[offset + 2]) << 16) | (ToRealByte(bytes[offset + 1]) << 8) | (ToRealByte(bytes[offset + 0]));
+        long returnValue = (ToUnsignedByte(bytes[offset + 7]) << 56) | (ToUnsignedByte(bytes[offset + 6]) << 48) | (ToUnsignedByte(bytes[offset + 5]) << 40) | (ToUnsignedByte(bytes[offset + 4]) << 32) | (ToUnsignedByte(bytes[offset + 3]) << 24) | (ToUnsignedByte(bytes[offset + 2]) << 16) | (ToUnsignedByte(bytes[offset + 1]) << 8) | (ToUnsignedByte(bytes[offset + 0]));
         return returnValue;
     }
 
@@ -84,20 +84,27 @@ public class EndiannessHelper {
         return returnValue;
     }
 
-    public static long ToRealByte(byte input) {
+    public static long ToUnsignedByte(byte input) {
         return ((int) input) & 0xFF;
     }
 
-    public static long ToRealByte(byte[] input) {
+    public static long ToUnsignedValue(byte[] input) {
         if (input == null) {
             throw new UnsupportedOperationException("Input cannot be NULL");
         }
 
-        if (input.length != 1) {
-            throw new UnsupportedOperationException("Input length must be 1, saw " + input.length);
+        if (input.length == 1) {
+            return ToUnsignedByte(input[0]);
         }
 
-        return ((int) input[0]) & 0xFF;
+        long result = 0;
+
+        for(int loop = 0; loop < input.length; loop++) {
+            long currentValue = ToUnsignedByte(input[loop]) << (loop * 8);
+            result += currentValue;
+        }
+
+        return result;
     }
 
     private static void validateSize(byte[] bytes, int requiredSize) {
