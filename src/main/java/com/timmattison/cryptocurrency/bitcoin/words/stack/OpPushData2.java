@@ -1,10 +1,5 @@
 package com.timmattison.cryptocurrency.bitcoin.words.stack;
 
-import com.timmattison.cryptocurrency.bitcoin.StateMachine;
-import com.timmattison.cryptocurrency.helpers.EndiannessHelper;
-
-import java.util.Arrays;
-
 /**
  * Created with IntelliJ IDEA.
  * User: timmattison

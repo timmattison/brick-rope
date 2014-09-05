@@ -99,7 +99,7 @@ public class EndiannessHelper {
 
         long result = 0;
 
-        for(int loop = 0; loop < input.length; loop++) {
+        for (int loop = 0; loop < input.length; loop++) {
             long currentValue = ToUnsignedByte(input[loop]) << (loop * 8);
             result += currentValue;
         }

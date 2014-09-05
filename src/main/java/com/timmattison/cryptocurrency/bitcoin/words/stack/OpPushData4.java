@@ -1,7 +1,5 @@
 package com.timmattison.cryptocurrency.bitcoin.words.stack;
 
-import java.util.Arrays;
-
 /**
  * Created with IntelliJ IDEA.
  * User: timmattison
