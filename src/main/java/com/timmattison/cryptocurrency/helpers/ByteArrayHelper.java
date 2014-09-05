@@ -111,6 +111,16 @@ public class ByteArrayHelper {
         return stringBuilder.toString();
     }
 
+    public static String toHexReverse(byte[] input) {
+        StringBuilder stringBuilder = new StringBuilder();
+
+        for (int loop = 0; loop < input.length; loop++) {
+            stringBuilder.append(String.format("%02x", input[input.length - loop - 1]));
+        }
+
+        return stringBuilder.toString();
+    }
+
     public static int get32BitWord(byte[] input, int offset) {
         byte byte0 = input[(offset * 4) + 0];
         byte byte1 = input[(offset * 4) + 1];
