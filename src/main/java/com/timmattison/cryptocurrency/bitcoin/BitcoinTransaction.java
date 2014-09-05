@@ -249,7 +249,7 @@ public class BitcoinTransaction implements Transaction {
 
     @Override
     public void clearInputScripts() {
-        for(Input input : getInputs()) {
+        for (Input input : getInputs()) {
             input.setScript(null);
         }
     }

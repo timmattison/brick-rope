@@ -3,16 +3,15 @@ package com.timmattison.cryptocurrency.bitcoin.applications;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.timmattison.cryptocurrency.factories.BlockChainFactory;
-import com.timmattison.cryptocurrency.factories.ScriptingFactory;
-import com.timmattison.cryptocurrency.factories.StateMachineFactory;
-import com.timmattison.cryptocurrency.interfaces.*;
+import com.timmattison.cryptocurrency.interfaces.Block;
+import com.timmattison.cryptocurrency.interfaces.BlockChain;
+import com.timmattison.cryptocurrency.interfaces.BlockValidator;
 import com.timmattison.cryptocurrency.modules.BitcoinModule;
 import com.timmattison.cryptocurrency.standard.interfaces.BlockStorage;
 import org.apache.commons.cli.ParseException;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
@@ -67,7 +66,7 @@ public class BitcoinProcessBlockChain {
             // Read the block so the next read skips over it
             Block lastBlock = blockChain.next();
 
-            if(!blockValidator.isValid(lastBlock, lastBlockNumber)) {
+            if (!blockValidator.isValid(lastBlock, lastBlockNumber)) {
                 throw new UnsupportedOperationException("Block failed to validate!");
             }
 
@@ -83,7 +82,7 @@ public class BitcoinProcessBlockChain {
 
             Block fromDb = blockStorage.getBlock(blockNumber);
 
-            if(!blockValidator.isValid(fromDb, blockNumber)) {
+            if (!blockValidator.isValid(fromDb, blockNumber)) {
                 throw new UnsupportedOperationException("Block failed to validate!");
             }
 

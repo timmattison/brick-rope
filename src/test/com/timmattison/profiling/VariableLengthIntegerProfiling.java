@@ -6,7 +6,6 @@ import com.timmattison.cryptocurrency.factories.VariableLengthIntegerFactory;
 import com.timmattison.cryptocurrency.standard.interfaces.VariableLengthInteger;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Test;
 
 import java.util.HashSet;
 import java.util.Set;

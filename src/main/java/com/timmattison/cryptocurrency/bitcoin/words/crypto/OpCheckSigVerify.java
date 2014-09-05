@@ -12,6 +12,7 @@ import com.timmattison.cryptocurrency.bitcoin.StateMachine;
 public class OpCheckSigVerify extends CryptoOp {
     private static final String word = "OP_CHECKSIGVERIFY";
     private static final Byte opcode = (byte) 0xad;
+
     @Override
 
     public void execute(StateMachine stateMachine) {

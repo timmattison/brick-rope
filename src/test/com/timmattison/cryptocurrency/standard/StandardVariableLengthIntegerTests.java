@@ -78,7 +78,7 @@ public class StandardVariableLengthIntegerTests {
 
             Assert.assertEquals(variableLengthInteger1.getValue(), variableLengthInteger2.getValue());
         } catch (Throwable t) {
-            throw(t);
+            throw (t);
         }
     }
 

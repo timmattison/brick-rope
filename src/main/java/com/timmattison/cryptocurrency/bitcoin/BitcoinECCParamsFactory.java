@@ -19,6 +19,7 @@ public class BitcoinECCParamsFactory implements ECCParamsFactory {
     public BitcoinECCParamsFactory(ECCNamedCurveFp namedCurve) {
         this.namedCurve = namedCurve;
     }
+
     @Override
     public ECCParameters create() {
         return namedCurve.getSecp256k1();

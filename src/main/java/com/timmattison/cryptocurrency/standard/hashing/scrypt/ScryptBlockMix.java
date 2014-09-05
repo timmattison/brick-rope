@@ -23,7 +23,7 @@ public class ScryptBlockMix implements BlockMix {
     @Override
     public byte[][] execute(byte[][] input, int rounds) {
         // Is there any data?
-        if(input == null) {
+        if (input == null) {
             // No, throw an exception
             throw new UnsupportedOperationException("ScryptBlockMix data cannot be NULL");
         }
@@ -31,7 +31,7 @@ public class ScryptBlockMix implements BlockMix {
         int expectedNumberOfBlocks = (2 * rounds);
 
         // Are there there the expected number of blocks?
-        if(input.length != expectedNumberOfBlocks) {
+        if (input.length != expectedNumberOfBlocks) {
             // No, throw an exception
             throw new UnsupportedOperationException("ScryptBlockMix didn't get the correct number of input blocks.  Expected " + expectedNumberOfBlocks + ", saw " + input.length);
         }
@@ -42,7 +42,7 @@ public class ScryptBlockMix implements BlockMix {
         // Copy the last block
         byte[] currentBlock = Arrays.copyOf(input[expectedNumberOfBlocks - 1], input[expectedNumberOfBlocks - 1].length);
 
-        for(int loop = 0; loop < (expectedNumberOfBlocks - 1); loop++) {
+        for (int loop = 0; loop < (expectedNumberOfBlocks - 1); loop++) {
             byte[] temp = ByteArrayHelper.xor(currentBlock, input[loop]);
             currentBlock = salsa.execute(temp);
             returnValue[loop] = currentBlock;

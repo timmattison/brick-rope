@@ -18,18 +18,17 @@ public class OpVerify extends FlowControlOp {
         // Is the top stack value a 1?
         Object value = stateMachine.pop();
 
-        if(!(value instanceof Integer)) {
+        if (!(value instanceof Integer)) {
             throw new UnsupportedOperationException("Top stack value is not an integer");
         }
 
         int intValue = (Integer) value;
 
-        if(intValue == 0) {
+        if (intValue == 0) {
             // Put the zero value back
             stateMachine.push(0);
             throw new UnsupportedOperationException("Top stack value is zero");
-        }
-        else if(intValue != 1) {
+        } else if (intValue != 1) {
             throw new UnsupportedOperationException("Top stack value is not one");
         }
     }

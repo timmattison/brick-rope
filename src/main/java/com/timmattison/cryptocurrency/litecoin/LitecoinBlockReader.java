@@ -29,7 +29,7 @@ public class LitecoinBlockReader implements BlockReader {
     @Override
     public byte[] getNextBlock(InputStream inputStream) throws IOException {
         // Are there enough bytes to read the values we need?
-        if(InputStreamHelper.getAvailableBytes(inputStream) < bytesRequired) {
+        if (InputStreamHelper.getAvailableBytes(inputStream) < bytesRequired) {
             // No, just return NULL
             return null;
         }
@@ -39,13 +39,13 @@ public class LitecoinBlockReader implements BlockReader {
         int bytesRead = inputStream.read(magicNumber, 0, magicNumberLengthInBytes);
 
         // Did we get the right number of bytes?
-        if(bytesRead != magicNumberLengthInBytes) {
+        if (bytesRead != magicNumberLengthInBytes) {
             // No, don't be clever and just throw an exception
             throwExceptionWhenIncorrectLengthRead("the magic number", magicNumberLengthInBytes, bytesRead);
         }
 
         // Did we get the value we expected?
-        if(!Arrays.equals(requiredMagicNumberBytes, magicNumber)) {
+        if (!Arrays.equals(requiredMagicNumberBytes, magicNumber)) {
             // No, throw an exception
             throwExceptionWhenIncorrectValueRead("the magic number", requiredMagicNumberBytes, magicNumber);
         }
@@ -55,7 +55,7 @@ public class LitecoinBlockReader implements BlockReader {
         bytesRead = inputStream.read(blockSizeBytes, 0, blockSizeLengthInBytes);
 
         // Did we get the right number of bytes?
-        if(bytesRead != blockSizeLengthInBytes) {
+        if (bytesRead != blockSizeLengthInBytes) {
             // No, don't be clever and just throw an exception
             throwExceptionWhenIncorrectLengthRead("the block size", blockSizeLengthInBytes, bytesRead);
         }
@@ -64,7 +64,7 @@ public class LitecoinBlockReader implements BlockReader {
         int blockSize = EndiannessHelper.BytesToInt(blockSizeBytes);
 
         // Was the block size valid?
-        if(blockSize == 0) {
+        if (blockSize == 0) {
             // No, don't be clever and just throw an exception
             throw new IllegalStateException("Block size cannot be zero");
         }
@@ -73,7 +73,7 @@ public class LitecoinBlockReader implements BlockReader {
         byte[] blockData = new byte[blockSize];
         bytesRead = inputStream.read(blockData, 0, blockSize);
 
-        if(blockSize != bytesRead) {
+        if (blockSize != bytesRead) {
             throwExceptionWhenIncorrectLengthRead("the block data", magicNumberLengthInBytes, bytesRead);
         }
 
@@ -82,7 +82,7 @@ public class LitecoinBlockReader implements BlockReader {
 
     @Override
     public void skipNextBlocks(InputStream inputStream, int count) throws IOException {
-        for(int loop = 0; loop < count; loop++) {
+        for (int loop = 0; loop < count; loop++) {
             getNextBlock(inputStream);
         }
     }

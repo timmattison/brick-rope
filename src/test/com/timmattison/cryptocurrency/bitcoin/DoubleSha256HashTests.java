@@ -3,8 +3,8 @@ package com.timmattison.cryptocurrency.bitcoin;
 import com.timmattison.cryptocurrency.helpers.ByteArrayHelper;
 import com.timmattison.cryptocurrency.standard.TestHelper;
 import com.timmattison.cryptocurrency.standard.hashing.sha.DoubleSha256Hash;
-import org.junit.Assert;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
