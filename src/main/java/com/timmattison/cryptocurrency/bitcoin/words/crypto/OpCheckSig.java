@@ -76,13 +76,6 @@ public class OpCheckSig extends CryptoOp {
             throw new UnsupportedOperationException("Signature does not start with 0x30");
         }
 
-        // Sanity check: Signature ends with 0x01 or 0x00
-        byte lastByteOfSignature = signature[signature.length - 1];
-
-        if ((lastByteOfSignature != 0x01) && (lastByteOfSignature != 0x00)) {
-            throw new UnsupportedOperationException("Signature does not end with 0x01 or 0x00");
-        }
-
         // Sanity check: r starts with 0x02
         if (signature[2] != 0x02) {
             throw new UnsupportedOperationException("r does not start with 0x02");
