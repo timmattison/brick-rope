@@ -119,7 +119,7 @@ public class BitcoinInputScript extends BitcoinScript implements InputScript {
                 int scriptBytesPosition = 0;
 
                 // Get the length of the block height value that is coming up
-                int lengthOfBlockHeight = (int) EndiannessHelper.ToRealByte(scriptBytes[scriptBytesPosition]);
+                int lengthOfBlockHeight = (int) EndiannessHelper.ToUnsignedByte(scriptBytes[scriptBytesPosition]);
                 scriptBytesPosition++;
 
                 // Read the block height

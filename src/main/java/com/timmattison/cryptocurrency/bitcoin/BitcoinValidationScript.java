@@ -32,7 +32,7 @@ public class BitcoinValidationScript extends BitcoinScript implements Validation
 
     @Override
     protected void validateLength() {
-        if(lengthInBytes == 0) {
+        if (lengthInBytes == 0) {
             throw new UnsupportedOperationException("Validation scripts cannot be zero length");
         }
     }

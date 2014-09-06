@@ -2,9 +2,9 @@ package com.timmattison.ecc;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import com.timmattison.crypto.modules.ECCSECTestModule;
 import com.timmattison.crypto.ecc.enums.ECCFieldType;
 import com.timmattison.crypto.ecc.interfaces.ECCKeyPair;
+import com.timmattison.crypto.modules.ECCSECTestModule;
 import org.junit.Assert;
 import org.junit.Test;
 

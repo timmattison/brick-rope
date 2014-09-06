@@ -7,9 +7,6 @@ import com.timmattison.cryptocurrency.standard.interfaces.Script;
 import com.timmattison.cryptocurrency.standard.interfaces.ValidationScript;
 
 import javax.inject.Inject;
-import java.io.IOException;
-import java.sql.SQLException;
-import java.util.List;
 
 public abstract class AbstractBitcoinTransactionValidator implements TransactionValidator {
     private final TransactionLocator transactionLocator;

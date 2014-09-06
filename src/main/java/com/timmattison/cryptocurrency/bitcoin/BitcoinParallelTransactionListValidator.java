@@ -9,7 +9,6 @@ import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 import java.util.logging.Logger;
@@ -32,7 +31,7 @@ public class BitcoinParallelTransactionListValidator implements TransactionListV
 
         int size = transactionList.size();
 
-        if(size == 1) {
+        if (size == 1) {
             // Assume the coinbase is always valid
             // TODO: Make this compliant with new BIPs that require the coinbase to include certain data
             return true;

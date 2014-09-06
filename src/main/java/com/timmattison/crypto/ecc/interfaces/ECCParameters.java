@@ -12,24 +12,28 @@ import java.math.BigInteger;
 public interface ECCParameters extends ECCElement {
     /**
      * The curve to which this is being applied
+     *
      * @return
      */
     public ECCCurve getCurve();
 
     /**
      * The base point
+     *
      * @return
      */
     public ECCPoint getG();
 
     /**
      * The order n of G
+     *
      * @return
      */
     public BigInteger getN();
 
     /**
      * The cofactor
+     *
      * @return
      */
     public BigInteger getH();

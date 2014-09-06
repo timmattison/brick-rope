@@ -12,7 +12,7 @@ public abstract class BitcoinWord<T> implements Word {
     protected String name;
 
     public Byte getOpcode() {
-        if(opcode == null) {
+        if (opcode == null) {
             throw new IllegalStateException("Opcode cannot be NULL");
         }
 
@@ -20,7 +20,7 @@ public abstract class BitcoinWord<T> implements Word {
     }
 
     public String getName() {
-        if(name == null) {
+        if (name == null) {
             throw new IllegalStateException("Name cannot be NULL");
         }
 

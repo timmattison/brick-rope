@@ -2,15 +2,10 @@ package com.timmattison.cryptocurrency.standard.blockstorage.database;
 
 import com.google.inject.name.Named;
 import com.timmattison.cryptocurrency.factories.BlockFactory;
-import com.timmattison.cryptocurrency.helpers.ByteArrayHelper;
-import com.timmattison.cryptocurrency.interfaces.Block;
-import com.timmattison.cryptocurrency.interfaces.Transaction;
 import com.timmattison.cryptocurrency.modules.BitcoinModule;
 import org.postgresql.util.PSQLException;
 
 import javax.inject.Inject;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

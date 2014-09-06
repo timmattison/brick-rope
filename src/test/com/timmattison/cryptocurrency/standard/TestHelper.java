@@ -45,10 +45,9 @@ public class TestHelper {
         BigInteger bigInteger = new BigInteger(string, 16);
         byte[] result = bigInteger.toByteArray();
 
-        if(result[0] == 0) {
+        if (result[0] == 0) {
             return Arrays.copyOfRange(result, 1, result.length);
-        }
-        else {
+        } else {
             return result;
         }
     }

@@ -1,8 +1,5 @@
 package com.timmattison.cryptocurrency.interfaces;
 
-import java.io.IOException;
-import java.sql.SQLException;
-
 /**
  * Created with IntelliJ IDEA.
  * User: timmattison
