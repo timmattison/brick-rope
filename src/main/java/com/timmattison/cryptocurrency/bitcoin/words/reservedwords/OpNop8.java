@@ -13,7 +13,7 @@ public class OpNop8 extends ReservedWordOp {
 
     @Override
     public void execute(com.timmattison.cryptocurrency.bitcoin.StateMachine stateMachine) {
-        throw new UnsupportedOperationException();
+        // Do nothing
     }
 
     @Override

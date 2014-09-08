@@ -15,7 +15,7 @@ public class OpNop1 extends ReservedWordOp {
 
     @Override
     public void execute(StateMachine stateMachine) {
-        throw new UnsupportedOperationException();
+        // Do nothing
     }
 
     @Override
