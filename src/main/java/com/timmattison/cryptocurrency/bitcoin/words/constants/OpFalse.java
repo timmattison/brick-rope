@@ -15,7 +15,7 @@ public class OpFalse extends ConstantOp {
 
     @Override
     public void execute(StateMachine stateMachine) {
-        throw new UnsupportedOperationException();
+        stateMachine.push(new byte[0]);
     }
 
     @Override
