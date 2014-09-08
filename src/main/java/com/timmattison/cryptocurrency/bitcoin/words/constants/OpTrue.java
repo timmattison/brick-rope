@@ -15,7 +15,7 @@ public class OpTrue extends ConstantOp {
 
     @Override
     public void execute(StateMachine stateMachine) {
-        throw new UnsupportedOperationException();
+        stateMachine.push(1);
     }
 
     @Override
