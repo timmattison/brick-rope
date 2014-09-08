@@ -33,11 +33,6 @@ public class BitcoinProcessBlockChain {
 
         BitcoinModule bitcoinModule = new BitcoinModule();
 
-//        if (options.containsKey(ApplicationHelper.DATABASE)) {
-//            bitcoinModule.useH2Storage(options.get(ApplicationHelper.DATABASE));
-//        }
-
-
         if (options.containsKey(ApplicationHelper.BLOCKCHAIN)) {
             bitcoinModule.useBlockChainFile(options.get(ApplicationHelper.BLOCKCHAIN));
         }
