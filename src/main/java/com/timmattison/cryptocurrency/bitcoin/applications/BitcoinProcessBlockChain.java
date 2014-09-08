@@ -37,12 +37,21 @@ public class BitcoinProcessBlockChain {
 //            bitcoinModule.useH2Storage(options.get(ApplicationHelper.DATABASE));
 //        }
 
-        if (options.containsKey(ApplicationHelper.DATABASE)) {
-            bitcoinModule.usePostgresqlStorage(options.get(ApplicationHelper.DATABASE));
-        }
 
         if (options.containsKey(ApplicationHelper.BLOCKCHAIN)) {
             bitcoinModule.useBlockChainFile(options.get(ApplicationHelper.BLOCKCHAIN));
+        }
+
+        String database = options.get(ApplicationHelper.DATABASE);
+        boolean mysql = Boolean.parseBoolean(options.get(ApplicationHelper.MYSQL));
+        boolean postgresql = Boolean.parseBoolean(options.get(ApplicationHelper.POSTGRESQL));
+
+        if (mysql) {
+            bitcoinModule.useMySqlStorage(database);
+        }
+
+        if (postgresql) {
+            bitcoinModule.usePostgresqlStorage(database);
         }
 
         Injector injector = Guice.createInjector(bitcoinModule);
