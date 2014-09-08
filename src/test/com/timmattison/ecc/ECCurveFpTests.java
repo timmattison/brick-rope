@@ -10,6 +10,8 @@ import com.timmattison.crypto.modules.ECCSECTestModule;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.math.BigInteger;
+
 /**
  * Created with IntelliJ IDEA.
  * User: Tim
@@ -70,27 +72,11 @@ public class ECCurveFpTests {
         ECCParameters eccParameters1 = ECCTestHelper.getSmallCurve1Parameters(injector);
         ECCCurve eccCurve1 = eccParameters1.getCurve();
 
-        Assert.assertNull(eccCurve1.decodePointHex("02"));
-    }
-
-    @Test
-    public void testShouldReturnNull2() {
-        ECCParameters eccParameters1 = ECCTestHelper.getSmallCurve1Parameters(injector);
-        ECCCurve eccCurve1 = eccParameters1.getCurve();
-
-        Assert.assertNull(eccCurve1.decodePointHex("03"));
-    }
-
-    @Test
-    public void testShouldReturnNull3() {
-        ECCParameters eccParameters1 = ECCTestHelper.getSmallCurve1Parameters(injector);
-        ECCCurve eccCurve1 = eccParameters1.getCurve();
-
         Assert.assertNull(eccCurve1.decodePointHex("05"));
     }
 
     @Test
-    public void testShouldReturnNull4() {
+    public void testShouldReturnNull2() {
         ECCParameters eccParameters1 = ECCTestHelper.getSmallCurve1Parameters(injector);
         ECCCurve eccCurve1 = eccParameters1.getCurve();
 
@@ -103,5 +89,22 @@ public class ECCurveFpTests {
         ECCCurve eccCurve1 = eccParameters1.getCurve();
 
         Assert.assertEquals(ECCFieldType.Fp, eccCurve1.getECCFieldType());
+    }
+
+    @Test
+    public void testDecodePoint1() {
+        // From https://bitcointalk.org/index.php?topic=237260.0
+        ECCParameters eccParameters = ECCTestHelper.getSecp256r1(injector);
+        ECCCurve eccCurve = eccParameters.getCurve();
+
+        ECCPoint eccPoint = eccCurve.decodePointHex("03a3a8ee8a09fa012934eb0eee2150d4bcb6268f2b4430abf31f4a58c95b365b20");
+        BigInteger x = eccPoint.getX().getX();
+        BigInteger y = eccPoint.getY().getX();
+
+        String xHex = x.toString(16);
+        String yHex = y.toString(16);
+
+        Assert.assertEquals("a3a8ee8a09fa012934eb0eee2150d4bcb6268f2b4430abf31f4a58c95b365b20", xHex);
+        Assert.assertEquals("6e98c827edc5e80829c71e1fa9a83043379344316ba641d7c9c0850f687ed419", yHex);
     }
 }

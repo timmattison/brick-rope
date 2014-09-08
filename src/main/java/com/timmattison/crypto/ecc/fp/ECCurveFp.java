@@ -126,21 +126,30 @@ public class ECCurveFp implements ECCCurve {
     // for now, work with hex strings because they're easier in JS
     @Override
     public ECCPoint decodePointHex(String s) {
-        switch (Integer.parseInt(s.substring(0, 2), 16)) {
-            // first byte
+        int start = 2;
+        int end = s.length();
+        String xHex;
+
+        // Convert the first byte
+        int type = Integer.parseInt(s.substring(0, start), 16);
+
+        switch (type) {
             case 0:
                 return getInfinity();
             case 2:
+                // Y is even
+                xHex = s.substring(start, end);
+                return decompressPoint(false, new BigInteger(xHex, 16));
             case 3:
-                // TODO: Support point compression
-                return null;
+                // Y is odd
+                xHex = s.substring(start, end);
+                return decompressPoint(true, new BigInteger(xHex, 16));
             case 4:
             case 6:
             case 7:
-                int start = 2;
-                int end = s.length();
+                end = s.length();
                 int middle = (end - start) / 2;
-                String xHex = s.substring(start, middle + start);
+                xHex = s.substring(start, middle + start);
                 String yHex = s.substring(middle + start, end);
                 return eccPointFactory.create(this,
                         this.fromBigInteger(new BigInteger(xHex, 16)),
@@ -148,6 +157,38 @@ public class ECCurveFp implements ECCCurve {
             default:
                 // unsupported
                 return null;
+        }
+    }
+
+    private ECCPoint decompressPoint(boolean odd, BigInteger x) {
+        // Some guidance from: https://bitcointalk.org/index.php?topic=162805.0
+
+        // Get Q from ECCFieldElement a
+        BigInteger q = a.getQ();
+
+        // Is q = 3 mod 4?
+        if (q.mod(BigInteger.valueOf(4)).equals(BigInteger.valueOf(3))) {
+            // Yes, our algorithm can handle this
+
+            // y^2 = x^3 + ax^2 + b, so we need to perform sqrt to recover y
+            BigInteger ySquared = x.multiply(x.multiply(x).add(a.toBigInteger())).add(b.toBigInteger());
+
+            // sqrt(a) = a^((q+1)/4) if q = 3 mod 4
+            BigInteger y = ySquared.modPow(q.add(BigInteger.ONE).divide(BigInteger.valueOf(4)), q);
+
+            // Is y even but we expect it to be odd?
+            if (y.testBit(0) != odd) {
+                // Yes, subtract y from q since we must have the other solution
+                y = q.subtract(y);
+            }
+
+            // Create our point from the x and y values
+            return eccPointFactory.create(this,
+                    this.fromBigInteger(x),
+                    this.fromBigInteger(y));
+        } else {
+            // No, our algorithm cannot handle the case where q != 3 mod 4
+            return null;
         }
     }
 

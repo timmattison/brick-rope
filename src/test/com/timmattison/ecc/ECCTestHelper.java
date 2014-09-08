@@ -39,6 +39,10 @@ public class ECCTestHelper {
         return injector.getInstance(ECCNamedCurveFactory.class).create().getSecp256k1();
     }
 
+    public static ECCParameters getSecp256r1(Injector injector) {
+        return injector.getInstance(ECCNamedCurveFactory.class).create().getSecp256r1();
+    }
+
     public static ECCKeyPair getKeyPair(Injector injector, ECCParameters eccParameters, BigInteger dU) {
         return injector.getInstance(ECCKeyPairFactory.class).create(eccParameters, dU);
     }
