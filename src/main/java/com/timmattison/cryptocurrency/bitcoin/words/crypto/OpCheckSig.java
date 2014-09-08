@@ -59,16 +59,6 @@ public class OpCheckSig extends CryptoOp {
         byte[] signature = (byte[]) stateMachine.pop();
 
         //System.out.println("Public key bytes: " + ByteArrayHelper.toHex(publicKey));
-
-        // Sanity check: Public key must start with 0x04
-        if (publicKey[0] != 0x04) {
-            throw new UnsupportedOperationException("Public key does not start with 0x04");
-        }
-
-        // Validate X and Y
-        // XXX - This actually does nothing because it just validates the length it already knows
-        //validateXandY(publicKey);
-
         //System.out.println("Signature bytes: " + ByteArrayHelper.toHex(signature));
 
         // Sanity check: Signature starts with 0x30
@@ -187,29 +177,6 @@ public class OpCheckSig extends CryptoOp {
         } catch (Exception e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
             throw new UnsupportedOperationException(e);
-        }
-    }
-
-    private void validateXandY(byte[] publicKey) {
-        // Extract X and Y
-        int xStart = 1;
-        int xEnd = xStart + 32;
-        int yStart = xEnd;
-        int yEnd = yStart + 32;
-
-        byte[] x = Arrays.copyOfRange(publicKey, xStart, xEnd);
-        byte[] y = Arrays.copyOfRange(publicKey, yStart, yEnd);
-
-        //System.out.println("X bytes: " + ByteArrayHelper.toHex(x));
-        //System.out.println("Y bytes: " + ByteArrayHelper.toHex(y));
-
-        // Sanity check: x and y are both 32 bytes
-        if (x.length != 32) {
-            throw new UnsupportedOperationException("x is not 32 bytes");
-        }
-
-        if (y.length != 32) {
-            throw new UnsupportedOperationException("y is not 32 bytes");
         }
     }
 }
