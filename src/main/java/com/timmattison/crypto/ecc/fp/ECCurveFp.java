@@ -132,7 +132,7 @@ public class ECCurveFp implements ECCCurve {
                 return getInfinity();
             case 2:
             case 3:
-                // point compression not supported yet
+                // TODO: Support point compression
                 return null;
             case 4:
             case 6:
