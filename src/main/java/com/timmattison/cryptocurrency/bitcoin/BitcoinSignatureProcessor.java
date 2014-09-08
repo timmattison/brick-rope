@@ -4,6 +4,7 @@ import com.timmattison.crypto.ecc.interfaces.*;
 import com.timmattison.cryptocurrency.factories.ECCParamsFactory;
 import com.timmattison.cryptocurrency.interfaces.SignatureProcessor;
 
+import javax.inject.Inject;
 import java.math.BigInteger;
 import java.util.Arrays;
 
@@ -19,6 +20,7 @@ public class BitcoinSignatureProcessor implements SignatureProcessor<ECCSignatur
     private final ECCParamsFactory eccParamsFactory;
     private final ECCSignatureFactory signatureFactory;
 
+    @Inject
     public BitcoinSignatureProcessor(ECCParamsFactory eccParamsFactory, ECCSignatureFactory signatureFactory) {
         this.eccParamsFactory = eccParamsFactory;
         this.signatureFactory = signatureFactory;
@@ -26,61 +28,49 @@ public class BitcoinSignatureProcessor implements SignatureProcessor<ECCSignatur
 
     @Override
     public ECCSignature getSignature(byte[] signature, byte[] publicKey) {
-        /*
-        Signature should be in this format (from http://www.bitcoinsecurity.org/2012/07/22/7/):
-          [sig] = [sigLength][0×30][rsLength][0×02][rLength][sig_r][0×02][sLength][sig_s][0×01]
-            where
-              sigLength gives the number of bytes taken up the rest of the signature ([0×30]…[0×01])
-              rsLength gives the number of bytes in [0×02][rLength][sig_r][0×02][sLength][sig_s]
-              rLength gives the number of bytes in [sig_r] (approx 32 bytes)
-              sLength gives the number of bytes in [sig_s] (approx 32 bytes)
-         */
+        //System.out.println("Public key bytes: " + ByteArrayHelper.toHex(publicKey));
+        //System.out.println("Signature bytes: " + ByteArrayHelper.toHex(signature));
 
-        // At this point we don't have the sigLength bytes so let's validate what we know for sure
-
-        // First byte must be 0x30
+        // Sanity check: Signature starts with 0x30
         if (signature[0] != 0x30) {
             throw new UnsupportedOperationException("Signature does not start with 0x30");
         }
 
-        // Second byte must be the length of the data minus 3 (1 for the byte we just checked, 1 for this byte,
-        //   and 1 for the last byte which is the signature hash type)
-        if (signature[1] != (signature.length - 3)) {
-            throw new UnsupportedOperationException("Invalid rsLength [" + signature[1] + ", " + signature.length + "]");
-        }
-
-        // Third byte must be 0x02
+        // Sanity check: r starts with 0x02
         if (signature[2] != 0x02) {
-            throw new UnsupportedOperationException("sig_r Signature type is not 0x02 [" + signature[2] + "]");
+            throw new UnsupportedOperationException("r does not start with 0x02");
         }
 
-        // sig_r length must be (XXX - docs say approx 32 bytes - XXX) 32 bytes
-        if (signature[3] != 32) {
-            throw new UnsupportedOperationException("rLength is not 32 [" + signature[3] + "]");
+        // TODO Sanity check: rLength makes sense
+        int rLength = signature[3];
+
+        // Extract r
+        int rStart = 3 + 1;
+        int rEnd = rStart + rLength;
+        byte[] r = Arrays.copyOfRange(signature, rStart, rEnd);
+
+        // TODO Sanity check: sLength makes sense
+        int sLength = signature[rEnd + 1];
+
+        // Extract s
+        int sStart = rEnd + 2;
+        int sEnd = sStart + sLength;
+        byte[] s = Arrays.copyOfRange(signature, sStart, sEnd);
+
+        //System.out.println("R bytes: " + ByteArrayHelper.toHex(r));
+        //System.out.println("S bytes: " + ByteArrayHelper.toHex(s));
+
+        // Sanity check rsLength makes sense
+        int rsLength = signature[1];
+
+        int expectedRsLength = rLength + sLength + 4;
+
+        if (expectedRsLength != rsLength) {
+            throw new UnsupportedOperationException("rsLength is incorrect [expected " + expectedRsLength + ", actual " + rsLength + "]");
         }
 
-        // First byte after sig_r must be 0x02
-        if (signature[4 + 32] != 0x02) {
-            throw new UnsupportedOperationException("sig_s Signature type is not 0x02 [" + signature[3 + 32] + "]");
-        }
-
-        // sig_s length must be (XXX - docs say approx 32 bytes - XXX) 32 bytes
-        if (signature[4 + 32 + 1] != 32) {
-            throw new UnsupportedOperationException("sLength is not 32 [" + signature[3 + 32 + 1] + "]");
-        }
-
-        // Last byte must be a valid signature hash value
-        byte hashTypeByte = signature[signature.length - 1];
-
-        if (BitcoinHashType.convert(hashTypeByte) == null) {
-            throw new UnsupportedOperationException("Unsupported hash type [" + hashTypeByte + "]");
-        }
-
-        // Everything looks good.  Extract sig_r and sig_s.
-        byte[] sig_r = Arrays.copyOfRange(signature, 4, 4 + 32);
-        byte[] sig_s = Arrays.copyOfRange(signature, 4 + 32 + 2, 4 + 32 + 2 + 32);
-
-        return getSignature(sig_r, sig_s, publicKey);
+        // Convert R, S, and the public key into an ECC signature object
+        return getSignature(r, s, publicKey);
     }
 
     @Override

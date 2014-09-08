@@ -8,10 +8,10 @@ import com.timmattison.crypto.ecc.random.impl.RealBigIntegerRandom;
 import com.timmattison.crypto.ecc.random.interfaces.BigIntegerRandom;
 import com.timmattison.crypto.ecc.random.interfaces.RandomFactory;
 import com.timmattison.cryptocurrency.bitcoin.BitcoinECCParamsFactory;
-import com.timmattison.cryptocurrency.bitcoin.factories.BitcoinSignatureProcessorFactory;
+import com.timmattison.cryptocurrency.bitcoin.BitcoinSignatureProcessor;
 import com.timmattison.cryptocurrency.factories.ECCParamsFactory;
-import com.timmattison.cryptocurrency.factories.SignatureProcessorFactory;
 import com.timmattison.cryptocurrency.interfaces.Hash;
+import com.timmattison.cryptocurrency.interfaces.SignatureProcessor;
 import com.timmattison.cryptocurrency.standard.hashing.sha.SingleSha1Hash;
 
 import java.util.Random;
@@ -52,7 +52,7 @@ public class ECCSECTestModule extends AbstractModule {
         install(new FactoryModuleBuilder().implement(ECCMessageSignatureVerifier.class, ECMessageSignatureVerifierFp.class).build(ECCMessageSignatureVerifierFactory.class));
 
         // For block 170 test
-        bind(SignatureProcessorFactory.class).to(BitcoinSignatureProcessorFactory.class);
+        bind(SignatureProcessor.class).to(BitcoinSignatureProcessor.class);
         bind(ECCParamsFactory.class).to(BitcoinECCParamsFactory.class);
     }
 }

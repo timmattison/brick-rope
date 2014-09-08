@@ -60,6 +60,7 @@ public class BitcoinModule extends AbstractModule {
     private String databaseName;
     private StorageType storageType = null;
     private String blockchainFile;
+    private boolean highPerformance = true;
 
     public void useH2Storage(String databaseFile) {
         throwExceptionOnMultipleStorageTypes();
@@ -116,10 +117,17 @@ public class BitcoinModule extends AbstractModule {
         bind(ScriptingFactory.class).to(BitcoinScriptingFactory.class);
         bind(TargetFactory.class).to(BitcoinTargetFactory.class);
         install(new FactoryModuleBuilder().implement(StateMachine.class, BitcoinStateMachine.class).build(StateMachineFactory.class));
-        bind(SignatureProcessorFactory.class).to(BitcoinSignatureProcessorFactory.class);
+        bind(SignatureProcessor.class).to(BitcoinSignatureProcessor.class);
         bind(BlockChainFactory.class).to(BitcoinBlockChainFactory.class);
-        bind(TransactionValidator.class).to(BitcoinParallelTransactionValidator.class);
-        bind(TransactionListValidator.class).to(BitcoinParallelTransactionListValidator.class);
+        bind(CheckSigPreprocessor.class).to(BitcoinCheckSigPreprocessor.class);
+
+        if (highPerformance) {
+            bind(TransactionValidator.class).to(BitcoinParallelTransactionValidator.class);
+            bind(TransactionListValidator.class).to(BitcoinParallelTransactionListValidator.class);
+        } else {
+            bind(TransactionValidator.class).to(BitcoinSerialTransactionValidator.class);
+            bind(TransactionListValidator.class).to(BitcoinSerialTransactionListValidator.class);
+        }
 
         install(new FactoryModuleBuilder().implement(VariableLengthInteger.class, StandardVariableLengthInteger.class).build(VariableLengthIntegerFactory.class));
 

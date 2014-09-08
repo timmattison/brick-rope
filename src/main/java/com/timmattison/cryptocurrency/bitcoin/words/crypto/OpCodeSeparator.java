@@ -12,11 +12,11 @@ import com.timmattison.cryptocurrency.bitcoin.StateMachine;
 public class OpCodeSeparator extends CryptoOp {
     private static final String word = "OP_CODESEPARATOR";
     private static final Byte opcode = (byte) 0xab;
-    private int position;
 
     @Override
     public void execute(StateMachine stateMachine) {
-        throw new UnsupportedOperationException();
+        // TODO: Clean this up.  It is hacky.
+        // Do nothing
     }
 
     @Override
