@@ -1,14 +1,12 @@
 package com.timmattison.cryptocurrency.standard.blockstorage.database;
 
 import com.google.inject.name.Named;
+import com.mysql.jdbc.exceptions.jdbc4.MySQLSyntaxErrorException;
 import com.timmattison.cryptocurrency.factories.BlockFactory;
 import com.timmattison.cryptocurrency.modules.BitcoinModule;
-import org.postgresql.util.PSQLException;
 
 import javax.inject.Inject;
 import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
@@ -80,7 +78,7 @@ public class MySqlBlockStorage extends AbstractDatabaseBlockStorage {
     }
 
     /**
-     * Overriden version of createIndexesIfNecessary since PostgreSQL needs some special transaction handling when there
+     * Overriden version of createIndexesIfNecessary since MySQL needs some special transaction handling when there
      * are exceptions (eg. the indexes already exist)
      *
      * @param connection
@@ -90,7 +88,7 @@ public class MySqlBlockStorage extends AbstractDatabaseBlockStorage {
     protected void createIndexesIfNecessary(Connection connection) throws SQLException {
         try {
             connection.createStatement().execute(createBlockNumberBlocksTableIndexSql);
-        } catch (PSQLException e) {
+        } catch (MySQLSyntaxErrorException e) {
             throwIfNotAlreadyExistsException(e);
         }
 
@@ -98,7 +96,7 @@ public class MySqlBlockStorage extends AbstractDatabaseBlockStorage {
 
         try {
             connection.createStatement().execute(createBlockNumberTransactionsTableIndexSql);
-        } catch (PSQLException e) {
+        } catch (MySQLSyntaxErrorException e) {
             throwIfNotAlreadyExistsException(e);
         }
 
@@ -106,22 +104,22 @@ public class MySqlBlockStorage extends AbstractDatabaseBlockStorage {
 
         try {
             connection.createStatement().execute(createTransactionHashTransactionsTableIndexSql);
-        } catch (PSQLException e) {
+        } catch (MySQLSyntaxErrorException e) {
             throwIfNotAlreadyExistsException(e);
         }
 
         doSafeCommit(connection);
     }
 
-    private void throwIfNotAlreadyExistsException(PSQLException e) throws PSQLException {
+    private void throwIfNotAlreadyExistsException(MySQLSyntaxErrorException e) throws MySQLSyntaxErrorException {
         if (!alreadyExistsException(e)) {
             e.printStackTrace();
             throw (e);
         }
     }
 
-    private boolean alreadyExistsException(PSQLException psqlException) {
-        if (psqlException.getMessage().contains("already exists")) {
+    private boolean alreadyExistsException(MySQLSyntaxErrorException mysqlException) {
+        if (mysqlException.getMessage().contains("Duplicate key name")) {
             return true;
         }
 
@@ -136,23 +134,10 @@ public class MySqlBlockStorage extends AbstractDatabaseBlockStorage {
      */
     private void doSafeCommit(Connection connection) throws SQLException {
         /**
-         * This COMMIT is necessary because if the previous statement failed PostgreSQL will ignore any new commands
+         * This COMMIT is necessary because if the previous statement failed MySQL will ignore any new commands
          * until a commit or rollback;
          */
         connection.createStatement().execute("COMMIT");
-    }
-
-    /**
-     * An overridden version of prepareStatement.  This is because PostgreSQL needs special flags set.
-     *
-     * @param sql
-     * @return
-     * @throws java.sql.SQLException
-     * @throws ClassNotFoundException
-     */
-    @Override
-    protected PreparedStatement prepareStatement(String sql) throws SQLException, ClassNotFoundException {
-        return getConnection().prepareStatement(sql, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
     }
 
     @Override
