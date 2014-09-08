@@ -15,7 +15,7 @@ public class OpDrop extends StackOp {
 
     @Override
     public void execute(StateMachine stateMachine) {
-        throw new UnsupportedOperationException();
+        stateMachine.pop();
     }
 
     @Override
