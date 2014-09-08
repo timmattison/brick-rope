@@ -20,6 +20,10 @@ public class ApplicationHelper {
     private static final String DATABASE_FILE_NAME = "block database file name";
     public static final String BLOCKCHAIN = "blockchain";
     private static final String BLOCKCHAIN_FILE_NAME = "blockchain file name";
+    public static final String POSTGRESQL = "postgresql";
+    private static final String POSTGRESQL_OPTION = "use PostgreSQL";
+    public static final String MYSQL = "mysql";
+    private static final String MYSQL_OPTION = "use MySQL";
 
     public static void logFine() {
         Handler[] handlers = Logger.getLogger("").getHandlers();
@@ -36,6 +40,8 @@ public class ApplicationHelper {
         // Add the database adn blockchain options
         options.addOption(DATABASE, true, DATABASE_FILE_NAME);
         options.addOption(BLOCKCHAIN, true, BLOCKCHAIN_FILE_NAME);
+        options.addOption(POSTGRESQL, false, POSTGRESQL_OPTION);
+        options.addOption(MYSQL, false, MYSQL_OPTION);
 
         CommandLineParser commandLineParser = new BasicParser();
         CommandLine commandLine = commandLineParser.parse(options, args);
@@ -44,6 +50,9 @@ public class ApplicationHelper {
 
         String databaseFile = commandLine.getOptionValue(DATABASE);
         String blockchainFile = commandLine.getOptionValue(BLOCKCHAIN);
+
+        boolean postgresql = commandLine.hasOption(POSTGRESQL);
+        boolean mysql = commandLine.hasOption(MYSQL);
 
         if (databaseFile == null) {
             // Automatically generate the usage info with Apache CLI
@@ -58,6 +67,14 @@ public class ApplicationHelper {
 
         if (blockchainFile != null) {
             output.put(BLOCKCHAIN, blockchainFile);
+        }
+
+        if(postgresql) {
+            output.put(POSTGRESQL, String.valueOf(postgresql));
+        }
+
+        if(mysql) {
+            output.put(MYSQL, String.valueOf(mysql));
         }
 
         return output;

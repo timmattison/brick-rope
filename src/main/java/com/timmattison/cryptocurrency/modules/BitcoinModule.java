@@ -17,7 +17,9 @@ import com.timmattison.cryptocurrency.standard.StandardBlockFactory;
 import com.timmattison.cryptocurrency.standard.StandardMerkleRootCalculator;
 import com.timmattison.cryptocurrency.standard.StandardVariableLengthInteger;
 import com.timmattison.cryptocurrency.standard.blockstorage.database.H2BlockStorage;
+import com.timmattison.cryptocurrency.standard.blockstorage.database.MySqlBlockStorage;
 import com.timmattison.cryptocurrency.standard.blockstorage.database.PostgresqlBlockStorage;
+import com.timmattison.cryptocurrency.standard.blockstorage.database.StorageType;
 import com.timmattison.cryptocurrency.standard.hashing.chunks.ChunkExtractor;
 import com.timmattison.cryptocurrency.standard.hashing.chunks.StandardChunkExtractor;
 import com.timmattison.cryptocurrency.standard.hashing.padding.MessagePadder;
@@ -41,22 +43,34 @@ public class BitcoinModule extends AbstractModule {
     public static final String DATABASE_FILE_NAME = "databaseFile";
     public static final String DATABASE_NAME_NAME = "databaseName";
     public static final String BLOCKCHAIN_FILE_NAME = "blockchainFile";
-    private static final int threads = 10;
 
     private String databaseFile;
     private String databaseName;
-    private boolean useH2Storage = false;
+    private StorageType storageType = null;
     private String blockchainFile;
-    private boolean usePostgresqlStorage = false;
 
     public void useH2Storage(String databaseFile) {
+        throwExceptionOnMultipleStorageTypes();
         this.databaseFile = databaseFile;
-        this.useH2Storage = true;
+        this.storageType = StorageType.H2;
+    }
+
+    private void throwExceptionOnMultipleStorageTypes() {
+        if (storageType != null) {
+            throw new UnsupportedOperationException("Can't use multiple storage types");
+        }
     }
 
     public void usePostgresqlStorage(String databaseName) {
+        throwExceptionOnMultipleStorageTypes();
         this.databaseName = databaseName;
-        this.usePostgresqlStorage = true;
+        this.storageType = StorageType.PostgreSQL;
+    }
+
+    public void useMySqlStorage(String databaseName) {
+        throwExceptionOnMultipleStorageTypes();
+        this.databaseName = databaseName;
+        this.storageType = StorageType.MySQL;
     }
 
     public void useBlockChainFile(String blockchainFile) {
@@ -134,15 +148,21 @@ public class BitcoinModule extends AbstractModule {
         bind(MessagePadder.class).to(StandardMessagePadder.class);
 
         // For storage
-        if (useH2Storage) {
-            bind(String.class).annotatedWith(Names.named(DATABASE_FILE_NAME)).toInstance(databaseFile);
-            bind(BlockStorage.class).to(H2BlockStorage.class).in(Singleton.class);
+        if (storageType == null) {
+            throw new UnsupportedOperationException("No storage type specified");
         }
 
-        // For storage
-        if (usePostgresqlStorage) {
+        if (storageType.equals(StorageType.H2)) {
+            bind(String.class).annotatedWith(Names.named(DATABASE_FILE_NAME)).toInstance(databaseFile);
+            bind(BlockStorage.class).to(H2BlockStorage.class).in(Singleton.class);
+        } else if (storageType.equals(StorageType.PostgreSQL)) {
             bind(String.class).annotatedWith(Names.named(DATABASE_NAME_NAME)).toInstance(databaseName);
             bind(BlockStorage.class).to(PostgresqlBlockStorage.class).in(Singleton.class);
+        } else if (storageType.equals(StorageType.MySQL)) {
+            bind(String.class).annotatedWith(Names.named(DATABASE_NAME_NAME)).toInstance(databaseName);
+            bind(BlockStorage.class).to(MySqlBlockStorage.class).in(Singleton.class);
+        } else {
+            throw new UnsupportedOperationException("Unknown storage type [" + storageType + "]");
         }
 
         // For multithreading
