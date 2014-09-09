@@ -163,7 +163,7 @@ public class OpCheckSig extends CryptoOp {
         SignatureProcessor signatureProcessor = signatureProcessorFactory.create();
         ECCMessageSignatureVerifier eccMessageSignatureVerifier = eccMessageSignatureVerifierFactory.create();
 
-        // XXX - R and S match what the reference code shows
+        // Convert R, S, and the public key into an ECC signature object
         ECCSignature eccSignature = (ECCSignature) signatureProcessor.getSignature(r, s, publicKey);
 
         try {
