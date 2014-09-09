@@ -2,6 +2,7 @@ package com.timmattison.cryptocurrency.bitcoin.words.stack;
 
 import com.timmattison.cryptocurrency.bitcoin.StateMachine;
 import com.timmattison.cryptocurrency.helpers.ByteArrayHelper;
+import org.apache.commons.lang.ArrayUtils;
 
 import java.util.Arrays;
 
@@ -69,5 +70,15 @@ public class VirtualOpPush extends StackOp {
         stringBuilder.append("]");
 
         return stringBuilder.toString();
+    }
+
+    @Override
+    public byte[] dump() {
+        byte[] dump = new byte[1];
+        dump[0] = getOpcode();
+
+        dump = ArrayUtils.addAll(dump, valueToPush);
+
+        return dump;
     }
 }
