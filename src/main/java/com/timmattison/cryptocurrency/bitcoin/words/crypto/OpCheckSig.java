@@ -159,8 +159,6 @@ public class OpCheckSig extends CryptoOp {
         // Add on four byte hash type code
         txCopyBytes = ByteArrayHelper.concatenate(txCopyBytes, hashType.getLittleEndianValue());
 
-        // XXX USE THE TRANSACTION LOCATOR!
-
         // Create the signature processor
         SignatureProcessor signatureProcessor = signatureProcessorFactory.create();
         ECCMessageSignatureVerifier eccMessageSignatureVerifier = eccMessageSignatureVerifierFactory.create();
