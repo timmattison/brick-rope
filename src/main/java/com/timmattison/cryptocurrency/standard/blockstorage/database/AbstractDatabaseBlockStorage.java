@@ -78,6 +78,7 @@ public abstract class AbstractDatabaseBlockStorage implements BlockStorage {
 
         resultSet.first();
         int blockCount = resultSet.getInt(1);
+        resultSet.close();
 
         return blockCount;
     }
@@ -92,6 +93,7 @@ public abstract class AbstractDatabaseBlockStorage implements BlockStorage {
 
         resultSet.first();
         int lastBlockNumber = resultSet.getInt(1);
+        resultSet.close();
 
         return lastBlockNumber;
     }
@@ -105,11 +107,15 @@ public abstract class AbstractDatabaseBlockStorage implements BlockStorage {
 
         ResultSet resultSet = preparedStatement.executeQuery();
 
-        if (!resultSet.first()) {
-            return null;
-        }
+        try {
+            if (!resultSet.first()) {
+                return null;
+            }
 
-        return (Block) blockFactory.createBlock(new ByteArrayInputStream(resultSet.getBytes(1)));
+            return (Block) blockFactory.createBlock(new ByteArrayInputStream(resultSet.getBytes(1)));
+        } finally {
+            resultSet.close();
+        }
     }
 
     protected abstract String getGetBlockSql();
@@ -121,11 +127,15 @@ public abstract class AbstractDatabaseBlockStorage implements BlockStorage {
 
         ResultSet resultSet = preparedStatement.executeQuery();
 
-        if (!resultSet.first()) {
-            return null;
-        }
+        try {
+            if (!resultSet.first()) {
+                return null;
+            }
 
-        return resultSet.getLong(1);
+            return resultSet.getLong(1);
+        } finally {
+            resultSet.close();
+        }
     }
 
     protected abstract String getGetBlockOffsetSql();
@@ -145,18 +155,22 @@ public abstract class AbstractDatabaseBlockStorage implements BlockStorage {
 
         ResultSet resultSet = preparedStatement.executeQuery();
 
-        if (!resultSet.first()) {
-            return null;
+        try {
+            if (!resultSet.first()) {
+                return null;
+            }
+
+            int blockNumber = resultSet.getInt(1);
+            int transactionNumber = resultSet.getInt(2);
+
+            Block block = getBlock(blockNumber);
+
+            Transaction transaction = block.getTransactions().get(transactionNumber);
+
+            return transaction;
+        } finally {
+            resultSet.close();
         }
-
-        int blockNumber = resultSet.getInt(1);
-        int transactionNumber = resultSet.getInt(2);
-
-        Block block = getBlock(blockNumber);
-
-        Transaction transaction = block.getTransactions().get(transactionNumber);
-
-        return transaction;
     }
 
     protected abstract String getGetTransactionSql();
