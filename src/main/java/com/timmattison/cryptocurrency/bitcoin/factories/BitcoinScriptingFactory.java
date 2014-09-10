@@ -43,10 +43,12 @@ public class BitcoinScriptingFactory implements ScriptingFactory {
         this.logger = logger;
         this.words = words;
 
+        // TODO: Lazy initialize this!
         if (wordsByOpcode == null) {
             createOpcodeLookupTable();
         }
 
+        // TODO: Lazy initialize this!
         if (wordsByName == null) {
             createNameLookupTable();
         }
