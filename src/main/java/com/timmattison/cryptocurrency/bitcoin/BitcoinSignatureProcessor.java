@@ -113,6 +113,7 @@ public class BitcoinSignatureProcessor implements SignatureProcessor<ECCSignatur
             output = new byte[input.length + 1];
             output[0] = 0;
 
+            // TODO: Use System.arraycopy here
             for (int loop = 0; loop < input.length; loop++) {
                 output[loop + 1] = input[loop];
             }
