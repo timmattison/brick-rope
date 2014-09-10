@@ -101,9 +101,9 @@ public class BitcoinSignatureProcessor implements SignatureProcessor<ECCSignatur
         BigInteger signatureS = new BigInteger(sig_s);
 
         // Create the signature instance
-        ECCSignature ecSignature = signatureFactory.create(ecc, signatureR, signatureS, Qu);
+        ECCSignature eccSignature = signatureFactory.create(ecc, signatureR, signatureS, Qu);
 
-        return ecSignature;
+        return eccSignature;
     }
 
     private byte[] addProperPadding(byte[] input) {
