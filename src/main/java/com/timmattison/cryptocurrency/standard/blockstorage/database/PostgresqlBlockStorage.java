@@ -24,8 +24,9 @@ public class PostgresqlBlockStorage extends AbstractDatabaseBlockStorage {
     private static final String blockNumberField = "blockNumber";
     private static final String blockField = "block";
     private static final String blockOffsetField = "blockOffset";
-    private static final String createBlocksTableSql = "CREATE TABLE IF NOT EXISTS " + blocksTable + " (" + blockNumberField + " BIGINT not null, " + blockField + " BYTEA not null, " + blockOffsetField + " BIGINT not null);";
-    private static final String createTransactionsTableSql = "CREATE TABLE IF NOT EXISTS " + transactionsTable + " (" + transactionHashField + " VARCHAR(255) not null, " + blockNumberField + " BIGINT not null, " + transactionNumberField + " BIGINT not null);";
+    private static final String cannedTimestampField = "timestamp timestamp default current_timestamp";
+    private static final String createBlocksTableSql = "CREATE TABLE IF NOT EXISTS " + blocksTable + " (" + blockNumberField + " BIGINT not null, " + blockField + " BYTEA not null, " + blockOffsetField + " BIGINT not null, " + cannedTimestampField + ");";
+    private static final String createTransactionsTableSql = "CREATE TABLE IF NOT EXISTS " + transactionsTable + " (" + transactionHashField + " VARCHAR(255) not null, " + blockNumberField + " BIGINT not null, " + transactionNumberField + " BIGINT not null, " + cannedTimestampField + ");";
     private static final String createBlockNumberBlocksTableIndexSql = "CREATE INDEX blocknumber_" + blocksTable + "_index on " + blocksTable + "(blocknumber)";
     private static final String createBlockNumberTransactionsTableIndexSql = "CREATE INDEX blocknumber_" + transactionsTable + "_index on " + transactionsTable + "(blocknumber)";
     private static final String createTransactionHashTransactionsTableIndexSql = "CREATE INDEX transactionhash_" + transactionsTable + "_index on " + transactionsTable + "(transactionhash)";
