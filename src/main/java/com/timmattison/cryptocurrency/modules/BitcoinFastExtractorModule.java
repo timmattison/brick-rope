@@ -69,7 +69,7 @@ public class BitcoinFastExtractorModule extends AbstractModule {
         bind(OutputFactory.class).to(BitcoinOutputFactory.class);
         bind(ScriptingFactory.class).to(BitcoinScriptingFactory.class);
         bind(TargetFactory.class).to(BitcoinTargetFactory.class);
-        bind(StateMachineFactory.class).to(BitcoinStateMachineFactory.class);
+        install(new FactoryModuleBuilder().implement(StateMachine.class, BitcoinStateMachine.class).build(StateMachineFactory.class));
         bind(SignatureProcessorFactory.class).to(BitcoinSignatureProcessorFactory.class);
 
         // ECC bindings

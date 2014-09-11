@@ -1,15 +1,12 @@
 package com.timmattison.cryptocurrency.bitcoin.factories;
 
-import com.timmattison.crypto.ecc.interfaces.ECCMessageSignatureVerifierFactory;
 import com.timmattison.cryptocurrency.bitcoin.BitcoinInputScript;
 import com.timmattison.cryptocurrency.bitcoin.BitcoinOutputScript;
 import com.timmattison.cryptocurrency.bitcoin.BitcoinValidationScript;
 import com.timmattison.cryptocurrency.bitcoin.Word;
 import com.timmattison.cryptocurrency.bitcoin.words.stack.VirtualOpPush;
 import com.timmattison.cryptocurrency.factories.ScriptingFactory;
-import com.timmattison.cryptocurrency.factories.SignatureProcessorFactory;
 import com.timmattison.cryptocurrency.helpers.ByteArrayHelper;
-import com.timmattison.cryptocurrency.interfaces.TransactionLocator;
 import com.timmattison.cryptocurrency.standard.interfaces.InputScript;
 import com.timmattison.cryptocurrency.standard.interfaces.OutputScript;
 import com.timmattison.cryptocurrency.standard.interfaces.Script;
@@ -39,17 +36,11 @@ public class BitcoinScriptingFactory implements ScriptingFactory {
     private static HashMap<String, Word> wordsByName;
 
     private final Logger logger;
-    private final SignatureProcessorFactory signatureProcessorFactory;
-    private final ECCMessageSignatureVerifierFactory eccMessageSignatureVerifierFactory;
-    private final TransactionLocator transactionLocator;
     private final Set<Word> words;
 
     @Inject
-    public BitcoinScriptingFactory(Logger logger, SignatureProcessorFactory signatureProcessorFactory, ECCMessageSignatureVerifierFactory eccMessageSignatureVerifierFactory, TransactionLocator transactionLocator, Set<Word> words) throws InstantiationException, IllegalAccessException {
+    public BitcoinScriptingFactory(Logger logger, Set<Word> words) throws InstantiationException, IllegalAccessException {
         this.logger = logger;
-        this.signatureProcessorFactory = signatureProcessorFactory;
-        this.eccMessageSignatureVerifierFactory = eccMessageSignatureVerifierFactory;
-        this.transactionLocator = transactionLocator;
         this.words = words;
 
         if (wordsByOpcode == null) {
