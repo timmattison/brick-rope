@@ -15,6 +15,7 @@ import com.timmattison.cryptocurrency.interfaces.TransactionLocator;
 import com.timmattison.cryptocurrency.standard.interfaces.InputScript;
 import com.timmattison.cryptocurrency.standard.interfaces.Script;
 
+import javax.inject.Inject;
 import java.util.Arrays;
 import java.util.logging.Logger;
 
@@ -34,6 +35,7 @@ public class OpCheckSig extends CryptoOp {
     private final TransactionLocator transactionLocator;
     private Logger logger;
 
+    @Inject
     public OpCheckSig(Logger logger, SignatureProcessorFactory signatureProcessorFactory, ECCMessageSignatureVerifierFactory eccMessageSignatureVerifierFactory, ScriptingFactory scriptingFactory, TransactionLocator transactionLocator) {
         this.logger = logger;
         this.signatureProcessorFactory = signatureProcessorFactory;
