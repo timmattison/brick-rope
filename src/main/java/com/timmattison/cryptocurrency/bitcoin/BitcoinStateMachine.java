@@ -1,11 +1,13 @@
 package com.timmattison.cryptocurrency.bitcoin;
 
+import com.timmattison.cryptocurrency.bitcoin.words.crypto.OpCodeSeparator;
 import com.timmattison.cryptocurrency.factories.ScriptingFactory;
 import com.timmattison.cryptocurrency.standard.interfaces.Script;
 
 import javax.inject.Inject;
 import java.util.Arrays;
 import java.util.Stack;
+import java.util.logging.Logger;
 
 /**
  * Created with IntelliJ IDEA.
@@ -17,6 +19,7 @@ import java.util.Stack;
 public class BitcoinStateMachine implements StateMachine {
     private static final int MAX_WORD_LIST_LENGTH = 9999;
     private final ScriptingFactory scriptingFactory;
+    private final Logger logger;
     Stack<Object> stack;
     private byte[] previousTransactionHash;
     private byte[] currentTransactionHash;
@@ -24,7 +27,8 @@ public class BitcoinStateMachine implements StateMachine {
     private Integer inputNumber;
 
     @Inject
-    public BitcoinStateMachine(ScriptingFactory scriptingFactory) {
+    public BitcoinStateMachine(Logger logger, ScriptingFactory scriptingFactory) {
+        this.logger = logger;
         this.scriptingFactory = scriptingFactory;
     }
 
@@ -80,6 +84,8 @@ public class BitcoinStateMachine implements StateMachine {
 
             // Get the word that the next byte corresponds to
             Word currentWord = scriptingFactory.createWord(currentByte);
+
+            // Build the current word and get the remaining script data
             scriptData = currentWord.build(Arrays.copyOfRange(scriptData, 1, scriptData.length));
 
             // Execute this word

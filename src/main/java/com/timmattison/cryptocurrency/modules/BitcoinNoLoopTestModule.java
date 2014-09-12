@@ -56,7 +56,7 @@ public class BitcoinNoLoopTestModule extends AbstractModule {
         bind(ScriptingFactory.class).to(BitcoinScriptingFactory.class);
         bind(TargetFactory.class).to(BitcoinTargetFactory.class);
         install(new FactoryModuleBuilder().implement(StateMachine.class, BitcoinStateMachine.class).build(StateMachineFactory.class));
-        bind(SignatureProcessorFactory.class).to(BitcoinSignatureProcessorFactory.class);
+        bind(SignatureProcessor.class).to(BitcoinSignatureProcessor.class);
         bind(BlockChainFactory.class).to(BitcoinBlockChainFactory.class);
 
         install(new FactoryModuleBuilder().implement(VariableLengthInteger.class, NoLoopVariableLengthInteger.class).build(VariableLengthIntegerFactory.class));

@@ -2,7 +2,7 @@ package com.timmattison.ecc;
 
 import com.google.inject.Injector;
 import com.timmattison.crypto.ecc.interfaces.*;
-import com.timmattison.cryptocurrency.factories.SignatureProcessorFactory;
+import com.timmattison.cryptocurrency.interfaces.SignatureProcessor;
 import com.timmattison.ecc.random.BigIntegerRandomForTesting;
 
 import java.math.BigInteger;
@@ -56,7 +56,7 @@ public class ECCTestHelper {
     }
 
     public static Object getSignature(Injector injector, byte[] r, byte[] s, byte[] publicKey) {
-        return injector.getInstance(SignatureProcessorFactory.class).create().getSignature(r, s, publicKey);
+        return injector.getInstance(SignatureProcessor.class).getSignature(r, s, publicKey);
     }
 
     public static ECCMessageSigner getSigner(Injector injector, BigInteger valueToReturn, ECCKeyPair eccKeyPair) {
