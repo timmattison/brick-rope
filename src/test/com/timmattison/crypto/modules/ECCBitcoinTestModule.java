@@ -26,14 +26,7 @@ import java.util.Random;
 public class ECCBitcoinTestModule extends AbstractModule {
     @Override
     protected void configure() {
-        bind(ECCCurve.class).to(ECCurveFp.class);
         bind(ECCNamedCurveFp.class).to(SECNamedCurveFp.class);
-        bind(ECCParameters.class).to(ECParametersFp.class);
-        bind(ECCFieldElement.class).to(ECFieldElementFp.class);
-        bind(ECCPoint.class).to(ECPointFp.class);
-
-        bind(ECCKeyPair.class).to(ECKeyPairFp.class);
-        bind(ECCSignature.class).to(ECSignatureFp.class);
 
         install(new FactoryModuleBuilder().implement(ECCCurve.class, ECCurveFp.class).build(ECCCurveFactory.class));
         install(new FactoryModuleBuilder().implement(ECCNamedCurveFp.class, SECNamedCurveFp.class).build(ECCNamedCurveFactory.class));
@@ -44,7 +37,6 @@ public class ECCBitcoinTestModule extends AbstractModule {
         install(new FactoryModuleBuilder().implement(ECCSignature.class, ECSignatureFp.class).build(ECCSignatureFactory.class));
 
         // Message signing
-        bind(ECCMessageSigner.class).to(ECMessageSignerFp.class);
         install(new FactoryModuleBuilder().implement(ECCMessageSigner.class, ECMessageSignerFp.class).build(ECCMessageSignerFactory.class));
         install(new FactoryModuleBuilder().implement(Hash.class, DoubleSha256Hash.class).build(ECCMessageSignerHashFactory.class));
         bind(BigIntegerRandom.class).to(RealBigIntegerRandom.class);

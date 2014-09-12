@@ -6,6 +6,7 @@ import com.timmattison.cryptocurrency.bitcoin.Constants;
 import com.timmattison.cryptocurrency.helpers.ByteArrayHelper;
 import com.timmattison.cryptocurrency.interfaces.Hash;
 
+import javax.inject.Inject;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -15,7 +16,7 @@ public class SingleSha1Hash implements Hash {
     private byte[] output;
     private BigInteger outputBigInteger;
 
-    @AssistedInject
+    @Inject
     public SingleSha1Hash(@Assisted("input") byte[] input) {
         this.input = input;
     }

@@ -6,6 +6,7 @@ import com.timmattison.crypto.ecc.enums.ECCFieldType;
 import com.timmattison.crypto.ecc.interfaces.*;
 
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 import java.math.BigInteger;
 
 // This code is based off of the Javascript implementation found here - http://www-cs-students.stanford.edu/~tjw/jsbn/
@@ -32,7 +33,7 @@ public class ECPointFp implements ECCPoint {
     public ECPointFp() {
     }
 
-    @AssistedInject
+    @Inject
     public ECPointFp(ECCPointFactory eccPointFactory, ECCFieldElementFactory eccFieldElementFactory, @Assisted("curve") ECCCurve curve, @Nullable @Assisted("x") ECCFieldElement x, @Nullable @Assisted("y") ECCFieldElement y) {
         this.eccPointFactory = eccPointFactory;
         this.eccFieldElementFactory = eccFieldElementFactory;

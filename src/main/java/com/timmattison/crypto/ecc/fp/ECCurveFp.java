@@ -6,6 +6,7 @@ import com.timmattison.crypto.ecc.enums.ECCFieldType;
 import com.timmattison.crypto.ecc.interfaces.*;
 import com.timmattison.cryptocurrency.helpers.ByteArrayHelper;
 
+import javax.inject.Inject;
 import java.math.BigInteger;
 import java.util.Random;
 
@@ -31,7 +32,7 @@ public class ECCurveFp implements ECCCurve {
     public ECCurveFp() {
     }
 
-    @AssistedInject
+    @Inject
     public ECCurveFp(ECCPointFactory eccPointFactory, ECCFieldElementFactory eccFieldElementFactory, @Assisted("p") BigInteger p, @Assisted("order") BigInteger order, @Assisted("a") BigInteger a, @Assisted("b") BigInteger b) {
         this.eccPointFactory = eccPointFactory;
         this.eccFieldElementFactory = eccFieldElementFactory;

@@ -1,5 +1,7 @@
 package com.timmattison.crypto.ecc.interfaces;
 
+import com.google.inject.assistedinject.Assisted;
+
 import java.math.BigInteger;
 
 /**
@@ -10,5 +12,5 @@ import java.math.BigInteger;
  * To change this template use File | Settings | File Templates.
  */
 public interface ECCKeyPairFactory {
-    ECCKeyPair create(ECCParameters eccParameters, BigInteger dU);
+    ECCKeyPair create(@Assisted("eccParameters") ECCParameters eccParameters, @Assisted("dU") BigInteger dU);
 }

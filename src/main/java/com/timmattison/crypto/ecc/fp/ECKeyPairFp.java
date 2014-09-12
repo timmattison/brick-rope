@@ -1,12 +1,12 @@
 package com.timmattison.crypto.ecc.fp;
 
 import com.google.inject.assistedinject.Assisted;
-import com.google.inject.assistedinject.AssistedInject;
 import com.timmattison.crypto.ecc.enums.ECCFieldType;
 import com.timmattison.crypto.ecc.interfaces.ECCKeyPair;
 import com.timmattison.crypto.ecc.interfaces.ECCParameters;
 import com.timmattison.crypto.ecc.interfaces.ECCPoint;
 
+import javax.inject.Inject;
 import java.math.BigInteger;
 
 // This code is based off of the Javascript implementation found here - http://www-cs-students.stanford.edu/~tjw/jsbn/
@@ -26,8 +26,8 @@ public class ECKeyPairFp implements ECCKeyPair {
     public ECKeyPairFp() {
     }
 
-    @AssistedInject
-    public ECKeyPairFp(@Assisted ECCParameters eccParameters, @Assisted BigInteger d) throws Exception {
+    @Inject
+    public ECKeyPairFp(@Assisted("eccParameters") ECCParameters eccParameters, @Assisted("dU") BigInteger d) throws Exception {
         this.eccParameters = eccParameters;
         this.d = d;
 

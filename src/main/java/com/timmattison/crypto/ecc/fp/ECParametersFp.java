@@ -7,6 +7,7 @@ import com.timmattison.crypto.ecc.interfaces.ECCCurve;
 import com.timmattison.crypto.ecc.interfaces.ECCParameters;
 import com.timmattison.crypto.ecc.interfaces.ECCPoint;
 
+import javax.inject.Inject;
 import java.math.BigInteger;
 
 // This code is based off of the Javascript implementation found here - http://www-cs-students.stanford.edu/~tjw/jsbn/
@@ -38,7 +39,7 @@ public class ECParametersFp implements ECCParameters {
         return other.getCurve().equals(this.getCurve()) && other.getN().equals(this.getN()) && other.getG().equals(this.getG()) && other.getH().equals(this.getH());
     }
 
-    @AssistedInject
+    @Inject
     public ECParametersFp(@Assisted("curve") ECCCurve curve, @Assisted("g") ECCPoint g, @Assisted("n") BigInteger n, @Assisted("h") BigInteger h) {
         this.curve = curve;
         this.g = g;

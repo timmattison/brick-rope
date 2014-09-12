@@ -7,6 +7,7 @@ import com.timmattison.crypto.ecc.random.interfaces.BigIntegerRandom;
 import com.timmattison.cryptocurrency.helpers.ByteArrayHelper;
 import com.timmattison.cryptocurrency.interfaces.Hash;
 
+import javax.inject.Inject;
 import java.math.BigInteger;
 
 // This code is based off of the Javascript implementation found here - http://www-cs-students.stanford.edu/~tjw/jsbn/
@@ -27,7 +28,7 @@ public class ECMessageSignerFp implements ECCMessageSigner {
     public ECMessageSignerFp() {
     }
 
-    @AssistedInject
+    @Inject
     public ECMessageSignerFp(ECCSignatureFactory eccSignatureFactory, ECCMessageSignerHashFactory eccMessageSignerHashFactory, @Assisted("bigIntegerRandom") BigIntegerRandom bigIntegerRandom, @Assisted("eccKeyPair") ECCKeyPair eccKeyPair) {
         this.eccSignatureFactory = eccSignatureFactory;
         this.eccMessageSignerHashFactory = eccMessageSignerHashFactory;

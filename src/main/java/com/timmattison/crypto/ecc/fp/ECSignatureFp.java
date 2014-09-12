@@ -1,11 +1,11 @@
 package com.timmattison.crypto.ecc.fp;
 
 import com.google.inject.assistedinject.Assisted;
-import com.google.inject.assistedinject.AssistedInject;
 import com.timmattison.crypto.ecc.interfaces.ECCParameters;
 import com.timmattison.crypto.ecc.interfaces.ECCPoint;
 import com.timmattison.crypto.ecc.interfaces.ECCSignature;
 
+import javax.inject.Inject;
 import java.math.BigInteger;
 
 // This code is based off of the Javascript implementation found here - http://www-cs-students.stanford.edu/~tjw/jsbn/
@@ -26,7 +26,7 @@ public class ECSignatureFp implements ECCSignature {
     public ECSignatureFp() {
     }
 
-    @AssistedInject
+    @Inject
     public ECSignatureFp(@Assisted("eccParameters") ECCParameters eccParameters, @Assisted("r") BigInteger r, @Assisted("s") BigInteger s, @Assisted("Qu") ECCPoint Qu) {
         this.eccParameters = eccParameters;
         this.r = r;
