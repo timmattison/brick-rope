@@ -30,10 +30,6 @@ public class BitcoinScriptingFactory implements ScriptingFactory {
      * These are the words mapped by their opcode
      */
     private static Map<Byte, Word> wordsByOpcode;
-    /**
-     * These are the words mapped by their name
-     */
-    private static HashMap<String, Word> wordsByName;
 
     private final Logger logger;
     private final Set<Word> words;
@@ -65,14 +61,6 @@ public class BitcoinScriptingFactory implements ScriptingFactory {
 
         for (Word word : words) {
             wordsByOpcode.put(word.getOpcode(), word);
-        }
-    }
-
-    private void createNameLookupTable() throws IllegalAccessException, InstantiationException {
-        wordsByName = new HashMap<String, Word>();
-
-        for (Word word : words) {
-            wordsByName.put(word.getName(), word);
         }
     }
 
