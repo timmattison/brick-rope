@@ -42,16 +42,22 @@ public class BitcoinScriptingFactory implements ScriptingFactory {
     public BitcoinScriptingFactory(Logger logger, Set<Word> words) throws InstantiationException, IllegalAccessException {
         this.logger = logger;
         this.words = words;
+    }
 
-        // TODO: Lazy initialize this!
+    public Map<Byte, Word> getWordsByOpcode() {
         if (wordsByOpcode == null) {
-            createOpcodeLookupTable();
+            try {
+                createOpcodeLookupTable();
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+                throw new UnsupportedOperationException(e);
+            } catch (InstantiationException e) {
+                e.printStackTrace();
+                throw new UnsupportedOperationException(e);
+            }
         }
 
-        // TODO: Lazy initialize this!
-        if (wordsByName == null) {
-            createNameLookupTable();
-        }
+        return wordsByOpcode;
     }
 
     private void createOpcodeLookupTable() throws IllegalAccessException, InstantiationException {
@@ -81,7 +87,7 @@ public class BitcoinScriptingFactory implements ScriptingFactory {
         }
 
         // See if this class is a no argument class
-        Word word = wordsByOpcode.get(opcode);
+        Word word = getWordsByOpcode().get(opcode);
 
         // Did we find it?
         if (word != null) {
