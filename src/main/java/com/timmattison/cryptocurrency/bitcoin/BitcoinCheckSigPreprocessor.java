@@ -13,6 +13,7 @@ import org.apache.commons.lang.ArrayUtils;
 
 import javax.inject.Inject;
 import java.util.Arrays;
+import java.util.logging.Logger;
 
 /**
  * Created by timmattison on 9/10/14.
@@ -20,9 +21,11 @@ import java.util.Arrays;
 public class BitcoinCheckSigPreprocessor implements CheckSigPreprocessor {
     private final TransactionLocator transactionLocator;
     private final ScriptingFactory scriptingFactory;
+    private final Logger logger;
 
     @Inject
-    public BitcoinCheckSigPreprocessor(TransactionLocator transactionLocator, ScriptingFactory scriptingFactory) {
+    public BitcoinCheckSigPreprocessor(Logger logger, TransactionLocator transactionLocator, ScriptingFactory scriptingFactory) {
+        this.logger = logger;
         this.transactionLocator = transactionLocator;
         this.scriptingFactory = scriptingFactory;
     }
