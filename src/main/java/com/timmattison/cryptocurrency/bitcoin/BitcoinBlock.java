@@ -23,10 +23,6 @@ public class BitcoinBlock extends StandardBlock implements Serializable {
         super(blockHeaderFactory, transactionFactory, variableLengthIntegerFactory);
     }
 
-    public BitcoinBlock() {
-        super(null, null, null);
-    }
-
     @Override
     public byte[] dump() {
         byte[] magic = new byte[]{(byte) 0xf9, (byte) 0xbe, (byte) 0xb4, (byte) 0xd9};
