@@ -10,8 +10,7 @@ import com.timmattison.cryptocurrency.bitcoin.words.crypto.OpHash256;
 import com.timmattison.cryptocurrency.bitcoin.words.flowcontrol.OpReturn;
 import com.timmattison.cryptocurrency.bitcoin.words.stack.*;
 import com.timmattison.cryptocurrency.factories.ScriptingFactory;
-import com.timmattison.cryptocurrency.standard.interfaces.InputScript;
-import com.timmattison.cryptocurrency.standard.interfaces.OutputScript;
+import com.timmattison.cryptocurrency.standard.interfaces.Script;
 import com.timmattison.cryptocurrency.standard.interfaces.ScriptToWordListConverter;
 import com.timmattison.cryptocurrency.standard.interfaces.ValidationScript;
 
@@ -31,7 +30,7 @@ public class BasicBitcoinScriptClassifier implements BitcoinScriptClassifier {
     }
 
     @Override
-    public BitcoinScriptType determineScriptType(InputScript inputScript, OutputScript outputScript) {
+    public BitcoinScriptType determineScriptType(Script inputScript, Script outputScript) {
         List<Word> outputWords = scriptToWordListConverter.convert(outputScript);
 
         if (outputWords != null) {

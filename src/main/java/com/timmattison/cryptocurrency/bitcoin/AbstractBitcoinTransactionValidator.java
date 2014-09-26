@@ -7,17 +7,22 @@ import com.timmattison.cryptocurrency.standard.interfaces.Script;
 import com.timmattison.cryptocurrency.standard.interfaces.ValidationScript;
 
 import javax.inject.Inject;
+import java.util.logging.Logger;
 
 public abstract class AbstractBitcoinTransactionValidator implements TransactionValidator {
+    private final Logger logger;
     private final TransactionLocator transactionLocator;
     private final ScriptingFactory scriptingFactory;
     private final StateMachineFactory stateMachineFactory;
+    private final BitcoinScriptClassifier bitcoinScriptClassifier;
 
     @Inject
-    public AbstractBitcoinTransactionValidator(TransactionLocator transactionLocator, ScriptingFactory scriptingFactory, StateMachineFactory stateMachineFactory) {
+    public AbstractBitcoinTransactionValidator(Logger logger, TransactionLocator transactionLocator, ScriptingFactory scriptingFactory, StateMachineFactory stateMachineFactory, BitcoinScriptClassifier bitcoinScriptClassifier) {
+        this.logger = logger;
         this.transactionLocator = transactionLocator;
         this.scriptingFactory = scriptingFactory;
         this.stateMachineFactory = stateMachineFactory;
+        this.bitcoinScriptClassifier = bitcoinScriptClassifier;
     }
 
     protected void innerValidateTransactionInput(Transaction transaction, int inputNumber, Input input) {
@@ -50,5 +55,7 @@ public abstract class AbstractBitcoinTransactionValidator implements Transaction
 
         // Execute the validation script
         stateMachine.execute(validationScript);
+
+        logger.info(bitcoinScriptClassifier.determineScriptType(inputScript, outputScript).getDescription());
     }
 }

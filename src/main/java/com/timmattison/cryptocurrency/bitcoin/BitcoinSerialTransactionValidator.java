@@ -8,11 +8,12 @@ import com.timmattison.cryptocurrency.interfaces.TransactionLocator;
 
 import javax.inject.Inject;
 import java.util.List;
+import java.util.logging.Logger;
 
 public class BitcoinSerialTransactionValidator extends AbstractBitcoinTransactionValidator {
     @Inject
-    public BitcoinSerialTransactionValidator(TransactionLocator transactionLocator, ScriptingFactory scriptingFactory, StateMachineFactory stateMachineFactory) {
-        super(transactionLocator, scriptingFactory, stateMachineFactory);
+    public BitcoinSerialTransactionValidator(Logger logger, TransactionLocator transactionLocator, ScriptingFactory scriptingFactory, StateMachineFactory stateMachineFactory, BitcoinScriptClassifier bitcoinScriptClassifier) {
+        super(logger, transactionLocator, scriptingFactory, stateMachineFactory, bitcoinScriptClassifier);
     }
 
     @Override

@@ -13,13 +13,14 @@ import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
+import java.util.logging.Logger;
 
 public class BitcoinParallelTransactionValidator extends AbstractBitcoinTransactionValidator {
     private final ExecutorService executorService;
 
     @Inject
-    public BitcoinParallelTransactionValidator(TransactionLocator transactionLocator, ScriptingFactory scriptingFactory, StateMachineFactory stateMachineFactory, ExecutorService executorService) {
-        super(transactionLocator, scriptingFactory, stateMachineFactory);
+    public BitcoinParallelTransactionValidator(Logger logger, TransactionLocator transactionLocator, ScriptingFactory scriptingFactory, StateMachineFactory stateMachineFactory, ExecutorService executorService, BitcoinScriptClassifier bitcoinScriptClassifier) {
+        super(logger, transactionLocator, scriptingFactory, stateMachineFactory, bitcoinScriptClassifier);
         this.executorService = executorService;
     }
 

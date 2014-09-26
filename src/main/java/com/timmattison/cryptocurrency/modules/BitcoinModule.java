@@ -27,6 +27,7 @@ import com.timmattison.cryptocurrency.factories.*;
 import com.timmattison.cryptocurrency.interfaces.*;
 import com.timmattison.cryptocurrency.standard.StandardBlockFactory;
 import com.timmattison.cryptocurrency.standard.StandardMerkleRootCalculator;
+import com.timmattison.cryptocurrency.standard.StandardScriptToWordListConverter;
 import com.timmattison.cryptocurrency.standard.StandardVariableLengthInteger;
 import com.timmattison.cryptocurrency.standard.blockstorage.database.H2BlockStorage;
 import com.timmattison.cryptocurrency.standard.blockstorage.database.MySqlBlockStorage;
@@ -38,6 +39,7 @@ import com.timmattison.cryptocurrency.standard.hashing.padding.MessagePadder;
 import com.timmattison.cryptocurrency.standard.hashing.padding.StandardMessagePadder;
 import com.timmattison.cryptocurrency.standard.hashing.sha.DoubleSha256Hash;
 import com.timmattison.cryptocurrency.standard.interfaces.BlockStorage;
+import com.timmattison.cryptocurrency.standard.interfaces.ScriptToWordListConverter;
 import com.timmattison.cryptocurrency.standard.interfaces.VariableLengthInteger;
 
 import java.util.Random;
@@ -120,6 +122,9 @@ public class BitcoinModule extends AbstractModule {
         bind(SignatureProcessor.class).to(BitcoinSignatureProcessor.class);
         bind(BlockChainFactory.class).to(BitcoinBlockChainFactory.class);
         bind(CheckSigPreprocessor.class).to(BitcoinCheckSigPreprocessor.class);
+
+        bind(ScriptToWordListConverter.class).to(StandardScriptToWordListConverter.class);
+        bind(BitcoinScriptClassifier.class).to(BasicBitcoinScriptClassifier.class);
 
         if (highPerformance) {
             bind(TransactionValidator.class).to(BitcoinParallelTransactionValidator.class);

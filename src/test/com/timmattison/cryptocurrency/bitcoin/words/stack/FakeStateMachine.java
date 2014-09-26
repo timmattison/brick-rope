@@ -8,7 +8,7 @@ import com.timmattison.cryptocurrency.standard.interfaces.Script;
  */
 public class FakeStateMachine extends BitcoinStateMachine {
     public FakeStateMachine() {
-        super(null, null);
+        super(null, null, null);
     }
 
     @Override

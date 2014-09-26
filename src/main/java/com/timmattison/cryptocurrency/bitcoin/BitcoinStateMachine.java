@@ -1,11 +1,12 @@
 package com.timmattison.cryptocurrency.bitcoin;
 
-import com.timmattison.cryptocurrency.bitcoin.words.crypto.OpCodeSeparator;
 import com.timmattison.cryptocurrency.factories.ScriptingFactory;
 import com.timmattison.cryptocurrency.standard.interfaces.Script;
+import com.timmattison.cryptocurrency.standard.interfaces.ScriptToWordListConverter;
 
 import javax.inject.Inject;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Stack;
 import java.util.logging.Logger;
 
@@ -18,6 +19,7 @@ import java.util.logging.Logger;
  */
 public class BitcoinStateMachine implements StateMachine {
     private static final int MAX_WORD_LIST_LENGTH = 9999;
+    private final ScriptToWordListConverter scriptToWordListConverter;
     private final ScriptingFactory scriptingFactory;
     private final Logger logger;
     Stack<Object> stack;
@@ -27,7 +29,8 @@ public class BitcoinStateMachine implements StateMachine {
     private Integer inputNumber;
 
     @Inject
-    public BitcoinStateMachine(Logger logger, ScriptingFactory scriptingFactory) {
+    public BitcoinStateMachine(ScriptToWordListConverter scriptToWordListConverter, Logger logger, ScriptingFactory scriptingFactory) {
+        this.scriptToWordListConverter = scriptToWordListConverter;
         this.logger = logger;
         this.scriptingFactory = scriptingFactory;
     }
@@ -66,31 +69,24 @@ public class BitcoinStateMachine implements StateMachine {
         // Reset the state machine
         reset();
 
-        // Is this script executable?
-        if (!script.isExecutable()) {
+        List<Word> words = scriptToWordListConverter.convert(script);
+
+        // Is there anything to run?
+        if (words == null) {
             // No, just return
             return;
         }
 
-        do {
-            // Are there too many words?
-            if (wordCounter > MAX_WORD_LIST_LENGTH) {
-                // Yes, throw an exception
-                throw new UnsupportedOperationException("The maximum number of words in a script is " + MAX_WORD_LIST_LENGTH + ", saw " + wordCounter++ + " word(s)");
-            }
+        // Are there too many words?
+        if (words.size() > MAX_WORD_LIST_LENGTH) {
+            // Yes, throw an exception
+            throw new UnsupportedOperationException("The maximum number of words in a script is " + MAX_WORD_LIST_LENGTH + ", saw " + wordCounter++ + " word(s)");
+        }
 
-            // Build the next word
-            byte currentByte = scriptData[0];
-
-            // Get the word that the next byte corresponds to
-            Word currentWord = scriptingFactory.createWord(currentByte);
-
-            // Build the current word and get the remaining script data
-            scriptData = currentWord.build(Arrays.copyOfRange(scriptData, 1, scriptData.length));
-
+        for (Word word : words) {
             // Execute this word
-            currentWord.execute(this);
-        } while ((scriptData != null) && (scriptData.length > 0));
+            word.execute(this);
+        }
 
         // Pop the top value of the stack
         Object topStackValue = pop();
