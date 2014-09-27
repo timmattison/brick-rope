@@ -68,13 +68,15 @@ public class BitcoinCheckSigPreprocessor implements CheckSigPreprocessor {
         // XXX - NEED A REAL COPY HERE OTHERWISE WE DESTROY OUR DATA!
         Transaction txCopy = destinationTransaction;
 
-        logger.info("Previous TX hash: " + ByteArrayHelper.toHex(previousTransactionHash));
-        logger.info("Before: " + ByteArrayHelper.toHex(txCopy.dump()));
+        //logger.info("Previous TX hash: " + ByteArrayHelper.toHex(previousTransactionHash));
+        //logger.info("Before: " + ByteArrayHelper.toHex(txCopy.dump()));
+
         // Clear all txIn scripts
         for (Input input : txCopy.getInputs()) {
             input.setScript(null);
         }
-        logger.info("After: " + ByteArrayHelper.toHex(txCopy.dump()));
+
+        //logger.info("After: " + ByteArrayHelper.toHex(txCopy.dump()));
 
         byte[] finalSubscriptBytes = new byte[0];
 
