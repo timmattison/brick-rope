@@ -1,5 +1,9 @@
 package com.timmattison.cryptocurrency.bitcoin.words.arithmetic;
 
+import com.timmattison.cryptocurrency.bitcoin.WordDumper;
+
+import javax.inject.Inject;
+
 /**
  * Created with IntelliJ IDEA.
  * User: timmattison
@@ -10,6 +14,11 @@ package com.timmattison.cryptocurrency.bitcoin.words.arithmetic;
 public class OpNegate extends ArithmeticOp {
     private static final String word = "OP_NEGATE";
     private static final Byte opcode = (byte) 0x8f;
+
+    @Inject
+    public OpNegate(WordDumper wordDumper) {
+        super(wordDumper);
+    }
 
     @Override
     public Byte getOpcode() {

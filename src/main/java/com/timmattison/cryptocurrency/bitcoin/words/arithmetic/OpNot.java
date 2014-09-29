@@ -1,5 +1,8 @@
 package com.timmattison.cryptocurrency.bitcoin.words.arithmetic;
 
+import com.google.inject.Inject;
+import com.timmattison.cryptocurrency.bitcoin.WordDumper;
+
 /**
  * Created with IntelliJ IDEA.
  * User: timmattison
@@ -10,6 +13,11 @@ package com.timmattison.cryptocurrency.bitcoin.words.arithmetic;
 public class OpNot extends ArithmeticOp {
     private static final String word = "OP_NOT";
     private static final Byte opcode = (byte) 0x91;
+
+    @Inject
+    public OpNot(WordDumper wordDumper) {
+        super(wordDumper);
+    }
 
     @Override
     public Byte getOpcode() {

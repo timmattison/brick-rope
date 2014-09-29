@@ -2,6 +2,9 @@ package com.timmattison.cryptocurrency.bitcoin.words.arithmetic;
 
 import com.timmattison.cryptocurrency.bitcoin.StateMachine;
 import com.timmattison.cryptocurrency.bitcoin.Word;
+import com.timmattison.cryptocurrency.bitcoin.WordDumper;
+
+import javax.inject.Inject;
 
 /**
  * Created with IntelliJ IDEA.
@@ -11,6 +14,13 @@ import com.timmattison.cryptocurrency.bitcoin.Word;
  * To change this template use File | Settings | File Templates.
  */
 public abstract class ArithmeticOp implements Word {
+    private final WordDumper wordDumper;
+
+    @Inject
+    protected ArithmeticOp(WordDumper wordDumper) {
+        this.wordDumper = wordDumper;
+    }
+
     @Override
     public final byte[] build(byte[] data) {
         // Arithmetic operations manipulate the stack but do not consume any bytes
@@ -41,20 +51,6 @@ public abstract class ArithmeticOp implements Word {
 
     @Override
     public String prettyDump(int indentationLevel) {
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("\n");
-
-        for (int loop = 0; loop < indentationLevel; loop++) {
-            stringBuilder.append("\t");
-        }
-
-        stringBuilder.append("Opcode value: ");
-        stringBuilder.append((int) getOpcode() & 0xFF);
-        stringBuilder.append(String.format(", 0x%02x", getOpcode()));
-        stringBuilder.append(" [opcode name: ");
-        stringBuilder.append(getName());
-        stringBuilder.append("]");
-
-        return stringBuilder.toString();
+        return wordDumper.prettyDump(indentationLevel, this);
     }
 }
