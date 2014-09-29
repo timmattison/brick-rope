@@ -5,6 +5,7 @@ import com.timmattison.cryptocurrency.factories.BlockFactory;
 import com.timmattison.cryptocurrency.modules.BitcoinModule;
 
 import javax.inject.Inject;
+import java.util.concurrent.ExecutorService;
 
 /**
  * Created by timmattison on 4/15/14.
@@ -34,8 +35,8 @@ public class H2BlockStorage extends AbstractDatabaseBlockStorage {
     private final String databaseName;
 
     @Inject
-    public H2BlockStorage(BlockFactory blockFactory, @Named(BitcoinModule.DATABASE_FILE_NAME) String databaseName) {
-        super(blockFactory);
+    public H2BlockStorage(ExecutorService executorService, BlockFactory blockFactory, @Named(BitcoinModule.DATABASE_FILE_NAME) String databaseName) {
+        super(executorService, blockFactory);
         this.databaseName = databaseName;
     }
 

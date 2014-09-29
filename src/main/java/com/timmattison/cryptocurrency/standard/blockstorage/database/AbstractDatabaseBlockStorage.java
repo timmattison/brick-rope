@@ -10,18 +10,25 @@ import javax.inject.Inject;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Future;
 
 /**
  * Created by timmattison on 4/15/14.
  */
 public abstract class AbstractDatabaseBlockStorage implements BlockStorage {
     private Connection connection;
+    private final ExecutorService executorService;
     private final BlockFactory blockFactory;
     protected long lastBlockInserted;
     protected long currentOffset;
 
     @Inject
-    public AbstractDatabaseBlockStorage(BlockFactory blockFactory) {
+    public AbstractDatabaseBlockStorage(ExecutorService executorService, BlockFactory blockFactory) {
+        this.executorService = executorService;
         this.blockFactory = blockFactory;
     }
 
@@ -175,14 +182,42 @@ public abstract class AbstractDatabaseBlockStorage implements BlockStorage {
 
     protected abstract String getGetTransactionSql();
 
-    private void innerStoreTransactions(long blockNumber, Block block) throws SQLException, ClassNotFoundException {
-        for (Transaction transaction : block.getTransactions()) {
-            PreparedStatement preparedStatement = prepareStatement(getStoreTransactionSql());
-            preparedStatement.setString(1, ByteArrayHelper.toHex(transaction.getHash()));
-            preparedStatement.setLong(2, blockNumber);
-            preparedStatement.setInt(3, transaction.getTransactionNumber());
+    private void innerStoreTransactions(final long blockNumber, Block block) throws SQLException, ClassNotFoundException {
+        List<Future<?>> jobs = new ArrayList<Future<?>>();
 
-            preparedStatement.executeUpdate();
+        for (final Transaction transaction : block.getTransactions()) {
+            jobs.add(executorService.submit(new Runnable() {
+                @Override
+                public void run() {
+                    PreparedStatement preparedStatement = null;
+                    try {
+                        preparedStatement = prepareStatement(getStoreTransactionSql());
+                        preparedStatement.setString(1, ByteArrayHelper.toHex(transaction.getHash()));
+                        preparedStatement.setLong(2, blockNumber);
+                        preparedStatement.setInt(3, transaction.getTransactionNumber());
+
+                        preparedStatement.executeUpdate();
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                        System.exit(1);
+                    } catch (ClassNotFoundException e) {
+                        e.printStackTrace();
+                        System.exit(2);
+                    }
+                }
+            }));
+        }
+
+        for (Future<?> job : jobs) {
+            try {
+                job.get();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+                System.exit(3);
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+                System.exit(4);
+            }
         }
     }
 

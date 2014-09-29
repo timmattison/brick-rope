@@ -78,8 +78,6 @@ public class BitcoinDumpBlockChain {
         while (block != null) {
             blockStorage.storeBlock(blockNumber, block);
 
-            Block fromDb = blockStorage.getBlock(blockNumber);
-
             // Move onto the next block
             block = blockChain.next();
             if ((blockNumber % 1000) == 0) {

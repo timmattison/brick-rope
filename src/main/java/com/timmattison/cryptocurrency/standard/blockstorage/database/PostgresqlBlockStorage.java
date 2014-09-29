@@ -10,6 +10,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.concurrent.ExecutorService;
 
 /**
  * Created by timmattison on 4/15/14.
@@ -40,8 +41,8 @@ public class PostgresqlBlockStorage extends AbstractDatabaseBlockStorage {
     private final String databaseName;
 
     @Inject
-    public PostgresqlBlockStorage(BlockFactory blockFactory, @Named(BitcoinModule.DATABASE_NAME_NAME) String databaseName) {
-        super(blockFactory);
+    public PostgresqlBlockStorage(ExecutorService executorService, BlockFactory blockFactory, @Named(BitcoinModule.DATABASE_NAME_NAME) String databaseName) {
+        super(executorService, blockFactory);
         this.databaseName = databaseName;
     }
 

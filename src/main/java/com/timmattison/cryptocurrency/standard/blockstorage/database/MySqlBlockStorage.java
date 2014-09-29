@@ -8,6 +8,7 @@ import com.timmattison.cryptocurrency.modules.BitcoinModule;
 import javax.inject.Inject;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.concurrent.ExecutorService;
 
 /**
  * Created by timmattison on 4/15/14.
@@ -37,8 +38,8 @@ public class MySqlBlockStorage extends AbstractDatabaseBlockStorage {
     private final String databaseName;
 
     @Inject
-    public MySqlBlockStorage(BlockFactory blockFactory, @Named(BitcoinModule.DATABASE_NAME_NAME) String databaseName) {
-        super(blockFactory);
+    public MySqlBlockStorage(ExecutorService executorService, BlockFactory blockFactory, @Named(BitcoinModule.DATABASE_NAME_NAME) String databaseName) {
+        super(executorService, blockFactory);
         this.databaseName = databaseName;
     }
 
