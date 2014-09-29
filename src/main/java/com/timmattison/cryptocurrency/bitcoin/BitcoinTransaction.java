@@ -208,10 +208,6 @@ public class BitcoinTransaction implements Transaction {
         stringBuilder.append("\n");
 
         for (int loop = 0; loop < inputs.size(); loop++) {
-            stringBuilder.append(indentation);
-            stringBuilder.append("Input script #");
-            stringBuilder.append(loop);
-            stringBuilder.append(": ");
             stringBuilder.append(inputs.get(loop).prettyDump(indentationLevel + 1));
             stringBuilder.append("\n");
         }
@@ -222,10 +218,6 @@ public class BitcoinTransaction implements Transaction {
         stringBuilder.append("\n");
 
         for (int loop = 0; loop < outputs.size(); loop++) {
-            stringBuilder.append(indentation);
-            stringBuilder.append("Output script #");
-            stringBuilder.append(loop);
-            stringBuilder.append(": ");
             stringBuilder.append(outputs.get(loop).prettyDump(indentationLevel + 1));
             stringBuilder.append("\n");
         }

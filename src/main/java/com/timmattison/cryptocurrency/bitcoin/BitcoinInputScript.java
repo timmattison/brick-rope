@@ -78,10 +78,6 @@ public class BitcoinInputScript extends BitcoinScript implements InputScript {
             indentation.append("\t");
         }
 
-        stringBuilder.append(indentation);
-        stringBuilder.append("Script bytes: ");
-        stringBuilder.append(ByteArrayHelper.toHex(scriptBytes));
-
         for (Word word : dumpWords()) {
             stringBuilder.append(word.prettyDump(indentationLevel + 1));
         }
