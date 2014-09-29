@@ -125,6 +125,7 @@ public class BitcoinModule extends AbstractModule {
 
         bind(ScriptToWordListConverter.class).to(StandardScriptToWordListConverter.class);
         bind(BitcoinScriptClassifier.class).to(BasicBitcoinScriptClassifier.class);
+        bind(BitcoinInputIterator.class).to(BitcoinParallelInputIterator.class);
 
         if (highPerformance) {
             bind(TransactionValidator.class).to(BitcoinParallelTransactionValidator.class);

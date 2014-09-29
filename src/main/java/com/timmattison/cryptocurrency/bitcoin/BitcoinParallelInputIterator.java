@@ -1,38 +1,36 @@
 package com.timmattison.cryptocurrency.bitcoin;
 
-import com.timmattison.cryptocurrency.factories.ScriptingFactory;
-import com.timmattison.cryptocurrency.factories.StateMachineFactory;
+import com.google.inject.Inject;
 import com.timmattison.cryptocurrency.helpers.FutureHelper;
 import com.timmattison.cryptocurrency.interfaces.Input;
 import com.timmattison.cryptocurrency.interfaces.Transaction;
-import com.timmattison.cryptocurrency.interfaces.TransactionLocator;
 
-import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
-import java.util.logging.Logger;
 
-public class BitcoinParallelTransactionValidator extends AbstractBitcoinTransactionValidator {
+/**
+ * Created by timmattison on 9/29/14.
+ */
+public class BitcoinParallelInputIterator implements BitcoinInputIterator {
     private final ExecutorService executorService;
 
     @Inject
-    public BitcoinParallelTransactionValidator(Logger logger, TransactionLocator transactionLocator, ScriptingFactory scriptingFactory, StateMachineFactory stateMachineFactory, ExecutorService executorService, BitcoinScriptClassifier bitcoinScriptClassifier) {
-        super(logger, transactionLocator, scriptingFactory, stateMachineFactory, bitcoinScriptClassifier);
+    public BitcoinParallelInputIterator(ExecutorService executorService) {
         this.executorService = executorService;
     }
 
     @Override
-    public boolean isValid(final Transaction transaction) {
+    public void iterateOverInputs(final Transaction transaction, final BitcoinInputProcessor bitcoinInputProcessor) {
         List<Future<Boolean>> results = new ArrayList<Future<Boolean>>();
 
         // Is this the first transaction?
         if (transaction.getTransactionNumber() == 0) {
             // Yes, it is the coinbase.  It does not need validation.
             // TODO: Implement BIP-0034 (https://github.com/bitcoin/bips/blob/master/bip-0034.mediawiki)
-            return true;
+            return;
         }
 
         // Get the transaction's inputs
@@ -49,7 +47,7 @@ public class BitcoinParallelTransactionValidator extends AbstractBitcoinTransact
                 @Override
                 public Boolean call() throws Exception {
                     try {
-                        process(transaction, currentInputNumber, input);
+                        bitcoinInputProcessor.process(transaction, currentInputNumber, input);
                     } catch (Exception e) {
                         e.printStackTrace();
                         return false;
@@ -70,6 +68,6 @@ public class BitcoinParallelTransactionValidator extends AbstractBitcoinTransact
             inputNumber++;
         }
 
-        return FutureHelper.allTrue(results);
+        FutureHelper.allTrue(results);
     }
 }

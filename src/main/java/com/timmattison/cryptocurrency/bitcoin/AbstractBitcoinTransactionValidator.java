@@ -9,7 +9,7 @@ import com.timmattison.cryptocurrency.standard.interfaces.ValidationScript;
 import javax.inject.Inject;
 import java.util.logging.Logger;
 
-public abstract class AbstractBitcoinTransactionValidator implements TransactionValidator {
+public abstract class AbstractBitcoinTransactionValidator implements TransactionValidator, BitcoinInputProcessor {
     private final Logger logger;
     private final TransactionLocator transactionLocator;
     private final ScriptingFactory scriptingFactory;
@@ -25,7 +25,8 @@ public abstract class AbstractBitcoinTransactionValidator implements Transaction
         this.bitcoinScriptClassifier = bitcoinScriptClassifier;
     }
 
-    protected void innerValidateTransactionInput(Transaction transaction, int inputNumber, Input input) {
+    @Override
+    public void process(Transaction transaction, int inputNumber, Input input) {
         // Get the index of the previous output that this input is taken from
         long previousOutputIndex = input.getPreviousOutputIndex();
 
@@ -56,6 +57,7 @@ public abstract class AbstractBitcoinTransactionValidator implements Transaction
         // Execute the validation script
         stateMachine.execute(validationScript);
 
-        logger.info(bitcoinScriptClassifier.determineScriptType(inputScript, outputScript).getDescription());
+        boolean isCoinbase = ((transaction.getTransactionNumber() == 0) && (inputNumber == 0));
+        bitcoinScriptClassifier.determineScriptType(isCoinbase, inputScript, outputScript).getDescription();
     }
 }

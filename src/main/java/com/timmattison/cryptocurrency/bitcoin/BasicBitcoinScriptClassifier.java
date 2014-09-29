@@ -30,7 +30,7 @@ public class BasicBitcoinScriptClassifier implements BitcoinScriptClassifier {
     }
 
     @Override
-    public BitcoinScriptType determineScriptType(Script inputScript, Script outputScript) {
+    public BitcoinScriptType determineScriptType(boolean isCoinbase, Script inputScript, Script outputScript) {
         List<Word> outputWords = scriptToWordListConverter.convert(outputScript);
 
         if (outputWords != null) {
