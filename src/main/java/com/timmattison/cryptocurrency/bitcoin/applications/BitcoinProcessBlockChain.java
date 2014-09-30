@@ -6,6 +6,7 @@ import com.timmattison.cryptocurrency.factories.BlockChainFactory;
 import com.timmattison.cryptocurrency.interfaces.Block;
 import com.timmattison.cryptocurrency.interfaces.BlockChain;
 import com.timmattison.cryptocurrency.interfaces.BlockValidator;
+import com.timmattison.cryptocurrency.interfaces.TransactionLocator;
 import com.timmattison.cryptocurrency.modules.BitcoinModule;
 import com.timmattison.cryptocurrency.standard.interfaces.BlockStorage;
 import org.apache.commons.cli.ParseException;
@@ -55,6 +56,7 @@ public class BitcoinProcessBlockChain {
         BlockChain blockChain = injector.getInstance(BlockChainFactory.class).getBlockChain();
         BlockStorage blockStorage = injector.getInstance(BlockStorage.class);
         BlockValidator blockValidator = injector.getInstance(BlockValidator.class);
+        TransactionLocator transactionLocator = injector.getInstance(TransactionLocator.class);
 
         long blockNumber = 0;
 
@@ -82,13 +84,17 @@ public class BitcoinProcessBlockChain {
         Block block = blockChain.next();
 
         while (block != null) {
-            blockStorage.storeBlock(blockNumber, block);
+            // Add this block as a temporary block so that we can validate the transactions in it
+            transactionLocator.addTemporaryBlock(block);
 
-            Block fromDb = blockStorage.getBlock(blockNumber);
-
-            if (!blockValidator.isValid(fromDb, blockNumber)) {
+            // Is this block valid?
+            if (!blockValidator.isValid(block, blockNumber)) {
+                // No, throw an exception
                 throw new UnsupportedOperationException("Block failed to validate!");
             }
+
+            // The block was valid, store it
+            blockStorage.storeBlock(blockNumber, block);
 
             // Move onto the next block
             block = blockChain.next();

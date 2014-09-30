@@ -1,11 +1,11 @@
 package com.timmattison.cryptocurrency.bitcoin;
 
 import com.timmattison.cryptocurrency.factories.BlockChainFactory;
+import com.timmattison.cryptocurrency.factories.TransactionFactory;
 import com.timmattison.cryptocurrency.helpers.ByteArrayHelper;
 import com.timmattison.cryptocurrency.interfaces.Block;
 import com.timmattison.cryptocurrency.interfaces.BlockChain;
 import com.timmattison.cryptocurrency.interfaces.Transaction;
-import com.timmattison.cryptocurrency.interfaces.TransactionLocator;
 
 import javax.inject.Inject;
 import java.util.HashMap;
@@ -18,18 +18,19 @@ import java.util.Map;
  * Time: 11:49 AM
  * To change this template use File | Settings | File Templates.
  */
-public class BitcoinInMemoryTransactionLocator implements TransactionLocator {
+public class BitcoinInMemoryTransactionLocator extends AbstractTransactionLocator {
     private final BlockChainFactory blockChainFactory;
     private BlockChain blockChain;
     private Map<String, Transaction> transactionMap = new HashMap<String, Transaction>();
 
     @Inject
-    public BitcoinInMemoryTransactionLocator(BlockChainFactory blockChainFactory) {
+    public BitcoinInMemoryTransactionLocator(TransactionFactory transactionFactory, BlockChainFactory blockChainFactory) {
+        super(transactionFactory);
         this.blockChainFactory = blockChainFactory;
     }
 
     @Override
-    public Transaction findTransaction(byte[] transactionHash) {
+    public Transaction innerFindTransaction(byte[] transactionHash) {
         if (true) {
             throw new UnsupportedOperationException("This is not supported anymore!");
         }
