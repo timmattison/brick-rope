@@ -24,11 +24,11 @@ public class ECCTestHelper {
     }
 
     public static ECCParameters getSmallCurve1Parameters(Injector injector) {
-        return injector.getInstance(TestCurveParameters.class).getSmallCurve1Parameters();
+        return injector.getInstance(CurveParametersTest.class).getSmallCurve1Parameters();
     }
 
     public static ECCParameters getSmallCurve2Parameters(Injector injector) {
-        return injector.getInstance(TestCurveParameters.class).getSmallCurve2Parameters();
+        return injector.getInstance(CurveParametersTest.class).getSmallCurve2Parameters();
     }
 
     public static ECCParameters getSecp160r1(Injector injector) {

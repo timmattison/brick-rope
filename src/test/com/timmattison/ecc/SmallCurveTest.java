@@ -20,7 +20,7 @@ import java.util.Set;
  * Time: 7:23 AM
  * To change this template use File | Settings | File Templates.
  */
-public class SmallCurveTests {
+public class SmallCurveTest {
     Injector injector = Guice.createInjector(new ECCSECTestModule());
 
     @Test

@@ -12,17 +12,17 @@ import java.math.BigInteger;
  * Time: 8:23 AM
  * To change this template use File | Settings | File Templates.
  */
-public class TestCurveParameters {
+public class CurveParametersTest {
     private ECCCurveFactory eccCurveFactory;
     private ECCParametersFactory eccParametersFactory;
     private ECCFieldElementFactory eccFieldElementFactory;
     private ECCPointFactory eccPointFactory;
 
-    public TestCurveParameters() {
+    public CurveParametersTest() {
     }
 
     @Inject
-    public TestCurveParameters(ECCCurveFactory eccCurveFactory, ECCParametersFactory eccParametersFactory, ECCFieldElementFactory eccFieldElementFactory, ECCPointFactory eccPointFactory) {
+    public CurveParametersTest(ECCCurveFactory eccCurveFactory, ECCParametersFactory eccParametersFactory, ECCFieldElementFactory eccFieldElementFactory, ECCPointFactory eccPointFactory) {
         this.eccCurveFactory = eccCurveFactory;
         this.eccParametersFactory = eccParametersFactory;
         this.eccFieldElementFactory = eccFieldElementFactory;

@@ -12,7 +12,7 @@ import java.util.Random;
  * Time: 1:24 PM
  * To change this template use File | Settings | File Templates.
  */
-public class OpPushDataXTests {
+public class OpPushDataXTest {
     private OpPushData1 opPushData1;
     private OpPushData2 opPushData2;
     private OpPushData4 opPushData4;

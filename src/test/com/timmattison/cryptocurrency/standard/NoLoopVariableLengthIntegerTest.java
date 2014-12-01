@@ -4,7 +4,7 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.timmattison.cryptocurrency.factories.VariableLengthIntegerFactory;
 import com.timmattison.cryptocurrency.standard.interfaces.VariableLengthInteger;
-import com.timmattison.profiling.StandardVariableLengthIntegerUnitTestModule;
+import com.timmattison.profiling.NoLoopVariableLengthIntegerUnitTestModule;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -14,7 +14,7 @@ import java.util.Random;
 /**
  * Created by timmattison on 5/8/14.
  */
-public class StandardVariableLengthIntegerTests {
+public class NoLoopVariableLengthIntegerTest {
     private static final long max8BitValue = 0xfd;
     private static final long max16BitValue = 0xffff;
     private static final long max32BitValue = 0xffffffff;
@@ -25,7 +25,7 @@ public class StandardVariableLengthIntegerTests {
 
     @Before
     public void setup() {
-        Injector injector = Guice.createInjector(new StandardVariableLengthIntegerUnitTestModule());
+        Injector injector = Guice.createInjector(new NoLoopVariableLengthIntegerUnitTestModule());
         variableLengthIntegerFactory = injector.getInstance(VariableLengthIntegerFactory.class);
 
         // Use a fixed seed so we get consistent test results

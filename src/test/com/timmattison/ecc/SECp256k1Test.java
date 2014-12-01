@@ -18,7 +18,7 @@ import java.util.Random;
  * Time: 7:23 AM
  * To change this template use File | Settings | File Templates.
  */
-public class SECp256k1Tests {
+public class SECp256k1Test {
     Injector injector = Guice.createInjector(new ECCSECTestModule());
 
     /*

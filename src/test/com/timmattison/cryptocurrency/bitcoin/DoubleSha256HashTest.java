@@ -19,7 +19,7 @@ import java.util.Arrays;
  * Time: 1:24 PM
  * To change this template use File | Settings | File Templates.
  */
-public class DoubleSha256HashTests {
+public class DoubleSha256HashTest {
     final byte[] helloStringExpectedHash = TestHelper.fromLittleEndianHexString("9595c9df90075148eb06860365df33584b75bff782a510c6cd4883a419833d50");
 
     @BeforeClass

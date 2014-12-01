@@ -17,7 +17,7 @@ import java.util.List;
  * Time: 10:12 AM
  * To change this template use File | Settings | File Templates.
  */
-public class StandardMerkleRootCalculatorTests {
+public class StandardMerkleRootCalculatorTest {
     private final StandardMerkleRootCalculator calculator = new StandardMerkleRootCalculator(new DoubleSha256Factory());
 
     @BeforeClass
