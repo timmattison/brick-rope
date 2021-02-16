@@ -1,13 +1,13 @@
 package com.timmattison.cryptocurrency.standard.blockstorage.database;
 
 import com.google.inject.name.Named;
-import com.mysql.jdbc.exceptions.jdbc4.MySQLSyntaxErrorException;
 import com.timmattison.cryptocurrency.factories.BlockFactory;
 import com.timmattison.cryptocurrency.modules.BitcoinModule;
 
 import javax.inject.Inject;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.sql.SQLSyntaxErrorException;
 import java.util.concurrent.ExecutorService;
 
 /**
@@ -89,7 +89,7 @@ public class MySqlBlockStorage extends AbstractDatabaseBlockStorage {
     protected void createIndexesIfNecessary(Connection connection) throws SQLException {
         try {
             connection.createStatement().execute(createBlockNumberBlocksTableIndexSql);
-        } catch (MySQLSyntaxErrorException e) {
+        } catch (SQLSyntaxErrorException e) {
             throwIfNotAlreadyExistsException(e);
         }
 
@@ -97,7 +97,7 @@ public class MySqlBlockStorage extends AbstractDatabaseBlockStorage {
 
         try {
             connection.createStatement().execute(createBlockNumberTransactionsTableIndexSql);
-        } catch (MySQLSyntaxErrorException e) {
+        } catch (SQLSyntaxErrorException e) {
             throwIfNotAlreadyExistsException(e);
         }
 
@@ -105,21 +105,21 @@ public class MySqlBlockStorage extends AbstractDatabaseBlockStorage {
 
         try {
             connection.createStatement().execute(createTransactionHashTransactionsTableIndexSql);
-        } catch (MySQLSyntaxErrorException e) {
+        } catch (SQLSyntaxErrorException e) {
             throwIfNotAlreadyExistsException(e);
         }
 
         doSafeCommit(connection);
     }
 
-    private void throwIfNotAlreadyExistsException(MySQLSyntaxErrorException e) throws MySQLSyntaxErrorException {
+    private void throwIfNotAlreadyExistsException(SQLSyntaxErrorException e) throws SQLSyntaxErrorException {
         if (!alreadyExistsException(e)) {
             e.printStackTrace();
             throw (e);
         }
     }
 
-    private boolean alreadyExistsException(MySQLSyntaxErrorException mysqlException) {
+    private boolean alreadyExistsException(SQLSyntaxErrorException mysqlException) {
         if (mysqlException.getMessage().contains("Duplicate key name")) {
             return true;
         }
